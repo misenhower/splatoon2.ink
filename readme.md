@@ -11,3 +11,9 @@ yarn serve
 ```shell
 yarn build
 ```
+
+## Update SplatNet Data
+
+```shell
+yarn splatnet
+```
