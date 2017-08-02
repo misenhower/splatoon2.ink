@@ -1,2 +1,7 @@
+@import './fonts';
 @import './variables';
 @import '~bulma';
+
+.title {
+    font-family: Splatoon1, $original-family-sans-serif;
+}

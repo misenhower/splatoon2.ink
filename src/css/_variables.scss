@@ -1,1 +1,4 @@
 @import '~bulma/sass/utilities/initial-variables';
+
+$original-family-sans-serif: $family-sans-serif;
+$family-sans-serif: Splatoon2, $family-sans-serif;
