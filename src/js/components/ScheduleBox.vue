@@ -1,27 +1,39 @@
 <template>
     <div v-if="firstSchedule">
-        <h2 class="title is-2">{{ firstSchedule.game_mode.name }}</h2>
-        <h3 class="title is-3">{{ firstSchedule.rule.name }}</h3>
-        <div class="columns">
-            <div class="column"><Stage :stage="firstSchedule.stage_a"></Stage></div>
-            <div class="column"><Stage :stage="firstSchedule.stage_b"></Stage></div>
-        </div>
-        <div v-if="upcomingSchedule">
-            <button @click="previousSchedule">Prev</button>
-            <button @click="nextSchedule">Next</button>
-        </div>
-        <div class="columns" v-if="upcomingSchedule">
-            <div class="column">
-                <div v-if="upcomingScheduleIndex == 0">
-                    Next
-                </div>
-                <div v-else>
-                    Soon
-                </div>
-                <div>{{ upcomingSchedule.rule.name }}</div>
+        <h2 class="title is-2">
+            <span class="schedule-icon"></span>{{ firstSchedule.game_mode.name }}
+        </h2>
+
+        <div class="main-schedule">
+            <div class="rule-name">{{ firstSchedule.rule.name }}</div>
+            <div class="columns is-mobile">
+                <div class="column"><Stage :stage="firstSchedule.stage_a"></Stage></div>
+                <div class="column"><Stage :stage="firstSchedule.stage_b"></Stage></div>
             </div>
-            <div class="column"><Stage :stage="upcomingSchedule.stage_a"></Stage></div>
-            <div class="column"><Stage :stage="upcomingSchedule.stage_b"></Stage></div>
+        </div>
+
+        <div class="columns is-gapless" v-if="upcomingSchedule">
+            <div class="column is-narrow"><button @click="previousSchedule">Prev</button></div>
+            <div class="column">
+                <div class="columns is-gapless" v-if="upcomingSchedule">
+                    <div class="column">
+                        <div v-if="upcomingScheduleIndex == 0">
+                            Next
+                        </div>
+                        <div v-else>
+                            Soon
+                        </div>
+                        <div>{{ upcomingSchedule.rule.name }}</div>
+                    </div>
+                    <div class="column is-8">
+                        <div class="columns is-mobile">
+                            <div class="column"><Stage :stage="upcomingSchedule.stage_a"></Stage></div>
+                            <div class="column"><Stage :stage="upcomingSchedule.stage_b"></Stage></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column is-narrow"><button @click="nextSchedule">Next</button></div>
         </div>
     </div>
 </template>

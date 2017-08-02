@@ -5,9 +5,15 @@
         </div>
         <div v-else>
             <div class="columns">
-                <div class="column"><ScheduleBox :schedules="regular" :now="now"></ScheduleBox></div>
-                <div class="column"><ScheduleBox :schedules="ranked" :now="now"></ScheduleBox></div>
-                <div class="column"><ScheduleBox :schedules="league" :now="now"></ScheduleBox></div>
+                <div class="column">
+                    <ScheduleBox class="schedule-box regular" :schedules="regular" :now="now"></ScheduleBox>
+                </div>
+                <div class="column">
+                    <ScheduleBox class="schedule-box ranked" :schedules="ranked" :now="now"></ScheduleBox>
+                </div>
+                <div class="column">
+                    <ScheduleBox class="schedule-box league" :schedules="league" :now="now"></ScheduleBox>
+                </div>
             </div>
         </div>
     </div>

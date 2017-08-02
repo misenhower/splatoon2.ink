@@ -5,3 +5,98 @@
 .title {
     font-family: Splatoon1, $original-family-sans-serif;
 }
+
+html {
+    background: #191919 url(../img/bkg-squid.png) top;
+    background-size: 360px 360px;
+}
+
+.schedule-box {
+    background: url(../img/bkg-stripes.png) top;
+    background-size: 80px 80px;
+    border-radius: 32px;
+
+    max-width: 600px;
+    padding: 35px 10px 10px 10px;
+    margin: auto;
+
+    mask-image: url(../img/bkg-mask-product.png);
+    -webkit-mask-image: url(../img/bkg-mask-product.png);
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    // Original value: 500px 800px
+    mask-size: 600px 960px;
+    -webkit-mask-size: 600px 960px;
+    mask-position: center top;
+    -webkit-mask-position: center top;
+
+    .schedule-icon {
+        display: inline-block;
+        width: 42px;
+        height: 38px;
+        background-size: auto 38px;
+        background-repeat: no-repeat;
+        background-position: center;
+        margin: 0 4px -4px 0;
+    }
+
+    &.regular {
+        background-color: #19d719;
+        .schedule-icon {
+            background-image: url(../img/battle-regular.png);
+        }
+    }
+
+    &.ranked {
+        background-color: #f54910;
+        .schedule-icon {
+            background-image: url(../img/battle-ranked.png);
+        }
+    }
+
+    &.league {
+        background-color: #f02d7d;
+        .schedule-icon {
+            background-image: url(../img/battle-league.png);
+        }
+    }
+}
+
+.main-schedule {
+    background: rgba(0,0,0,0.7);
+    padding: 5px 10px 10px;
+    margin: 0 -5px 15px;
+    border-radius: 12px;
+
+    .rule-name {
+        color: $title-color;
+        font-size: 1.25rem;
+        margin-bottom: 5px;
+    }
+}
+
+.stage-image {
+    background-size: contain;
+    background-repeat: no-repeat;
+    border-radius: 10px;
+
+    position: relative;
+
+    span {
+        position: absolute;
+        right: 3px;
+        bottom: 3px;
+
+        padding: 2px 5px;
+        max-width: 95%;
+
+        background: rgba(0,0,0,0.7);
+        border-radius: 8px;
+
+        font-size: 0.9rem;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}

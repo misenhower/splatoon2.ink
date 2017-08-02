@@ -1,7 +1,7 @@
 <template>
-    <div>
-        <h4 class="title is-4">{{ stage.name }}</h4>
-        <img :src="image" />
+    <div class="stage-image" :style="style">
+        <figure class=" image is-16by9"></figure>
+        <span>{{ stage.name }}</span>
     </div>
 </template>
 
@@ -12,6 +12,11 @@ export default {
         image() {
             if (this.stage)
                 return `https://app.splatoon2.nintendo.net${this.stage.image}`;
+        },
+        style() {
+            return {
+                'background-image': `url(${this.image})`,
+            };
         },
     },
 }
