@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="is-clearfix"></div>
-            <div class="columns is-mobile">
+            <div class="columns is-mobile is-slim">
                 <div class="column"><Stage :stage="firstSchedule.stage_a"></Stage></div>
                 <div class="column"><Stage :stage="firstSchedule.stage_b"></Stage></div>
             </div>
@@ -42,7 +42,7 @@
                         </div>
                     </div>
                     <div class="column is-8">
-                        <div class="columns is-mobile">
+                        <div class="columns is-mobile is-slim">
                             <div class="column"><Stage :stage="upcomingSchedule.stage_a"></Stage></div>
                             <div class="column"><Stage :stage="upcomingSchedule.stage_b"></Stage></div>
                         </div>
