@@ -73,16 +73,18 @@ module.exports = function(env) {
             // Extract CSS to a separate file
             new ExtractTextPlugin('assets/css/[name].[contenthash].css'),
             // Remove unused CSS styles
-            // new PurifyCSSPlugin({
-            //     paths: [
-            //         ...glob.sync(path.join(__dirname, 'src/html/*.html')),
-            //         ...glob.sync(path.join(__dirname, 'src/js/components/*.vue')),
-            //     ],
-            //     minimize: production,
-            //     purifyOptions: {
-            //         // whitelist: ['.columns'],
-            //     },
-            // }),
+            new PurifyCSSPlugin({
+                paths: [
+                    ...glob.sync(path.join(__dirname, 'src/html/*.html')),
+                    ...glob.sync(path.join(__dirname, 'src/js/components/*.vue')),
+                ],
+                minimize: production,
+                purifyOptions: {
+                    whitelist: [
+                        '.title:not(.is-spaced)+.subtitle', // Fix subtitle spacing
+                    ],
+                },
+            }),
             // Favicon
             // new FaviconsWebpackPlugin({
             //     logo: './src/img/1f389.svg',
