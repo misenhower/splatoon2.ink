@@ -34,6 +34,15 @@
                             <ScheduleBox class="schedule-box tilt-left league" :schedules="league" :now="now"></ScheduleBox>
                         </div>
                     </div>
+
+                    <div v-if="coop">
+                        <div class="hook-box-wrapper salmon-run tilt-left">
+                            <div class="hook-box">
+                                <SalmonRunBox :coop="coop" :now="now"></SalmonRunBox>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -50,22 +59,28 @@
 <script>
 import axios from 'axios';
 import ScheduleBox from './ScheduleBox.vue';
+import SalmonRunBox from './SalmonRunBox.vue';
 
 export default {
-    components: { ScheduleBox },
+    components: { ScheduleBox, SalmonRunBox },
     data() {
         return {
             now: null,
             splatnet: {
                 schedules: null,
+                timeline: null,
             },
         };
     },
     computed: {
-        loading() { return !this.splatnet.schedules; },
+        loading() { return !this.splatnet.schedules || !this.splatnet.timeline; },
         regular() { return !this.loading && this.splatnet.schedules.regular.filter(this.filterSchedule) },
         ranked() { return !this.loading && this.splatnet.schedules.gachi.filter(this.filterSchedule) },
         league() { return !this.loading && this.splatnet.schedules.league.filter(this.filterSchedule) },
+        coop() {
+            if (!this.loading && this.splatnet.timeline.coop.schedule.end_time >= this.now)
+                return this.splatnet.timeline.coop;
+        },
     },
     created() {
         this.updateNow();
@@ -80,6 +95,7 @@ export default {
     methods: {
         updateData() {
             axios.get('/data/schedules.json').then(response => this.splatnet.schedules = response.data);
+            axios.get('/data/timeline.json').then(response => this.splatnet.timeline = response.data);
         },
         updateNow() {
             this.now = Math.trunc((new Date).getTime() / 1000);
