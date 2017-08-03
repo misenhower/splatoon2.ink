@@ -39,8 +39,10 @@
         </div>
 
         <div class="hero-foot has-text-centered has-text-grey plain-font is-size-7" style="margin-bottom: 0.5rem">
-            This website is not affiliated with Nintendo or Splatoon.
-            All product names, logos, and brands are property of their respective owners.
+            <div class="container is-fluid">
+                This website is not affiliated with Nintendo.
+                All product names, logos, and brands are property of their respective owners.
+            </div>
         </div>
     </div>
 </template>
