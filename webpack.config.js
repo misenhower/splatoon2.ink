@@ -66,10 +66,10 @@ module.exports = function(env) {
         },
         plugins: [
             // Remove old files
-            new CleanWebpackPlugin([
-                'public/assets/css/*',
-                'public/assets/js/*',
-            ]),
+            // new CleanWebpackPlugin([
+            //     'public/assets/css/*',
+            //     'public/assets/js/*',
+            // ]),
             // Extract CSS to a separate file
             new ExtractTextPlugin('assets/css/[name].[contenthash].css'),
             // Remove unused CSS styles
