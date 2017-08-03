@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('console-stamp')(console);
 const axios = require('axios');
 const path = require('path');
 const fs = require('fs');
