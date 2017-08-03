@@ -12,14 +12,36 @@ const api = axios.create({
     headers: {'Cookie': `iksm_session=${process.env.NINTENDO_SESSION_ID}`},
 });
 
-module.exports.update = function() {
-    // Make sure the data path exists
-    mkdirp(dataPath);
-
-    // Update map schedules
+const updateSchedules = function() {
     console.info('Updating map schedules...');
+
     api.get('schedules').then(response => {
+        // Make sure the data path exists
+        mkdirp(dataPath);
+
         fs.writeFile(`${dataPath}/schedules.json`, JSON.stringify(response.data));
         console.info('Updated map schedules.');
     });
+}
+
+const updateTimeline = function() {
+    console.info('Updating timeline...');
+
+    api.get('timeline').then(response => {
+        // Make sure the data path exists
+        mkdirp(dataPath);
+
+        // Filter out everything but the data we need
+        let data = { coop: null };
+        if (response.data.coop && response.data.coop.importance > -1)
+            data.coop = response.data.coop;
+
+        fs.writeFile(`${dataPath}/timeline.json`, JSON.stringify(data));
+        console.info('Updated timeline.');
+    });
+}
+
+module.exports.update = function() {
+    updateSchedules();
+    updateTimeline();
 }
