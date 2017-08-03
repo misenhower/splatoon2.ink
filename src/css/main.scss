@@ -68,10 +68,13 @@ html {
     margin: 0 -5px 15px;
     border-radius: 12px;
 
+    .top-bar {
+        margin-bottom: 0.5rem;
+    }
+
     .rule-name {
         color: $title-color;
         font-size: 1.25rem;
-        margin-bottom: 5px;
     }
 }
 

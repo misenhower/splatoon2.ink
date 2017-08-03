@@ -5,7 +5,18 @@
         </h2>
 
         <div class="main-schedule">
-            <div class="rule-name">{{ firstSchedule.rule.name }}</div>
+            <div class="level is-mobile top-bar">
+                <div class="level-left">
+                    <div class="level-item rule-name">{{ firstSchedule.rule.name }}</div>
+                </div>
+                <div class="level-right">
+                    <div class="level-item">
+                        {{ firstSchedule.start_time | time }} &ndash;
+                        {{ firstSchedule.end_time | time }}
+                    </div>
+                </div>
+            </div>
+            <div class="is-clearfix"></div>
             <div class="columns is-mobile">
                 <div class="column"><Stage :stage="firstSchedule.stage_a"></Stage></div>
                 <div class="column"><Stage :stage="firstSchedule.stage_b"></Stage></div>
@@ -24,6 +35,11 @@
                             Soon
                         </div>
                         <div>{{ upcomingSchedule.rule.name }}</div>
+                        <div>in {{ upcomingSchedule.start_time - now | duration }}</div>
+                        <div>
+                            {{ upcomingSchedule.start_time | time }} &ndash;
+                            {{ upcomingSchedule.end_time | time }}
+                        </div>
                     </div>
                     <div class="column is-8">
                         <div class="columns is-mobile">
@@ -39,6 +55,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import Stage from './Stage.vue';
 
 export default {
@@ -56,6 +73,20 @@ export default {
     },
     watch: {
         firstSchedule(newSchedule, oldSchedule) { if (oldSchedule != newSchedule) this.upcomingScheduleIndex = 0; },
+    },
+    filters: {
+        time(value) {
+            return moment.unix(value).local().format('ha');
+        },
+        duration(value) {
+            let duration = moment.duration(value, 'seconds');
+            let hours = Math.floor(duration.asHours());
+            let minutes = ('0' + duration.minutes()).substr(-2);
+            let seconds = ('0' + duration.seconds()).substr(-2);
+            if (hours)
+                return `${hours}h ${minutes}m ${seconds}s`;
+            return `${minutes}m ${seconds}s`;
+        },
     },
     methods: {
         nextSchedule() {
