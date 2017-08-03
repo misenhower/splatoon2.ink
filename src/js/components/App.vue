@@ -1,5 +1,22 @@
 <template>
     <div class="hero is-fullheight">
+        <div class="hero-head">
+            <div class="container is-fluid">
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <h1 class="title is-1 alt-font is-inline">Splatoon 2</h1>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <h3 class="subtitle is-3 is-inline">Map Schedules</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="hero-body">
             <div class="container is-fluid">
                 <div v-if="loading">
@@ -19,6 +36,11 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="hero-foot has-text-centered has-text-grey plain-font is-size-7" style="margin-bottom: 0.5rem">
+            This website is not affiliated with Nintendo or Splatoon.
+            All product names, logos, and brands are property of their respective owners.
         </div>
     </div>
 </template>

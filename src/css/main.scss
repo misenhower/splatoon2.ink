@@ -2,6 +2,10 @@
 @import './variables';
 @import '~bulma';
 
+.plain-font {
+    font-family: $original-family-sans-serif;
+}
+
 .alt-font {
     font-family: Splatoon1, $original-family-sans-serif;
 }
