@@ -83,6 +83,9 @@ module.exports = function(env) {
                     whitelist: [
                         '.title:not(.is-spaced)+.subtitle', // Fix subtitle spacing
                     ],
+                    cleanCssOptions: {
+                        rebase: false, // Leave relative paths alone when minifying CSS
+                    },
                 },
             }),
             // Favicon
