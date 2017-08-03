@@ -4,7 +4,7 @@
     "dev": "webpack",
     "watch": "npm run dev -- --watch",
     "build": "webpack -p --env production",
-    "serve": "webpack-dev-server --content-base public/",
+    "serve": "webpack-dev-server --hot --content-base public/",
     "splatnet": "node src/splatoon/update.js",
     "start": "node src/splatoon/run.js"
   },

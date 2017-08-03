@@ -19,9 +19,9 @@ module.exports = function(env) {
         },
         output: {
             path: path.resolve(__dirname, './public'),
-            filename: 'assets/js/[name].[chunkhash].js',
+            filename: 'assets/js/[name].[hash].js',
         },
-        devtool: (production) ? false : 'inline-source-map',
+        devtool: (production) ? false : '#cheap-module-eval-source-map',
         module: {
             loaders: [
                 {
