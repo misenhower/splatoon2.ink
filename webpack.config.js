@@ -71,7 +71,10 @@ module.exports = function(env) {
             //     'public/assets/js/*',
             // ]),
             // Extract CSS to a separate file
-            new ExtractTextPlugin('assets/css/[name].[contenthash].css'),
+            new ExtractTextPlugin({
+                filename: 'assets/css/[name].[contenthash].css',
+                disable: !production,
+            }),
             // Remove unused CSS styles
             new PurifyCSSPlugin({
                 paths: [
