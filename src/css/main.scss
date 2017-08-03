@@ -2,8 +2,27 @@
 @import './variables';
 @import '~bulma';
 
-.title {
+.alt-font {
     font-family: Splatoon1, $original-family-sans-serif;
+}
+
+.title-effect {
+    color: $title-color;
+    background: #460fc8 url(../img/bkg-stripes.png);
+
+    display: inline-block;
+
+    padding: 2px 48px 2px 20px;
+    margin: 0 0 10px -20px;
+
+    -webkit-mask-image: url(../img/bkg-header.png);
+    mask-image: url(../img/bkg-header.png);
+    -webkit-mask-size: cover;
+    mask-size: cover;
+    -webkit-mask-position: right center;
+    mask-position: right center;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
 }
 
 html {
@@ -20,15 +39,25 @@ html {
     padding: 35px 10px 10px 10px;
     margin: auto;
 
-    mask-image: url(../img/bkg-mask-product.png);
     -webkit-mask-image: url(../img/bkg-mask-product.png);
-    mask-repeat: no-repeat;
+    mask-image: url(../img/bkg-mask-product.png);
     -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     // Original value: 500px 800px
-    mask-size: 600px 960px;
     -webkit-mask-size: 600px 960px;
-    mask-position: center top;
+    mask-size: 600px 960px;
     -webkit-mask-position: center top;
+    mask-position: center top;
+
+    &.tilt-right {
+        -webkit-transform: rotate(1.4deg);
+        transform: rotate(1.4deg);
+    }
+
+    &.tilt-left {
+        -webkit-transform: rotate(-1.4deg);
+        transform: rotate(-1.4deg);
+    }
 
     .schedule-icon {
         display: inline-block;
@@ -75,6 +104,13 @@ html {
     .rule-name {
         color: $title-color;
         font-size: 1.25rem;
+    }
+}
+
+.upcoming-schedule {
+    .rule-name {
+        color: $title-color;
+        font-size: 1.1rem;
     }
 }
 

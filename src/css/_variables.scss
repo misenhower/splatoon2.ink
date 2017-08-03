@@ -6,3 +6,7 @@ $family-sans-serif: Splatoon2, $family-sans-serif;
 $text: $grey-lighter;
 $text-strong: $white-ter;
 $title-color: $white-ter;
+$subtitle-color: $grey-lighter;
+
+// Temp: This can be removed after Bulma 0.5.1
+$sizes: $size-1 $size-2 $size-3 $size-4 $size-5 $size-6 $size-7;

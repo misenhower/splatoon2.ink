@@ -1,18 +1,22 @@
 <template>
-    <div>
-        <div v-if="loading">
-            Loading...
-        </div>
-        <div v-else>
-            <div class="columns">
-                <div class="column">
-                    <ScheduleBox class="schedule-box regular" :schedules="regular" :now="now"></ScheduleBox>
+    <div class="hero is-fullheight">
+        <div class="hero-body">
+            <div class="container is-fluid">
+                <div v-if="loading">
+                    Loading...
                 </div>
-                <div class="column">
-                    <ScheduleBox class="schedule-box ranked" :schedules="ranked" :now="now"></ScheduleBox>
-                </div>
-                <div class="column">
-                    <ScheduleBox class="schedule-box league" :schedules="league" :now="now"></ScheduleBox>
+                <div v-else>
+                    <div class="columns is-desktop">
+                        <div class="column">
+                            <ScheduleBox class="schedule-box tilt-left regular" :schedules="regular" :now="now"></ScheduleBox>
+                        </div>
+                        <div class="column">
+                            <ScheduleBox class="schedule-box tilt-right ranked" :schedules="ranked" :now="now"></ScheduleBox>
+                        </div>
+                        <div class="column">
+                            <ScheduleBox class="schedule-box tilt-left league" :schedules="league" :now="now"></ScheduleBox>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
