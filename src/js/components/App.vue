@@ -78,9 +78,8 @@ export default {
         clearInterval(this.timer);
     },
     methods: {
-        async updateData() {
-            let schedules = await axios.get('/data/schedules.json');
-            this.splatnet.schedules = schedules.data;
+        updateData() {
+            axios.get('/data/schedules.json').then(response => this.splatnet.schedules = response.data);
         },
         updateNow() {
             this.now = Math.trunc((new Date).getTime() / 1000);
