@@ -10,17 +10,34 @@ html {
     background-color: #191919;
 }
 
-.squid-refresh {
+.fa {
     &:before {
         display: inline-block;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+.squid-refresh {
+    &:before {
         @extend .font-splatoon2;
         content: "\e066";
     }
 }
 
-.schedule-box {
+.squid-squid {
+    &:before {
+        @extend .font-splatoon2;
+        content: "\e065";
+    }
+}
+
+.squid-icon-tilt {
+    -webkit-transform: rotate(25deg);
+    transform: rotate(25deg);
+}
+
+.main-schedule-box {
     @extend .product-box;
     @extend .bg-stripes;
     @extend .text-shadow;
@@ -39,6 +56,47 @@ html {
 
     &.league {
         background-color: $bg-battle-league;
+    }
+}
+
+.modal-card.schedule-box {
+    @extend .modal-card-product-box;
+    @extend .text-shadow;
+
+    .modal-card-head {
+        @extend .bg-spots-dots;
+    }
+    .modal-card-body {
+        @extend .bg-stripes;
+    }
+
+    &.regular {
+        .modal-card-head {
+            background-color: darken($bg-battle-regular, 30%);
+        }
+        .modal-card-body {
+            background-color: $bg-battle-regular;
+        }
+    }
+
+    &.ranked {
+        .modal-card-head {
+            background-color: darken($bg-battle-ranked, 30%);
+            // background-color: $grey-darker;
+            background-color: mix($bg-battle-ranked, $black-ter, 25%);
+        }
+        .modal-card-body {
+            background-color: $bg-battle-ranked;
+        }
+    }
+
+    &.league {
+        .modal-card-head {
+            background-color: darken($bg-battle-league, 30%);
+        }
+        .modal-card-body {
+            background-color: $bg-battle-league;
+        }
     }
 }
 

@@ -5,6 +5,46 @@
     padding-top: 35px;
 }
 
+.modal-card-product-box {
+    .modal-card-head {
+        @extend .bg-mask-product;
+        -webkit-mask-size: 730px 1168px;
+        mask-size: 730px 1168px;
+        background-position-y: bottom;
+
+        border: none;
+
+        border-top-left-radius: 32px;
+        border-top-right-radius: 32px;
+
+        padding-top: 45px;
+
+        display: block; // Fixes issues with .level
+    }
+    .modal-card-body {
+        @extend .bg-stripes;
+
+        border-bottom-left-radius: 32px;
+        border-bottom-right-radius: 32px;
+
+        padding-bottom: 32px;
+
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+        &::-webkit-scrollbar-track {
+            margin-bottom: 32px;
+        }
+        &::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background: rgba($white, 0.6);
+            &:hover {
+                background: rgba($white-ter, 0.8);
+            }
+        }
+    }
+}
+
 .hook-box {
     border-radius: 32px;
     padding: 10px;

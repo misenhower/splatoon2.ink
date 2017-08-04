@@ -32,6 +32,26 @@
     }
 }
 
+.button.is-clear {
+    @extend .text-shadow;
+
+    background: rgba($white-ter, 0.4);
+    border: rgba($white-ter, 0.9);
+    color: $white-ter;
+
+    &:hover {
+        background: rgba($white, 0.5);
+        border: rgba($white, 1.0);
+        color: $white;
+    }
+}
+
+.button.is-rounded {
+    border-radius: 100px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
 .hand {
     cursor: pointer;
 }
@@ -57,9 +77,19 @@
     transform: rotate(1.4deg);
 }
 
+.tilt-right-slight {
+    -webkit-transform: rotate(1.2deg);
+    transform: rotate(1.2deg);
+}
+
 .tilt-left {
     -webkit-transform: rotate(-1.4deg);
     transform: rotate(-1.4deg);
+}
+
+.tilt-left-slight {
+    -webkit-transform: rotate(-1.2deg);
+    transform: rotate(-1.2deg);
 }
 
 .columns.is-slim {

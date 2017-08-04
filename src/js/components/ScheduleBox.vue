@@ -1,124 +1,82 @@
 <template>
-    <div class="font-splatoon2" v-if="firstSchedule">
-        <div class="level">
-            <div class="level-left">
-                <div class="level-item">
-                    <div class="image is-48x48" style="margin-bottom: -6px">
-                        <img v-if="firstSchedule.game_mode.key == 'regular'" src="../../img/battle-regular.png" />
-                        <img v-if="firstSchedule.game_mode.key == 'gachi'" src="../../img/battle-ranked.png" />
-                        <img v-if="firstSchedule.game_mode.key == 'league'" src="../../img/battle-league.png" />
-                    </div>
-                </div>
-                <div class="level-item">
-                    <h2 class="title is-3 is-size-2-fullhd font-splatoon1">
-                        {{ firstSchedule.game_mode.name }}
-                    </h2>
-                </div>
-            </div>
-        </div>
+    <div class="font-splatoon2" :class="cssClass" v-if="gameMode">
+        <GameModeHeader :gameMode="gameMode"></GameModeHeader>
 
-        <div class="main-schedule">
+        <div class="main-schedule" v-if="currentSchedule">
             <div class="level is-mobile top-bar">
                 <div class="level-left">
-                    <div class="level-item title-color is-size-5">{{ firstSchedule.rule.name }}</div>
+                    <div class="level-item title-color is-size-5">{{ currentSchedule.rule.name }}</div>
                 </div>
                 <div class="level-right">
                     <div class="level-item">
-                        {{ firstSchedule.start_time | time }} &ndash;
-                        {{ firstSchedule.end_time | time }}
+                        {{ currentSchedule.start_time | time }} &ndash;
+                        {{ currentSchedule.end_time | time }}
                     </div>
                 </div>
             </div>
             <div class="is-clearfix"></div>
             <div class="columns is-mobile is-slim">
-                <div class="column"><Stage :stage="firstSchedule.stage_a"></Stage></div>
-                <div class="column"><Stage :stage="firstSchedule.stage_b"></Stage></div>
+                <div class="column"><Stage :stage="currentSchedule.stage_a"></Stage></div>
+                <div class="column"><Stage :stage="currentSchedule.stage_b"></Stage></div>
             </div>
         </div>
 
-        <div class="upcoming-schedule" v-if="upcomingSchedule">
-            <div class="is-size-5 title-squid font-splatoon1">
-                Next
-            </div>
-            <div class="level is-mobile is-marginless is-hidden-tablet">
-                <div class="level-left">
-                    <div class="level-item title-color is-size-5">{{ upcomingSchedule.rule.name }}</div>
-                </div>
-                <div class="level-right">
-                    <div class="level-item">
-                        in {{ upcomingSchedule.start_time - now | duration }},
-                        {{ upcomingSchedule.start_time | time }} &ndash;
-                        {{ upcomingSchedule.end_time | time }}
-                    </div>
-                </div>
-            </div>
+        <ScheduleList :schedules="upcomingSchedules" :now="now" :onlyFirst="true"></ScheduleList>
 
-            <div class="columns is-slim" v-if="upcomingSchedule">
-                <div class="column has-text-centered is-hidden-mobile" style="margin-top: auto; margin-bottom: auto;">
-                    <div class="title is-6 is-size-5-fullhd">{{ upcomingSchedule.rule.name }}</div>
-                    <div class="subtitle is-7 is-size-6-fullhd ">
-                        in {{ upcomingSchedule.start_time - now | duration }}
-                        <br />
-                        {{ upcomingSchedule.start_time | time }} &ndash;
-                        {{ upcomingSchedule.end_time | time }}
-                    </div>
-                </div>
-                <div class="column is-8">
-                    <div class="columns is-mobile is-slim">
-                        <div class="column"><Stage :stage="upcomingSchedule.stage_a"></Stage></div>
-                        <div class="column"><Stage :stage="upcomingSchedule.stage_b"></Stage></div>
-                    </div>
-                </div>
+        <p class="has-text-centered" style="margin-top: 10px">
+            <button class="button is-smallZ is-clear is-rounded" @click="isOpen=true">
+                <span class="icon is-smallZ squid-icon-tilt">
+                    <span class="fa squid-squid"></span>
+                </span>
+                <span class="font-splatoon2">All Upcoming Stages</span>
+            </button>
+        </p>
+
+        <div class="modal is-active font-splatoon2" v-if="isOpen" v-portal>
+            <div class="modal-background" @click="isOpen = false"></div>
+            <div class="modal-card schedule-box tilt-left-slight" :class="cssClass">
+                <header class="modal-card-head">
+
+                    <GameModeHeader :gameMode="gameMode"></GameModeHeader>
+                </header>
+                <section class="modal-card-body">
+                    <ScheduleList :schedules="schedules" :now="now" :onlyFirst="false"></ScheduleList>
+                </section>
             </div>
+            <button class="modal-close is-large" @click="isOpen = false"></button>
         </div>
     </div>
 </template>
 
 <script>
-import moment from 'moment';
+import GameModeHeader from './GameModeHeader.vue';
 import Stage from './Stage.vue';
+import ScheduleList from './ScheduleList.vue';
 
 export default {
-    components: { Stage },
-    props: ['schedules', 'now'],
+    components: { GameModeHeader, Stage, ScheduleList },
+    props: ['schedules', 'cssClass', 'now'],
     data() {
         return {
-            upcomingScheduleIndex: 0,
+            isOpen: false,
         };
     },
     computed: {
-        firstSchedule() { return this.schedules && this.schedules[0]; },
-        upcomingSchedules() { return this.schedules && this.schedules.slice(1); },
-        upcomingSchedule() { return this.upcomingSchedules && this.upcomingSchedules[this.upcomingScheduleIndex]; },
-    },
-    watch: {
-        firstSchedule(newSchedule, oldSchedule) { if (oldSchedule != newSchedule) this.upcomingScheduleIndex = 0; },
-    },
-    filters: {
-        time(value) {
-            return moment.unix(value).local().format('ha');
+        gameMode() {
+            if (this.schedules && this.schedules[0])
+                return this.schedules[0].game_mode;
         },
-        duration(value) {
-            let duration = moment.duration(value, 'seconds');
-            let hours = Math.floor(duration.asHours());
-            let minutes = ('0' + duration.minutes()).substr(-2);
-            let seconds = ('0' + duration.seconds()).substr(-2);
-            if (hours)
-                return `${hours}h ${minutes}m ${seconds}s`;
-            return `${minutes}m ${seconds}s`;
+        currentSchedule() {
+            if (this.schedules && this.schedules[0] && this.schedules[0].start_time <= this.now)
+                return this.schedules[0];
         },
-    },
-    methods: {
-        // nextSchedule() {
-        //     this.upcomingScheduleIndex++;
-        //     if (this.upcomingScheduleIndex >= this.upcomingSchedules.length)
-        //         this.upcomingScheduleIndex = 0;
-        // },
-        // previousSchedule() {
-        //     this.upcomingScheduleIndex--;
-        //     if (this.upcomingScheduleIndex < 0)
-        //         this.upcomingScheduleIndex = this.upcomingSchedules.length - 1;
-        // },
+        upcomingSchedules() {
+            if (this.schedules) {
+                if (this.currentSchedule)
+                    return this.schedules.slice(1);
+                return this.schedules;
+            }
+        }
     },
 }
 </script>

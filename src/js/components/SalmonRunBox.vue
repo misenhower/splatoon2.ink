@@ -48,26 +48,10 @@
 </template>
 
 <script>
-import moment from 'moment';
-
 export default {
     props: ['coop', 'now'],
     computed: {
         isOpen() { return this.coop.schedule.start_time <= this.now; },
-    },
-    filters: {
-        time(value) {
-            return moment.unix(value).local().format('ha');
-        },
-        duration(value) {
-            let duration = moment.duration(value, 'seconds');
-            let hours = Math.floor(duration.asHours());
-            let minutes = ('0' + duration.minutes()).substr(-2);
-            let seconds = ('0' + duration.seconds()).substr(-2);
-            if (hours)
-                return `${hours}h ${minutes}m ${seconds}s`;
-            return `${minutes}m ${seconds}s`;
-        },
     },
 }
 </script>

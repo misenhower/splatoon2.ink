@@ -27,13 +27,13 @@
                 <div v-else>
                     <div class="columns is-desktop">
                         <div class="column">
-                            <ScheduleBox class="schedule-box tilt-left regular" :schedules="regular" :now="now"></ScheduleBox>
+                            <ScheduleBox class="main-schedule-box tilt-left" cssClass="regular" :schedules="regular" :now="now"></ScheduleBox>
                         </div>
                         <div class="column">
-                            <ScheduleBox class="schedule-box tilt-right ranked" :schedules="ranked" :now="now"></ScheduleBox>
+                            <ScheduleBox class="main-schedule-box tilt-right" cssClass="ranked" :schedules="ranked" :now="now"></ScheduleBox>
                         </div>
                         <div class="column">
-                            <ScheduleBox class="schedule-box tilt-left league" :schedules="league" :now="now"></ScheduleBox>
+                            <ScheduleBox class="main-schedule-box tilt-left" cssClass="league" :schedules="league" :now="now"></ScheduleBox>
                         </div>
                     </div>
 

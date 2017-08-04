@@ -5,7 +5,7 @@
 
         <div class="modal is-active" v-if="isOpen" v-portal>
             <div class="modal-background" @click="isOpen = false"></div>
-                <div class="modal-content">
+                <div class="modal-content tilt-right-slight">
                     <p class="image is-16by9">
                         <img :src="image" />
                     </p>
