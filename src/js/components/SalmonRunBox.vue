@@ -31,7 +31,10 @@
                             <span v-else>Soon!</span>
                         </div>
                         <div class="title-color is-size-5">
-                            {{ coop.schedule.start_time | time }} &ndash;
+                            {{ coop.schedule.start_time | date }}
+                            {{ coop.schedule.start_time | time }}
+                            &ndash;
+                            {{ coop.schedule.end_time | date }}
                             {{ coop.schedule.end_time | time }}
                         </div>
                         <div v-if="isOpen">

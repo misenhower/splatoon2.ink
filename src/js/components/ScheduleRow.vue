@@ -23,6 +23,9 @@
                         in {{ schedule.start_time - now | duration }}
                         <br />
                     </template>
+                    <template v-if="!isToday">
+                        {{ schedule.start_time | date }}
+                    </template>
                     {{ schedule.start_time | time }} &ndash;
                     {{ schedule.end_time | time }}
                 </div>
@@ -43,5 +46,12 @@ import Stage from './Stage.vue';
 export default {
     components: { Stage },
     props: ['schedule', 'now'],
+    computed: {
+        isToday() {
+            let now = new Date(this.now * 1000);
+            let start = new Date(this.schedule.start_time * 1000);
+            return (now.getDate() == start.getDate() && now.getMonth() == start.getMonth() && now.getFullYear() == start.getFullYear());
+        }
+    }
 }
 </script>
