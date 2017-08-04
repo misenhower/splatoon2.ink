@@ -44,7 +44,7 @@ export default {
     computed: {
         first() { return this.schedules && this.schedules[0]; },
         second() { return this.schedules && this.schedules[1]; },
-        others() { return this.schedules && this.schedules.splice(2); },
+        others() { return this.schedules && this.schedules.slice(2); },
     },
 }
 </script>
