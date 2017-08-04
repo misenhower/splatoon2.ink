@@ -57,8 +57,22 @@ html {
     margin: 40px auto 0;
 
     .hook-box, .hook-box:before {
-        background-color: darken(#ff5600, 10%);
+        background-color: darken(#ff5600, 0%);
         @extend .bg-spots-dots;
+
+        padding-left: 0;
+        padding-right: 0;
+        padding-bottom: 0;
+    }
+
+    .salmon-run-header, .salmon-run-content {
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-bottom: 10px;
+    }
+
+    .salmon-run-content {
+        padding-top: 15px;
     }
 }
 
