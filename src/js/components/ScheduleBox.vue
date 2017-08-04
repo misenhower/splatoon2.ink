@@ -1,8 +1,21 @@
 <template>
     <div class="font-splatoon2" v-if="firstSchedule">
-        <h2 class="title is-3 is-size-2-fullhd font-splatoon1">
-            <span class="schedule-icon"></span>{{ firstSchedule.game_mode.name }}
-        </h2>
+        <div class="level">
+            <div class="level-left">
+                <div class="level-item">
+                    <div class="image is-48x48" style="margin-bottom: -6px">
+                        <img v-if="firstSchedule.game_mode.key == 'regular'" src="../../img/battle-regular.png" />
+                        <img v-if="firstSchedule.game_mode.key == 'gachi'" src="../../img/battle-ranked.png" />
+                        <img v-if="firstSchedule.game_mode.key == 'league'" src="../../img/battle-league.png" />
+                    </div>
+                </div>
+                <div class="level-item">
+                    <h2 class="title is-3 is-size-2-fullhd font-splatoon1">
+                        {{ firstSchedule.game_mode.name }}
+                    </h2>
+                </div>
+            </div>
+        </div>
 
         <div class="main-schedule">
             <div class="level is-mobile top-bar">

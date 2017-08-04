@@ -19,35 +19,16 @@ html {
     padding: 35px 10px 10px 10px;
     margin: auto;
 
-    .schedule-icon {
-        display: inline-block;
-        width: 42px;
-        height: 38px;
-        background-size: auto 38px;
-        background-repeat: no-repeat;
-        background-position: center;
-        margin: 0 4px -4px 0;
-    }
-
     &.regular {
         background-color: $bg-battle-regular;
-        .schedule-icon {
-            background-image: url(../img/battle-regular.png);
-        }
     }
 
     &.ranked {
         background-color: $bg-battle-ranked;
-        .schedule-icon {
-            background-image: url(../img/battle-ranked.png);
-        }
     }
 
     &.league {
         background-color: $bg-battle-league;
-        .schedule-icon {
-            background-image: url(../img/battle-league.png);
-        }
     }
 }
 
