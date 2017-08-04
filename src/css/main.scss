@@ -72,7 +72,7 @@ html {
 
     &.regular {
         .modal-card-head {
-            background-color: darken($bg-battle-regular, 30%);
+            background-color: mix($bg-battle-regular, $black-ter, 25%);
         }
         .modal-card-body {
             background-color: $bg-battle-regular;
@@ -81,8 +81,6 @@ html {
 
     &.ranked {
         .modal-card-head {
-            background-color: darken($bg-battle-ranked, 30%);
-            // background-color: $grey-darker;
             background-color: mix($bg-battle-ranked, $black-ter, 25%);
         }
         .modal-card-body {
@@ -92,7 +90,7 @@ html {
 
     &.league {
         .modal-card-head {
-            background-color: darken($bg-battle-league, 30%);
+            background-color: mix($bg-battle-league, $black-ter, 25%);
         }
         .modal-card-body {
             background-color: $bg-battle-league;
