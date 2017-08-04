@@ -32,6 +32,12 @@
     }
 }
 
+@include mobile {
+    .level:not(.is-mobile) .level-item {
+        margin-right: 0; // Fix horizontal alignment issue with the Game Mode Header icon
+    }
+}
+
 .button.is-clear {
     @extend .text-shadow;
 
