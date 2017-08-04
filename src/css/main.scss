@@ -1,59 +1,23 @@
 @import './fonts';
 @import './variables';
 @import '~bulma';
-
-.plain-font {
-    font-family: $original-family-sans-serif;
-}
-
-.alt-font {
-    font-family: Splatoon1, $original-family-sans-serif;
-}
-
-.title-effect {
-    color: $title-color;
-    background: #460fc8 url(../img/bkg-stripes.png);
-
-    display: inline-block;
-
-    padding: 2px 48px 2px 20px;
-    margin: 0 0 10px -20px;
-
-    -webkit-mask-image: url(../img/bkg-header.png);
-    mask-image: url(../img/bkg-header.png);
-    -webkit-mask-size: cover;
-    mask-size: cover;
-    -webkit-mask-position: right center;
-    mask-position: right center;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-}
+@import './modifiers';
+@import './backgrounds';
+@import './boxes';
 
 html {
-    background: #191919 url(../img/bkg-squid.png) top;
-    background-size: 360px 360px;
+    @extend .bg-squids;
+    background-color: #191919;
 }
 
 .schedule-box {
-    background: url(../img/bkg-stripes.png) top;
-    background-size: 80px 80px;
-    border-radius: 32px;
-
-    text-shadow: 1px 1px 0 #000;
+    @extend .product-box;
+    @extend .bg-stripes;
+    @extend .text-shadow;
 
     max-width: 600px;
     padding: 35px 10px 10px 10px;
     margin: auto;
-
-    -webkit-mask-image: url(../img/bkg-mask-product.png);
-    mask-image: url(../img/bkg-mask-product.png);
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    // Original value: 500px 800px
-    -webkit-mask-size: 600px 960px;
-    mask-size: 600px 960px;
-    -webkit-mask-position: center top;
-    mask-position: center top;
 
     .schedule-icon {
         display: inline-block;
@@ -66,79 +30,36 @@ html {
     }
 
     &.regular {
-        background-color: #19d719;
+        background-color: $bg-battle-regular;
         .schedule-icon {
             background-image: url(../img/battle-regular.png);
         }
     }
 
     &.ranked {
-        background-color: #f54910;
+        background-color: $bg-battle-ranked;
         .schedule-icon {
             background-image: url(../img/battle-ranked.png);
         }
     }
 
     &.league {
-        background-color: #f02d7d;
+        background-color: $bg-battle-league;
         .schedule-icon {
             background-image: url(../img/battle-league.png);
         }
     }
 }
 
-.hook-box-wrapper {
-    position: relative;
-    margin: 40px auto 20px;
-}
-
-.hook-box {
-    border-radius: 32px;
-    padding: 10px;
-    text-shadow: 1px 1px 0 #000;
-    overflow: hidden;
-
-    &, &:before {
-        background: url(../img/bkg-spots.png) 50%, url(../img/bkg-dots.png) 50%;
-        background-size: 189px 189px, 40px 40px;
-    }
-
-    &:before {
-        content: "";
-        position: absolute;
-
-        width: 100%;
-        height: 29px;
-        top: -28px;
-        left: 0;
-
-        -webkit-mask-image: url(../img/bkg-mask-hook.png);
-        mask-image: url(../img/bkg-mask-hook.png);
-        -webkit-mask-size: 36px 29px;
-        mask-size: 36px 29px;
-        -webkit-mask-position: center top;
-        mask-position: center top;
-        -webkit-mask-repeat: no-repeat;
-        mask-repeat: no-repeat;
-    }
-}
-
 .salmon-run {
+    @extend .text-shadow;
+    max-width: 600px;
+    margin: 40px auto 0;
+
     .hook-box, .hook-box:before {
         background-color: darken(#ff5600, 10%);
+        @extend .bg-spots-dots;
     }
-
-    max-width: 600px;
-}
-
-.tilt-right {
-    -webkit-transform: rotate(1.4deg);
-    transform: rotate(1.4deg);
-}
-
-.tilt-left {
-    -webkit-transform: rotate(-1.4deg);
-    transform: rotate(-1.4deg);
 }
 
 .main-schedule {
@@ -150,18 +71,6 @@ html {
     .top-bar {
         margin-bottom: 0.5rem;
     }
-
-    .rule-name {
-        color: $title-color;
-        font-size: 1.25rem;
-    }
-}
-
-.upcoming-schedule {
-    .rule-name {
-        color: $title-color;
-        font-size: 1.1rem;
-    }
 }
 
 .stage-image {
@@ -171,7 +80,7 @@ html {
 
     position: relative;
 
-    span {
+    .stage-title {
         position: absolute;
         right: 3px;
         bottom: 3px;
@@ -187,15 +96,5 @@ html {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-    }
-}
-
-.columns.is-slim {
-    margin-left: -0.4rem;
-    margin-right: -0.4rem;
-
-    .column {
-        padding-left: 0.4rem;
-        padding-right: 0.4rem;
     }
 }

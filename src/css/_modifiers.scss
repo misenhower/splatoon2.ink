@@ -1,0 +1,43 @@
+.font-splatoon1 {
+    font-family: Splatoon1, $family-sans-serif;
+}
+
+.font-splatoon2 {
+    font-family: Splatoon2, $family-sans-serif;
+}
+
+.title-color {
+    color: $title-color;
+}
+
+.title-squid {
+    background-color: $purple;
+    color: $title-color;
+    @extend .bg-stripes;
+    @extend .bg-mask-title-squid;
+
+    display: inline-block;
+
+    padding: 2px 48px 2px 20px;
+    margin: 0 0 10px -20px;
+}
+
+.tilt-right {
+    -webkit-transform: rotate(1.4deg);
+    transform: rotate(1.4deg);
+}
+
+.tilt-left {
+    -webkit-transform: rotate(-1.4deg);
+    transform: rotate(-1.4deg);
+}
+
+.columns.is-slim {
+    margin-left: -0.4rem;
+    margin-right: -0.4rem;
+
+    .column {
+        padding-left: 0.4rem;
+        padding-right: 0.4rem;
+    }
+}

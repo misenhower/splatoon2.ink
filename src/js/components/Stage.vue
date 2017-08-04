@@ -1,7 +1,7 @@
 <template>
     <div class="stage-image" :style="style">
         <figure class=" image is-16by9"></figure>
-        <span>{{ stage.name }}</span>
+        <span class="stage-title">{{ stage.name }}</span>
     </div>
 </template>
 

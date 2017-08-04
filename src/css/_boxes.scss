@@ -1,0 +1,25 @@
+// Generic boxes
+.product-box {
+    @extend .bg-mask-product;
+    border-radius: 32px;
+    padding-top: 35px;
+}
+
+.hook-box {
+    border-radius: 32px;
+    padding: 10px;
+    overflow: hidden;
+
+    &:before {
+        content: "";
+        position: absolute;
+        background-position-y: bottom !important;
+
+        width: 100%;
+        height: 29px;
+        top: -28px;
+        left: 0;
+
+        @extend .bg-mask-hook;
+    }
+}

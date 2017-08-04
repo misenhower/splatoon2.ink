@@ -1,13 +1,13 @@
 <template>
-    <div v-if="firstSchedule">
-        <h2 class="title is-3 is-size-2-fullhd alt-font">
+    <div class="font-splatoon2" v-if="firstSchedule">
+        <h2 class="title is-3 is-size-2-fullhd font-splatoon1">
             <span class="schedule-icon"></span>{{ firstSchedule.game_mode.name }}
         </h2>
 
         <div class="main-schedule">
             <div class="level is-mobile top-bar">
                 <div class="level-left">
-                    <div class="level-item rule-name">{{ firstSchedule.rule.name }}</div>
+                    <div class="level-item title-color is-size-5">{{ firstSchedule.rule.name }}</div>
                 </div>
                 <div class="level-right">
                     <div class="level-item">
@@ -24,12 +24,12 @@
         </div>
 
         <div class="upcoming-schedule" v-if="upcomingSchedule">
-            <div class="is-size-5 title-effect alt-font">
+            <div class="is-size-5 title-squid font-splatoon1">
                 Next
             </div>
             <div class="level is-mobile is-marginless is-hidden-tablet">
                 <div class="level-left">
-                    <div class="level-item rule-name">{{ upcomingSchedule.rule.name }}</div>
+                    <div class="level-item title-color is-size-5">{{ upcomingSchedule.rule.name }}</div>
                 </div>
                 <div class="level-right">
                     <div class="level-item">

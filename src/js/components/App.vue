@@ -5,12 +5,12 @@
                 <div class="level">
                     <div class="level-left">
                         <div class="level-item">
-                            <h1 class="title is-1 alt-font is-inline">Splatoon 2</h1>
+                            <h1 class="title is-1 font-splatoon1 is-inline">Splatoon 2</h1>
                         </div>
                     </div>
                     <div class="level-right">
                         <div class="level-item">
-                            <h3 class="subtitle is-3 is-inline">Map Schedules</h3>
+                            <h3 class="subtitle is-3 font-splatoon2 is-inline">Map Schedules</h3>
                         </div>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                     </div>
 
                     <div v-if="coop">
-                        <div class="hook-box-wrapper salmon-run tilt-left">
+                        <div class="salmon-run tilt-left">
                             <div class="hook-box">
                                 <SalmonRunBox :coop="coop" :now="now"></SalmonRunBox>
                             </div>
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <div class="hero-foot has-text-centered has-text-grey plain-font is-size-7" style="margin-bottom: 0.5rem">
+        <div class="hero-foot has-text-centered has-text-grey is-size-7" style="margin-bottom: 0.5rem">
             <div class="container is-fluid">
                 This website is not affiliated with Nintendo.
                 All product names, logos, and brands are property of their respective owners.
