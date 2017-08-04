@@ -79,7 +79,7 @@ export default {
         ranked() { return !this.loading && this.splatnet.schedules.gachi.filter(this.filterSchedule) },
         league() { return !this.loading && this.splatnet.schedules.league.filter(this.filterSchedule) },
         coop() {
-            if (!this.loading && this.splatnet.timeline.coop.schedule.end_time >= this.now)
+            if (!this.loading && this.splatnet.timeline.coop && this.splatnet.timeline.coop.schedule.end_time >= this.now)
                 return this.splatnet.timeline.coop;
         },
     },
