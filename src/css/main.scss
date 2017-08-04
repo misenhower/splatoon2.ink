@@ -10,6 +10,16 @@ html {
     background-color: #191919;
 }
 
+.squid-refresh {
+    &:before {
+        display: inline-block;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        @extend .font-splatoon2;
+        content: "\e066";
+    }
+}
+
 .schedule-box {
     @extend .product-box;
     @extend .bg-stripes;

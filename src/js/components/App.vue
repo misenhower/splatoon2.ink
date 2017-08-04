@@ -19,8 +19,10 @@
 
         <div class="hero-body">
             <div class="container is-fluid">
-                <div v-if="loading">
-                    Loading...
+                <div v-if="loading" class="has-text-centered">
+                    <span class="icon is-large">
+                        <span class="fa fa-spin squid-refresh"></span>
+                    </span>
                 </div>
                 <div v-else>
                     <div class="columns is-desktop">
@@ -42,7 +44,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
