@@ -24,8 +24,8 @@
         <ScheduleList :schedules="upcomingSchedules" :now="now" :onlyFirst="true"></ScheduleList>
 
         <p class="has-text-centered" style="margin-top: 10px">
-            <button class="button is-smallZ is-clear is-rounded" @click="isOpen=true">
-                <span class="icon is-smallZ squid-icon-tilt">
+            <button class="button is-clear is-rounded" @click="isOpen=true">
+                <span class="icon squid-icon-tilt">
                     <span class="fa squid-squid"></span>
                 </span>
                 <span class="font-splatoon2">All Upcoming Stages</span>
