@@ -126,6 +126,7 @@ export default {
         },
     },
     created() {
+        this.detectRegion();
         this.updateNow();
         this.timer = setInterval(() => {
             this.updateNow();
@@ -140,6 +141,16 @@ export default {
             axios.get('/data/schedules.json').then(response => this.splatnet.schedules = response.data);
             axios.get('/data/timeline.json').then(response => this.splatnet.timeline = response.data);
             axios.get('/data/festivals-na.json').then(response => this.splatnet.festivals.na = response.data);
+        },
+        detectRegion() {
+            if (window.navigator && window.navigator.language) {
+                switch (window.navigator.language) {
+                    case 'en-US':
+                    case 'en-CA':
+                    case 'es-MX':
+                        this.selectedRegionKey = 'na';
+                }
+            }
         },
         updateNow() {
             this.now = Math.trunc((new Date).getTime() / 1000);
