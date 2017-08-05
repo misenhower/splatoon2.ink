@@ -1,5 +1,8 @@
 @import '~bulma/sass/utilities/initial-variables';
 
+$background: $black-ter;
+$body-background-color: #191919;
+
 $text: $grey-lighter;
 $text-strong: $white-ter;
 $title-color: $white-ter;
@@ -9,3 +12,8 @@ $purple: #460fc8;
 
 // Temp: This can be removed after Bulma 0.5.1
 $sizes: $size-1 $size-2 $size-3 $size-4 $size-5 $size-6 $size-7;
+
+$dropdown-content-background-color: rgba($grey-dark, 0.9);
+$dropdown-item-color: $grey-lighter;
+$dropdown-item-hover-color: $white;
+$dropdown-item-active-background-color: $orange;

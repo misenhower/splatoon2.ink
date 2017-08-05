@@ -10,7 +10,8 @@
             </div>
             <div class="level-item">
                 <h2 class="title is-3 is-size-2-fullhd is-size-4-mobile font-splatoon1">
-                    {{ gameMode.name }}
+                    <template v-if="isFestival">Splatfest Battle</template>
+                    <template v-else>{{ gameMode.name }}</template>
                 </h2>
             </div>
         </div>
@@ -19,6 +20,11 @@
 
 <script>
 export default {
-    props: ['gameMode'],
+    props: ['gameMode', 'festival', 'now'],
+    computed: {
+        isFestival() {
+            return this.festival && this.festival.times.start <= this.now && this.festival.times.end > this.now;
+        },
+    },
 }
 </script>

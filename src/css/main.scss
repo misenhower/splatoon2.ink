@@ -7,7 +7,6 @@
 
 html {
     @extend .bg-squids;
-    background-color: #191919;
 }
 
 .fa {
@@ -45,6 +44,13 @@ html {
     max-width: 600px;
     padding: 35px 10px 10px 10px;
     margin: auto;
+
+    &.splatfest-schedule-box {
+        // Provide a little more room for the third Splatfest stage
+        max-width: 720px;
+        -webkit-mask-size: 730px 1168px;
+        mask-size: 730px 1168px;
+    }
 
     &.regular {
         background-color: $bg-battle-regular;
@@ -120,6 +126,56 @@ html {
 
     .salmon-run-content {
         padding-top: 15px;
+    }
+}
+
+.splatfest {
+    @extend .text-shadow;
+    max-width: 500px;
+    margin: auto;
+
+    .hook-box, .hook-box:before {
+        background-color: #888;
+        @extend .bg-stripes;
+
+        padding-left: 0;
+        padding-right: 0;
+        padding-bottom: 0;
+    }
+
+    .splatfest-header, .splatfest-content {
+        padding: 5px 15px 10px;
+    }
+
+    .panel-container {
+        position: relative;
+
+        .alpha, .bravo {
+            @extend .font-splatoon1;
+            @extend .title-color;
+            @extend .is-size-5;
+            position: absolute;
+            bottom: 0.25rem;
+        }
+
+        .alpha {
+            left: 0.25rem;
+        }
+
+        .bravo {
+            right: 0.25rem;
+        }
+    }
+
+    .festival-period-container {
+        margin-bottom: 10px;
+    }
+
+    .festival-period {
+        @extend .bg-mask-banner;
+        @extend .bg-stripes;
+        background-size: 53px 53px;
+        padding: 4px 20px;
     }
 }
 

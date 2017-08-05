@@ -32,6 +32,7 @@
     "purifycss-webpack": "^0.7.0",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
+    "v-click-outside": "^0.0.8",
     "vue": "^2.4.2",
     "vue-loader": "^13.0.2",
     "vue-template-compiler": "^2.4.2",

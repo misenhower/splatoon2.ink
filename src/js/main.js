@@ -1,5 +1,8 @@
 import Vue from 'vue';
 import App from './components/App.vue';
+import vClickOutside from 'v-click-outside';
+
+Vue.use(vClickOutside);
 
 Vue.directive('portal', {
     inserted(el) {

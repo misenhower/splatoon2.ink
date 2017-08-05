@@ -42,7 +42,20 @@ const updateTimeline = function() {
     });
 }
 
+const updateFestivals = function() {
+    console.info('Updating festivals...');
+
+    api.get('festivals/active').then(response => {
+        // Make sure the data path exists
+        mkdirp(dataPath);
+
+        fs.writeFile(`${dataPath}/festivals-na.json`, JSON.stringify(response.data));
+        console.info('Updated festivals.');
+    });
+}
+
 module.exports.update = function() {
     updateSchedules();
     updateTimeline();
+    updateFestivals();
 }

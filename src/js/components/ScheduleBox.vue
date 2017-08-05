@@ -1,6 +1,6 @@
 <template>
     <div class="font-splatoon2" :class="cssClass" v-if="gameMode">
-        <GameModeHeader :gameMode="gameMode"></GameModeHeader>
+        <GameModeHeader :gameMode="gameMode" :festival="festival" :now="now"></GameModeHeader>
 
         <div class="main-schedule" v-if="currentSchedule">
             <div class="level is-mobile top-bar">
@@ -18,13 +18,16 @@
             <div class="columns is-mobile is-slim">
                 <div class="column"><Stage :stage="currentSchedule.stage_a"></Stage></div>
                 <div class="column"><Stage :stage="currentSchedule.stage_b"></Stage></div>
+                <template v-if="festival">
+                    <div class="column"><Stage :stage="festival.special_stage"></Stage></div>
+                </template>
             </div>
         </div>
 
         <ScheduleList :schedules="upcomingSchedules" :now="now" :onlyFirst="true"></ScheduleList>
 
         <p class="has-text-centered" style="margin-top: 10px">
-            <button class="button is-clear is-rounded" @click="isOpen=true">
+            <button class="button is-translucent is-rounded" @click="isOpen=true">
                 <span class="icon squid-icon-tilt">
                     <span class="fa squid-squid"></span>
                 </span>
@@ -55,7 +58,7 @@ import ScheduleList from './ScheduleList.vue';
 
 export default {
     components: { GameModeHeader, Stage, ScheduleList },
-    props: ['schedules', 'cssClass', 'now'],
+    props: ['schedules', 'cssClass', 'festival', 'now'],
     data() {
         return {
             isOpen: false,
