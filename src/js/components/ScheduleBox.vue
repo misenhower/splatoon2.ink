@@ -35,8 +35,7 @@
             </button>
         </p>
 
-        <div class="modal is-active font-splatoon2" v-if="isOpen" v-portal>
-            <div class="modal-background" @click="isOpen = false"></div>
+        <Modal v-if="isOpen" @close="isOpen = false" class="font-splatoon2">
             <div class="modal-card schedule-box tilt-left-slight" :class="cssClass">
                 <header class="modal-card-head">
 
@@ -46,18 +45,18 @@
                     <ScheduleList :schedules="schedules" :now="now" :onlyFirst="false"></ScheduleList>
                 </section>
             </div>
-            <button class="modal-close is-large" @click="isOpen = false"></button>
-        </div>
+        </Modal>
     </div>
 </template>
 
 <script>
+import Modal from './Modal.vue';
 import GameModeHeader from './GameModeHeader.vue';
 import Stage from './Stage.vue';
 import ScheduleList from './ScheduleList.vue';
 
 export default {
-    components: { GameModeHeader, Stage, ScheduleList },
+    components: { Modal, GameModeHeader, Stage, ScheduleList },
     props: ['schedules', 'cssClass', 'festival', 'now'],
     data() {
         return {

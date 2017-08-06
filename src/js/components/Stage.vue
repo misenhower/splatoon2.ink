@@ -3,25 +3,26 @@
         <figure class="image is-16by9"></figure>
         <span class="stage-title">{{ stage.name }}</span>
 
-        <div class="modal is-active" v-if="isOpen" v-portal>
-            <div class="modal-background" @click="isOpen = false"></div>
-                <div class="modal-content tilt-right-slight">
-                    <p class="image is-16by9">
-                        <img :src="image" />
-                    </p>
-                    <p class="has-text-centered">
-                        <span class="font-splatoon2">
-                            {{ stage.name }}
-                        </span>
-                    </p>
-                </div>
-            <button class="modal-close is-large" @click="isOpen = false"></button>
-        </div>
+        <Modal v-if="isOpen" @close="isOpen = false">
+            <div class="modal-content tilt-right-slight">
+                <p class="image is-16by9">
+                    <img :src="image" />
+                </p>
+                <p class="has-text-centered">
+                    <span class="font-splatoon2">
+                        {{ stage.name }}
+                    </span>
+                </p>
+            </div>
+        </Modal>
     </div>
 </template>
 
 <script>
+import Modal from './Modal.vue';
+
 export default {
+    components: { Modal },
     props: ['stage'],
     data() {
         return {

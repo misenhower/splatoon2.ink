@@ -9,6 +9,10 @@ html {
     @extend .bg-squids;
 }
 
+body.has-modal #main {
+    filter: blur(4px);
+}
+
 .fa {
     &:before {
         display: inline-block;
