@@ -26,6 +26,12 @@ $bg-battle-league: #f02d7d;
     background-size: 80px 80px;
 }
 
+.bg-stripes-gradient {
+    background-image: linear-gradient(to bottom, transparent, rgba($black-ter ,0.1)), $bg-stripes;
+    background-position: top;
+    background-size: 100% 100%, 80px 80px;
+}
+
 .bg-spots-dots {
     background-image : $bg-spots, $bg-dots;
     background-position: 50% top;

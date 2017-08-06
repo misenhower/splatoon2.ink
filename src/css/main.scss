@@ -38,7 +38,7 @@ html {
 
 .main-schedule-box {
     @extend .product-box;
-    @extend .bg-stripes;
+    @extend .bg-stripes-gradient;
     @extend .text-shadow;
 
     max-width: 600px;
@@ -73,7 +73,7 @@ html {
         @extend .bg-spots-dots;
     }
     .modal-card-body {
-        @extend .bg-stripes;
+        @extend .bg-stripes-gradient;
     }
 
     &.regular {
@@ -136,7 +136,7 @@ html {
 
     .hook-box, .hook-box:before {
         background-color: #888;
-        @extend .bg-stripes;
+        @extend .bg-stripes-gradient;
 
         padding-left: 0;
         padding-right: 0;
