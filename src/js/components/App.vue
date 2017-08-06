@@ -121,7 +121,7 @@ export default {
             return this.festival && this.festival.times.start <= this.now && this.festival.times.end > this.now;
         },
         coop() {
-            if (!this.loading && this.splatnet.timeline.coop && this.splatnet.timeline.coop.schedule.end_time >= this.now)
+            if (!this.loading && this.splatnet.timeline.coop && this.splatnet.timeline.coop.schedule.end_time > this.now)
                 return this.splatnet.timeline.coop;
         },
     },
@@ -156,7 +156,7 @@ export default {
             this.now = Math.trunc((new Date).getTime() / 1000);
         },
         filterSchedule(item) {
-            return item.end_time >= this.now;
+            return item.end_time > this.now;
         },
     },
 }
