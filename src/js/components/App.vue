@@ -59,10 +59,19 @@
                         </div>
                     </div>
 
-                    <div v-if="coop">
-                        <div class="salmon-run tilt-left">
-                            <div class="hook-box">
-                                <SalmonRunBox :coop="coop" :now="now"></SalmonRunBox>
+                    <div class="columns is-desktop" style="max-width: 1392px; margin: auto">
+                        <div class="column" v-if="festival && !isFestivalActive && festival.times.start > now">
+                            <div class="splatfest tilt-right" style="margin-top: 40px">
+                                <div class="hook-box">
+                                    <SplatfestBox :festival="festival" :now="now"></SplatfestBox>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column" v-if="coop">
+                            <div class="salmon-run tilt-left">
+                                <div class="hook-box">
+                                    <SalmonRunBox :coop="coop" :now="now"></SalmonRunBox>
+                                </div>
                             </div>
                         </div>
                     </div>
