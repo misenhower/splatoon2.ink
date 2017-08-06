@@ -10,7 +10,7 @@
         </div>
         <div class="dropdown-menu" role="menu">
             <div class="dropdown-content">
-                <a href="#" class="dropdown-item" v-for="option in options" :class="{ 'is-active': option.key == value }" @click="$emit('input', option.key)">
+                <a href="#" class="dropdown-item" v-for="option in options" :class="{ 'is-active': option.key == value }" @click.prevent="$emit('input', option.key)">
                     {{ option.name }}
                 </a>
             </div>
