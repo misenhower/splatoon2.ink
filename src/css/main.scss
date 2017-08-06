@@ -179,6 +179,37 @@ html {
     }
 }
 
+.about-box {
+    position: relative;
+    margin-top: 50px;
+
+    .hook-box, .hook-box:before {
+        background-color: $purple;
+        @extend .bg-stripes-gradient;
+    }
+
+    @include desktop {
+        .hook-box:before {
+            -webkit-mask-position: calc(50% - 40px) top;
+            mask-position: calc(50% - 40px) top;
+            background-position-x: -20px !important;
+        }
+        .hook-box {
+            margin: 0 40px 0 0;
+        }
+    }
+
+    .hook-box {
+        padding: 25px;
+        overflow: visible;
+    }
+
+    .hero-image {
+        shape-outside: polygon(0 0, 100% 0, 100% 100%, 50% 100%, 50% 50%, 0 50%);
+        margin: -40px -55px 0 0;
+    }
+}
+
 .main-schedule {
     background: rgba(0,0,0,0.7);
     padding: 5px 10px 10px;

@@ -83,7 +83,50 @@
             <div class="container is-fluid">
                 This website is not affiliated with Nintendo.
                 All product names, logos, and brands are property of their respective owners.
+                <a href="#" @click.prevent="aboutOpen = true">About</a>
             </div>
+        </div>
+
+        <div class="modal is-active" v-if="aboutOpen" v-portal>
+            <div class="modal-background" @click="aboutOpen = false"></div>
+                <div class="modal-content tilt-left-slight" style="max-height: 100vh">
+                    <div class="about-box">
+                        <div class="hook-box">
+                            <div class="content">
+                                <h3 class="font-splatoon2 title is-3">
+                                    <div class="image is-pulled-right hero-image is-hidden-touch" style="width: 307px; height: 250px;">
+                                        <img src="../../img/hero-char.png" />
+                                    </div>
+                                    Hello!
+                                </h3>
+                                <p>
+                                    Splatoon2.ink shows the current and upcoming map schedule for Splatoon 2.
+                                </p>
+                                <p>
+                                    This site was built with <a href="https://vuejs.org/" target="_blank">Vue.js</a>
+                                    and <a href="http://bulma.io/" target="_blank">Bulma</a>.
+                                    All data comes from the SplatNet 2 API.
+                                </p>
+                                <p>
+                                    <a href="https://twitter.com/mattisenhower" target="_blank">Follow me on Twitter</a>
+                                    or <a href="mailto:matt@isenhower.com" target="_blank">email me</a> with any questions!
+                                </p>
+                                <h5 class="font-splatoon2 title is-5">Known Issues</h5>
+                                <p>
+                                    <strong>Salmon Run:</strong>
+                                    Times are only displayed when a Salmon Run stage is open.
+                                    The API doesn't provide a way to see maps, available weapons, or upcoming Salmon Run times.
+                                </p>
+                                <p>
+                                    <strong>Splatfests:</strong>
+                                    Only North American Splatfests are displayed since the API seems to be restricted to the region you purchased the game from.
+                                    I may manually enter times for Splatfests in other regions in the future.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <button class="modal-close is-large" @click="aboutOpen = false"></button>
         </div>
     </div>
 </template>
@@ -112,6 +155,7 @@ export default {
                     na: null,
                 },
             },
+            aboutOpen: false,
         };
     },
     computed: {
