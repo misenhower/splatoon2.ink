@@ -19,6 +19,9 @@ Vue.filter('time', function(value) {
 });
 
 Vue.filter('duration', function(value) {
+    let negative = (value < 0) ? '-' : '';
+    value = Math.abs(value);
+
     let days = Math.floor(value / 86400);
     value -= days * 86400;
     let hours = Math.floor(value / 3600) % 24;
@@ -33,10 +36,10 @@ Vue.filter('duration', function(value) {
     seconds = ('0' + seconds).substr(-2);
 
     if (days)
-        return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        return `${negative}${days}d ${hours}h ${minutes}m ${seconds}s`;
     if (hours)
-        return `${hours}h ${minutes}m ${seconds}s`;
-    return `${minutes}m ${seconds}s`;
+        return `${negative}${hours}h ${minutes}m ${seconds}s`;
+    return `${negative}${minutes}m ${seconds}s`;
 });
 
 new Vue(App).$mount('#app');
