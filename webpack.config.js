@@ -92,21 +92,21 @@ module.exports = function(env) {
                 },
             }),
             // Favicon
-            // new FaviconsWebpackPlugin({
-            //     logo: './src/img/1f389.svg',
-            //     prefix: 'assets/icons/[hash:5]/',
-            //     background: '#333',
-            //     icons: {
-            //         'android': true,
-            //         'appleIcon': { offset: 15 },
-            //         'appleStartup': false,
-            //         'coast': false,
-            //         'favicons': true,
-            //         'firefox': false,
-            //         'windows': true,
-            //         'yandex': false,
-            //     }
-            // }),
+            new FaviconsWebpackPlugin({
+                logo: './src/img/favicon.svg',
+                prefix: 'assets/icons/[hash:5]/',
+                background: '#333',
+                icons: {
+                    'android': true,
+                    'appleIcon': { offset: 15 },
+                    'appleStartup': false,
+                    'coast': false,
+                    'favicons': true,
+                    'firefox': false,
+                    'windows': true,
+                    'yandex': false,
+                },
+            }),
             // Build HTML
             new HtmlWebpackPlugin({
                 filename: 'index.html',
