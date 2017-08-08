@@ -9,6 +9,10 @@ html {
     @extend .bg-squids;
 }
 
+body #main {
+    transition: filter 0.15s ease;
+}
+
 body.has-modal #main {
     filter: blur(4px);
 }
