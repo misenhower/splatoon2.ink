@@ -189,13 +189,17 @@ export default {
     created() {
         this.detectRegion();
         this.updateNow();
-        this.timer = setInterval(() => {
+        this.updateNowTimer = setInterval(() => {
             this.updateNow();
         }, 200);
+        this.updateDataTimer = setInterval(() => {
+            this.updateData();
+        }, 15 * 60 * 1000); // 15 minutes
         this.updateData();
     },
     beforeDestroy() {
-        clearInterval(this.timer);
+        clearInterval(this.updateNowTimer);
+        clearInterval(this.updateDataTimer);
     },
     methods: {
         updateData() {
