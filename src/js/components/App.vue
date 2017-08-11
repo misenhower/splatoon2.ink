@@ -67,10 +67,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="column" v-if="coop">
+                        <div class="column" v-if="coop || coopCalendar">
                             <div class="salmon-run tilt-left">
                                 <div class="hook-box">
-                                    <SalmonRunBox :coop="coop" :now="now"></SalmonRunBox>
+                                    <SalmonRunBox :coop="coop" :coopCalendar="coopCalendar" :now="now"></SalmonRunBox>
                                 </div>
                             </div>
                         </div>
@@ -99,7 +99,7 @@
                                 Hello!
                             </h3>
                             <p>
-                                Splatoon2.ink shows the current and upcoming map schedule for Splatoon 2.
+                                Splatoon2.ink shows the current and upcoming map schedules for Splatoon 2.
                             </p>
                             <p>
                                 This site was built with <a href="https://vuejs.org/" target="_blank">Vue.js</a>
@@ -110,11 +110,12 @@
                                 <a href="https://twitter.com/mattisenhower" target="_blank">Follow me on Twitter</a>
                                 or <a href="mailto:matt@isenhower.com" target="_blank">email me</a> with any questions!
                             </p>
-                            <h5 class="font-splatoon2 title is-5">Known Issues</h5>
+                            <h5 class="font-splatoon2 title is-5">Notes &amp; Issues</h5>
                             <p>
                                 <strong>Salmon Run:</strong>
-                                Times are only displayed when a Salmon Run stage is open.
-                                The API doesn't provide a way to see maps, available weapons, or upcoming Salmon Run times.
+                                The SplatNet API doesn't provide a way to see maps, available weapons, or upcoming Salmon Run times.
+                                Upcoming times are provided by
+                                <a href="https://www.reddit.com/r/splatoon/comments/6pgqy4/i_couldnt_find_a_calendar_online_with_a_list_of/" target="_blank">thejellydude</a>.
                             </p>
                             <p>
                                 <strong>Splatfests:</strong>
@@ -154,6 +155,7 @@ export default {
                     na: null,
                 },
             },
+            salmonruncalendar: null,
             aboutOpen: false,
         };
     },
@@ -176,6 +178,13 @@ export default {
             if (!this.loading && this.splatnet.timeline.coop && this.splatnet.timeline.coop.schedule.end_time > this.now)
                 return this.splatnet.timeline.coop;
         },
+        coopCalendar() {
+            if (this.salmonruncalendar) {
+                let schedules = this.salmonruncalendar.schedules.filter(this.filterSchedule);
+                if (schedules.length > 0)
+                    return schedules;
+            }
+        },
     },
     created() {
         this.detectRegion();
@@ -193,6 +202,7 @@ export default {
             axios.get('/data/schedules.json').then(response => this.splatnet.schedules = response.data);
             axios.get('/data/timeline.json').then(response => this.splatnet.timeline = response.data);
             axios.get('/data/festivals-na.json').then(response => this.splatnet.festivals.na = response.data);
+            axios.get('/data/salmonruncalendar.json').then(response => this.salmonruncalendar = response.data);
         },
         detectRegion() {
             if (window.navigator && window.navigator.language) {

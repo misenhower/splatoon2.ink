@@ -133,7 +133,40 @@ body.has-modal #main {
     }
 
     .salmon-run-content {
-        padding-top: 15px;
+        padding: 10px;
+    }
+
+    .salmon-run-ad-img {
+        background-image: url(../img/salmon-run.png);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        z-index: 1;
+    }
+
+    .salmon-run-future {
+        background: rgba(0,0,0,0.7);
+        padding: 5px 10px 10px;
+        margin: 2px -5px;
+        border-radius: 12px;
+        overflow: hidden;
+        line-height: 20px;
+
+        .columns:not(:last-child) {
+            border-bottom: 0.1rem dashed $grey;
+            padding-bottom: 0.3rem;
+            margin-bottom: 0.3rem;
+        }
+    }
+
+    .calendar-attribution {
+        background: rgba(0,0,0,0.5);
+        font-family: $family-sans-serif;
+        font-size: 0.7rem;
+        padding: 2px 20px;
+        a {
+            color: mix($green, $white-ter, 25%);
+        }
     }
 }
 
