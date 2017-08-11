@@ -11,7 +11,7 @@
         </div>
         <template v-if="!onlyFirst">
             <div v-if="second">
-                <div class="is-size-5 title-squid font-splatoon1">
+                <div class="is-size-5 title-squid font-splatoon1" style="margin-top: 10px">
                     Next
                 </div>
 
@@ -19,7 +19,7 @@
             </div>
 
             <div v-if="others && others.length">
-                <div class="is-size-5 title-squid font-splatoon1">
+                <div class="is-size-5 title-squid font-splatoon1" style="margin-top: 10px">
                     Future
                 </div>
 

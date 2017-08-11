@@ -38,7 +38,6 @@
         <Modal v-if="isOpen" @close="isOpen = false" class="font-splatoon2">
             <div class="modal-card schedule-box tilt-left-slight" :class="cssClass">
                 <header class="modal-card-head">
-
                     <GameModeHeader :gameMode="gameMode"></GameModeHeader>
                 </header>
                 <section class="modal-card-body">

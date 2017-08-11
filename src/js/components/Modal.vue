@@ -2,30 +2,34 @@
     <transition name="modal">
         <div class="modal is-active" v-portal>
             <div class="modal-background" @click="$emit('close')"></div>
-            <div class="modal-inner-transition">
-                <slot></slot>
-            </div>
+            <slot></slot>
             <button class="modal-close is-large" @click="$emit('close')"></button>
         </div>
     </transition>
 </template>
 
-<style>
+<style lang="scss">
 .modal-enter-active, .modal-leave-active {
-    transition: all 0.15s ease;
+    &, &>.modal-content, &>.modal-card {
+        transition: all 0.15s ease;
+    }
 }
 
 .modal-enter, .modal-leave-active {
     opacity: 0;
-}
 
-.modal-enter-active .modal-inner-transition, .modal-leave-active .modal-inner-transition {
-    transition: all 0.15s ease;
-}
-
-.modal-enter .modal-inner-transition, .modal-leave-active .modal-inner-transition {
-    -webkit-transform: scale(0.98);
-    transform: scale(0.98);
+    &>.modal-content, &>.modal-card {
+        &.tilt-left-slight {
+            -webkit-transform: rotate(-1.0deg) scale(0.98);
+            transform: rotate(-1.0deg) scale(0.98);
+        }
+        &.tilt-right-slight {
+            -webkit-transform: rotate(1.0deg) scale(0.98);
+            transform: rotate(1.0deg) scale(0.98);
+        }
+        -webkit-transform: scale(0.98);
+        transform: scale(0.98);
+    }
 }
 </style>
 

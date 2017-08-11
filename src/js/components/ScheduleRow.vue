@@ -5,12 +5,16 @@
                 <div class="level-item title-color is-size-5">{{ schedule.rule.name }}</div>
             </div>
             <div class="level-right">
-                <div class="level-item">
-                    <template v-if="schedule.start_time > now">
-                        in {{ schedule.start_time - now | duration }},
-                    </template>
-                    {{ schedule.start_time | time }} &ndash;
-                    {{ schedule.end_time | time }}
+                <div class="level-item has-text-right">
+                    <div>
+                        <template v-if="schedule.start_time > now">
+                            in {{ schedule.start_time - now | duration }}<span class="is-hidden-mobile">,&nbsp;</span>
+                        </template>
+                        <div class="is-size-7">
+                            {{ schedule.start_time | time }} &ndash;
+                            {{ schedule.end_time | time }}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
