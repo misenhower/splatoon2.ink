@@ -1,9 +1,9 @@
-require('dotenv').config();
-require('console-stamp')(console);
+require('./bootstrap');
 const axios = require('axios');
 const path = require('path');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
+const raven = require('raven');
 
 const dataPath = path.resolve('public/data');
 
@@ -22,7 +22,7 @@ const updateSchedules = function() {
 
         fs.writeFile(`${dataPath}/schedules.json`, JSON.stringify(response.data));
         console.info('Updated map schedules.');
-    });
+    }).catch(e => raven.captureException(e));
 }
 
 const updateTimeline = function() {
@@ -39,7 +39,7 @@ const updateTimeline = function() {
 
         fs.writeFile(`${dataPath}/timeline.json`, JSON.stringify(data));
         console.info('Updated timeline.');
-    });
+    }).catch(e => raven.captureException(e));
 }
 
 const updateFestivals = function() {
@@ -51,7 +51,7 @@ const updateFestivals = function() {
 
         fs.writeFile(`${dataPath}/festivals-na.json`, JSON.stringify(response.data));
         console.info('Updated festivals.');
-    });
+    }).catch(e => raven.captureException(e));
 }
 
 module.exports.update = function() {

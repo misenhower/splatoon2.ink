@@ -1,3 +1,4 @@
+require('./bootstrap');
 const CronJob = require('cron').CronJob;
 const splatnet = require('./splatnet');
 const salmoncalendar = require('./salmoncalendar');

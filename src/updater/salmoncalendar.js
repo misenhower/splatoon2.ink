@@ -1,10 +1,10 @@
-require('dotenv').config();
-require('console-stamp')(console);
+require('./bootstrap');
 const axios = require('axios');
 const path = require('path');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
 const ical = require('ical.js');
+const raven = require('raven');
 
 const dataPath = path.resolve('public/data');
 
@@ -40,5 +40,5 @@ module.exports.update = function() {
 
         fs.writeFile(`${dataPath}/salmonruncalendar.json`, JSON.stringify({ schedules }));
         console.info('Updated Salmon Run calendar.');
-    });
+    }).catch(e => raven.captureException(e));
 }
