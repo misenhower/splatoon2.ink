@@ -142,6 +142,10 @@ body.has-modal #main {
         background-repeat: no-repeat;
         background-position: 50% 50%;
         z-index: 1;
+
+        @include desktop {
+            border-top-right-radius: 10px;
+        }
     }
 
     .salmon-run-future {
