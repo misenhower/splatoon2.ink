@@ -7,7 +7,7 @@
                 <span v-else>Soon!</span>
             </div>
 
-            <ScheduleRow :schedule="first" :now="now"></ScheduleRow>
+            <ScheduleRow :schedule="first" :now="now" :smallSize="smallSize"></ScheduleRow>
         </div>
         <template v-if="!onlyFirst">
             <div v-if="second">
@@ -15,7 +15,7 @@
                     Next
                 </div>
 
-                <ScheduleRow :schedule="second" :now="now"></ScheduleRow>
+                <ScheduleRow :schedule="second" :now="now" :smallSize="smallSize"></ScheduleRow>
             </div>
 
             <div v-if="others && others.length">
@@ -28,6 +28,7 @@
                     :key="schedule.id"
                     :schedule="schedule"
                     :now="now"
+                    :smallSize="smallSize"
                     ></ScheduleRow>
             </div>
 
@@ -45,6 +46,11 @@ export default {
         first() { return this.schedules && this.schedules[0]; },
         second() { return this.schedules && this.schedules[1]; },
         others() { return this.schedules && this.schedules.slice(2); },
+        smallSize() {
+            // Use a smaller size on smaller displays when only displaying the first row
+            // (i.e., only when viewing the row on the main page with the three types of battles)
+            return this.onlyFirst;
+        }
     },
 }
 </script>

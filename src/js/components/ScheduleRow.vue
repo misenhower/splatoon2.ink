@@ -21,8 +21,8 @@
 
         <div class="columns is-slim" v-if="schedule">
             <div class="column has-text-centered is-hidden-mobile" style="margin-top: auto; margin-bottom: auto;">
-                <div class="title is-6 is-size-5-fullhd is-size-5-touch">{{ schedule.rule.name }}</div>
-                <div class="subtitle is-7 is-size-6-fullhd is-size-6-touch">
+                <div class="title is-size-5-fullhd is-size-5-touch" :class="ruleNameClass">{{ schedule.rule.name }}</div>
+                <div class="subtitle is-size-6-fullhd is-size-6-touch" :class="scheduleClass">
                     <template v-if="schedule.start_time > now">
                         in {{ schedule.start_time - now | duration }}
                         <br />
@@ -49,13 +49,15 @@ import Stage from './Stage.vue';
 
 export default {
     components: { Stage },
-    props: ['schedule', 'now'],
+    props: ['schedule', 'now', 'smallSize'],
     computed: {
         isToday() {
             let now = new Date(this.now * 1000);
             let start = new Date(this.schedule.start_time * 1000);
             return (now.getDate() == start.getDate() && now.getMonth() == start.getMonth() && now.getFullYear() == start.getFullYear());
-        }
+        },
+        ruleNameClass() { return this.smallSize ? 'is-6' : 'is-5' },
+        scheduleClass() { return this.smallSize ? 'is-7' : 'is-6' },
     }
 }
 </script>
