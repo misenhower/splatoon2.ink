@@ -5,7 +5,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const PurifyCSSPlugin = require('purifycss-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = function(env) {
     const production = (env === 'production');
@@ -19,7 +19,7 @@ module.exports = function(env) {
         },
         output: {
             path: path.resolve(__dirname, './public'),
-            filename: 'assets/js/[name].[hash].js',
+            filename: 'assets/js/[name].[hash:6].js',
         },
         devtool: (production) ? false : '#cheap-module-eval-source-map',
         module: {
@@ -52,14 +52,14 @@ module.exports = function(env) {
                 },
                 {
                     test: /\.woff2?$|\.ttf$|\.eot$|\.svg$/,
-                    loader: 'file-loader?name=assets/fonts/[name].[hash].[ext]',
+                    loader: 'file-loader?name=assets/fonts/[name].[hash:6].[ext]',
                 },
                 {
-                    test: /\.(png|jpe?g|gif)$/,
-                    loader: 'file-loader?name=assets/img/[name].[hash].[ext]',
+                    test: /\.(png|jpe?g|gif|svg)$/,
+                    loader: 'file-loader?name=assets/img/[name].[hash:6].[ext]',
                 },
                 {
-                    test:/^favicon\.ico$/,
+                    test: /favicon\.ico$/,
                     loader: 'file-loader?name=favicon.ico',
                 }
             ],
@@ -72,7 +72,7 @@ module.exports = function(env) {
             // ]),
             // Extract CSS to a separate file
             new ExtractTextPlugin({
-                filename: 'assets/css/[name].[contenthash].css',
+                filename: 'assets/css/[name].[contenthash:6].css',
                 disable: !production,
             }),
             // Remove unused CSS styles
@@ -91,28 +91,16 @@ module.exports = function(env) {
                     },
                 },
             }),
-            // Favicon
-            new FaviconsWebpackPlugin({
-                logo: './src/img/favicon.svg',
-                prefix: 'assets/icons/[hash:5]/',
-                background: '#333',
-                icons: {
-                    'android': true,
-                    'appleIcon': { offset: 15 },
-                    'appleStartup': false,
-                    'coast': false,
-                    'favicons': true,
-                    'firefox': false,
-                    'windows': true,
-                    'yandex': false,
-                },
-            }),
             // Build HTML
             new HtmlWebpackPlugin({
                 filename: 'index.html',
                 template: 'src/html/index.html',
                 minify: { collapseWhitespace: true },
             }),
+            // Copy additional favicons
+            new CopyWebpackPlugin([
+                { from: 'src/icons/public' },
+            ]),
         ],
     }
 }
