@@ -40,5 +40,8 @@ module.exports.update = function() {
 
         fs.writeFile(`${dataPath}/salmonruncalendar.json`, JSON.stringify({ schedules }));
         console.info('Updated Salmon Run calendar.');
-    }).catch(e => raven.captureException(e));
+    }).catch(e => {
+        raven.captureException(e);
+        console.error('Couldn\'t update Salmon Run calendar.');
+    });
 }

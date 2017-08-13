@@ -22,7 +22,10 @@ const updateSchedules = function() {
 
         fs.writeFile(`${dataPath}/schedules.json`, JSON.stringify(response.data));
         console.info('Updated map schedules.');
-    }).catch(e => raven.captureException(e));
+    }).catch(e => {
+        raven.captureException(e);
+        console.error('Couldn\'t update map schedules.')
+    });
 }
 
 const updateTimeline = function() {
@@ -39,7 +42,10 @@ const updateTimeline = function() {
 
         fs.writeFile(`${dataPath}/timeline.json`, JSON.stringify(data));
         console.info('Updated timeline.');
-    }).catch(e => raven.captureException(e));
+    }).catch(e => {
+        raven.captureException(e);
+        console.error('Couldn\'t update timeline.')
+    });
 }
 
 const updateFestivals = function() {
@@ -51,7 +57,10 @@ const updateFestivals = function() {
 
         fs.writeFile(`${dataPath}/festivals-na.json`, JSON.stringify(response.data));
         console.info('Updated festivals.');
-    }).catch(e => raven.captureException(e));
+    }).catch(e => {
+        raven.captureException(e);
+        console.error('Couldn\'t update festivals.')
+    });
 }
 
 module.exports.update = function() {
