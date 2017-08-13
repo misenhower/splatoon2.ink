@@ -51,7 +51,7 @@ module.exports = function(env) {
                     }),
                 },
                 {
-                    test: /\.woff2?$|\.ttf$|\.eot$|\.svg$/,
+                    test: /\.(woff2?|ttf|eot)$/,
                     loader: 'file-loader?name=assets/fonts/[name].[hash:6].[ext]',
                 },
                 {
