@@ -99,7 +99,8 @@
                                 Hello!
                             </h3>
                             <p>
-                                Splatoon2.ink shows the current and upcoming map schedules for Splatoon 2.
+                                Splatoon2.ink shows the current and upcoming map schedules for
+                                <a href="https://www.amazon.com/gp/product/B01N9QVIRV/ref=as_li_tl?ie=UTF8&tag=matisesblo-20&camp=1789&creative=9325&linkCode=as2&creativeASIN=B01N9QVIRV&linkId=01d5f076af5b6008436d9843c40a28db" target="_blank">Splatoon 2</a>.
                             </p>
                             <p>
                                 This site was built with <a href="https://vuejs.org/" target="_blank">Vue.js</a>
