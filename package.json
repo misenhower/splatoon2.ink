@@ -9,6 +9,7 @@
     "cron": "node src/updater/cron.js"
   },
   "dependencies": {
+    "autoprefixer": "^7.1.2",
     "axios": "^0.16.2",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
@@ -29,6 +30,7 @@
     "ical.js": "^1.2.2",
     "mkdirp": "^0.5.1",
     "node-sass": "^4.5.3",
+    "postcss-loader": "^2.0.6",
     "purify-css": "^1.2.5",
     "purifycss-webpack": "^0.7.0",
     "raven": "^2.1.1",

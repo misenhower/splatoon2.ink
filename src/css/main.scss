@@ -40,7 +40,6 @@ body.has-modal #main {
 }
 
 .squid-icon-tilt {
-    -webkit-transform: rotate(25deg);
     transform: rotate(25deg);
 }
 
@@ -56,7 +55,6 @@ body.has-modal #main {
     &.splatfest-schedule-box {
         // Provide a little more room for the third Splatfest stage
         max-width: 720px;
-        -webkit-mask-size: 730px 1168px;
         mask-size: 730px 1168px;
     }
 
@@ -235,7 +233,6 @@ body.has-modal #main {
 
     @include desktop {
         .hook-box:before {
-            -webkit-mask-position: calc(50% - 20px) top;
             mask-position: calc(50% - 20px) top;
             background-position-x: -20px !important;
         }

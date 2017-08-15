@@ -40,45 +40,29 @@ $bg-battle-league: #f02d7d;
 
 // Background masks
 .bg-mask-product {
-    -webkit-mask-image: $bg-mask-product;
     mask-image: $bg-mask-product;
-    -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
-    -webkit-mask-size: 600px 960px; // Original value: 500px 800px
-    mask-size: 600px 960px;
-    -webkit-mask-position: center top;
+    mask-size: 600px 960px; // Original value: 500px 800px
     mask-position: center top;
 }
 
 .bg-mask-title-squid {
-    -webkit-mask-image: $bg-mask-title-squid;
     mask-image: $bg-mask-title-squid;
-    -webkit-mask-size: cover;
     mask-size: cover;
-    -webkit-mask-position: right center;
     mask-position: right center;
-    -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
 }
 
 .bg-mask-hook {
-    -webkit-mask-image: $bg-mask-hook;
     mask-image: $bg-mask-hook;
-    -webkit-mask-size: 36px 29px;
     mask-size: 36px 29px;
-    -webkit-mask-position: center top;
     mask-position: center top;
-    -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
 }
 
 .bg-mask-banner {
-    -webkit-mask-image: $bg-mask-banner;
     mask-image: $bg-mask-banner;
-    -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
-    -webkit-mask-size: 100% 100%;
     mask-size: 100% 100%;
-    -webkit-mask-position: center;
     mask-position: center;
 }

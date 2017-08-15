@@ -7,27 +7,22 @@
 }
 
 .fa-spin {
-    -webkit-animation: fa-spin 2s infinite linear;
     animation: fa-spin 2s infinite linear;
 }
 
 @-webkit-keyframes fa-spin {
     0% {
-        -webkit-transform: rotate(0deg);
         transform: rotate(0deg);
     }
     100% {
-        -webkit-transform: rotate(359deg);
         transform: rotate(359deg);
     }
 }
 @keyframes fa-spin {
     0% {
-        -webkit-transform: rotate(0deg);
         transform: rotate(0deg);
     }
     100% {
-        -webkit-transform: rotate(359deg);
         transform: rotate(359deg);
     }
 }
@@ -124,22 +119,18 @@
 }
 
 .tilt-right {
-    -webkit-transform: rotate(1.4deg);
     transform: rotate(1.4deg);
 }
 
 .tilt-right-slight {
-    -webkit-transform: rotate(1.0deg);
     transform: rotate(1.0deg);
 }
 
 .tilt-left {
-    -webkit-transform: rotate(-1.4deg);
     transform: rotate(-1.4deg);
 }
 
 .tilt-left-slight {
-    -webkit-transform: rotate(-1.0deg);
     transform: rotate(-1.0deg);
 }
 

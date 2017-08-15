@@ -20,14 +20,11 @@
 
     &>.modal-content, &>.modal-card {
         &.tilt-left-slight {
-            -webkit-transform: rotate(-1.0deg) scale(0.98);
             transform: rotate(-1.0deg) scale(0.98);
         }
         &.tilt-right-slight {
-            -webkit-transform: rotate(1.0deg) scale(0.98);
             transform: rotate(1.0deg) scale(0.98);
         }
-        -webkit-transform: scale(0.98);
         transform: scale(0.98);
     }
 }

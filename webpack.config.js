@@ -45,6 +45,10 @@ module.exports = function(env) {
                                 options: { sourceMap: !production },
                             },
                             {
+                                loader: 'postcss-loader',
+                                options: { sourceMap: !production },
+                            },
+                            {
                                 loader: 'sass-loader',
                                 options: { sourceMap: !production },
                             },

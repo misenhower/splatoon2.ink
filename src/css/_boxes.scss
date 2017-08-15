@@ -8,7 +8,6 @@
 .modal-card-product-box {
     .modal-card-head {
         @extend .bg-mask-product;
-        -webkit-mask-size: 730px 1168px;
         mask-size: 730px 1168px;
         background-position-y: bottom;
 
