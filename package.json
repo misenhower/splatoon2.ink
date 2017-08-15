@@ -6,7 +6,7 @@
     "build": "webpack -p --env production",
     "serve": "webpack-dev-server --hot --content-base public/",
     "splatnet": "node src/updater/update.js",
-    "start": "node src/updater/run.js"
+    "cron": "node src/updater/cron.js"
   },
   "dependencies": {
     "axios": "^0.16.2",

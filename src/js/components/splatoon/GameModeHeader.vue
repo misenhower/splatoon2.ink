@@ -3,9 +3,9 @@
         <div class="level-left">
             <div class="level-item">
                 <div class="image is-48x48" style="margin-bottom: -6px">
-                    <img v-if="gameMode.key == 'regular'" src="../../img/battle-regular.png" />
-                    <img v-if="gameMode.key == 'gachi'" src="../../img/battle-ranked.png" />
-                    <img v-if="gameMode.key == 'league'" src="../../img/battle-league.png" />
+                    <img v-if="gameMode.key == 'regular'" src="~@/img/battle-regular.png" />
+                    <img v-if="gameMode.key == 'gachi'" src="~@/img/battle-ranked.png" />
+                    <img v-if="gameMode.key == 'league'" src="~@/img/battle-league.png" />
                 </div>
             </div>
             <div class="level-item">

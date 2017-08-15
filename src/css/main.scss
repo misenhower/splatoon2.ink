@@ -235,8 +235,8 @@ body.has-modal #main {
 
     @include desktop {
         .hook-box:before {
-            -webkit-mask-position: calc(50% - 40px) top;
-            mask-position: calc(50% - 40px) top;
+            -webkit-mask-position: calc(50% - 20px) top;
+            mask-position: calc(50% - 20px) top;
             background-position-x: -20px !important;
         }
         .hook-box {
@@ -250,6 +250,8 @@ body.has-modal #main {
     }
 
     .hero-image {
+        width: 307px;
+        height: 250px;
         shape-outside: polygon(0 0, 100% 0, 100% 100%, 50% 100%, 50% 50%, 0 50%);
         margin: -40px -55px 0 0;
     }

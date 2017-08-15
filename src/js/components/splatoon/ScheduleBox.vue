@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import Modal from './Modal.vue';
+import Modal from '@/js/components/Modal.vue';
 import GameModeHeader from './GameModeHeader.vue';
 import Stage from './Stage.vue';
 import ScheduleList from './ScheduleList.vue';

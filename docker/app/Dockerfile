@@ -10,4 +10,4 @@ RUN apt-get update \
     && apt-get install -y nodejs yarn bzip2 libfontconfig
 
 WORKDIR /app
-CMD ["yarn", "start"]
+CMD ["yarn", "cron"]

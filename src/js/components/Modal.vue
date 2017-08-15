@@ -34,6 +34,8 @@
 </style>
 
 <script>
+// This tracks open modals in order to add/remove the "has-modal" class to the body
+
 const openModals = [];
 
 function opened(vm) {

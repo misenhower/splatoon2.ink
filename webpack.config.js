@@ -11,6 +11,7 @@ module.exports = function(env) {
     const production = (env === 'production');
 
     return {
+        resolve: { alias: { '@': path.resolve(__dirname, './src') } },
         entry: {
             main: [
                 './src/js/main.js',

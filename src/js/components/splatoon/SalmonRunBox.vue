@@ -5,7 +5,7 @@
                 <div class="level-left">
                     <div class="level-item">
                         <div class="image is-48x48">
-                            <img src="../../img/mr-grizz.png" style="margin-top: -5px" />
+                            <img src="~@/img/mr-grizz.png" style="margin-top: -5px" />
                         </div>
                     </div>
                     <div class="level-item">
@@ -47,7 +47,7 @@
                             <div v-for="event in upcomingSchedules" class="columns is-gapless is-mobile">
                                 <div class="column is-narrow" style="margin-right: 5px">
                                     <div class="image is-4by3" style="width: 23px">
-                                        <img src="../../img/salmon-run-mini.png" />
+                                        <img src="~@/img/salmon-run-mini.png" />
                                     </div>
                                 </div>
                                 <div class="column">
