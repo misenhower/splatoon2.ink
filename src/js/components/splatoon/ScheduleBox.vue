@@ -24,10 +24,20 @@
             </div>
         </div>
 
-        <ScheduleList :schedules="upcomingSchedules" :now="now" :onlyFirst="true"></ScheduleList>
+        <template v-if="upcomingSchedules && upcomingSchedules[0]">
+            <div class="is-size-5 title-squid font-splatoon1">
+                Next
+            </div>
+
+            <ScheduleRow
+                :schedule="upcomingSchedules[0]"
+                :now="now"
+                :smallSize="true"
+                ></ScheduleRow>
+        </template>
 
         <p class="has-text-centered" style="margin-top: 10px">
-            <button class="button is-translucent is-rounded" @click="isOpen=true">
+            <button class="button is-translucent is-rounded" @click="dialogOpen = true">
                 <span class="icon squid-icon-tilt">
                     <span class="fa squid-squid"></span>
                 </span>
@@ -35,31 +45,29 @@
             </button>
         </p>
 
-        <Modal v-if="isOpen" @close="isOpen = false" class="font-splatoon2">
-            <div class="modal-card schedule-box tilt-left-slight" :class="cssClass">
-                <header class="modal-card-head">
-                    <GameModeHeader :gameMode="gameMode"></GameModeHeader>
-                </header>
-                <section class="modal-card-body">
-                    <ScheduleList :schedules="schedules" :now="now" :onlyFirst="false"></ScheduleList>
-                </section>
-            </div>
-        </Modal>
+        <ScheduleDialog
+            v-if="dialogOpen"
+            :schedules="schedules"
+            :gameMode="gameMode"
+            :cssClass="cssClass"
+            :now="now"
+            @close="dialogOpen = false"
+            ></ScheduleDialog>
     </div>
 </template>
 
 <script>
-import Modal from '@/js/components/Modal.vue';
 import GameModeHeader from './GameModeHeader.vue';
 import Stage from './Stage.vue';
-import ScheduleList from './ScheduleList.vue';
+import ScheduleRow from './ScheduleRow.vue';
+import ScheduleDialog from './ScheduleDialog.vue';
 
 export default {
-    components: { Modal, GameModeHeader, Stage, ScheduleList },
+    components: { GameModeHeader, Stage, ScheduleRow, ScheduleDialog },
     props: ['schedules', 'cssClass', 'festival', 'now'],
     data() {
         return {
-            isOpen: false,
+            dialogOpen: false,
         };
     },
     computed: {
