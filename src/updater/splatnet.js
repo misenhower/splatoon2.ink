@@ -1,11 +1,5 @@
 require('./bootstrap');
 const axios = require('axios');
-const path = require('path');
-const fs = require('fs');
-const mkdirp = require('mkdirp');
-const raven = require('raven');
-
-const dataPath = path.resolve('public/data');
 
 // SplatNet2 API
 const api = axios.create({
@@ -13,58 +7,23 @@ const api = axios.create({
     headers: {'Cookie': `iksm_session=${process.env.NINTENDO_SESSION_ID}`},
 });
 
-const updateSchedules = function() {
-    console.info('Updating map schedules...');
-
-    api.get('schedules').then(response => {
-        // Make sure the data path exists
-        mkdirp(dataPath);
-
-        fs.writeFile(`${dataPath}/schedules.json`, JSON.stringify(response.data));
-        console.info('Updated map schedules.');
-    }).catch(e => {
-        raven.captureException(e);
-        console.error('Couldn\'t update map schedules.')
-    });
+async function getSchedules() {
+    let response = await api.get('schedules');
+    return response.data;
 }
 
-const updateTimeline = function() {
-    console.info('Updating timeline...');
-
-    api.get('timeline').then(response => {
-        // Make sure the data path exists
-        mkdirp(dataPath);
-
-        // Filter out everything but the data we need
-        let data = { coop: null };
-        if (response.data.coop && response.data.coop.importance > -1)
-            data.coop = response.data.coop;
-
-        fs.writeFile(`${dataPath}/timeline.json`, JSON.stringify(data));
-        console.info('Updated timeline.');
-    }).catch(e => {
-        raven.captureException(e);
-        console.error('Couldn\'t update timeline.')
-    });
+async function getTimeline() {
+    let response = await api.get('timeline');
+    return response.data;
 }
 
-const updateFestivals = function() {
-    console.info('Updating festivals...');
-
-    api.get('festivals/active').then(response => {
-        // Make sure the data path exists
-        mkdirp(dataPath);
-
-        fs.writeFile(`${dataPath}/festivals-na.json`, JSON.stringify(response.data));
-        console.info('Updated festivals.');
-    }).catch(e => {
-        raven.captureException(e);
-        console.error('Couldn\'t update festivals.')
-    });
+async function getFestivals() {
+    let response = await api.get('festivals/active');
+    return response.data;
 }
 
-module.exports.update = function() {
-    updateSchedules();
-    updateTimeline();
-    updateFestivals();
+module.exports = {
+    getSchedules,
+    getTimeline,
+    getFestivals,
 }

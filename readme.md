@@ -7,6 +7,8 @@ All data comes from the SplatNet 2 API.
 
 More information about Nintendo's API can be found [here](https://github.com/ZekeSnider/NintendoSwitchRESTAPI).
 
+**Note:** The Splatnet updater script requires Node.js v8 or later.
+
 ## Getting Started
 
 Clone this repo:
