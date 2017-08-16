@@ -83,8 +83,8 @@ module.exports = function(env) {
             // Remove unused CSS styles
             new PurifyCSSPlugin({
                 paths: [
-                    ...glob.sync(path.join(__dirname, 'src/html/*.html')),
-                    ...glob.sync(path.join(__dirname, 'src/js/components/*.vue')),
+                    ...glob.sync(path.join(__dirname, 'src/html/**/*.html')),
+                    ...glob.sync(path.join(__dirname, 'src/js/components/**/*.vue')),
                 ],
                 minimize: production,
                 purifyOptions: {
