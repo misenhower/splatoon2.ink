@@ -5,7 +5,7 @@ const salmoncalendar = require('./salmoncalendar');
 
 console.info('Starting periodic tasks...');
 
-// Run every day at 0min 30sec after the hour
+// Run every hour at 30sec after the hour
 new CronJob('30 0 * * * *', () => {
     splatnet.update();
     salmoncalendar.update();
