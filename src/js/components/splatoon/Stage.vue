@@ -31,8 +31,10 @@ export default {
     },
     computed: {
         image() {
-            if (this.stage)
-                return `https://app.splatoon2.nintendo.net${this.stage.image}`;
+            if (this.stage) {
+                let filename = this.stage.image.replace(/^.*[\\\/]/, '');
+                return `/assets/img/splatnet/${filename}`;
+            }
         },
         style() {
             return {

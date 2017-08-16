@@ -46,8 +46,10 @@ export default {
     props: ['festival', 'now'],
     computed: {
         image() {
-            if (this.festival)
-                return `https://app.splatoon2.nintendo.net${this.festival.images.panel}`;
+            if (this.festival) {
+                let filename = this.festival.images.panel.replace(/^.*[\\\/]/, '');
+                return `/assets/img/splatnet/${filename}`;
+            }
         }
     }
 }
