@@ -101,9 +101,10 @@
 </template>
 
 <style>
-.limited-width {
+#main .limited-width {
     max-width: 1392px;
-    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 </style>
 
