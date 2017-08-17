@@ -1,9 +1,9 @@
 <template>
     <transition name="modal">
         <div class="modal is-active" v-portal>
-            <div class="modal-background" @click="$emit('close')"></div>
+            <div class="modal-background" @click="close"></div>
             <slot></slot>
-            <button class="modal-close is-large" @click="$emit('close')"></button>
+            <button class="modal-close is-large" @click="close"></button>
         </div>
     </transition>
 </template>
@@ -37,15 +37,29 @@ const openModals = [];
 
 function opened(vm) {
     openModals.push(vm);
-    document.body.classList.add('has-modal');
+
+    if (openModals.length === 1) {
+        document.body.classList.add('has-modal');
+        document.body.addEventListener('keydown', onKeyDown);
+    }
 }
 
 function closed(vm) {
     let index = openModals.indexOf(vm);
     if (index > -1)
         openModals.splice(index, 1);
-    if (openModals.length === 0)
+
+    if (openModals.length === 0) {
         document.body.classList.remove('has-modal');
+        document.body.removeEventListener('keydown', onKeyDown);
+    }
+}
+
+function onKeyDown(event) {
+    // Close the most recent dialog when the escape key is pressed
+    if (event.keyCode === 27) {
+        openModals[openModals.length - 1].close();
+    }
 }
 
 export default {
@@ -54,6 +68,11 @@ export default {
     },
     beforeDestroy() {
         closed(this);
+    },
+    methods: {
+        close() {
+            this.$emit('close');
+        },
     },
 }
 </script>
