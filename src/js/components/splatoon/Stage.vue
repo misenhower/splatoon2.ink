@@ -4,9 +4,9 @@
         <span class="stage-title">{{ stage.name }}</span>
 
         <Modal v-if="isOpen" @close="isOpen = false">
-            <div class="modal-content tilt-right-slight">
+            <div class="modal-content tilt-right-slight is-wide">
                 <p class="image is-16by9">
-                    <img :src="image" />
+                    <img :src="largeImage" />
                 </p>
                 <p class="has-text-centered">
                     <span class="font-splatoon2">
@@ -18,8 +18,15 @@
     </div>
 </template>
 
+<style>
+.modal-content.is-wide {
+    width: 1200px;
+}
+</style>
+
 <script>
 import Modal from '@/js/components/Modal.vue';
+import SplatoonStages from '@/js/splatoonStages';
 
 export default {
     components: { Modal },
@@ -34,6 +41,16 @@ export default {
             if (this.stage) {
                 let filename = this.stage.image.replace(/^.*[\\\/]/, '');
                 return `/assets/img/splatnet/${filename}`;
+            }
+        },
+        largeImage() {
+            if (this.stage) {
+                let stage = SplatoonStages.find(stage => stage.id === this.stage.id);
+
+                if (stage && stage.largeImage)
+                    return stage.largeImage;
+
+                return this.image;
             }
         },
         style() {
