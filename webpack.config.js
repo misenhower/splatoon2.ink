@@ -33,6 +33,9 @@ module.exports = function(env) {
                 {
                     test: /\.vue$/,
                     loader: 'vue-loader',
+                    options: {
+                        extractCSS: true,
+                    },
                 },
                 {
                     test: /\.scss$/,
