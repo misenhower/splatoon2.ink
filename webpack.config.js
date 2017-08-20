@@ -1,5 +1,7 @@
+require('dotenv').config();
 const path = require('path');
 const glob = require('glob');
+const webpack = require('webpack');
 
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -79,6 +81,9 @@ module.exports = function(env) {
             //     'public/assets/css/*',
             //     'public/assets/js/*',
             // ]),
+            new webpack.DefinePlugin({
+                'GOOGLE_ANALYTICS_ID': JSON.stringify(process.env.GOOGLE_ANALYTICS_ID),
+            }),
             // Extract CSS to a separate file
             new ExtractTextPlugin({
                 filename: 'assets/css/[name].[contenthash:6].css',
@@ -102,6 +107,7 @@ module.exports = function(env) {
             }),
             // Build HTML
             new HtmlWebpackPlugin({
+                inject: false,
                 filename: 'index.html',
                 template: 'src/html/index.html',
                 minify: { collapseWhitespace: true },

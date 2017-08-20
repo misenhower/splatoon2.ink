@@ -12,6 +12,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Splatoon2.ink">
+    <% for (var css in htmlWebpackPlugin.files.css) { %>
+    <link href="<%= htmlWebpackPlugin.files.css[css] %>" rel="stylesheet">
+    <% } %>
     <link rel="apple-touch-icon" sizes="180x180" href="<%= require('../icons/apple-touch-icon.png') %>">
     <link rel="icon" type="image/png" sizes="32x32" href="<%= require('../icons/favicon-32x32.png') %>">
     <link rel="icon" type="image/png" sizes="16x16" href="<%= require('../icons/favicon-16x16.png') %>">
@@ -23,5 +26,9 @@
 </head>
 <body>
     <div id="app"></div>
+    <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
+    <script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
+    <% } %>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
 </body>
 </html>
