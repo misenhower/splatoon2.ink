@@ -23,6 +23,7 @@ module.exports = function(env) {
             filename: 'assets/js/[name].[hash:6].js',
         },
         devtool: (production) ? false : '#cheap-module-eval-source-map',
+        devServer: { overlay: true },
         module: {
             loaders: [
                 {
