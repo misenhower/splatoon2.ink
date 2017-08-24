@@ -42,14 +42,14 @@
 </template>
 
 <script>
+import Vue from 'vue';
+
 export default {
     props: ['festival', 'now'],
     computed: {
         image() {
-            if (this.festival) {
-                let filename = this.festival.images.panel.replace(/^.*[\\\/]/, '');
-                return `/assets/img/splatnet/${filename}`;
-            }
+            if (this.festival)
+                return Vue.filter('localSplatNetImageUrl')(this.festival.images.panel);
         }
     }
 }

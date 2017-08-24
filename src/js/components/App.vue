@@ -10,6 +10,7 @@
                             <h1 class="title is-1 font-splatoon1 is-inline">Splatoon 2</h1>
                         </div>
                     </div>
+
                     <div class="level-right">
                         <div class="level-item">
                             <h3 class="subtitle is-3 font-splatoon2 is-inline">Map Schedules</h3>
@@ -18,7 +19,14 @@
                 </div>
 
                 <div class="level">
-                    <div class="level-left"></div>
+                    <div class="level-left">
+                        <div class="level-item" style="padding-top: 10px" v-if="merchandises && merchandises.length">
+                            <button class="button is-translucent-dark is-rounded" @click="splatNetGearOpen = true">
+                                <span class="font-splatoon2">SplatNet Gear</span>
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="level-right">
                         <div class="level-item">
                             <Dropdown :options="regions" v-model="selectedRegionKey" style="margin: 0 -12px"></Dropdown>
@@ -97,6 +105,12 @@
         </div>
 
         <AboutDialog v-if="aboutOpen" @close="aboutOpen = false"></AboutDialog>
+        <SplatNetGearDialog
+            v-if="splatNetGearOpen"
+            :merchandises="merchandises"
+            :now="now"
+            @close="splatNetGearOpen = false"
+            ></SplatNetGearDialog>
     </div>
 </template>
 
@@ -115,9 +129,10 @@ import ScheduleBox from './splatoon/ScheduleBox.vue';
 import SalmonRunBox from './splatoon/SalmonRunBox.vue';
 import SplatfestBox from './splatoon/SplatfestBox.vue';
 import AboutDialog from './AboutDialog.vue';
+import SplatNetGearDialog from './splatoon/SplatNetGearDialog.vue';
 
 export default {
-    components: { Dropdown, ScheduleBox, SalmonRunBox, SplatfestBox, AboutDialog },
+    components: { Dropdown, ScheduleBox, SalmonRunBox, SplatfestBox, AboutDialog, SplatNetGearDialog },
     data() {
         return {
             regions: [
@@ -129,12 +144,14 @@ export default {
             splatnet: {
                 schedules: null,
                 timeline: null,
+                merchandises: null,
                 festivals: {
                     na: null,
                 },
             },
             salmonruncalendar: null,
             aboutOpen: false,
+            splatNetGearOpen: false,
         };
     },
     computed: {
@@ -151,6 +168,10 @@ export default {
         },
         isFestivalActive() {
             return this.festival && this.festival.times.start <= this.now && this.festival.times.end > this.now;
+        },
+        merchandises() {
+            if (this.splatnet.merchandises && this.splatnet.merchandises.merchandises)
+                return this.splatnet.merchandises.merchandises.filter(this.filterSchedule);
         },
         coop() {
             if (!this.loading && this.splatnet.timeline.coop && this.splatnet.timeline.coop.schedule.end_time > this.now)
@@ -197,6 +218,11 @@ export default {
             // Splatfest data
             axios.get('/data/festivals-na.json')
                 .then(response => this.splatnet.festivals.na = response.data)
+                .catch(e => console.error(e));
+
+            // Splatnet merchandise data
+            axios.get('/data/merchandises.json')
+                .then(response => this.splatnet.merchandises = response.data)
                 .catch(e => console.error(e));
 
             // Salmon Run calendar data (upcoming Salmon Run schedules)

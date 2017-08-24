@@ -290,3 +290,90 @@ body.has-modal #main {
         text-overflow: ellipsis;
     }
 }
+
+.splatnet-gear-dialog {
+    background: rgba($grey-light, 0.25);
+    border-radius: 20px;
+    padding: 15px;
+}
+
+.merchandise-box {
+    @extend .product-box;
+    @extend .bg-circles;
+
+    mask-size: 500px 800px;
+
+    background-color: $white-ter;
+    color: $black;
+
+    border-radius: 15px;
+    padding: 38px 10px 0 10px;
+
+    .brand {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+    }
+
+    .skills {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        text-align: center;
+
+        .main, .sub {
+            line-height: 0;
+            margin: 0 auto 3px;
+        }
+
+        .main {
+            padding: 3px;
+            background: #000;
+            border-radius: 50%;
+            img {
+                width: 30px;
+            }
+        }
+
+        .sub img {
+            width: 22px;
+        }
+    }
+
+    .remaining-time {
+        margin-bottom: 0;
+    }
+
+    .gear-image {
+        margin: 0 20px;
+    }
+
+    .bottom-bar {
+        @extend .bg-stripes;
+        margin-top: 5px;
+        margin-left: -10px;
+        margin-right: -10px;
+        padding: 4px 10px;
+
+        color: $white-ter;
+        @extend .text-shadow;
+
+        .cash {
+            width: 24px;
+            height: 24px;
+            vertical-align: text-bottom;
+        }
+    }
+
+    &.shoes .bottom-bar {
+        background-color: #e66900;
+    }
+
+    &.head .bottom-bar {
+        background-color: #ee156e;
+    }
+
+    &.clothes .bottom-bar {
+        background-color: #1dd6ad;
+    }
+}

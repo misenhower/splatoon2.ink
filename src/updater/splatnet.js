@@ -23,6 +23,11 @@ async function getFestivals() {
     return response.data;
 }
 
+async function getMerchandises() {
+    let response = await api.get('onlineshop/merchandises');
+    return response.data;
+}
+
 async function getImage(imagePath) {
     let response = await axios.get(`${splatnetBaseUrl}${imagePath}`, { responseType: 'arraybuffer' });
     return response.data;
@@ -32,5 +37,6 @@ module.exports = {
     getSchedules,
     getTimeline,
     getFestivals,
+    getMerchandises,
     getImage,
 }

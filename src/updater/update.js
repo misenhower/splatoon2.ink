@@ -65,6 +65,30 @@ async function updateFestivals() {
     }
 }
 
+async function updateMerchandises() {
+    let data = await handleRequest({
+        title: 'merchandises',
+        filename: `${dataPath}/merchandises.json`,
+        request: splatnet.getMerchandises(),
+        transformer: responseData => {
+            // Filter out everything but the data we need
+            let data = { merchandises: null };
+            if (responseData.merchandises)
+                data.merchandises = responseData.merchandises;
+            return data;
+        },
+    });
+
+    // Download merchandise/skill images
+    if (data && data.merchandises) {
+        for (let merchandise of data.merchandises) {
+            await maybeDownloadImage(merchandise.gear.image);
+            await maybeDownloadImage(merchandise.gear.brand.image);
+            await maybeDownloadImage(merchandise.skill.image);
+        }
+    }
+}
+
 function updateSalmonRunCalendar() {
     return handleRequest({
         title: 'Salmon Run calendar',
@@ -77,6 +101,7 @@ async function updateAll() {
     await updateSchedules();
     await updateTimeline();
     await updateFestivals();
+    await updateMerchandises();
     await updateSalmonRunCalendar();
 
     return 'Done.';
@@ -138,6 +163,7 @@ module.exports = {
     updateSchedules,
     updateTimeline,
     updateFestivals,
+    updateMerchandises,
     updateSalmonRunCalendar,
     updateAll,
 }

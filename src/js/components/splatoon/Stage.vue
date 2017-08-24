@@ -25,6 +25,7 @@
 </style>
 
 <script>
+import Vue from 'vue';
 import Modal from '@/js/components/Modal.vue';
 import SplatoonStages from '@/js/splatoonStages';
 
@@ -38,10 +39,8 @@ export default {
     },
     computed: {
         image() {
-            if (this.stage) {
-                let filename = this.stage.image.replace(/^.*[\\\/]/, '');
-                return `/assets/img/splatnet/${filename}`;
-            }
+            if (this.stage)
+                return Vue.filter('localSplatNetImageUrl')(this.stage.image);
         },
         largeImage() {
             if (this.stage) {

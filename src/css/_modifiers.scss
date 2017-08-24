@@ -47,6 +47,20 @@
     }
 }
 
+.button.is-translucent-dark {
+    @extend .text-shadow;
+
+    background: rgba($grey, 0.4);
+    border: rgba($grey, 0.9);
+    color: $grey-lighter;
+
+    &:hover {
+        background: rgba($grey-light, 0.5);
+        border: rgba($grey-light, 1.0);
+        color: $white;
+    }
+}
+
 .button.is-clear {
     @extend .text-shadow;
 
@@ -116,6 +130,10 @@
 
     padding: 2px 48px 2px 20px;
     margin: 0 0 10px -20px;
+
+    &.is-size-6 {
+        padding-right: 36px;
+    }
 }
 
 .tilt-right {
