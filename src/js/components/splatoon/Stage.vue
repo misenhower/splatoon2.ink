@@ -5,7 +5,7 @@
 
         <Modal v-if="isOpen" @close="isOpen = false">
             <div class="modal-content tilt-right-slight is-wide">
-                <p class="image is-16by9">
+                <p class="image is-16by9" @click="isOpen = false">
                     <img :src="largeImage" />
                 </p>
                 <p class="has-text-centered">
