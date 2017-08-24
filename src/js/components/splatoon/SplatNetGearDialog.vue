@@ -18,11 +18,15 @@
 </template>
 
 <script>
+import analytics from '@/js/analytics';
 import Modal from '@/js/components/Modal.vue';
 import MerchandiseBox from './MerchandiseBox.vue';
 
 export default {
     components: { Modal, MerchandiseBox },
     props: ['merchandises', 'now'],
+    mounted() {
+        analytics.event('SplatNet Gear', 'Open');
+    },
 }
 </script>

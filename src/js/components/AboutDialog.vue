@@ -64,9 +64,13 @@
 </style>
 
 <script>
+import analytics from '@/js/analytics';
 import Modal from './Modal.vue';
 
 export default {
     components: { Modal },
+    mounted() {
+        analytics.event('About', 'Open');
+    },
 }
 </script>
