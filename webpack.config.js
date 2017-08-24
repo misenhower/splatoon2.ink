@@ -99,6 +99,10 @@ module.exports = function(env) {
                 purifyOptions: {
                     whitelist: [
                         '.title:not(.is-spaced)+.subtitle', // Fix subtitle spacing
+                        // Dynamic merchandise types
+                        '.merchandise-box.shoes',
+                        '.merchandise-box.head',
+                        '.merchandise-box.clothes',
                     ],
                     cleanCssOptions: {
                         rebase: false, // Leave relative paths alone when minifying CSS
