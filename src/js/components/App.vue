@@ -19,16 +19,19 @@
                 </div>
 
                 <div class="level">
-                    <div class="level-left">
-                        <div class="level-item" style="padding-top: 10px" v-if="merchandises && merchandises.length">
+                    <div class="level-left"></div>
+                    <div class="level-right">
+                        <div class="level-item" v-if="merchandises && merchandises.length">
                             <button class="button is-translucent-dark is-rounded" @click="splatNetGearOpen = true">
                                 <span class="font-splatoon2">SplatNet Gear</span>
                             </button>
                         </div>
-                    </div>
 
-                    <div class="level-right">
-                        <div class="level-item">
+                        <div class="level-item" v-if="festival">
+                            <!-- Empty spacer to add some room when festivals are active -->
+                        </div>
+
+                        <div class="level-item" v-if="festival">
                             <Dropdown :options="regions" v-model="selectedRegionKey" style="margin: 0 -12px"></Dropdown>
                         </div>
                     </div>
