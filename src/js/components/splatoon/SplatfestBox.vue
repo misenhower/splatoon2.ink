@@ -2,7 +2,7 @@
     <div class="font-splatoon2">
         <div class="splatfest-header">
             <h2 class="title is-3 is-size-2-fullhd font-splatoon1">
-                Splatfest
+                {{ title }}
             </h2>
         </div>
 
@@ -47,6 +47,11 @@ import Vue from 'vue';
 export default {
     props: ['festival', 'now'],
     computed: {
+        title() {
+            if (this.festival.times.start > this.now)
+                return 'Upcoming Splatfest';
+            return 'Splatfest';
+        },
         image() {
             if (this.festival)
                 return Vue.filter('localSplatNetImageUrl')(this.festival.images.panel);
