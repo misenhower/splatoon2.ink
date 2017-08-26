@@ -59,7 +59,7 @@
                                         {{ event.end_time | time }}
                                     </span>
                                     <span class="is-size-7 is-hidden-touch is-pulled-right">
-                                        in {{ event.start_time - now | duration }}
+                                        in {{ event.start_time - now | duration(true) }}
                                     </span>
                                 </div>
                             </div>

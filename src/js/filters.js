@@ -34,7 +34,8 @@ function getDurationParts(value) {
 }
 
 // Countdown duration (e.g., 1d 13h 21m 19s)
-Vue.filter('duration', function(value) {
+// "hideSeconds" only hides seconds when the time is >= 1 hour, this is used in the Salmon Run box
+Vue.filter('duration', function(value, hideSeconds = false) {
     let { negative, days, hours, minutes, seconds } = getDurationParts(value);
 
     // Add leading zeros
@@ -42,10 +43,16 @@ Vue.filter('duration', function(value) {
         minutes = ('0' + minutes).substr(-2);
     seconds = ('0' + seconds).substr(-2);
 
-    if (days)
+    if (days) {
+        if (hideSeconds)
+            return `${negative}${days}d ${hours}h ${minutes}m`;
         return `${negative}${days}d ${hours}h ${minutes}m ${seconds}s`;
-    if (hours)
+    }
+    if (hours) {
+        if (hideSeconds)
+            return `${negative}${hours}h ${minutes}m`;
         return `${negative}${hours}h ${minutes}m ${seconds}s`;
+    }
     return `${negative}${minutes}m ${seconds}s`;
 });
 
