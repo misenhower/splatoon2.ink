@@ -27,11 +27,11 @@
                             </button>
                         </div>
 
-                        <div class="level-item" v-if="festival">
+                        <div class="level-item" v-if="showFestivalRegionDropdown">
                             <!-- Empty spacer to add some room when festivals are active -->
                         </div>
 
-                        <div class="level-item" v-if="festival">
+                        <div class="level-item" v-if="showFestivalRegionDropdown">
                             <Dropdown :options="regions" v-model="selectedRegionKey" style="margin: 0 -12px"></Dropdown>
                         </div>
                     </div>
@@ -171,6 +171,11 @@ export default {
         },
         isFestivalActive() {
             return this.festival && this.festival.times.start <= this.now && this.festival.times.end > this.now;
+        },
+        showFestivalRegionDropdown() {
+            // TODO: Check each region
+            if (this.splatnet.festivals.na && this.splatnet.festivals.na.festivals[0] && this.splatnet.festivals.na.festivals[0].times.end > this.now)
+                return true;
         },
         merchandises() {
             if (this.splatnet.merchandises && this.splatnet.merchandises.merchandises)
