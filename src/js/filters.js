@@ -53,10 +53,10 @@ Vue.filter('shortDuration', function (value) {
     let { negative, days, hours, minutes, seconds } = getDurationParts(value);
 
     if (days)
-        return (days == 1) ? '1 day' : `${days} days`;
+        return (days == 1) ? `${negative}1 day` : `${negative}${days} days`;
     if (hours)
-        return (hours == 1) ? '1 hour' : `${hours} hours`;
+        return (hours == 1) ? `${negative}1 hour` : `${negative}${hours} hours`;
     if (minutes)
-        return (minutes == 1) ? '1 minute' : `${minutes} minutes`;
-    return (seconds == 1) ? '1 second' : `${seconds} seconds`;
+        return (minutes == 1) ? `${negative}1 minute` : `${negative}${minutes} minutes`;
+    return (seconds == 1) ? `${negative}1 second` : `${negative}${seconds} seconds`;
 });
