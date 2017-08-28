@@ -1,3 +1,4 @@
 node_modules
 .env
 public/*
+manual-festivals.json

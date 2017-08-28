@@ -37,8 +37,8 @@
                             </p>
                             <p>
                                 <strong>Splatfests:</strong>
-                                Only North American Splatfests are displayed since the API seems to be restricted to the region you purchased the game from.
-                                I may manually enter times for Splatfests in other regions in the future.
+                                Only North American Splatfests are updated automatically.
+                                There may be a slight delay in updating Splatfest schedules for other regions.
                             </p>
                         </div>
                     </div>

@@ -51,16 +51,16 @@
 
                 <div v-else>
                     <!-- Active Splatfest: Show the Splatfest box and the Splatfest Battle box -->
-                    <div v-if="isFestivalActive" class="columns is-desktop limited-width">
+                    <div v-if="isSelectedFestivalActive" class="columns is-desktop limited-width">
                         <div class="column">
                             <div class="splatfest tilt-left">
                                 <div class="hook-box">
-                                    <SplatfestBox :festival="festival" :now="now"></SplatfestBox>
+                                    <SplatfestBox :festival="selectedFestival" :now="now"></SplatfestBox>
                                 </div>
                             </div>
                         </div>
                         <div class="column">
-                            <ScheduleBox class="main-schedule-box splatfest-schedule-box tilt-right" cssClass="regular" :schedules="regular" :festival="festival" :now="now"></ScheduleBox>
+                            <ScheduleBox class="main-schedule-box splatfest-schedule-box tilt-right" cssClass="regular" :schedules="regular" :festival="selectedFestival" :now="now"></ScheduleBox>
                         </div>
                     </div>
 
@@ -79,10 +79,10 @@
 
                     <!-- Upcoming Splatfest and Salmon Run boxes -->
                     <div class="columns is-desktop limited-width">
-                        <div class="column" v-if="festival && !isFestivalActive && festival.times.start > now">
+                        <div class="column" v-if="selectedFestival && !isSelectedFestivalActive">
                             <div class="splatfest tilt-right" style="margin-top: 40px">
                                 <div class="hook-box">
-                                    <SplatfestBox :festival="festival" :now="now"></SplatfestBox>
+                                    <SplatfestBox :festival="selectedFestival" :now="now"></SplatfestBox>
                                 </div>
                             </div>
                         </div>
@@ -140,7 +140,9 @@ export default {
         return {
             regions: [
                 { key: null, name: 'Global' },
-                { key: 'na', name: 'North America' },
+                { key: 'na', name: 'North America & Oceania' },
+                { key: 'eu', name: 'Europe' },
+                { key: 'jp', name: 'Japan' },
             ],
             selectedRegionKey: null,
             now: null,
@@ -148,9 +150,7 @@ export default {
                 schedules: null,
                 timeline: null,
                 merchandises: null,
-                festivals: {
-                    na: null,
-                },
+                festivals: null,
             },
             salmonruncalendar: null,
             aboutOpen: false,
@@ -158,39 +158,54 @@ export default {
         };
     },
     computed: {
-        loading() { return !this.splatnet.schedules || !this.splatnet.timeline; },
-        regular() { return !this.loading && this.splatnet.schedules.regular.filter(this.filterSchedule) },
-        ranked() { return !this.loading && this.splatnet.schedules.gachi.filter(this.filterSchedule) },
-        league() { return !this.loading && this.splatnet.schedules.league.filter(this.filterSchedule) },
-        festival() {
-            if (this.loading || !this.selectedRegionKey)
-                return;
+        loading() { return !this.splatnet.schedules; },
 
-            let festivals = this.splatnet.festivals[this.selectedRegionKey];
-            return festivals && festivals.festivals && festivals.festivals[0];
-        },
-        isFestivalActive() {
-            return this.festival && this.festival.times.start <= this.now && this.festival.times.end > this.now;
+        // Normal battles
+        regular() { return !this.loading && this.splatnet.schedules.regular.filter(this.filterEndTime) },
+        ranked() { return !this.loading && this.splatnet.schedules.gachi.filter(this.filterEndTime) },
+        league() { return !this.loading && this.splatnet.schedules.league.filter(this.filterEndTime) },
+
+        // Festivals
+        festivals() {
+            if (this.splatnet.festivals) {
+                return {
+                    na: (this.splatnet.festivals.na.festivals || []).filter(this.filterFestivals),
+                    eu: (this.splatnet.festivals.eu.festivals || []).filter(this.filterFestivals),
+                    jp: (this.splatnet.festivals.jp.festivals || []).filter(this.filterFestivals),
+                };
+            }
         },
         showFestivalRegionDropdown() {
-            // TODO: Check each region
-            if (this.splatnet.festivals.na && this.splatnet.festivals.na.festivals[0] && this.splatnet.festivals.na.festivals[0].times.end > this.now)
-                return true;
+            if (this.festivals)
+                return Object.values(this.festivals).some(arr => arr.length > 0);
+                // return this.festivals.na.length > 0 || this.festivals.eu.length > 0 || this.festivals.jp.length > 0;
         },
-        merchandises() {
-            if (this.splatnet.merchandises && this.splatnet.merchandises.merchandises)
-                return this.splatnet.merchandises.merchandises.filter(this.filterSchedule);
+        selectedFestival() {
+            if (this.festivals && this.selectedRegionKey)
+                return this.festivals[this.selectedRegionKey][0];
         },
+        isSelectedFestivalActive() {
+            return this.selectedFestival && this.selectedFestival.times.start <= this.now;
+            // return this.festival && this.festival.times.start <= this.now && this.festival.times.end > this.now;
+        },
+
+        // Salmon Run
         coop() {
-            if (!this.loading && this.splatnet.timeline.coop && this.splatnet.timeline.coop.schedule.end_time > this.now)
+            if (this.splatnet.timeline && this.splatnet.timeline.coop && this.splatnet.timeline.coop.schedule.end_time > this.now)
                 return this.splatnet.timeline.coop;
         },
         coopCalendar() {
             if (this.salmonruncalendar) {
-                let schedules = this.salmonruncalendar.schedules.filter(this.filterSchedule);
+                let schedules = this.salmonruncalendar.schedules.filter(this.filterEndTime);
                 if (schedules.length > 0)
                     return schedules;
             }
+        },
+
+        // SplatNet Merchandise
+        merchandises() {
+            if (this.splatnet.merchandises && this.splatnet.merchandises.merchandises)
+                return this.splatnet.merchandises.merchandises.filter(this.filterEndTime);
         },
     },
     created() {
@@ -224,8 +239,8 @@ export default {
                 .catch(e => console.error(e));
 
             // Splatfest data
-            axios.get('/data/festivals-na.json')
-                .then(response => this.splatnet.festivals.na = response.data)
+            axios.get('/data/festivals.json')
+                .then(response => this.splatnet.festivals = response.data)
                 .catch(e => console.error(e));
 
             // Splatnet merchandise data
@@ -241,18 +256,58 @@ export default {
         detectRegion() {
             if (window.navigator && window.navigator.language) {
                 switch (window.navigator.language) {
-                    case 'en-US':
-                    case 'en-CA':
-                    case 'es-MX':
+                    case 'en-US': // USA
+                    case 'en-CA': // Canada (English)
+                    case 'fr-CA': // Canada (French)
+                    case 'es-MX': // Mexico
+                    case 'en-AU': // Australia
+                    case 'en-NZ': // New Zealand
                         this.selectedRegionKey = 'na';
+                        break;
+                    case 'de-AT': // Austria
+                    case 'nl-BE': // Belgium (Dutch)
+                    case 'fr-BE': // Belgium (French)
+                    case 'cs-CZ': // Czech Republic
+                    case 'da-DK': // Denmark
+                    case 'de':    // Germany
+                    case 'de-DE': // Germany
+                    case 'es-ES': // Spain
+                    case 'fi-FI': // Finland
+                    case 'fr':    // France
+                    case 'fr-FR': // France
+                    case 'el-GR': // Greece
+                    case 'hu-HU': // Hungary
+                    case 'it-IT': // Italy
+                    case 'nl':    // Netherlands
+                    case 'nl-NL': // Netherlands
+                    case 'nb-NO': // Norway
+                    case 'pl-PL': // Poland
+                    case 'pt-PT': // Portugal
+                    case 'ru-RU': // Russia
+                    case 'en-ZA': // South Africa
+                    case 'sv-SE': // Sweden
+                    case 'de-CH': // Switzerland (German)
+                    case 'fr-CH': // Switzerland (French)
+                    case 'it-CH': // Switzerland (Italian)
+                    case 'en-GB': // United Kingdom
+                    case 'en-IE': // Ireland
+                        this.selectedRegionKey = 'eu';
+                        break;
+                    case 'ja':    // Japan
+                    case 'ja-JP': // Japan
+                        this.selectedRegionKey = 'jp';
+                        break;
                 }
             }
         },
         updateNow() {
             this.now = Math.trunc((new Date).getTime() / 1000);
         },
-        filterSchedule(item) {
+        filterEndTime(item) {
             return item.end_time > this.now;
+        },
+        filterFestivals(item) {
+            return item.times.end > this.now;
         },
     },
 }

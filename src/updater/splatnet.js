@@ -1,4 +1,6 @@
 require('./bootstrap');
+const fs = require('fs');
+const path = require('path');
 const axios = require('axios');
 
 // SplatNet2 API
@@ -18,9 +20,29 @@ async function getTimeline() {
     return response.data;
 }
 
-async function getFestivals() {
+async function getNAFestivals() {
     let response = await api.get('festivals/active');
     return response.data;
+}
+
+function getManualFestivals(region) {
+    let filePath = path.resolve('manual-festivals.json');
+    if (!fs.existsSync(filePath))
+        return { festivals: [] };
+
+    let regionalFestivals = JSON.parse(fs.readFileSync(filePath));
+    if (!regionalFestivals || !regionalFestivals[region])
+        return { festivals: [] };
+
+    return { festivals: regionalFestivals[region] };
+}
+
+async function getEUFestivals() {
+    return getManualFestivals('eu');
+}
+
+async function getJPFestivals() {
+    return getManualFestivals('jp');
 }
 
 async function getMerchandises() {
@@ -36,7 +58,9 @@ async function getImage(imagePath) {
 module.exports = {
     getSchedules,
     getTimeline,
-    getFestivals,
+    getNAFestivals,
+    getEUFestivals,
+    getJPFestivals,
     getMerchandises,
     getImage,
 }

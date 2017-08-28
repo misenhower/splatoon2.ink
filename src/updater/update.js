@@ -51,17 +51,27 @@ function updateTimeline() {
 async function updateFestivals() {
     let data = await handleRequest({
         title: 'festivals',
-        filename: `${dataPath}/festivals-na.json`,
-        request: splatnet.getFestivals(),
+        filename: `${dataPath}/festivals.json`,
+        request: async function() {
+            return {
+                na: await splatnet.getNAFestivals(),
+                eu: await splatnet.getEUFestivals(),
+                jp: await splatnet.getJPFestivals(),
+            };
+        }(),
     });
 
     // Download banner/stage images
-    if (data && data.festivals && data.festivals.length) {
-        let festival = data.festivals[0];
-        await maybeDownloadImage(festival.images.alpha);
-        await maybeDownloadImage(festival.images.bravo);
-        await maybeDownloadImage(festival.images.panel);
-        await maybeDownloadImage(festival.special_stage.image);
+    if (data) {
+        for (let region of ['na', 'eu', 'jp']) {
+            let festival = data[region].festivals[0];
+            if (festival) {
+                await maybeDownloadImage(festival.images.alpha);
+                await maybeDownloadImage(festival.images.bravo);
+                await maybeDownloadImage(festival.images.panel);
+                await maybeDownloadImage(festival.special_stage.image);
+            }
+        }
     }
 }
 
