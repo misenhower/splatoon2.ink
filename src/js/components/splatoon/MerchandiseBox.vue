@@ -7,7 +7,7 @@
         </div>
 
         <div class="skills">
-            <div class="main">
+            <div class="main skill-img-bg">
                 <img :src="merchandise.skill.image | localSplatNetImageUrl" :title="merchandise.skill.name" />
             </div>
             <div class="sub" v-for="i in merchandise.gear.rarity + 1">
@@ -25,7 +25,19 @@
             </div>
         </div>
 
-        <div class="has-text-centered">{{ merchandise.gear.name }}</div>
+        <div class="gear-name has-text-centered">
+            {{ merchandise.gear.name }}
+
+            <div class="frequent-skill">
+                <div class="is-size-7">{{ merchandise.gear.brand.name }}</div>
+                <div>
+                    <div class="skill-img-bg">
+                        <img :src="merchandise.gear.brand.frequent_skill.image | localSplatNetImageUrl" :title="merchandise.gear.brand.frequent_skill.name" />
+                    </div>
+                    Common Ability
+                </div>
+            </div>
+        </div>
 
         <div class="bottom-bar has-text-centered">
             <img class="cash" src="~@/img/cash.png" />

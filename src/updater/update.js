@@ -84,6 +84,7 @@ async function updateMerchandises() {
         for (let merchandise of data.merchandises) {
             await maybeDownloadImage(merchandise.gear.image);
             await maybeDownloadImage(merchandise.gear.brand.image);
+            await maybeDownloadImage(merchandise.gear.brand.frequent_skill.image);
             await maybeDownloadImage(merchandise.skill.image);
         }
     }

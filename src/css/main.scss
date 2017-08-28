@@ -315,6 +315,15 @@ body.has-modal #main {
         left: 6px;
     }
 
+    .skill-img-bg {
+        display: inline-block;
+        line-height: 0;
+        vertical-align: middle;
+        padding: 3px;
+        background: #000;
+        border-radius: 50%;
+    }
+
     .skills {
         position: absolute;
         top: 6px;
@@ -326,13 +335,8 @@ body.has-modal #main {
             margin: 0 auto 3px;
         }
 
-        .main {
-            padding: 3px;
-            background: #000;
-            border-radius: 50%;
-            img {
-                width: 30px;
-            }
+        .main img {
+            width: 30px;
         }
 
         .sub img {
@@ -346,6 +350,36 @@ body.has-modal #main {
 
     .gear-image {
         margin: 0 20px;
+        transition: transform 0.2s ease;
+    }
+
+    &:hover .gear-image {
+        transform: scale(1.1);
+    }
+
+    .gear-name {
+        position: relative;
+    }
+
+    .frequent-skill {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        background: rgba($white-ter, 0.9);
+        border-radius: 10px;
+
+        opacity: 0;
+        transition: opacity 0.2s ease;
+
+        .skill-img-bg img {
+            width: 26px;
+        }
+    }
+
+    &:hover .frequent-skill {
+        opacity: 1;
     }
 
     .bottom-bar {
