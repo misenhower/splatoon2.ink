@@ -127,24 +127,21 @@
 
 <script>
 import axios from 'axios';
+import regions from '@/js/regions';
 import Dropdown from './Dropdown.vue';
 import ScheduleBox from './splatoon/ScheduleBox.vue';
 import SalmonRunBox from './splatoon/SalmonRunBox.vue';
 import SplatfestBox from './splatoon/SplatfestBox.vue';
 import AboutDialog from './AboutDialog.vue';
 import SplatNetGearDialog from './splatoon/SplatNetGearDialog.vue';
+const localStorage = window.localStorage;
 
 export default {
     components: { Dropdown, ScheduleBox, SalmonRunBox, SplatfestBox, AboutDialog, SplatNetGearDialog },
     data() {
         return {
-            regions: [
-                { key: null, name: 'Global' },
-                { key: 'na', name: 'North America & Oceania' },
-                { key: 'eu', name: 'Europe' },
-                { key: 'jp', name: 'Japan' },
-            ],
-            selectedRegionKey: null,
+            regions: regions.splatoonRegions,
+            actualSelectedRegionKey: null,
             now: null,
             splatnet: {
                 schedules: null,
@@ -159,6 +156,12 @@ export default {
     },
     computed: {
         loading() { return !this.splatnet.schedules; },
+
+        // Selected region
+        selectedRegionKey: {
+            get() { return this.actualSelectedRegionKey; },
+            set(value) { this.setRegion(value); },
+        },
 
         // Normal battles
         regular() { return !this.loading && this.splatnet.schedules.regular.filter(this.filterEndTime) },
@@ -209,7 +212,8 @@ export default {
         },
     },
     created() {
-        this.detectRegion();
+        this.loadRegion(true);
+        window.addEventListener('storage', this.loadRegion);
 
         this.updateNow();
         this.updateNowTimer = setInterval(() => {
@@ -225,8 +229,28 @@ export default {
     beforeDestroy() {
         clearInterval(this.updateNowTimer);
         clearInterval(this.updateDataTimer);
+        window.removeEventListener('storage', this.loadRegion);
     },
     methods: {
+        loadRegion(autoDetect = false) {
+            // Get the previously-selected region from local storage
+            let key = localStorage.getItem('selected-region');
+            if (key !== null) {
+                let region = regions.getRegionByKey(key);
+                this.actualSelectedRegionKey = (region) ? region.key : null;
+                return;
+            }
+
+            // If no region was previously selected, attempt to detect the region by the browser's language
+            if (autoDetect)
+                this.actualSelectedRegionKey = regions.detectSplatoonRegion();
+        },
+        setRegion(key) {
+            let region = regions.getRegionByKey(key);
+            key = (region) ? region.key : null;
+            this.actualSelectedRegionKey = key;
+            localStorage.setItem('selected-region', key);
+        },
         updateData() {
             // Main map schedules
             axios.get('/data/schedules.json')
