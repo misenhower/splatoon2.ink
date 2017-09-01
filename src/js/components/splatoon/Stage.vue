@@ -1,7 +1,7 @@
 <template>
-    <div class="stage-image hand" :style="style" @click="isOpen = true">
+    <div class="stage-image" :class="{ hand: clickable }" :style="style" @click="click" v-if="stageDetails">
         <figure class="image is-16by9"></figure>
-        <span class="stage-title">{{ stage.name }}</span>
+        <span class="stage-title">{{ stageDetails.name }}</span>
 
         <Modal v-if="isOpen" @close="isOpen = false">
             <div class="modal-content tilt-right-slight is-wide">
@@ -10,7 +10,7 @@
                 </p>
                 <p class="has-text-centered">
                     <span class="font-splatoon2">
-                        {{ stage.name }}
+                        {{ stageDetails.name }}
                     </span>
                 </p>
             </div>
@@ -31,31 +31,40 @@ import SplatoonStages from '@/js/splatoonStages';
 
 export default {
     components: { Modal },
-    props: ['stage'],
+    props: {
+        stage: {},
+        clickable: { default: true },
+    },
     data() {
         return {
             isOpen: false,
         };
     },
     computed: {
+        stageDetails() {
+            if (this.stage) {
+                // Merge our known data with potentially new data from Splatnet
+                return Object.assign({}, SplatoonStages.find(stage => stage.id === this.stage.id), this.stage);
+            }
+        },
         image() {
-            if (this.stage)
-                return Vue.filter('localSplatNetImageUrl')(this.stage.image);
+            if (this.stageDetails)
+                return Vue.filter('localSplatNetImageUrl')(this.stageDetails.image);
         },
         largeImage() {
-            if (this.stage) {
-                let stage = SplatoonStages.find(stage => stage.id === this.stage.id);
-
-                if (stage && stage.largeImage)
-                    return stage.largeImage;
-
-                return this.image;
-            }
+            if (this.stageDetails)
+                return Vue.filter('localSplatNetImageUrl')(this.stageDetails.largeImage || this.stageDetails.image);
         },
         style() {
             return {
                 'background-image': `url(${this.image})`,
             };
+        },
+    },
+    methods: {
+        click() {
+            if (this.clickable)
+                this.isOpen = true;
         },
     },
 }

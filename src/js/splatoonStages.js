@@ -47,4 +47,21 @@ export default [
         image: '/images/stage/96fd8c0492331a30e60a217c94fd1d4c73a966cc.png',
         largeImage: require('@/img/stages/turf-wars-stage-8_2x.jpg'),
     },
+
+    // Salmon Run stages with fake IDs for tracking purposes
+    {
+        id: '999901',
+        name: 'Spawning Grounds',
+        image: require('@/img/stages/turf-wars-stage-5_2x.jpg'),
+    },
+    {
+        id: '999902',
+        name: 'Marooner\'s Bay',
+        image: require('@/img/stages/marooners-bay.jpg'),
+    },
+    {
+        id: '999903',
+        name: 'Lost Outpost',
+        image: require('@/img/stages/lost-outpost.jpg'),
+    },
 ]

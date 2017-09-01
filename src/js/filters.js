@@ -3,6 +3,11 @@ import Vue from 'vue';
 // Local hosting of SplatNet images
 Vue.filter('localSplatNetImageUrl', function(value) {
     if (value) {
+        // Quick hack to detect whether this is a bundled image or a SplatNet image
+        if (value.indexOf('assets/img/') === 0)
+            return value;
+
+        // This is a SplatNet image, so let's adjust the URL
         let filename = value.replace(/^.*[\\\/]/, '');
         return `/assets/img/splatnet/${filename}`;
     }

@@ -114,6 +114,11 @@
             :now="now"
             @close="splatNetGearOpen = false"
             ></SplatNetGearDialog>
+        <SalmonRunAdminDialog
+            v-if="salmonRunAdminOpen"
+            :coopCalendar="coopCalendar"
+            @close="salmonRunAdminOpen = false"
+            ></SalmonRunAdminDialog>
     </div>
 </template>
 
@@ -134,10 +139,14 @@ import SalmonRunBox from './splatoon/SalmonRunBox.vue';
 import SplatfestBox from './splatoon/SplatfestBox.vue';
 import AboutDialog from './AboutDialog.vue';
 import SplatNetGearDialog from './splatoon/SplatNetGearDialog.vue';
+
+// Lazy loading since most people won't see this
+const SalmonRunAdminDialog = () => import('./splatoon/SalmonRunAdminDialog.vue');
+
 const localStorage = window.localStorage;
 
 export default {
-    components: { Dropdown, ScheduleBox, SalmonRunBox, SplatfestBox, AboutDialog, SplatNetGearDialog },
+    components: { Dropdown, ScheduleBox, SalmonRunBox, SplatfestBox, AboutDialog, SplatNetGearDialog, SalmonRunAdminDialog },
     data() {
         return {
             regions: regions.splatoonRegions,
@@ -152,6 +161,7 @@ export default {
             salmonruncalendar: null,
             aboutOpen: false,
             splatNetGearOpen: false,
+            salmonRunAdminOpen: false,
         };
     },
     computed: {
@@ -214,6 +224,7 @@ export default {
     created() {
         this.loadRegion(true);
         window.addEventListener('storage', this.loadRegion);
+        window.addEventListener('keydown', this.keydown);
 
         this.updateNow();
         this.updateNowTimer = setInterval(() => {
@@ -230,6 +241,7 @@ export default {
         clearInterval(this.updateNowTimer);
         clearInterval(this.updateDataTimer);
         window.removeEventListener('storage', this.loadRegion);
+        window.removeEventListener('keydown', this.keydown);
     },
     methods: {
         loadRegion(autoDetect = false) {
@@ -244,6 +256,11 @@ export default {
             // If no region was previously selected, attempt to detect the region by the browser's language
             if (autoDetect)
                 this.actualSelectedRegionKey = regions.detectSplatoonRegion();
+        },
+        keydown(event) {
+            // Ctrl-Alt-Shift-Z
+            if (event.ctrlKey && event.altKey && event.shiftKey && event.key === 'Z')
+                this.salmonRunAdminOpen = true;
         },
         setRegion(key) {
             let region = regions.getRegionByKey(key);
