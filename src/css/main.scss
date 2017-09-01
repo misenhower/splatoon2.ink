@@ -154,7 +154,7 @@ body.has-modal #main {
         overflow: hidden;
         line-height: 20px;
 
-        .columns:not(:last-child) {
+        .event:not(:last-child) {
             border-bottom: 0.1rem dashed $grey;
             padding-bottom: 0.3rem;
             margin-bottom: 0.3rem;

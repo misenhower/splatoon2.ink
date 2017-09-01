@@ -37,6 +37,7 @@
                         <div>
                             {{ currentSchedule.end_time - now | duration }} remaining
                         </div>
+                        <SalmonRunDetailsBar :schedule="currentSchedule"></SalmonRunDetailsBar>
                     </div>
 
                     <div v-if="upcomingSchedules.length > 0">
@@ -44,24 +45,28 @@
                             <div class="is-size-6 title-squid font-splatoon1">
                                 Soon
                             </div>
-                            <div v-for="event in upcomingSchedules" class="columns is-gapless is-mobile">
-                                <div class="column is-narrow" style="margin-right: 5px">
-                                    <div class="image is-4by3" style="width: 23px">
-                                        <img src="~@/img/salmon-run-mini.png" />
+                            <div v-for="event in upcomingSchedules" class="event">
+                                <div class="columns is-marginless is-gapless is-mobile">
+                                    <div class="column is-narrow" style="margin-right: 5px">
+                                        <div class="image is-4by3" style="width: 23px">
+                                            <img src="~@/img/salmon-run-mini.png" />
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <span class="title-color is-size-6">
+                                            {{ event.start_time | date }}
+                                            {{ event.start_time | time }}
+                                            &ndash;
+                                            {{ event.end_time | date }}
+                                            {{ event.end_time | time }}
+                                        </span>
+                                        <span class="is-size-7 is-hidden-touch is-pulled-right">
+                                            in {{ event.start_time - now | duration(true) }}
+                                        </span>
                                     </div>
                                 </div>
-                                <div class="column">
-                                    <span class="title-color is-size-6">
-                                        {{ event.start_time | date }}
-                                        {{ event.start_time | time }}
-                                        &ndash;
-                                        {{ event.end_time | date }}
-                                        {{ event.end_time | time }}
-                                    </span>
-                                    <span class="is-size-7 is-hidden-touch is-pulled-right">
-                                        in {{ event.start_time - now | duration(true) }}
-                                    </span>
-                                </div>
+
+                                <SalmonRunDetailsBar :schedule="event"></SalmonRunDetailsBar>
                             </div>
                         </div>
                     </div>
@@ -77,28 +82,26 @@
 </template>
 
 <script>
+import SalmonRunDetailsBar from './SalmonRunDetailsBar.vue';
+
 export default {
+    components: { SalmonRunDetailsBar },
     props: ['coop', 'coopCalendar', 'now'],
     computed: {
         allSchedules() {
-            let results = [];
+            let results = {};
 
-            // Track the "official" schedule so we don't duplicate it from the calendar data
-            let knownSchedule = null;
-            if (this.coop && this.coop.schedule.end_time > this.now) {
-                knownSchedule = this.coop.schedule;
-                results.push(this.coop.schedule);
-            }
+            // "Official" schedule from SplatNet
+            if (this.coop && this.coop.schedule.end_time > this.now)
+                results[this.coop.schedule.start_time] = this.coop.schedule;
 
-            // Add calendar data
+            // Other schedules
             if (this.coopCalendar) {
-                let filteredSchedules = this.coopCalendar
-                    .filter(schedule => (!knownSchedule || schedule.start_time != knownSchedule.start_time));
-
-                results.push(...filteredSchedules);
+                for (let schedule of this.coopCalendar)
+                    results[schedule.start_time] = schedule;
             }
 
-            return results;
+            return Object.values(results).sort((a, b) => { return a.start_time - b.start_time });
         },
         upcomingSchedules() { return this.allSchedules.filter(schedule => schedule.start_time > this.now) },
         currentSchedule() {
