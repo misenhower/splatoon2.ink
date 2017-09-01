@@ -50,6 +50,24 @@ async function getMerchandises() {
     return response.data;
 }
 
+async function getLeagueMatchRanking(year, month, day, hour, type = 'T', region = 'ALL') {
+    // Hour should be in multiples of 2, e.g., 00, 02, 04, ..., 22.
+    // Type should be 'T' (team) or 'P' (pair).
+    // Region should be 'ALL', 'JP', 'US', or 'EU'.
+
+    // Make sure year is specified as two digits
+    year = year % 100;
+
+    // Make sure we have leading zeros
+    year = ('0' + year).substr(-2);
+    month = ('0' + month).substr(-2);
+    day = ('0' + day).substr(-2);
+    hour = ('0' + hour).substr(-2);
+
+    let response = await api.get(`league_match_ranking/${year}${month}${day}${hour}${type}/${region}`);
+    return response.data;
+}
+
 async function getImage(imagePath) {
     let response = await axios.get(`${splatnetBaseUrl}${imagePath}`, { responseType: 'arraybuffer' });
     return response.data;
@@ -62,5 +80,6 @@ module.exports = {
     getEUFestivals,
     getJPFestivals,
     getMerchandises,
+    getLeagueMatchRanking,
     getImage,
 }
