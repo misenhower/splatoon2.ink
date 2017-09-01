@@ -1,8 +1,10 @@
 require('./bootstrap');
 const axios = require('axios');
 const ical = require('ical.js');
+const fs = require('fs');
+const path = require('path');
 
-async function getSalmonRunCalendar() {
+async function getEventsFromCalendar() {
     let response = await axios.get(process.env.SALMON_RUN_CALENDAR_ICS_URL);
 
     let now = Math.trunc((new Date).getTime() / 1000);
@@ -29,11 +31,37 @@ async function getSalmonRunCalendar() {
         schedules.push({ start_time, end_time });
     });
 
-    schedules.sort((a, b) => { return a.start_time - b.start_time });
+    return schedules;
+}
 
+function getManualEvents() {
+    let filename = path.resolve('manual-salmonrun.json');
+    if (!fs.existsSync(filename))
+        return [];
+    return JSON.parse(fs.readFileSync(filename));
+}
+
+async function getSchedules() {
+    let calendarEvents = await getEventsFromCalendar();
+    let manualEvents = getManualEvents();
+
+    let keyedSchedules = {};
+
+    for (event of calendarEvents)
+        keyedSchedules[event.start_time] = event;
+
+    for (event of manualEvents) {
+        if (event.start_time in keyedSchedules)
+            Object.assign(keyedSchedules[event.start_time], event);
+        else
+            keyedSchedules[event.start_time] = event;
+    }
+
+    let schedules = Object.values(keyedSchedules);
+    schedules.sort((a, b) => { return a.start_time - b.start_time });
     return { schedules };
 }
 
 module.exports = {
-    getSalmonRunCalendar,
+    getSchedules,
 }

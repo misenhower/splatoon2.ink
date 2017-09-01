@@ -139,7 +139,7 @@ function updateSalmonRunCalendar() {
     return handleRequest({
         title: 'Salmon Run calendar',
         filename: `${dataPath}/salmonruncalendar.json`,
-        request: salmoncalendar.getSalmonRunCalendar(),
+        request: salmoncalendar.getSchedules(),
     });
 }
 
