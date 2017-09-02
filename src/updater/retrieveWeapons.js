@@ -16,6 +16,9 @@ module.exports = async function retrieveWeapons(iterations = 1, useDelay = true)
     date.setUTCMinutes(0);
     date.setUTCSeconds(0);
 
+    // Give an extra hour delay to allow time for results to come in (and to prevent 404s)
+    date.setUTCHours(date.getUTCHours() - 1);
+
     // Hours must be in multiples of 2
     if (date.getUTCHours() % 2 == 1)
         date.setUTCHours(date.getUTCHours() - 1);
