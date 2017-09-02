@@ -1,19 +1,25 @@
 <template>
-    <div class="columns is-mobile">
-        <div class="column" v-if="schedule.stage" style="padding-top: 1rem">
-            <Stage :stage="schedule.stage"></Stage>
+    <div class="columns is-mobile is-slimmer" style="padding: 0.5rem 0" v-if="schedule.stage || schedule.weapons">
+        <div class="column" :class="mini ? 'is-3' : 'is-5'" v-if="schedule.stage">
+            <Stage :stage="schedule.stage" :showTitle="!mini"></Stage>
         </div>
-        <div class="column is-narrow" style="padding-top: 1rem">
-            <template v-if="schedule.weapons">
-                <div>Supplied Weapons</div>
-                <div class="columns is-gapless is-mobile">
+
+        <div class="column" style="display: flex; align-items: center;" v-if="mini && schedule.stage">
+            {{ schedule.stage.name }}
+        </div>
+
+        <div class="column" :class="{ 'is-5': mini }" style="display: flex; align-items: center;" v-if="schedule.weapons">
+            <div style="width: 100%">
+                <div class="has-text-centered" v-if="!mini">Supplied Weapons</div>
+
+                <div class="columns is-mobile is-slimmer">
                     <div class="column" v-for="weapon in schedule.weapons">
-                        <div class="image is-48x48">
+                        <div class="image is-square weapon">
                             <img :src="weapon.image | localSplatNetImageUrl" :title="weapon.name" />
                         </div>
                     </div>
                 </div>
-            </template>
+            </div>
         </div>
     </div>
 </template>
@@ -23,6 +29,6 @@ import Stage from './Stage.vue';
 
 export default {
     components: { Stage },
-    props: ['schedule'],
+    props: ['schedule', 'mini'],
 }
 </script>

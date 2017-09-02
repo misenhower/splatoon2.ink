@@ -161,3 +161,13 @@
         padding-right: 0.4rem;
     }
 }
+
+.columns.is-slimmer {
+    margin-left: -0.2rem;
+    margin-right: -0.2rem;
+
+    .column {
+        padding-left: 0.2rem;
+        padding-right: 0.2rem;
+    }
+}

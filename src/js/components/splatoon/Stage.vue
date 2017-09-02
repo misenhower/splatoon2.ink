@@ -1,7 +1,7 @@
 <template>
     <div class="stage-image" :class="{ hand: clickable }" :style="style" @click="click" v-if="stageDetails">
         <figure class="image is-16by9"></figure>
-        <span class="stage-title">{{ stageDetails.name }}</span>
+        <span class="stage-title" v-if="showTitle">{{ stageDetails.name }}</span>
 
         <Modal v-if="isOpen" @close="isOpen = false">
             <div class="modal-content tilt-right-slight is-wide">
@@ -33,6 +33,7 @@ export default {
     components: { Modal },
     props: {
         stage: {},
+        showTitle: { default: true },
         clickable: { default: true },
     },
     data() {

@@ -37,6 +37,7 @@
                         <div>
                             {{ currentSchedule.end_time - now | duration }} remaining
                         </div>
+
                         <SalmonRunDetailsBar :schedule="currentSchedule"></SalmonRunDetailsBar>
                     </div>
 
@@ -66,7 +67,7 @@
                                     </div>
                                 </div>
 
-                                <SalmonRunDetailsBar :schedule="event"></SalmonRunDetailsBar>
+                                <SalmonRunDetailsBar :schedule="event" :mini="true"></SalmonRunDetailsBar>
                             </div>
                         </div>
                     </div>
