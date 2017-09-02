@@ -191,6 +191,13 @@ async function handleRequest(options) {
 }
 
 function maybeDownloadImage(imagePath) {
+    if (!imagePath)
+        return;
+
+    // Quick hack to detect whether this is our own hosted image
+    if (imagePath.indexOf('assets/img/') === 0)
+        return;
+
     let filename = path.basename(imagePath);
     let localPath = `${splatnetImagePath}/${filename}`;
 
