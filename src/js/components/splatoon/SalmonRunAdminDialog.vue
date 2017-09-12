@@ -7,12 +7,12 @@
                         <p class="panel-heading">Salmon Run Times</p>
                         <a class="panel-block" v-for="event in schedules" :class="{'is-active': event == selectedSchedule}" @click="selectedSchedule = event">
                             <div style="width: 100%">
-                            <div>
-                                {{ event.start_time | date }}
-                                {{ event.start_time | time }}
-                                &ndash;
-                                {{ event.end_time | date }}
-                                {{ event.end_time | time }}
+                                <div>
+                                    {{ event.start_time | date }}
+                                    {{ event.start_time | time }}
+                                    &ndash;
+                                    {{ event.end_time | date }}
+                                    {{ event.end_time | time }}
                                 </div>
 
                                 <div class="columns">
@@ -32,7 +32,39 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <button class="button is-small is-danger" @click="removeSchedule(event)">&times;</button>
                         </a>
+
+                        <div class="panel-block">
+                            <div class="select">
+                                <select v-model="selectedStartDate">
+                                    <option v-for="date in dates" :value="date">{{ date | date }}</option>
+                                </select>
+                            </div>
+
+                            <div class="select">
+                                <select v-model="selectedStartTime">
+                                    <option v-for="time in times" :value="time">{{ time | time }}</option>
+                                </select>
+                            </div>
+
+                            &nbsp;&ndash;&nbsp;
+
+                            <div class="select">
+                                <select v-model="selectedEndDate">
+                                    <option v-for="date in dates" :value="date">{{ date | date }}</option>
+                                </select>
+                            </div>
+
+                            <div class="select">
+                                <select v-model="selectedEndTime">
+                                    <option v-for="time in times" :value="time">{{ time | time }}</option>
+                                </select>
+                            </div>
+
+                            <button class="button is-primary" @click="addSchedule">Add</button>
+                        </div>
                     </div>
 
                     <textarea class="textarea" style="height: 100%" :value="output" readonly @focus="$event.target.select()"></textarea>
@@ -85,6 +117,12 @@ export default {
             weaponSearchTerm: '',
             schedules: null,
             selectedSchedule: null,
+            dates: [],
+            times: [],
+            selectedStartDate: null,
+            selectedStartTime: null,
+            selectedEndDate: null,
+            selectedEndTime: null,
         };
     },
     computed: {
@@ -97,6 +135,29 @@ export default {
         },
     },
     created() {
+        // Set up dates/times
+        for (let i = 0; i < 20; i++) {
+            let date = new Date;
+            date.setHours(0);
+            date.setMinutes(0);
+            date.setSeconds(0);
+            date.setDate(date.getDate() + i);
+            this.dates.push(Math.floor(date.getTime() / 1000));
+        }
+        this.selectedStartDate = this.dates[0];
+        this.selectedEndDate = this.dates[0];
+
+        for (let i = 0; i < 24; i++) {
+            let date = new Date;
+            date.setHours(i);
+            date.setMinutes(0);
+            date.setSeconds(0);
+            this.times.push(Math.floor(date.getTime() / 1000));
+        }
+        this.selectedStartTime = this.times[0];
+        this.selectedEndTime = this.times[0];
+
+        // Update weapons
         this.updateWeapons();
 
         // Load existing weapon/map selections
@@ -131,6 +192,22 @@ export default {
 
             if (!schedule.weapons.length)
                 Vue.delete(schedule, 'weapons');
+        },
+        removeSchedule(schedule) {
+            let index = this.schedules.indexOf(schedule);
+            this.schedules.splice(index, 1);
+        },
+        addSchedule() {
+            let startTime = new Date(this.selectedStartDate * 1000);
+            startTime.setHours((new Date(this.selectedStartTime * 1000)).getHours());
+
+            let endTime = new Date(this.selectedEndDate * 1000);
+            endTime.setHours((new Date(this.selectedEndTime * 1000)).getHours());
+
+            this.schedules.push({
+                start_time: Math.floor(startTime.getTime() / 1000),
+                end_time: Math.floor(endTime.getTime() / 1000),
+            })
         },
     },
 }
