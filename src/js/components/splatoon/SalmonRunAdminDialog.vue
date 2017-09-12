@@ -5,7 +5,7 @@
                 <div class="column">
                     <div class="panel">
                         <p class="panel-heading">Salmon Run Times</p>
-                        <a class="panel-block" v-for="event in coopCalendar" :class="{'is-active': selectedStartTime == event.start_time}" @click="selectedStartTime = event.start_time">
+                        <a class="panel-block" v-for="event in schedules" :class="{'is-active': event == selectedSchedule}" @click="selectedSchedule = event">
                             <div style="width: 100%">
                             <div>
                                 {{ event.start_time | date }}
@@ -16,15 +16,15 @@
                                 </div>
 
                                 <div class="columns">
-                                    <div class="column is-one-quarter" v-if="stageSelections[event.start_time]">
-                                        <a @click="clearStage(event.start_time)">
-                                            <Stage :stage="stageSelections[event.start_time]" :clickable="false"></Stage>
+                                    <div class="column is-one-quarter" v-if="event.stage">
+                                        <a @click="clearStage(event)">
+                                            <Stage :stage="event.stage" :clickable="false"></Stage>
                                         </a>
                                     </div>
                                     <div class="column">
-                                        <div class="columns is-multiline" v-if="weaponSelections[event.start_time]">
-                                            <div class="column is-narrow" v-for="weapon in weaponSelections[event.start_time]">
-                                                <div class="image is-64x64 hand" @click="removeWeapon(event.start_time, weapon)">
+                                        <div class="columns is-multiline" v-if="event.weapons">
+                                            <div class="column is-narrow" v-for="weapon in event.weapons">
+                                                <div class="image is-64x64 hand" @click="removeWeapon(event, weapon)">
                                                     <img :src="weapon.image | localSplatNetImageUrl" :title="weapon.name" />
                                                 </div>
                                             </div>
@@ -83,9 +83,8 @@ export default {
                 SplatoonStages.find(stage => stage.id == '999903'),
             ],
             weaponSearchTerm: '',
-            selectedStartTime: null,
-            stageSelections: {},
-            weaponSelections: {},
+            schedules: null,
+            selectedSchedule: null,
         };
     },
     computed: {
@@ -94,34 +93,14 @@ export default {
                 return Object.values(this.weapons).filter(weapon => weapon.name.toLowerCase().indexOf(this.weaponSearchTerm) > -1);
         },
         output() {
-            let schedules = this.coopCalendar.map(event => {
-                let schedule = Object.assign({}, event);
-                delete schedule.stage;
-                delete schedule.weapons;
-
-                let stage = this.stageSelections[event.start_time];
-                if (stage)
-                    schedule.stage = { id: stage.id, name: stage.name };
-
-                let weapons = this.weaponSelections[event.start_time];
-                if (weapons && weapons.length)
-                    schedule.weapons = weapons;
-
-                return schedule;
-            });
-            return JSON.stringify(schedules);
+            return JSON.stringify(this.schedules);
         },
     },
     created() {
         this.updateWeapons();
 
         // Load existing weapon/map selections
-        for (event of this.coopCalendar) {
-            if (event.stage)
-                Vue.set(this.stageSelections, event.start_time, Object.assign({}, event.stage));
-            if (event.weapons)
-                Vue.set(this.weaponSelections, event.start_time, event.weapons.slice());
-        }
+        this.schedules = (this.coopCalendar) ? JSON.parse(JSON.stringify(this.coopCalendar)) : [];
     },
     methods: {
         updateWeapons() {
@@ -129,26 +108,29 @@ export default {
                 .then(response => this.weapons = response.data);
         },
         setStage(stage) {
-            if (this.selectedStartTime)
-                Vue.set(this.stageSelections, this.selectedStartTime, stage);
+            if (this.selectedSchedule)
+                Vue.set(this.selectedSchedule, 'stage', stage);
         },
-        clearStage(startTime) {
-            Vue.delete(this.stageSelections, startTime);
+        clearStage(schedule) {
+            Vue.delete(schedule, 'stage');
         },
         addWeapon(weapon) {
-            if (!this.selectedStartTime)
+            if (!this.selectedSchedule)
                 return;
 
-            if (!this.weaponSelections[this.selectedStartTime])
-                Vue.set(this.weaponSelections, this.selectedStartTime, []);
+            if (!this.selectedSchedule.weapons)
+                Vue.set(this.selectedSchedule, 'weapons', []);
 
-            this.weaponSelections[this.selectedStartTime].push(weapon);
+            this.selectedSchedule.weapons.push(weapon);
 
             this.weaponSearchTerm = '';
         },
-        removeWeapon(startTime, weapon) {
-            let index = this.weaponSelections[startTime].indexOf(weapon);
-            this.weaponSelections[startTime].splice(index, 1);
+        removeWeapon(schedule, weapon) {
+            let index = schedule.weapons.indexOf(weapon);
+            schedule.weapons.splice(index, 1);
+
+            if (!schedule.weapons.length)
+                Vue.delete(schedule, 'weapons');
         },
     },
 }
