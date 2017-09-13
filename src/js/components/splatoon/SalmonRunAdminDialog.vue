@@ -83,6 +83,9 @@
                             <input class="input" placeholder="Search weapons..." v-model="weaponSearchTerm" />
                         </div>
                     </div>
+                    <div>
+                        <button class="button" @click="addMysteryWeapon">Add Mystery Weapon</button>
+                    </div>
                     <div class="columns is-multiline is-mobile" v-if="filteredWeapons">
                         <div class="column is-narrow" v-for="weapon in filteredWeapons">
                             <div class="image is-64x64 hand" @click="addWeapon(weapon)">
@@ -185,6 +188,13 @@ export default {
             this.selectedSchedule.weapons.push(weapon);
 
             this.weaponSearchTerm = '';
+        },
+        addMysteryWeapon() {
+            this.addWeapon({
+                id: -1,
+                image: require('@/img/blank-skill-slot.png'),
+                name: 'Mystery Weapon',
+            });
         },
         removeWeapon(schedule, weapon) {
             let index = schedule.weapons.indexOf(weapon);
