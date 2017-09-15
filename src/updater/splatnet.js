@@ -4,10 +4,14 @@ const path = require('path');
 const axios = require('axios');
 
 // SplatNet2 API
+const userAgent = 'splatoon2inkbot/1.0 (+https://splatoon2.ink)';
 const splatnetBaseUrl = 'https://app.splatoon2.nintendo.net';
 const api = axios.create({
     baseURL: `${splatnetBaseUrl}/api/`,
-    headers: {'Cookie': `iksm_session=${process.env.NINTENDO_SESSION_ID}`},
+    headers: {
+        'User-Agent': userAgent,
+        'Cookie': `iksm_session=${process.env.NINTENDO_SESSION_ID}`,
+    },
 });
 
 async function getSchedules() {
@@ -69,7 +73,7 @@ async function getLeagueMatchRanking(year, month, day, hour, type = 'T', region 
 }
 
 async function getImage(imagePath) {
-    let response = await axios.get(`${splatnetBaseUrl}${imagePath}`, { responseType: 'arraybuffer' });
+    let response = await axios.get(`${splatnetBaseUrl}${imagePath}`, { responseType: 'arraybuffer', headers: { 'User-Agent': userAgent } });
     return response.data;
 }
 
