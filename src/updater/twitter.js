@@ -167,7 +167,7 @@ async function maybePostGearTweet() {
 
     // Have we already posted for this time?
     if (!shouldTweet(key, lastEndTime))  {
-        console.info('Twitter: Gear: Already posted for this hour', lastEndTime);
+        console.info('Twitter: Gear: Already posted for this hour');
         return;
     }
 
