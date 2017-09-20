@@ -1,0 +1,28 @@
+@import '~bulma/sass/utilities/initial-variables';
+@import './main';
+
+#screenshots {
+    .main-schedule-box {
+        border-radius: 20px;
+        mask-size: 800px 1280px; // Original value: 500px 800px
+        padding-top: 50px;
+
+        .stage-image:not(:last-child) {
+            margin-bottom: 10px;
+        }
+    }
+
+    .stage-title {
+        font-size: 1.35rem;
+    }
+
+    .hero-body {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .hero-foot {
+        padding: 0.5rem 0.75rem;
+        background: rgba($black-bis, 0.5);
+    }
+}

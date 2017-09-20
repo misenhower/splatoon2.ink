@@ -19,6 +19,10 @@ module.exports = function(env) {
                 './src/js/main.js',
                 './src/css/main.scss',
             ],
+            screenshots: [
+                './src/js/screenshots.js',
+                './src/css/screenshots.scss',
+            ],
         },
         output: {
             path: path.resolve(__dirname, './public'),
@@ -109,11 +113,18 @@ module.exports = function(env) {
                     },
                 },
             }),
-            // Build HTML
+            // Build main public HTML
             new HtmlWebpackPlugin({
                 inject: false,
                 filename: 'index.html',
                 template: 'src/html/index.html',
+                minify: { collapseWhitespace: true },
+            }),
+            // Build HTML used for screenshot generation
+            new HtmlWebpackPlugin({
+                inject: false,
+                filename: 'screenshots.html',
+                template: 'src/html/screenshots.html',
                 minify: { collapseWhitespace: true },
             }),
             // Copy additional favicons

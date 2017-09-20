@@ -9,7 +9,7 @@ Vue.filter('localSplatNetImageUrl', function(value) {
 
         // This is a SplatNet image, so let's adjust the URL
         let filename = value.replace(/^.*[\\\/]/, '');
-        return `/assets/img/splatnet/${filename}`;
+        return `assets/img/splatnet/${filename}`;
     }
 });
 
@@ -21,6 +21,11 @@ Vue.filter('date', function(value) {
 // Short localized time format (e.g., 1:23 PM or 13:23)
 Vue.filter('time', function(value) {
     return (new Date(value * 1000)).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+});
+
+Vue.filter('utcDateTime', function(value) {
+    let options = { timeZone: 'UTC', hour12: false, month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' };
+    return (new Date(value * 1000)).toLocaleString([], options);
 });
 
 function getDurationParts(value) {

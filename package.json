@@ -33,6 +33,7 @@
     "mkdirp": "^0.5.1",
     "node-sass": "^4.5.3",
     "postcss-loader": "^2.0.6",
+    "puppeteer": "^0.10.2",
     "purify-css": "^1.2.5",
     "purifycss-webpack": "^0.7.0",
     "raven": "^2.1.1",
@@ -41,6 +42,7 @@
     "v-click-outside": "^0.0.8",
     "vue": "^2.4.2",
     "vue-loader": "^13.0.2",
+    "vue-router": "^2.7.0",
     "vue-template-compiler": "^2.4.2",
     "webpack": "^3.4.1",
     "webpack-dev-server": "^2.6.1"

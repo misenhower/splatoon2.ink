@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <% for (var css in htmlWebpackPlugin.files.chunks.screenshots.css) { %>
+    <link href="<%= htmlWebpackPlugin.files.chunks.screenshots.css[css] %>" rel="stylesheet">
+    <% } %>
+</head>
+<body>
+    <div id="app"></div>
+    <script src="<%= htmlWebpackPlugin.files.chunks.screenshots.entry %>"></script>
+</body>
+</html>
