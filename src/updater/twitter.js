@@ -91,12 +91,13 @@ async function maybePostScheduleTweet() {
 
     // Do we have a schedule for the specified time?
     if (!schedules.regular.find(s => s.start_time == time)) {
-        console.info('Twitter: Schedule: No schedule for this hour')
+        console.info('Twitter: Schedule: No schedule for this hour');
         return;
     }
 
     // Everything looks good, let's post a tweet
     await postScheduleTweet(time);
+    console.info('Twitter: Schedule: Posted latest map schedule');
 
     // Update the last tweet time
     updateLastTweetTime(key, time);
