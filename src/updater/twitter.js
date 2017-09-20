@@ -86,6 +86,7 @@ async function maybePostTweets() {
 
     await maybePostScheduleTweet();
     await maybePostGearTweet();
+    await maybePostSalmonRunTweet();
 }
 
 /**
@@ -194,10 +195,78 @@ async function postGearTweet(startTime, endTime) {
     return await postMediaTweet(imageData, gearText);
 }
 
+/**
+ * Salmon Run tweets
+ */
+
+function getSalmonRunSchedules() {
+    let timelinePath = `${dataPath}/timeline.json`;
+    let calendarPath = `${dataPath}/salmonruncalendar.json`;
+    let schedules = {};
+
+    if (fs.existsSync(timelinePath)) {
+        let timeline = JSON.parse(fs.readFileSync(timelinePath)).coop;
+        if (timeline)
+            schedules[timeline.start_time] = timeline;
+    }
+
+    if (fs.existsSync(calendarPath)) {
+        let calendar = JSON.parse(fs.readFileSync(calendarPath)).schedules;
+        if (calendar) {
+            for (schedule of calendar)
+                schedules[schedule.start_time] = schedule;
+        }
+    }
+
+    return Object.values(schedules);
+}
+
+async function maybePostSalmonRunTweet() {
+    const key = 'salmonrun';
+
+    // What time are we posting the schedule for?
+    let time = getTopOfCurrentHour();
+
+    // Have we already posted for this time?
+    if (!shouldTweet(key, time)) {
+        console.info('Twitter: Salmon Run: Already posted for this hour');
+        return;
+    }
+
+    // Get the schedules
+    let schedules = getSalmonRunSchedules();
+    if (!schedules.length) {
+        console.warn('Twitter: Salmon Run: no schedules found');
+        return;
+    }
+
+    // Do we have a schedule for the specified time?
+    if (!schedules.find(s => s.start_time == time)) {
+        console.info('Twitter: Salmon Run: No schedule for this hour');
+        return;
+    }
+
+    // Everything looks good, let's post a tweet
+    await postSalmonRunTweet(time);
+    console.info('Twitter: Salmon Run: Posted Salmon Run schedule');
+
+    // Update the last tweet time
+    updateLastTweetTime(key, time);
+}
+
+async function postSalmonRunTweet(startTime) {
+    // Generate the image
+    let imageData = await screenshots.captureSalmonRunScreenshot(startTime);
+
+    // Post the tweet
+    return await postMediaTweet(imageData, 'Salmon Run is now open! (via https://splatoon2.ink) #splatoon2 #salmonrun');
+}
+
 module.exports = {
     maybePostTweets,
     postScheduleTweet,
     postGearTweet,
+    postSalmonRunTweet,
 }
 
 require('make-runnable/custom')({ printOutputFrame: false });

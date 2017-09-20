@@ -27,16 +27,23 @@
                         <div class="is-size-5 title-squid font-splatoon1">
                             Now open!
                         </div>
-                        <div class="title-color is-size-5">
-                            {{ currentSchedule.start_time | date }}
-                            {{ currentSchedule.start_time | time }}
-                            &ndash;
-                            {{ currentSchedule.end_time | date }}
-                            {{ currentSchedule.end_time | time }}
-                        </div>
-                        <div>
-                            {{ currentSchedule.end_time - now | duration }} remaining
-                        </div>
+                        <template v-if="screenshotMode">
+                            <div class="title-color is-size-5">
+                                {{ currentSchedule.end_time - now | durationDaysHours }} remaining
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="title-color is-size-5">
+                                {{ currentSchedule.start_time | date }}
+                                {{ currentSchedule.start_time | time }}
+                                &ndash;
+                                {{ currentSchedule.end_time | date }}
+                                {{ currentSchedule.end_time | time }}
+                            </div>
+                            <div>
+                                {{ currentSchedule.end_time - now | duration }} remaining
+                            </div>
+                        </template>
 
                         <SalmonRunDetailsBar :schedule="currentSchedule"></SalmonRunDetailsBar>
                     </div>
@@ -87,7 +94,7 @@ import SalmonRunDetailsBar from './SalmonRunDetailsBar.vue';
 
 export default {
     components: { SalmonRunDetailsBar },
-    props: ['coop', 'coopCalendar', 'now'],
+    props: ['coop', 'coopCalendar', 'now', 'screenshotMode'],
     computed: {
         allSchedules() {
             let results = {};

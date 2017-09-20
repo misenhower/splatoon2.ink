@@ -9,9 +9,11 @@ Vue.use(VueRouter);
 
 import Schedules from './components/screenshots/schedules/Schedules.vue';
 import SplatNetGear from './components/screenshots/splatnetgear/SplatNetGear.vue';
+import SalmonRun from './components/screenshots/salmonrun/SalmonRun.vue';
 const routes = [
     { path: '/schedules/:startTime', component: Schedules },
     { path: '/splatNetGear/:startTime/:endTime', component: SplatNetGear },
+    { path: '/salmonRun/:startTime', component: SalmonRun },
 ];
 const router = new VueRouter({ routes });
 

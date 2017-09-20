@@ -10,10 +10,10 @@
         .stage-image:not(:last-child) {
             margin-bottom: 10px;
         }
-    }
 
-    .stage-title {
-        font-size: 1.35rem;
+        .stage-title {
+            font-size: 1.35rem;
+        }
     }
 
     .hero-body {
@@ -29,5 +29,9 @@
     .featured-merchandise {
         transform: scale(2) rotate(-1.4deg);
         min-width: 173px;
+    }
+
+    .salmon-run {
+        transform: scale(1.5) rotate(-1.4deg);
     }
 }

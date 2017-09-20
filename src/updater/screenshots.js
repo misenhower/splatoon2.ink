@@ -54,7 +54,15 @@ function captureGearScreenshot(startTime, endTime) {
     return captureScreenshot({ url, viewport: { height: 660 } });
 }
 
+function captureSalmonRunScreenshot(startTime) {
+    let url = new URL(htmlUrl);
+    url.hash = `/salmonRun/${startTime}`;
+
+    return captureScreenshot({ url });
+}
+
 module.exports = {
     captureScheduleScreenshot,
     captureGearScreenshot,
+    captureSalmonRunScreenshot,
 }
