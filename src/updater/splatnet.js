@@ -4,7 +4,7 @@ const path = require('path');
 const axios = require('axios');
 
 // SplatNet2 API
-const userAgent = 'splatoon2inkbot/1.0 (+https://splatoon2.ink)';
+const userAgent = process.env.SPLATNET_USER_AGENT;
 const splatnetBaseUrl = 'https://app.splatoon2.nintendo.net';
 const api = axios.create({
     baseURL: `${splatnetBaseUrl}/api/`,
