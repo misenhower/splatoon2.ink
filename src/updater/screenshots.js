@@ -22,7 +22,8 @@ async function captureScreenshot(options) {
 
     // Create a new page and set the viewport
     const page = await browser.newPage();
-    page.setViewport(viewport);
+    let thisViewport = Object.assign({}, viewport, options.viewport);
+    page.setViewport(thisViewport);
 
     // Navigate to the URL
     await page.goto(options.url, {
@@ -46,6 +47,14 @@ function captureScheduleScreenshot(startTime) {
     return captureScreenshot({ url });
 }
 
+function captureGearScreenshot(startTime, endTime) {
+    let url = new URL(htmlUrl);
+    url.hash = `/splatNetGear/${startTime}/${endTime}`;
+
+    return captureScreenshot({ url, viewport: { height: 660 } });
+}
+
 module.exports = {
     captureScheduleScreenshot,
+    captureGearScreenshot,
 }

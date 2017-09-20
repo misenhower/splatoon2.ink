@@ -25,4 +25,9 @@
         padding: 0.5rem 0.75rem;
         background: rgba($black-bis, 0.5);
     }
+
+    .featured-merchandise {
+        transform: scale(2) rotate(-1.4deg);
+        min-width: 173px;
+    }
 }

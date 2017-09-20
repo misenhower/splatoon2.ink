@@ -52,6 +52,28 @@ function updateLastTweetTime(key, time) {
     fs.writeFileSync(lastTweetTimesPath, JSON.stringify(lastTweetTimes));
 }
 
+function postMediaTweet(imageData, statusText) {
+    return new Promise((resolve, reject) => {
+        // Upload the image
+        client.post('media/upload', { media: imageData }, (error, media, response) => {
+            if (error)
+                return reject(error);
+
+            let status = {
+                status: statusText,
+                media_ids: media.media_id_string,
+            };
+
+            client.post('statuses/update', status, (error, tweet, response) => {
+                if (error)
+                    return reject(error);
+
+                resolve(tweet);
+            });
+        });
+    });
+}
+
 /**
  * Twitter posts
  */
@@ -63,6 +85,7 @@ async function maybePostTweets() {
     }
 
     await maybePostScheduleTweet();
+    await maybePostGearTweet();
 }
 
 /**
@@ -103,33 +126,78 @@ async function maybePostScheduleTweet() {
     updateLastTweetTime(key, time);
 }
 
-function postScheduleTweet(startTime) {
-    return new Promise(async (resolve, reject) => {
-        // Generate the image
-        let imageData = await screenshots.captureScheduleScreenshot(startTime);
+async function postScheduleTweet(startTime) {
+    // Generate the image
+    let imageData = await screenshots.captureScheduleScreenshot(startTime);
 
-        // Upload the image
-        client.post('media/upload', { media: imageData }, (error, media, response) => {
-            if (error)
-                return reject(error);
+    // Post the tweet
+    return await postMediaTweet(imageData, 'Current Splatoon 2 map rotation, via https://splatoon2.ink #splatoon2');
+}
 
-            let status = {
-                status: 'Current Splatoon 2 map rotation, via https://splatoon2.ink #splatoon2',
-                media_ids: media.media_id_string,
-            };
+/**
+ * Gear tweets
+ */
 
-            client.post('statuses/update', status, (error, tweet, response) => {
-                if (error)
-                    return reject(error);
+function getMerchandises() {
+    let merchandisesPath = `${dataPath}/merchandises.json`;
+    if (!fs.existsSync(merchandisesPath)) {
+        console.warn('Twitter: Gear: merchandises.json does not exist');
+        return [];
+    }
+    return JSON.parse(fs.readFileSync(merchandisesPath)).merchandises;
+}
 
-                resolve(tweet);
-            });
-        });
-    });
+async function maybePostGearTweet() {
+    const key = 'gear';
+
+    // What time are we posting the schedule for?
+    let time = getTopOfCurrentHour();
+
+    // Make sure we have merchandises
+    let merchandises = getMerchandises();
+    if (!merchandises.length) {
+        console.info('Twitter: Gear: No merchandises');
+        return;
+    }
+
+    // This one is a little different: we only have end_times for merchandise items, so we
+    // need to track the latest end_time we've posted
+    let endTimes = merchandises.map(m => m.end_time);
+    let lastEndTime = Math.max(...endTimes);
+
+    // Have we already posted for this time?
+    if (!shouldTweet(key, lastEndTime))  {
+        console.info('Twitter: Gear: Already posted for this hour', lastEndTime);
+        return;
+    }
+
+    // Everything looks good, let's post a tweet
+    await postGearTweet(time, lastEndTime);
+    console.info('Twitter: Gear: Posted latest SplatNet gear');
+
+    // Update the last tweet time
+    updateLastTweetTime(key, lastEndTime);
+}
+
+async function postGearTweet(startTime, endTime) {
+    // Generate the image
+    let imageData = await screenshots.captureGearScreenshot(startTime, endTime);
+
+    // Generate the text
+    let gearText;
+    let merchandise = getMerchandises().find(g => g.end_time == endTime);
+    if (!merchandise)
+        return;
+    gearText = `Up now on SplatNet: ${merchandise.gear.name} with ${merchandise.skill.name}, via https://splatoon2.ink #splatoon2 #splatnet2`;
+
+    // Post the tweet
+    return await postMediaTweet(imageData, gearText);
 }
 
 module.exports = {
     maybePostTweets,
+    postScheduleTweet,
+    postGearTweet,
 }
 
 require('make-runnable/custom')({ printOutputFrame: false });

@@ -8,8 +8,10 @@ import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
 import Schedules from './components/screenshots/schedules/Schedules.vue';
+import SplatNetGear from './components/screenshots/splatnetgear/SplatNetGear.vue';
 const routes = [
     { path: '/schedules/:startTime', component: Schedules },
+    { path: '/splatNetGear/:startTime/:endTime', component: SplatNetGear },
 ];
 const router = new VueRouter({ routes });
 
