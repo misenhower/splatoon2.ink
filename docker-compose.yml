@@ -3,8 +3,6 @@ version: '2'
 services:
 
   app:
-    image: node:8
+    build: docker/app
     volumes:
       - ./:/app
-    working_dir: /app
-    command: 'yarn cron'

@@ -13,7 +13,10 @@ const viewport = {
 async function captureScreenshot(options) {
     // Launch a new Chrome instance
     const browser = await puppeteer.launch({
-        args: ['--disable-web-security'], // This allows us to retrieve file:// URLs via JS
+        args: [
+            '--disable-web-security', // This allows us to retrieve file:// URLs via JS
+            '--no-sandbox', // Allow running as root inside the Docker container
+        ],
         // headless: false, // For testing
     });
 
@@ -22,7 +25,10 @@ async function captureScreenshot(options) {
     page.setViewport(viewport);
 
     // Navigate to the URL
-    await page.goto(options.url);
+    await page.goto(options.url, {
+        waitUntil: 'networkidle', // Wait until the network is idle
+        networkIdleTimeout: 500, // 500ms
+    });
 
     // Take the screenshot
     let result = await page.screenshot();
