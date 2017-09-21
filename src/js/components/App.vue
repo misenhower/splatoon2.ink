@@ -104,6 +104,8 @@
                 This website is not affiliated with Nintendo.
                 All product names, logos, and brands are property of their respective owners.
                 <a href="#" @click.prevent="aboutOpen = true">About</a>
+                &ndash;
+                <a href="https://twitter.com/Splatoon2inkbot" target="_blank">Twitter</a>
             </div>
         </div>
 
