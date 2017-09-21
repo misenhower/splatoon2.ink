@@ -29,7 +29,7 @@
                         </div>
                         <template v-if="screenshotMode">
                             <div class="title-color is-size-5">
-                                {{ currentSchedule.end_time - now | durationDaysHours }} remaining
+                                {{ currentSchedule.end_time - now | durationHours }} remaining
                             </div>
                         </template>
                         <template v-else>

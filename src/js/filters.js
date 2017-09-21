@@ -78,15 +78,9 @@ Vue.filter('shortDuration', function (value) {
     return (seconds == 1) ? `${negative}1 second` : `${negative}${seconds} seconds`;
 });
 
-Vue.filter('durationDaysHours', function (value) {
+Vue.filter('durationHours', function (value) {
     let { negative, days, hours, minutes, seconds } = getDurationParts(value);
-    let result = '';
 
-    if (days)
-        result += (days == 1) ? `${negative}1 day` : `${negative}${days} days`;
-    if (days && hours)
-        result += ', ';
-    if (hours)
-        result += (hours == 1) ? `${negative}1 hour` : `${negative}${hours} hours`;
-    return result.trim();
+    hours += 24 * days;
+    return (hours == 1) ? `${negative}1 hour` : `${negative}${hours} hours`;
 });
