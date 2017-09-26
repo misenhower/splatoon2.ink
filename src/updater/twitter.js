@@ -89,6 +89,12 @@ async function maybePostTweets() {
     await maybePostSalmonRunTweet();
 }
 
+async function testScreenshots() {
+    await testScheduleScreenshot();
+    await testGearScreenshot();
+    await testSalmonRunScreenshot();
+}
+
 /**
  * Main schedule tweets
  */
@@ -125,6 +131,14 @@ async function maybePostScheduleTweet() {
 
     // Update the last tweet time
     updateLastTweetTime(key, time);
+}
+
+async function testScheduleScreenshot() {
+    let schedulesPath = `${dataPath}/schedules.json`;
+    let schedules = JSON.parse(fs.readFileSync(schedulesPath));
+    let imageData = await screenshots.captureScheduleScreenshot(schedules.regular[0].start_time);
+    fs.writeFileSync('test-screenshot-schedules.png', imageData);
+    console.info('Saved schedule screenshot');
 }
 
 async function postScheduleTweet(startTime) {
@@ -178,6 +192,13 @@ async function maybePostGearTweet() {
 
     // Update the last tweet time
     updateLastTweetTime(key, lastEndTime);
+}
+
+async function testGearScreenshot() {
+    let merchandises = getMerchandises();
+    let imageData = await screenshots.captureGearScreenshot(getTopOfCurrentHour(), merchandises[merchandises.length - 1].end_time);
+    fs.writeFileSync('test-screenshot-gear.png', imageData);
+    console.info('Saved gear screenshot');
 }
 
 async function postGearTweet(startTime, endTime) {
@@ -254,6 +275,13 @@ async function maybePostSalmonRunTweet() {
     updateLastTweetTime(key, time);
 }
 
+async function testSalmonRunScreenshot() {
+    let schedules = getSalmonRunSchedules();
+    let imageData = await screenshots.captureSalmonRunScreenshot(schedules[0].start_time);
+    fs.writeFileSync('test-screenshot-salmonrun.png', imageData);
+    console.info('Saved Salmon Run screenshot');
+}
+
 async function postSalmonRunTweet(startTime) {
     // Generate the image
     let imageData = await screenshots.captureSalmonRunScreenshot(startTime);
@@ -264,6 +292,7 @@ async function postSalmonRunTweet(startTime) {
 
 module.exports = {
     maybePostTweets,
+    testScreenshots,
     postScheduleTweet,
     postGearTweet,
     postSalmonRunTweet,

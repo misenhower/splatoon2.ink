@@ -6,6 +6,8 @@
     "build": "webpack -p --env production",
     "serve": "webpack-dev-server --hot --content-base public/",
     "splatnet": "node src/updater/update.js updateAll",
+    "twitter": "node src/updater/twitter.js maybePostTweets",
+    "twitter-test": "node src/updater/twitter.js testScreenshots",
     "cron": "node src/updater/cron.js"
   },
   "dependencies": {
