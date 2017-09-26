@@ -34,4 +34,17 @@
     .salmon-run {
         transform: scale(1.5) rotate(-1.4deg);
     }
+
+    .twitter-logo {
+        display: inline-block;
+        line-height: 1.4rem;
+        margin-left: -5px;
+        margin-right: -5px;
+        margin-bottom: -5px;
+    }
+
+    .time-table td {
+        text-align: right;
+        padding-left: 0.85rem;
+    }
 }

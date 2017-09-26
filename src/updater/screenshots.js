@@ -51,7 +51,7 @@ function captureGearScreenshot(startTime, endTime) {
     let url = new URL(htmlUrl);
     url.hash = `/splatNetGear/${startTime}/${endTime}`;
 
-    return captureScreenshot({ url, viewport: { height: 660 } });
+    return captureScreenshot({ url, viewport: { height: 680 } });
 }
 
 function captureSalmonRunScreenshot(startTime) {

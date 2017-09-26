@@ -33,6 +33,7 @@
     "ical.js": "^1.2.2",
     "make-runnable": "^1.3.6",
     "mkdirp": "^0.5.1",
+    "moment-timezone": "^0.5.13",
     "node-sass": "^4.5.3",
     "postcss-loader": "^2.0.6",
     "puppeteer": "^0.10.2",

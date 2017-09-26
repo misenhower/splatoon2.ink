@@ -23,11 +23,6 @@ Vue.filter('time', function(value) {
     return (new Date(value * 1000)).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 });
 
-Vue.filter('utcDateTime', function(value) {
-    let options = { timeZone: 'UTC', hour12: false, month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' };
-    return (new Date(value * 1000)).toLocaleString([], options);
-});
-
 function getDurationParts(value) {
     let negative = (value < 0) ? '-' : '';
     value = Math.abs(value);
