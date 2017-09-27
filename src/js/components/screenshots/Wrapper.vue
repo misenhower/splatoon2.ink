@@ -30,14 +30,14 @@
                             <div class="font-splatoon2 is-size-7 has-text-grey-light time-table">
                                 <table>
                                     <tr>
-                                        <td colspan="3" class="is-size-6 has-text-white">{{ time | dateTime('en', 'UTC') }}</td>
+                                        <td colspan="3" class="is-size-6 has-text-white">{{ time | dateTime('en', 'UTC', 'MMMM D, YYYY HH:mm z') }}</td>
                                     </tr>
                                     <tr>
-                                        <td>{{ time | dateTime('en-us', 'America/Los_Angeles', true) }}</td>
+                                        <td>{{ time | dateTime('en-us', 'America/Los_Angeles') }}</td>
                                         <td>{{ time | dateTime('en-gb', 'Europe/London') }}</td>
                                     </tr>
                                     <tr>
-                                        <td>{{ time | dateTime('en-us', 'America/New_York', true) }}</td>
+                                        <td>{{ time | dateTime('en-us', 'America/New_York') }}</td>
                                         <td>{{ time | dateTime('ja-jp', 'Asia/Tokyo') }}</td>
                                     </tr>
                                 </table>
@@ -56,10 +56,10 @@ import moment from 'moment-timezone';
 export default {
     props: ['title', 'time'],
     filters: {
-        dateTime(value, locale, timeZone, hour12 = false) {
+        dateTime(value, locale, timeZone, format = 'LLL z') {
             let date = moment.unix(value).tz(timeZone);
             date.locale(locale)
-            return date.format('LLL z');
+            return date.format(format);
         },
     },
 }
