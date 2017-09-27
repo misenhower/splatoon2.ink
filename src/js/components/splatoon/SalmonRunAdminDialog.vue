@@ -150,9 +150,9 @@ export default {
         this.selectedStartDate = this.dates[0];
         this.selectedEndDate = this.dates[0];
 
-        for (let i = 0; i < 24; i++) {
+        for (let i = 0; i < 24; i += 6) {
             let date = new Date;
-            date.setHours(i);
+            date.setUTCHours(i);
             date.setMinutes(0);
             date.setSeconds(0);
             this.times.push(Math.floor(date.getTime() / 1000));
