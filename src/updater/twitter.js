@@ -146,7 +146,7 @@ async function postScheduleTweet(startTime) {
     let imageData = await screenshots.captureScheduleScreenshot(startTime);
 
     // Post the tweet
-    return await postMediaTweet(imageData, 'Current Splatoon 2 map rotation (via https://splatoon2.ink) #splatoon2');
+    return await postMediaTweet(imageData, 'Current Splatoon 2 map rotation #splatoon2');
 }
 
 /**
@@ -210,7 +210,7 @@ async function postGearTweet(startTime, endTime) {
     let merchandise = getMerchandises().find(g => g.end_time == endTime);
     if (!merchandise)
         return;
-    gearText = `Up now on SplatNet: ${merchandise.gear.name} with ${merchandise.skill.name} (via https://splatoon2.ink) #splatoon2 #splatnet2`;
+    gearText = `Up now on SplatNet: ${merchandise.gear.name} with ${merchandise.skill.name} #splatoon2 #splatnet2`;
 
     // Post the tweet
     return await postMediaTweet(imageData, gearText);
@@ -287,7 +287,7 @@ async function postSalmonRunTweet(startTime) {
     let imageData = await screenshots.captureSalmonRunScreenshot(startTime);
 
     // Post the tweet
-    return await postMediaTweet(imageData, 'Salmon Run is now open! (via https://splatoon2.ink) #splatoon2 #salmonrun');
+    return await postMediaTweet(imageData, 'Salmon Run is now open! #splatoon2 #salmonrun');
 }
 
 module.exports = {
