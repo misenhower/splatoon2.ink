@@ -51,8 +51,11 @@ export default {
                 return this.merchandises.find(m => m.end_time == this.$route.params.endTime);
         },
         otherMerchandises() {
-            if (this.merchandises)
-                return this.merchandises.filter(m => m != this.featuredMerchandise && m.end_time > this.$route.params.startTime);
+            if (this.merchandises) {
+                return this.merchandises
+                    .filter(m => m != this.featuredMerchandise && m.end_time > this.$route.params.startTime)
+                    .sort((a, b) => b.end_time - a.end_time);
+            }
         },
     },
     created() {
