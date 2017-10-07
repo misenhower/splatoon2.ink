@@ -4,6 +4,7 @@ $bg-stripes: url(../img/bg-stripes.png);
 $bg-dots: url(../img/bg-dots.png);
 $bg-spots: url(../img/bg-spots.png);
 $bg-circles: url(../img/bg-circles.png);
+$bg-wavy: url(../img/bg-wavy.png);
 $bg-mask-product: url(../img/bg-mask-product.png);
 $bg-mask-title-squid: url(../img/bg-mask-title-squid.png);
 $bg-mask-hook: url(../img/bg-mask-hook.png);
@@ -43,6 +44,12 @@ $bg-battle-league: #f02d7d;
     background-image: $bg-circles;
     background-position: 50% top;
     background-size: 240px 120px;
+}
+
+.bg-wavy {
+    background-image: $bg-wavy;
+    background-position: 50% top;
+    background-size: 120px 60px;
 }
 
 // Background masks

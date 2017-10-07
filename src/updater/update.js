@@ -34,19 +34,33 @@ async function updateSchedules() {
     }
 }
 
-function updateTimeline() {
-    return handleRequest({
+async function updateTimeline() {
+    let data = await handleRequest({
         title: 'timeline',
         filename: `${dataPath}/timeline.json`,
         request: splatnet.getTimeline(),
         transformer: responseData => {
             // Filter out everything but the data we need
-            let data = { coop: null };
+            let data = { coop: null, weapon_availability: null };
             if (responseData.coop && responseData.coop.importance > -1)
                 data.coop = responseData.coop;
+            if (responseData.weapon_availability && responseData.weapon_availability.importance > -1)
+                data.weapon_availability = responseData.weapon_availability;
             return data;
         },
     });
+
+    // Download images
+    if (data) {
+        if (data.weapon_availability && data.weapon_availability.availabilities) {
+            for (let availability of data.weapon_availability.availabilities) {
+                let weapon = availability.weapon;
+                await maybeDownloadImage(weapon.image);
+                await maybeDownloadImage(weapon.special.image_a);
+                await maybeDownloadImage(weapon.sub.image_a);
+            }
+        }
+    }
 }
 
 async function updateFestivals() {

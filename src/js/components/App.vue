@@ -78,7 +78,7 @@
                     </div>
 
                     <!-- Upcoming Splatfest and Salmon Run boxes -->
-                    <div class="columns is-desktop limited-width">
+                    <div class="columns is-desktop" :class="{'limited-width': !bottomRowHasThreeColumns}">
                         <div class="column" v-if="selectedFestival && !isSelectedFestivalActive">
                             <div class="splatfest tilt-right" style="margin-top: 40px">
                                 <div class="hook-box">
@@ -86,12 +86,25 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="column" v-if="coop || coopCalendar">
                             <div class="salmon-run tilt-left">
                                 <div class="hook-box">
                                     <SalmonRunBox :coop="coop" :coopCalendar="coopCalendar" :now="now"></SalmonRunBox>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="column is-narrow-desktop-only" :class="{'is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only': bottomRowHasThreeColumns }" style="margin-top: 40px" v-if="newWeapon">
+                            <div class="new-weapon tilt-right">
+                                <NewWeaponBox :weapon="newWeapon"></NewWeaponBox>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="is-hidden-fullhd" style="margin-top: 20px" v-if="newWeapon && bottomRowHasThreeColumns">
+                        <div class="new-weapon tilt-left">
+                            <NewWeaponBox :weapon="newWeapon"></NewWeaponBox>
                         </div>
                     </div>
                 </div>
@@ -139,6 +152,7 @@ import Dropdown from './Dropdown.vue';
 import ScheduleBox from './splatoon/ScheduleBox.vue';
 import SalmonRunBox from './splatoon/SalmonRunBox.vue';
 import SplatfestBox from './splatoon/SplatfestBox.vue';
+import NewWeaponBox from './splatoon/NewWeaponBox.vue';
 import AboutDialog from './AboutDialog.vue';
 import SplatNetGearDialog from './splatoon/SplatNetGearDialog.vue';
 
@@ -148,7 +162,7 @@ const SalmonRunAdminDialog = () => import('./splatoon/SalmonRunAdminDialog.vue')
 const localStorage = window.localStorage;
 
 export default {
-    components: { Dropdown, ScheduleBox, SalmonRunBox, SplatfestBox, AboutDialog, SplatNetGearDialog, SalmonRunAdminDialog },
+    components: { Dropdown, ScheduleBox, SalmonRunBox, SplatfestBox, NewWeaponBox, AboutDialog, SplatNetGearDialog, SalmonRunAdminDialog },
     data() {
         return {
             regions: regions.splatoonRegions,
@@ -217,10 +231,24 @@ export default {
             }
         },
 
+        // New weapons
+        newWeapon() {
+            if (this.splatnet.timeline && this.splatnet.timeline.weapon_availability && this.splatnet.timeline.weapon_availability.availabilities) {
+                let availability = this.splatnet.timeline.weapon_availability.availabilities[0];
+                if (availability.release_time <= this.now)
+                    return availability.weapon;
+            }
+        },
+
         // SplatNet Merchandise
         merchandises() {
             if (this.splatnet.merchandises && this.splatnet.merchandises.merchandises)
                 return this.splatnet.merchandises.merchandises.filter(this.filterEndTime);
+        },
+
+        // Other
+        bottomRowHasThreeColumns() {
+            return this.selectedFestival && !this.isSelectedFestivalActive && (this.coop || this.coopCalendar) && this.newWeapon;
         },
     },
     created() {

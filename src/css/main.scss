@@ -419,3 +419,52 @@ body.has-modal #main {
         background-color: #1dd6ad;
     }
 }
+
+.new-weapon-box {
+    @extend .product-box;
+    @extend .bg-wavy;
+    @extend .text-shadow;
+
+    max-width: 250px;
+    margin-left: auto;
+    margin-right: auto;
+
+    background-color: #999;
+    color: $black;
+
+    border-radius: 20px;
+    padding: 38px 10px 0 10px;
+
+    .main-content-wrapper {
+        position: relative;
+        padding: 10px 0;
+
+        .weapon-special-sub {
+            z-index: 10;
+            position: absolute;
+            top: 0;
+            right: 0;
+
+            .image-wrapper {
+                display: inline-block;
+                background: rgba($black, 0.75);
+                border-radius: 5px;
+                padding: 4px;
+                margin-left: 2px;
+            }
+        }
+
+        .weapon-name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+
+            background: rgba($black, 0.5);
+            margin-left: -10px;
+            margin-right: -10px;
+            padding: 5px 10px;
+            color: $white;
+        }
+    }
+}

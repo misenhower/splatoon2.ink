@@ -33,6 +33,12 @@
     }
 }
 
+@include desktop-only {
+    .is-narrow-desktop-only {
+        flex: none;
+    }
+}
+
 .button.is-translucent {
     @extend .text-shadow;
 
