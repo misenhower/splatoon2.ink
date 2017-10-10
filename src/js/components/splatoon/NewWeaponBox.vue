@@ -2,7 +2,7 @@
     <div class="new-weapon-box font-splatoon2">
 
         <div class="font-splatoon1 is-size-5 title-squid">
-            New Weapon
+            {{ title }}
         </div>
 
         <div class="main-content-wrapper">
@@ -34,6 +34,9 @@
 
 <script>
 export default {
-    props: ['weapon'],
+    props: {
+        weapon: {},
+        title: { default: 'New Weapon' },
+    },
 }
 </script>

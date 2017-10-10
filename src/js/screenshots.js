@@ -11,11 +11,13 @@ import ScreenshotHelper from './components/screenshots/ScreenshotHelper.vue';
 import Schedules from './components/screenshots/schedules/Schedules.vue';
 import SplatNetGear from './components/screenshots/splatnetgear/SplatNetGear.vue';
 import SalmonRun from './components/screenshots/salmonrun/SalmonRun.vue';
+import NewWeapon from './components/screenshots/newweapon/NewWeapon.vue';
 const routes = [
     { path: '/', component: ScreenshotHelper },
     { path: '/schedules/:startTime', component: Schedules, props: true },
     { path: '/splatNetGear/:startTime/:endTime', component: SplatNetGear, props: true },
     { path: '/salmonRun/:startTime', component: SalmonRun, props: true },
+    { path: '/newWeapon/:releaseTime', component: NewWeapon, props: true },
 ];
 const router = new VueRouter({ routes });
 

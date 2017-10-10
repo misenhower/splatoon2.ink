@@ -25,6 +25,14 @@
                         </router-link>
                     </strong>
                 </div>
+
+                <div v-if="newWeaponAvailability">
+                    <strong>
+                        <router-link :to="`/newWeapon/${newWeaponAvailability.release_time}`">
+                            New Weapon
+                        </router-link>
+                    </strong>
+                </div>
             </div>
         </div>
     </div>
@@ -63,6 +71,11 @@ export default {
 
             if (this.timeline && this.timeline.coop)
                 return this.timeline.coop;
+        },
+        newWeaponAvailability() {
+            if (this.timeline && this.timeline.weapon_availability && this.timeline.weapon_availability.availabilities) {
+                return this.timeline.weapon_availability.availabilities[0];
+            }
         },
     },
     created() {

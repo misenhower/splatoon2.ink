@@ -87,12 +87,14 @@ async function maybePostTweets() {
     await maybePostScheduleTweet();
     await maybePostGearTweet();
     await maybePostSalmonRunTweet();
+    await maybePostNewWeaponTweet();
 }
 
 async function testScreenshots() {
     await testScheduleScreenshot();
     await testGearScreenshot();
     await testSalmonRunScreenshot();
+    await testNewWeaponScreenshot();
 }
 
 /**
@@ -290,12 +292,87 @@ async function postSalmonRunTweet(startTime) {
     return await postMediaTweet(imageData, 'Salmon Run is now open! #salmonrun');
 }
 
+/**
+ * New Weapon tweets
+ */
+
+function getNewWeaponAvailability(releaseTime = null) {
+    let timelinePath = `${dataPath}/timeline.json`;
+    if (!fs.existsSync(timelinePath)) {
+        console.warn('Twitter: Gear: timeline.json does not exist');
+        return;
+    }
+    let weaponAvailability = JSON.parse(fs.readFileSync(timelinePath)).weapon_availability;
+    if (weaponAvailability && weaponAvailability.availabilities) {
+        if (releaseTime === null)
+            return weaponAvailability.availabilities;
+
+        for (let availability of weaponAvailability.availabilities) {
+            if (availability.release_time == releaseTime)
+                return availability;
+        }
+    }
+}
+
+async function maybePostNewWeaponTweet() {
+    const key = 'weapon';
+
+    // What time are we posting the schedule for?
+    let time = getTopOfCurrentHour();
+
+    // Do we have a weapon?
+    let weaponAvailability = getNewWeaponAvailability(time);
+    if (!weaponAvailability) {
+        console.info('Twitter: No new weapon for this time');
+        return;
+    }
+
+    // Have we already posted for this time?
+    if (!shouldTweet(key, time))  {
+        console.info('Twitter: Weapons: Already posted for this hour');
+        return;
+    }
+
+    // Everything looks good, let's post a tweet
+    await postNewWeaponTweet(time);
+    console.info('Twitter: Weapons: Posted new weapon');
+
+    // Update the last tweet time
+    updateLastTweetTime(key, time);
+}
+
+async function testNewWeaponScreenshot() {
+    let availabilities = getNewWeaponAvailability();
+    let availability = availabilities[0];
+    if (!availability) {
+        console.info('No new weapon');
+        return;
+    }
+
+    let imageData = await screenshots.captureNewWeaponScreenshot(availability.release_time);
+    fs.writeFileSync('test-screenshot-weapon.png', imageData);
+    console.info('Saved new weapon screenshot');
+}
+
+async function postNewWeaponTweet(releaseTime) {
+    // Generate the image
+    let imageData = await screenshots.captureNewWeaponScreenshot(releaseTime);
+
+    // Generate the text
+    let availability = getNewWeaponAvailability(releaseTime);
+    let tweetText = `New weapon, now available: ${availability.weapon.name} #splatoon2`;
+
+    // Post the tweet
+    return await postMediaTweet(imageData, tweetText);
+}
+
 module.exports = {
     maybePostTweets,
     testScreenshots,
     postScheduleTweet,
     postGearTweet,
     postSalmonRunTweet,
+    postNewWeaponTweet,
 }
 
 require('make-runnable/custom')({ printOutputFrame: false });

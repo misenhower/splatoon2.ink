@@ -61,8 +61,16 @@ function captureSalmonRunScreenshot(startTime) {
     return captureScreenshot({ url });
 }
 
+function captureNewWeaponScreenshot(releaseTime) {
+    let url = new URL(htmlUrl);
+    url.hash = `/newWeapon/${releaseTime}`;
+
+    return captureScreenshot({ url });
+}
+
 module.exports = {
     captureScheduleScreenshot,
     captureGearScreenshot,
     captureSalmonRunScreenshot,
+    captureNewWeaponScreenshot,
 }
