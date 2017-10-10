@@ -1,5 +1,5 @@
 <template>
-    <Wrapper title="Map Schedules" :time="$route.params.startTime">
+    <Wrapper title="Map Schedules" :time="startTime">
         <div class="columns font-splatoon2">
             <div class="column">
                 <ScheduleBox class="main-schedule-box tilt-left regular" :schedule="regular"></ScheduleBox>
@@ -23,6 +23,7 @@ import ScheduleBox from './ScheduleBox.vue';
 
 export default {
     components: { Wrapper, ScheduleBox },
+    props: ['startTime'],
     data() {
         return {
             schedules: null,
@@ -31,15 +32,15 @@ export default {
     computed: {
         regular() {
             if (this.schedules)
-                return this.schedules.regular.find(s => s.start_time == this.$route.params.startTime);
+                return this.schedules.regular.find(s => s.start_time == this.startTime);
         },
         ranked() {
             if (this.schedules)
-                return this.schedules.gachi.find(s => s.start_time == this.$route.params.startTime);
+                return this.schedules.gachi.find(s => s.start_time == this.startTime);
         },
         league() {
             if (this.schedules)
-                return this.schedules.league.find(s => s.start_time == this.$route.params.startTime);
+                return this.schedules.league.find(s => s.start_time == this.startTime);
         },
     },
     created() {

@@ -20,6 +20,7 @@ import SalmonRunBox from '@/js/components/splatoon/SalmonRunBox.vue';
 
 export default {
     components: { Wrapper, SalmonRunBox },
+    props: ['startTime'],
     data() {
         return {
             timeline: null,
@@ -28,7 +29,7 @@ export default {
     },
     computed: {
         now() {
-            return this.$route.params.startTime;
+            return this.startTime;
         },
         coop() {
             if (this.timeline && this.timeline.coop && this.timeline.coop.schedule.end_time > this.now)

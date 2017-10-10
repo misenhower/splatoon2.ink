@@ -13,9 +13,9 @@ import SplatNetGear from './components/screenshots/splatnetgear/SplatNetGear.vue
 import SalmonRun from './components/screenshots/salmonrun/SalmonRun.vue';
 const routes = [
     { path: '/', component: ScreenshotHelper },
-    { path: '/schedules/:startTime', component: Schedules },
-    { path: '/splatNetGear/:startTime/:endTime', component: SplatNetGear },
-    { path: '/salmonRun/:startTime', component: SalmonRun },
+    { path: '/schedules/:startTime', component: Schedules, props: true },
+    { path: '/splatNetGear/:startTime/:endTime', component: SplatNetGear, props: true },
+    { path: '/salmonRun/:startTime', component: SalmonRun, props: true },
 ];
 const router = new VueRouter({ routes });
 
