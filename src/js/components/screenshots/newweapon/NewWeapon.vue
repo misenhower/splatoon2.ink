@@ -1,5 +1,5 @@
 <template>
-    <Wrapper title="New Weapon" :time="releaseTime">
+    <Wrapper :title="title" :time="releaseTime">
         <div class="new-weapon" v-if="newWeapons">
             <div style="display: flex; align-items: center; justify-content: center;">
                 <div v-for="(weapon, index) in newWeapons" style="margin: 0 20px">
@@ -37,6 +37,11 @@ export default {
                 if (weapons.length > 0)
                     return weapons;
             }
+        },
+        title() {
+            if (this.newWeapons && this.newWeapons.length == 1)
+                return 'New Weapon';
+            return 'New Weapons';
         },
     },
     created() {
