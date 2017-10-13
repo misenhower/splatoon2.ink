@@ -296,7 +296,7 @@ async function postSalmonRunTweet(startTime) {
  * New Weapon tweets
  */
 
-function getNewWeaponAvailability(releaseTime = null) {
+function getNewWeaponAvailabilities(releaseTime = null) {
     let timelinePath = `${dataPath}/timeline.json`;
     if (!fs.existsSync(timelinePath)) {
         console.warn('Twitter: Gear: timeline.json does not exist');
@@ -307,10 +307,7 @@ function getNewWeaponAvailability(releaseTime = null) {
         if (releaseTime === null)
             return weaponAvailability.availabilities;
 
-        for (let availability of weaponAvailability.availabilities) {
-            if (availability.release_time == releaseTime)
-                return availability;
-        }
+        return weaponAvailability.availabilities.filter(a => a.release_time == releaseTime);
     }
 }
 
@@ -321,8 +318,8 @@ async function maybePostNewWeaponTweet() {
     let time = getTopOfCurrentHour();
 
     // Do we have a weapon?
-    let weaponAvailability = getNewWeaponAvailability(time);
-    if (!weaponAvailability) {
+    let weaponAvailabilities = getNewWeaponAvailabilities(time);
+    if (!weaponAvailabilities) {
         console.info('Twitter: No new weapon for this time');
         return;
     }
@@ -342,7 +339,7 @@ async function maybePostNewWeaponTweet() {
 }
 
 async function testNewWeaponScreenshot() {
-    let availabilities = getNewWeaponAvailability();
+    let availabilities = getNewWeaponAvailabilities();
     let availability = availabilities[0];
     if (!availability) {
         console.info('No new weapon');
@@ -359,8 +356,17 @@ async function postNewWeaponTweet(releaseTime) {
     let imageData = await screenshots.captureNewWeaponScreenshot(releaseTime);
 
     // Generate the text
-    let availability = getNewWeaponAvailability(releaseTime);
-    let tweetText = `New weapon, now available: ${availability.weapon.name} #splatoon2`;
+    let availabilities = getNewWeaponAvailabilities(releaseTime);
+    let tweetText;
+    if (availabilities.length == 1) {
+        tweetText = `New weapon, now available: ${availabilities[0].weapon.name} #splatoon2`;
+    }
+    else {
+        tweetText = `New weapons, now available:`;
+        for (availability of availabilities)
+            tweetText += `\n- ${availability.weapon.name}`;
+        tweetText += '\n#splatoon2';
+    }
 
     // Post the tweet
     return await postMediaTweet(imageData, tweetText);

@@ -1,10 +1,15 @@
 <template>
     <Wrapper title="New Weapon" :time="releaseTime">
-        <div class="new-weapon" v-if="newWeapon">
-            <NewWeaponBox
-                :weapon="newWeapon"
-                title="Now Available"
-                ></NewWeaponBox>
+        <div class="new-weapon" v-if="newWeapons">
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <div v-for="(weapon, index) in newWeapons" style="margin: 0 20px">
+                    <NewWeaponBox
+                        :weapon="weapon"
+                        :class="(index % 2 == 0) ? 'tilt-left' : 'tilt-right'"
+                        title="Now Available"
+                        ></NewWeaponBox>
+                </div>
+            </div>
         </div>
     </Wrapper>
 </template>
@@ -23,12 +28,14 @@ export default {
         };
     },
     computed: {
-        newWeapon() {
+        newWeapons() {
             if (this.timeline && this.timeline.weapon_availability && this.timeline.weapon_availability.availabilities) {
-                for (let availability of this.timeline.weapon_availability.availabilities) {
-                    if (availability.release_time == this.releaseTime)
-                        return availability.weapon;
-                }
+                let weapons = this.timeline.weapon_availability.availabilities
+                    .filter(a => a.release_time == this.releaseTime)
+                    .map(a => a.weapon);
+
+                if (weapons.length > 0)
+                    return weapons;
             }
         },
     },

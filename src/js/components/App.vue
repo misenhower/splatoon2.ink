@@ -96,16 +96,30 @@
                             </div>
                         </div>
 
-                        <div class="column is-narrow-desktop-only" :class="{'is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only': bottomRowHasThreeColumns }" style="margin-top: 40px" v-if="newWeapon">
-                            <div class="new-weapon tilt-right">
-                                <NewWeaponBox :weapon="newWeapon"></NewWeaponBox>
+                        <div class="column is-narrow-desktop-only" :class="{'is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only': bottomRowHasThreeColumns }" style="margin-top: 40px" v-if="newWeapons">
+                            <div class="new-weapon">
+                                <div class="columns">
+                                    <div class="column" v-for="(weapon, index) in newWeapons">
+                                        <NewWeaponBox
+                                            :weapon="weapon"
+                                            :class="(index % 2 == 0) ? 'tilt-right' : 'tilt-left'"
+                                            ></NewWeaponBox>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="is-hidden-fullhd" style="margin-top: 20px" v-if="newWeapon && bottomRowHasThreeColumns">
-                        <div class="new-weapon tilt-left">
-                            <NewWeaponBox :weapon="newWeapon"></NewWeaponBox>
+                    <div class="is-hidden-fullhd" style="margin-top: 20px" v-if="newWeapons && bottomRowHasThreeColumns">
+                        <div class="new-weapon">
+                            <div style="display: flex; align-items: center; justify-content: center;">
+                                <div v-for="(weapon, index) in newWeapons" style="margin: 0 20px">
+                                    <NewWeaponBox
+                                        :weapon="weapon"
+                                        :class="(index % 2 == 0) ? 'tilt-right' : 'tilt-left'"
+                                        ></NewWeaponBox>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -233,11 +247,14 @@ export default {
         },
 
         // New weapons
-        newWeapon() {
+        newWeapons() {
             if (this.splatnet.timeline && this.splatnet.timeline.weapon_availability && this.splatnet.timeline.weapon_availability.availabilities) {
-                let availability = this.splatnet.timeline.weapon_availability.availabilities[0];
-                if (availability.release_time <= this.now)
-                    return availability.weapon;
+                let weapons = this.splatnet.timeline.weapon_availability.availabilities
+                    .filter(a => a.release_time <= this.now)
+                    .map(a => a.weapon);
+
+                if (weapons.length > 0)
+                    return weapons;
             }
         },
 
@@ -249,7 +266,7 @@ export default {
 
         // Other
         bottomRowHasThreeColumns() {
-            return this.selectedFestival && !this.isSelectedFestivalActive && (this.coop || this.coopCalendar) && this.newWeapon;
+            return this.selectedFestival && !this.isSelectedFestivalActive && (this.coop || this.coopCalendar) && this.newWeapons;
         },
     },
     created() {
