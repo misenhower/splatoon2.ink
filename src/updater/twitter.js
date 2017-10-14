@@ -319,7 +319,7 @@ async function maybePostNewWeaponTweet() {
 
     // Do we have a weapon?
     let weaponAvailabilities = getNewWeaponAvailabilities(time);
-    if (!weaponAvailabilities) {
+    if (!weaponAvailabilities || weaponAvailabilities.length == 0) {
         console.info('Twitter: No new weapon for this time');
         return;
     }
