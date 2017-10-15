@@ -317,6 +317,15 @@ body.has-modal #main {
     border-radius: 15px;
     padding: 38px 10px 0 10px;
 
+    transition: transform 0.2s ease;
+
+    &.tilt-left:hover {
+        transform: rotate(-1.4deg) scale(1.05);
+    }
+    &.tilt-right:hover {
+        transform: rotate(1.4deg) scale(1.05);
+    }
+
     .brand {
         position: absolute;
         top: 6px;
@@ -358,36 +367,75 @@ body.has-modal #main {
 
     .gear-image {
         margin: 0 20px;
-        transition: transform 0.2s ease;
-    }
-
-    &:hover .gear-image {
-        transform: scale(1.1);
     }
 
     .gear-name {
         position: relative;
     }
 
-    .frequent-skill {
+    .info-overlay {
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
 
-        background: rgba($white-ter, 0.9);
-        border-radius: 10px;
-
         opacity: 0;
-        transition: opacity 0.2s ease;
+        transform: translate(0, 2px);
+        transition: all 0.2s ease;
+
+        .info-overlay-container {
+            margin-top: 2px;
+            background: rgba($white-ter, 0.9);
+            border-radius: 10px;
+        }
 
         .skill-img-bg img {
             width: 26px;
         }
+
+        .original-gear {
+            .skill-img-bg img {
+                width: 24px;
+            }
+
+            .sub {
+                margin: 7px 0 0 2px;
+                img {
+                    width: 15px;
+                }
+            }
+
+            .cash {
+                width: 20px;
+                height: 20px;
+            }
+
+            .strikethrough {
+                position: relative;
+            }
+
+            .strikethrough:before {
+                position: absolute;
+                content: "";
+                left: -5px;
+                top: 50%;
+                right: -5px;
+                border-top: 3px solid;
+                border-color: red;
+                opacity: 0.6;
+
+                -webkit-transform:rotate(-20deg);
+                -moz-transform:rotate(-20deg);
+                -ms-transform:rotate(-20deg);
+                -o-transform:rotate(-20deg);
+                transform:rotate(-20deg);
+            }
+        }
     }
 
-    &:hover .frequent-skill {
+    &:hover .info-overlay {
         opacity: 1;
+        transform: none;
     }
 
     .bottom-bar {
@@ -399,12 +447,12 @@ body.has-modal #main {
 
         color: $white-ter;
         @extend .text-shadow;
+    }
 
-        .cash {
-            width: 24px;
-            height: 24px;
-            vertical-align: text-bottom;
-        }
+    .cash {
+        width: 24px;
+        height: 24px;
+        vertical-align: text-bottom;
     }
 
     &.shoes .bottom-bar {

@@ -1,0 +1,132 @@
+{
+    "0": {
+        "id": "0",
+        "image": "/images/skill/04b1de71fba1f14197b9163503955c52fd74858b.png",
+        "name": "Ink Saver (Main)"
+    },
+    "1": {
+        "id": "1",
+        "image": "/images/skill/da8ff08954fd5d890fc8bc4dd4cb761e2a33b703.png",
+        "name": "Ink Saver (Sub)"
+    },
+    "10": {
+        "id": "10",
+        "image": "/images/skill/34e114a50a001778a574f7061039d43e632137b7.png",
+        "name": "Sub Power Up"
+    },
+    "100": {
+        "id": "100",
+        "image": "/images/skill/492691ed2a7ce7ec694bf88d3ea1f692b7da1692.png",
+        "name": "Opening Gambit"
+    },
+    "101": {
+        "id": "101",
+        "image": "/images/skill/03d1b1e0221fc82d0ab26cb8cd3f5f40107b6190.png",
+        "name": "Last-Ditch Effort"
+    },
+    "102": {
+        "id": "102",
+        "image": "/images/skill/d59c8affb196bc3dcb6faea34899e782bce37656.png",
+        "name": "Tenacity"
+    },
+    "103": {
+        "id": "103",
+        "image": "/images/skill/bdc5135874439cf3169d9a54b3f1fbdba3731b34.png",
+        "name": "Comeback"
+    },
+    "104": {
+        "id": "104",
+        "image": "/images/skill/f0a99d1ab1a765b992b79610ebdc25b69d88fae9.png",
+        "name": "Ninja Squid"
+    },
+    "105": {
+        "id": "105",
+        "image": "/images/skill/53c62995f9d2dc4a60f3850c5dbdd2323f1eef87.png",
+        "name": "Haunt"
+    },
+    "106": {
+        "id": "106",
+        "image": "/images/skill/1d6ed2ef9cd1f71086368e9ec4b5704663ba3a0a.png",
+        "name": "Thermal Ink"
+    },
+    "107": {
+        "id": "107",
+        "image": "/images/skill/344e4c16ad4ec9ab8f56711d8d79a1ffb9228a1a.png",
+        "name": "Respawn Punisher"
+    },
+    "108": {
+        "id": "108",
+        "image": "/images/skill/67e4e8ec069dfaec1d732c7fe407a2c73e8e51b8.png",
+        "name": "Ability Doubler"
+    },
+    "109": {
+        "id": "109",
+        "image": "/images/skill/8a3f06a972689b094f762626ff36b3db8ee545b5.png",
+        "name": "Stealth Jump"
+    },
+    "11": {
+        "id": "11",
+        "image": "/images/skill/33087a476135074af856151a89a6fe4d1d3a996e.png",
+        "name": "Ink Resistance Up"
+    },
+    "110": {
+        "id": "110",
+        "image": "/images/skill/47a74cd575b25a9de3e3592084ff3870db0cf4e0.png",
+        "name": "Object Shredder"
+    },
+    "111": {
+        "id": "111",
+        "image": "/images/skill/d0de52e89947803e5b24165335855f39f9e8a6bd.png",
+        "name": "Drop Roller"
+    },
+    "12": {
+        "id": "12",
+        "image": "/images/skill/35f4ec4284fc5a19da58ffb1a7988eb26eb8bd7f.png",
+        "name": "Bomb Defense Up"
+    },
+    "13": {
+        "id": "13",
+        "image": "/images/skill/efa003501e1152ef7b617b9e01517c915e05b7ac.png",
+        "name": "Cold-Blooded"
+    },
+    "2": {
+        "id": "2",
+        "image": "/images/skill/c14f4471b26e0f918c736b5c17e03212290f4541.png",
+        "name": "Ink Recovery Up"
+    },
+    "3": {
+        "id": "3",
+        "image": "/images/skill/7de1bdfd875ef470b6066c17bed726b5b5113d48.png",
+        "name": "Run Speed Up"
+    },
+    "4": {
+        "id": "4",
+        "image": "/images/skill/d138c293c8ddac42fadf0e6531100a88c79c81f6.png",
+        "name": "Swim Speed Up"
+    },
+    "5": {
+        "id": "5",
+        "image": "/images/skill/1378f3963526d7216ec44da35b924b81a8ff6a37.png",
+        "name": "Special Charge Up"
+    },
+    "6": {
+        "id": "6",
+        "image": "/images/skill/d83b962b84fcea9d02c591c296234f5de77f9682.png",
+        "name": "Special Saver"
+    },
+    "7": {
+        "id": "7",
+        "image": "/images/skill/f20a3e85feeb6b4bb021d28059afd6265cee0b43.png",
+        "name": "Special Power Up"
+    },
+    "8": {
+        "id": "8",
+        "image": "/images/skill/84ab4ba1188849dff63a4314955a53ab103b47df.png",
+        "name": "Quick Respawn"
+    },
+    "9": {
+        "id": "9",
+        "image": "/images/skill/daf6883039afa62da91eb93eb2a40b673f10b715.png",
+        "name": "Quick Super Jump"
+    }
+}

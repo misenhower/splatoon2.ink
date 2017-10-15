@@ -1,0 +1,107 @@
+{
+    "0": {
+        "frequent_skill": "11",
+        "id": "0",
+        "image": "/images/brand/5547e529d160b188d104e3b68ff4b7566eab9771.png",
+        "name": "SquidForce"
+    },
+    "1": {
+        "frequent_skill": "9",
+        "id": "1",
+        "image": "/images/brand/3d4661b3f60f4b74e9bb6760ba7397ecd2502a20.png",
+        "name": "Zink"
+    },
+    "10": {
+        "frequent_skill": "2",
+        "id": "10",
+        "image": "/images/brand/02286fe17bb6bc3f5f13c6b251ddc0a55c44c756.png",
+        "name": "Tentatek"
+    },
+    "11": {
+        "frequent_skill": "5",
+        "id": "11",
+        "image": "/images/brand/eab05d2d502cf953b4ae034c87e52e8c999339d6.png",
+        "name": "Takoroka"
+    },
+    "15": {
+        "frequent_skill": "13",
+        "id": "15",
+        "image": "/images/brand/0b09659e2770389dcb23d911359175e8686f85f5.png",
+        "name": "Annaki"
+    },
+    "16": {
+        "frequent_skill": "10",
+        "id": "16",
+        "image": "/images/brand/de96243d58e41e928d30290162a6f496033da868.png",
+        "name": "Enperry"
+    },
+    "17": {
+        "frequent_skill": "13",
+        "id": "17",
+        "image": "/images/brand/4b05e494bf9a547b4d625fd52dcdd930a6c4defc.png",
+        "name": "Toni Kensa"
+    },
+    "2": {
+        "frequent_skill": "4",
+        "id": "2",
+        "image": "/images/brand/9ac5752790dd6dbdc7a427df95e1bfe89fe318e0.png",
+        "name": "Krak-On"
+    },
+    "3": {
+        "frequent_skill": "3",
+        "id": "3",
+        "image": "/images/brand/451a2d0b5ceb7ea4ec4e47c3ff05eee362e9b722.png",
+        "name": "Rockenberg"
+    },
+    "4": {
+        "frequent_skill": "6",
+        "id": "4",
+        "image": "/images/brand/f3d01187fd633e7d48d9e4e16ef31da73279293c.png",
+        "name": "Zekko"
+    },
+    "5": {
+        "frequent_skill": "7",
+        "id": "5",
+        "image": "/images/brand/b38b99b3358f587efd1613b72a72c9ca9f81f406.png",
+        "name": "Forge"
+    },
+    "6": {
+        "frequent_skill": "1",
+        "id": "6",
+        "image": "/images/brand/dee59c0797a6214114e527dfa51f0dd012085172.png",
+        "name": "Firefin"
+    },
+    "7": {
+        "frequent_skill": "8",
+        "id": "7",
+        "image": "/images/brand/8175954b5a7e02b8097dbb484c808c8f39d31f41.png",
+        "name": "Skalop"
+    },
+    "8": {
+        "frequent_skill": "0",
+        "id": "8",
+        "image": "/images/brand/36bc10db0aa2640c87ad712fc0281515beedcca1.png",
+        "name": "Splash Mob"
+    },
+    "9": {
+        "frequent_skill": "12",
+        "id": "9",
+        "image": "/images/brand/80648c6e427eae4d32677797fa1be7c0e253fda5.png",
+        "name": "Inkline"
+    },
+    "97": {
+        "id": "97",
+        "image": "/images/brand/ec85f17c315e0a1ea4dee55041fd30a88d6aba93.png",
+        "name": "Grizzco"
+    },
+    "98": {
+        "id": "98",
+        "image": "/images/brand/047cbc2f0674eeb4796efb3b6ec1b710b22d07e7.png",
+        "name": "Cuttlegear"
+    },
+    "99": {
+        "id": "99",
+        "image": "/images/brand/154440ecbfb65a22cdb224fac843b02cccbcad03.png",
+        "name": "amiibo"
+    }
+}

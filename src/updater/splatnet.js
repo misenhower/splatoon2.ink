@@ -72,6 +72,12 @@ async function getLeagueMatchRanking(year, month, day, hour, type = 'T', region 
     return response.data;
 }
 
+async function getResults(id = null) {
+    let url = (id) ? `results/${id}` : 'results';
+    let response = await api.get(url);
+    return response.data;
+}
+
 async function getImage(imagePath) {
     let response = await axios.get(`${splatnetBaseUrl}${imagePath}`, { responseType: 'arraybuffer', headers: { 'User-Agent': userAgent } });
     return response.data;
@@ -85,5 +91,6 @@ module.exports = {
     getJPFestivals,
     getMerchandises,
     getLeagueMatchRanking,
+    getResults,
     getImage,
 }

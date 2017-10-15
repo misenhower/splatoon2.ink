@@ -28,13 +28,40 @@
         <div class="gear-name has-text-centered">
             {{ merchandise.gear.name }}
 
-            <div class="frequent-skill">
-                <div class="is-size-7">{{ merchandise.gear.brand.name }}</div>
-                <div>
-                    <div class="skill-img-bg">
-                        <img :src="merchandise.gear.brand.frequent_skill.image | localSplatNetImageUrl" :title="merchandise.gear.brand.frequent_skill.name" />
+            <div class="info-overlay">
+                <div class="info-overlay-container original-gear" v-if="originalGear">
+                    <div class="is-size-7">Original Gear</div>
+
+                    <div class="level" style="margin: 0 3px">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="skill-img-bg strikethrough">
+                                    <img :src="originalGear.skill.image | localSplatNetImageUrl" :title="originalGear.skill.name" />
+                                </div>
+                                <div class="sub" v-for="i in originalGear.rarity + 1">
+                                    <img src="~@/img/blank-skill-slot.png" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div>
+                                    <img class="cash" src="~@/img/cash.png" />
+                                    <span class="strikethrough">{{ originalGear.price }}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    Common Ability
+                </div>
+
+                <div class="info-overlay-container">
+                    <div class="is-size-7">{{ merchandise.gear.brand.name }}</div>
+                    <div>
+                        <div class="skill-img-bg">
+                            <img :src="merchandise.gear.brand.frequent_skill.image | localSplatNetImageUrl" :title="merchandise.gear.brand.frequent_skill.name" />
+                        </div>
+                        Common Ability
+                    </div>
                 </div>
             </div>
         </div>
@@ -47,7 +74,14 @@
 </template>
 
 <script>
+import { getOriginalGear } from '@/js/splatoon';
+
 export default {
     props: ['merchandise', 'now'],
+    computed: {
+        originalGear() {
+            return getOriginalGear(this.merchandise.gear);
+        },
+    },
 }
 </script>

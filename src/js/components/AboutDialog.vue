@@ -18,7 +18,11 @@
                             <p>
                                 This site was built with <a href="https://vuejs.org/" target="_blank">Vue.js</a>
                                 and <a href="http://bulma.io/" target="_blank">Bulma</a>.
-                                All data comes from the SplatNet 2 API.
+                                Data comes from the SplatNet 2 API and other manually-maintained sources.
+                            </p>
+                            <p>
+                                Original SplatNet gear ability/price data comes from
+                                <a href="https://splatoonwiki.org/wiki/Gear#In_Splatoon_2" target="_blank">Inkipedia</a>.
                             </p>
                             <p>
                                 Source code for this site is available on
