@@ -10,7 +10,7 @@
         </div>
 
         <div class="columns">
-            <div class="column is-5" style="display: flex; align-items: center; justify-content: center;">
+            <div class="column is-5" style="min-height: 560px; display: flex; align-items: center; justify-content: center;">
                 <MerchandiseBox
                     :merchandise="featuredMerchandise"
                     :now="startTime"
@@ -18,7 +18,7 @@
                     ></MerchandiseBox>
             </div>
 
-            <div class="column">
+            <div class="column" style="display: flex; align-items: center; justify-content: center;">
                 <div class="columns is-multiline is-centered">
                     <div class="column is-one-third" v-for="(merchandise, index) in otherMerchandises">
                         <MerchandiseBox

@@ -27,8 +27,18 @@
     }
 
     .featured-merchandise {
-        transform: scale(2) rotate(-1.4deg);
+        transform: scale(1.85) rotate(-1.4deg);
         min-width: 173px;
+
+        .info-overlay {
+            opacity: 1;
+            transform: none;
+            position: static;
+
+            .common-ability {
+                display: none;
+            }
+        }
     }
 
     .salmon-run {

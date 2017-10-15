@@ -54,7 +54,7 @@
                     </div>
                 </div>
 
-                <div class="info-overlay-container">
+                <div class="info-overlay-container common-ability">
                     <div class="is-size-7">{{ merchandise.gear.brand.name }}</div>
                     <div>
                         <div class="skill-img-bg">
