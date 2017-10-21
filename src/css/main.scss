@@ -415,6 +415,7 @@ body.has-modal #main {
             }
 
             .strikethrough:before {
+                pointer-events: none;
                 position: absolute;
                 content: "";
                 left: -5px;
