@@ -1,6 +1,8 @@
 node_modules
 .env
+docker-compose.override.yml
 public/*
+logs
 manual-festivals.json
 manual-salmonrun.json
 twitter-lastTweetTimes.json

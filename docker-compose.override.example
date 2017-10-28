@@ -1,0 +1,20 @@
+version: '2'
+
+# This adds config options for use with nginx-proxy:
+# https://github.com/jwilder/nginx-proxy
+
+# Alternatively, a public port for nginx could be exposed here.
+
+services:
+
+  nginx:
+    environment:
+      VIRTUAL_HOST: splatoon2.ink,www.splatoon2.ink
+    networks:
+      - default
+      - nginx-proxy
+
+networks:
+  nginx-proxy:
+    external:
+      name: nginxproxy_default
