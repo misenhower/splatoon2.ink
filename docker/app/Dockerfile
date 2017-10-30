@@ -10,5 +10,13 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
     apt-get update &&\
     apt-get install -y google-chrome-unstable
 
+# Install dumb-init
+# https://github.com/Yelp/dumb-init
+# This fixes issues with zombie Chrome processes:
+# https://github.com/GoogleChrome/puppeteer/issues/615
+RUN wget https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64.deb &&\
+    dpkg -i dumb-init_*.deb
+
 WORKDIR /app
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["yarn", "cron"]
