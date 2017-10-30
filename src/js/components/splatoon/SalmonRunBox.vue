@@ -80,7 +80,7 @@
                     </div>
                 </div>
 
-                <div v-if="upcomingSchedules.length > 0" class="has-text-right calendar-attribution">
+                <div v-if="showSourceBar" class="has-text-right calendar-attribution">
                     Salmon Run schedule courtesy of
                     <a href="https://www.reddit.com/r/splatoon/comments/6pgqy4/i_couldnt_find_a_calendar_online_with_a_list_of/" target="_blank">thejellydude</a>
                 </div>
@@ -115,6 +115,9 @@ export default {
         currentSchedule() {
             if (this.allSchedules.length > 0 && this.allSchedules[0].start_time <= this.now)
                 return this.allSchedules[0];
+        },
+        showSourceBar() {
+            return this.upcomingSchedules && this.upcomingSchedules.find(s => s.source == 'thejellydude');
         },
     },
 }

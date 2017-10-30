@@ -28,7 +28,7 @@ async function getEventsFromCalendar() {
         if (end_time < now)
             return;
 
-        schedules.push({ start_time, end_time });
+        schedules.push({ start_time, end_time, source: 'thejellydude' });
     });
 
     return schedules;
@@ -38,7 +38,7 @@ function getManualEvents() {
     let filename = path.resolve('manual-salmonrun.json');
     if (!fs.existsSync(filename))
         return [];
-    return JSON.parse(fs.readFileSync(filename));
+    return JSON.parse(fs.readFileSync(filename)).map(s => { if (!s.source) s.source = 'splatoon2.ink'; return s; });
 }
 
 async function getSchedules() {

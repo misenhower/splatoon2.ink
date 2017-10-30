@@ -36,8 +36,7 @@
                             <p>
                                 <strong>Salmon Run:</strong>
                                 The SplatNet API doesn't provide a way to see maps, available weapons, or upcoming Salmon Run times.
-                                Upcoming times are provided by
-                                <a href="https://www.reddit.com/r/splatoon/comments/6pgqy4/i_couldnt_find_a_calendar_online_with_a_list_of/" target="_blank">thejellydude</a>.
+                                Upcoming times and weapons are manually entered.
                             </p>
                             <p>
                                 <strong>Splatfests:</strong>
