@@ -45,7 +45,7 @@
 
                             <div class="select">
                                 <select v-model="selectedStartTime">
-                                    <option v-for="time in times" :value="time">{{ time | time }}</option>
+                                    <option v-for="time in startTimes" :value="time">{{ time | time }}</option>
                                 </select>
                             </div>
 
@@ -59,7 +59,7 @@
 
                             <div class="select">
                                 <select v-model="selectedEndTime">
-                                    <option v-for="time in times" :value="time">{{ time | time }}</option>
+                                    <option v-for="time in endTimes" :value="time">{{ time | time }}</option>
                                 </select>
                             </div>
 
@@ -106,6 +106,20 @@ import Modal from '@/js/components/Modal.vue';
 import Stage from '@/js/components/splatoon/Stage.vue';
 import SplatoonStages from '@/js/splatoonStages';
 
+function getTimeRange(startDate) {
+    let times = [];
+
+    for (let i = 0; i < 24; i += 6) {
+        let date = new Date(startDate);
+        date.setUTCHours(i);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        times.push(Math.floor(date.getTime() / 1000));
+    }
+
+    return times;
+}
+
 export default {
     components: { Modal, Stage },
     props: ['coopCalendar'],
@@ -121,7 +135,7 @@ export default {
             schedules: null,
             selectedSchedule: null,
             dates: [],
-            times: [],
+            // times: [],
             selectedStartDate: null,
             selectedStartTime: null,
             selectedEndDate: null,
@@ -133,32 +147,56 @@ export default {
             if (this.weapons)
                 return Object.values(this.weapons).filter(weapon => weapon.name.toLowerCase().indexOf(this.weaponSearchTerm) > -1);
         },
+        startTimes() {
+            if (this.selectedStartDate)
+                return getTimeRange(this.selectedStartDate * 1000);
+        },
+        endTimes() {
+            if (this.selectedEndDate)
+                return getTimeRange(this.selectedEndDate * 1000);
+        },
         output() {
             return JSON.stringify(this.schedules);
         },
     },
+    watch: {
+        startTimes(newValue, oldValue) {
+            if (newValue) {
+                let index = (oldValue) ? oldValue.indexOf(this.selectedStartTime) : 0;
+                this.selectedStartTime = newValue[index];
+            }
+        },
+        endTimes(newValue, oldValue) {
+            if (newValue) {
+                let index = (oldValue) ? oldValue.indexOf(this.selectedEndTime) : 0;
+                this.selectedEndTime = newValue[index];
+            }
+        },
+        selectedStartDate() {
+            if (this.selectedStartDate) {
+                let index = this.dates.indexOf(this.selectedStartDate);
+                this.selectedEndDate = this.dates[index + 1];
+            }
+        },
+        selectedStartTime() {
+            if (this.selectedStartTime) {
+                let index = this.startTimes.indexOf(this.selectedStartTime);
+                this.selectedEndTime = this.endTimes[index];
+            }
+        },
+    },
     created() {
-        // Set up dates/times
+        // Set up dates
         for (let i = 0; i < 20; i++) {
             let date = new Date;
-            date.setHours(0);
-            date.setMinutes(0);
-            date.setSeconds(0);
-            date.setDate(date.getDate() + i);
+            date.setUTCHours(0);
+            date.setUTCMinutes(0);
+            date.setUTCSeconds(0);
+            date.setUTCDate(date.getDate() + i);
             this.dates.push(Math.floor(date.getTime() / 1000));
         }
         this.selectedStartDate = this.dates[0];
         this.selectedEndDate = this.dates[0];
-
-        for (let i = 0; i < 24; i += 6) {
-            let date = new Date;
-            date.setUTCHours(i);
-            date.setMinutes(0);
-            date.setSeconds(0);
-            this.times.push(Math.floor(date.getTime() / 1000));
-        }
-        this.selectedStartTime = this.times[0];
-        this.selectedEndTime = this.times[0];
 
         // Update weapons
         this.updateWeapons();
