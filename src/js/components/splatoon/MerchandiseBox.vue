@@ -7,7 +7,7 @@
         </div>
 
         <div class="skills">
-            <div class="main skill-img-bg">
+            <div class="main skill-img-bg" v-if="merchandise.skill">
                 <img :src="merchandise.skill.image | localSplatNetImageUrl" :title="merchandise.skill.name" />
             </div>
             <div class="sub" v-for="i in merchandise.gear.rarity + 1">
@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <div class="is-size-6 title-squid remaining-time">
+        <div class="is-size-6 title-squid remaining-time" v-if="merchandise.end_time">
             {{ merchandise.end_time - now | shortDuration }}
         </div>
 
@@ -54,7 +54,7 @@
                     </div>
                 </div>
 
-                <div class="info-overlay-container common-ability">
+                <div class="info-overlay-container common-ability" v-if="merchandise.gear.brand.frequent_skill">
                     <div class="is-size-7">{{ merchandise.gear.brand.name }}</div>
                     <div>
                         <div class="skill-img-bg">
@@ -66,7 +66,7 @@
             </div>
         </div>
 
-        <div class="bottom-bar has-text-centered">
+        <div class="bottom-bar has-text-centered" v-if="merchandise.price">
             <img class="cash" src="~@/img/cash.png" />
             {{ merchandise.price }}
         </div>

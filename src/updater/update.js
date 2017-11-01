@@ -52,6 +52,11 @@ async function updateTimeline() {
 
     // Download images
     if (data) {
+        if (data.coop && data.coop.reward_gear) {
+            await maybeDownloadImage(data.coop.reward_gear.gear.image);
+            await maybeDownloadImage(data.coop.reward_gear.gear.brand.image);
+        }
+
         if (data.weapon_availability && data.weapon_availability.availabilities) {
             for (let availability of data.weapon_availability.availabilities) {
                 let weapon = availability.weapon;

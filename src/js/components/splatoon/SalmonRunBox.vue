@@ -19,6 +19,17 @@
 
         <div class="columns is-gapless">
             <div class="column is-4 salmon-run-ad-img">
+                <template v-if="coop && coop.reward_gear">
+                    <div class="salmon-run-gear-text">
+                        This month's gear
+                    </div>
+                    <div class="salmon-run-gear-image hand" @click="gearDialogOpen = true">
+                        <div class="image is-32x32">
+                            <img :src="coop.reward_gear.gear.image | localSplatNetImageUrl" style="margin-top: -5px" />
+                        </div>
+                    </div>
+                </template>
+
                 <div class="image is-16by9 is-hidden-desktop"></div>
             </div>
             <div class="column">
@@ -86,15 +97,27 @@
                 </div>
             </div>
         </div>
+
+        <SalmonRunGearDialog
+            v-if="gearDialogOpen && coop && coop.reward_gear"
+            :gear="coop.reward_gear.gear"
+            @close="gearDialogOpen = false"
+            />
     </div>
 </template>
 
 <script>
 import SalmonRunDetailsBar from './SalmonRunDetailsBar.vue';
+import SalmonRunGearDialog from './SalmonRunGearDialog.vue';
 
 export default {
-    components: { SalmonRunDetailsBar },
+    components: { SalmonRunDetailsBar, SalmonRunGearDialog },
     props: ['coop', 'coopCalendar', 'now', 'screenshotMode'],
+    data() {
+        return {
+            gearDialogOpen: false,
+        };
+    },
     computed: {
         allSchedules() {
             let results = {};
