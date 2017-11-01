@@ -141,7 +141,7 @@ body.has-modal #main {
         background-position: 50% 50%;
         z-index: 1;
 
-        @include desktop {
+        @include tablet {
             border-top-right-radius: 6px;
         }
     }
