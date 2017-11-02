@@ -19,7 +19,7 @@
 
         <div class="columns is-gapless">
             <div class="column is-4 salmon-run-ad-img">
-                <template v-if="coop && coop.reward_gear">
+                <template v-if="!screenshotMode && coop && coop.reward_gear">
                     <div class="salmon-run-gear-text">
                         This month's gear
                     </div>
