@@ -59,7 +59,7 @@
                         <SalmonRunDetailsBar :schedule="currentSchedule"></SalmonRunDetailsBar>
                     </div>
 
-                    <div v-if="upcomingSchedules.length > 0">
+                    <div v-if="!screenshotMode && upcomingSchedules.length > 0">
                         <div class="salmon-run-future">
                             <div class="is-size-6 title-squid font-splatoon1">
                                 Soon
