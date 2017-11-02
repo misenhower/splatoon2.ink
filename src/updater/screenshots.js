@@ -68,9 +68,17 @@ function captureNewWeaponScreenshot(releaseTime) {
     return captureScreenshot({ url });
 }
 
+function captureSplatfestScreenshot(region, startTime) {
+    let url = new URL(htmlUrl);
+    url.hash = `/splatfest/${region}/${startTime}`;
+
+    return captureScreenshot({ url });
+}
+
 module.exports = {
     captureScheduleScreenshot,
     captureGearScreenshot,
     captureSalmonRunScreenshot,
     captureNewWeaponScreenshot,
+    captureSplatfestScreenshot,
 }

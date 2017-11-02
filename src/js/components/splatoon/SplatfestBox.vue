@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <div class="has-text-centered is-size-5 title-color festival-period-container">
+        <div class="has-text-centered is-size-5 title-color festival-period-container" v-if="!screenshotMode">
             <span class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }">
                 {{ festival.times.start | date }}
                 {{ festival.times.start | time }}
@@ -28,7 +28,7 @@
             </span>
         </div>
 
-        <div class="splatfest-content has-text-centered">
+        <div class="splatfest-content has-text-centered" v-if="!screenshotMode">
             <template v-if="festival.times.start <= now">
                 {{ festival.times.end - now | duration }}
                 remaining
@@ -38,6 +38,12 @@
                 {{ festival.times.start - now | duration }}
             </template>
         </div>
+
+        <div class="has-text-centered is-size-5 title-color festival-period-container" v-if="screenshotMode">
+            <span class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }">
+                {{ festival.times.end - now | durationHours }} remaining
+            </span>
+        </div>
     </div>
 </template>
 
@@ -45,7 +51,7 @@
 import Vue from 'vue';
 
 export default {
-    props: ['festival', 'now'],
+    props: ['festival', 'now', 'screenshotMode'],
     computed: {
         title() {
             if (this.festival.times.start > this.now)

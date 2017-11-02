@@ -33,6 +33,18 @@
                         </router-link>
                     </strong>
                 </div>
+
+                <div v-if="splatfests">
+                    Splatfest:
+                    <strong>
+                        <router-link
+                            v-for="splatfest in splatfests"
+                            :key="splatfest.region"
+                            :to="`/splatfest/${splatfest.region}/${splatfest.festival.times.start}`">
+                            {{ splatfest.region }}
+                        </router-link>
+                    </strong>
+                </div>
             </div>
         </div>
     </div>
@@ -48,6 +60,7 @@ export default {
             merchandises: null,
             timeline: null,
             salmonruncalendar: null,
+            festivals: null,
         };
     },
     computed: {
@@ -77,6 +90,20 @@ export default {
                 return this.timeline.weapon_availability.availabilities[0];
             }
         },
+        splatfests() {
+            if (this.festivals) {
+                let splatfests = [];
+
+                for (let region in this.festivals) {
+                    let festival = this.festivals[region].festivals[0];
+                    if (festival)
+                        splatfests.push({ region, festival });
+                }
+
+                if (splatfests.length)
+                    return splatfests;
+            }
+        },
     },
     created() {
         axios.get('data/schedules.json')
@@ -87,6 +114,8 @@ export default {
             .then(response => this.timeline = response.data);
         axios.get('data/salmonruncalendar.json')
             .then(response => this.salmonruncalendar = response.data);
+        axios.get('data/festivals.json')
+            .then(response => this.festivals = response.data);
     },
 }
 </script>

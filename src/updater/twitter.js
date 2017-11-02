@@ -4,12 +4,16 @@ const ScheduleTweet = require('./twitter/ScheduleTweet');
 const GearTweet = require('./twitter/GearTweet');
 const SalmonRunTweet = require('./twitter/SalmonRunTweet');
 const NewWeaponTweet = require('./twitter/NewWeaponTweet');
+const SplatfestTweet = require('./twitter/SplatfestTweet');
 
 let tweets = [
     new ScheduleTweet,
     new GearTweet,
     new SalmonRunTweet,
     new NewWeaponTweet,
+    new SplatfestTweet('na'),
+    new SplatfestTweet('eu'),
+    new SplatfestTweet('jp'),
 ];
 
 async function maybePostTweets() {

@@ -1,8 +1,8 @@
 const splatoonRegions = [
-    { key: null, name: 'Global' },
-    { key: 'na', name: 'North America & Oceania' },
-    { key: 'eu', name: 'Europe' },
-    { key: 'jp', name: 'Japan' },
+    { key: null, name: 'Global', demonym: 'Global' },
+    { key: 'na', name: 'North America & Oceania', demonym: 'North American & Oceanian' },
+    { key: 'eu', name: 'Europe', demonym: 'European' },
+    { key: 'jp', name: 'Japan', demonym: 'Japanese' },
 ];
 
 function getRegionByKey(key) {
@@ -62,7 +62,7 @@ function detectSplatoonRegionFromLanguage(language) {
     return null;
 }
 
-export default {
+module.exports = {
     splatoonRegions,
     getRegionByKey,
     detectSplatoonRegion,
