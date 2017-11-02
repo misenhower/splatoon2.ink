@@ -23,7 +23,7 @@
                     <div class="salmon-run-gear-text">
                         This month's gear
                     </div>
-                    <div class="salmon-run-gear-image hand" @click="gearDialogOpen = true">
+                    <div class="salmon-run-gear-image hand" @click="gearDialogOpen = true" :title="coop.reward_gear.gear.name">
                         <div class="image is-32x32">
                             <img :src="coop.reward_gear.gear.image | localSplatNetImageUrl" style="margin-top: -5px" />
                         </div>
