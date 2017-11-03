@@ -29,6 +29,10 @@
                                 <a href="https://github.com/misenhower/splatoon2.ink" target="_blank">GitHub</a>.
                             </p>
                             <p>
+                                If you'd like to use this site's data in your own site/bot/app, please review the data access policy
+                                <a href="https://github.com/misenhower/splatoon2.ink/wiki/Data-access-policy" target="_blank">here</a>.
+                            </p>
+                            <p>
                                 <a href="https://twitter.com/mattisenhower" target="_blank">Follow me on Twitter</a>
                                 or <a href="mailto:matt@isenhower.com" target="_blank">email me</a> with any questions!
                             </p>
