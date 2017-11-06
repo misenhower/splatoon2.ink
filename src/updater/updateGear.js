@@ -8,6 +8,7 @@ const mkdirp = require('mkdirp');
 const axios = require('axios');
 const retrieveGearData = require('./retrieveGearData');
 const stringify = require('json-stable-stringify');
+const he = require('he');
 
 const dataPath = path.resolve('src/js/data');
 const brandsFilename = `${dataPath}/brands.json`;
@@ -72,7 +73,7 @@ function applyData(oldData, newData) {
             let details = /name=(.*?)\|brand=(.*?)\|cost=(.*?)\|ability=(.*?)\|rarity=(.*?)\|/.exec(row[0]);
             if (details) {
                 inkipediaGear[key].push({
-                    name: details[1],
+                    name: he.decode(details[1]),
                     brand: details[2],
                     price: parseInt(details[3].replace(',', '')),
                     skill: details[4],
