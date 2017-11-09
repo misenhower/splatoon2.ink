@@ -38,11 +38,6 @@
                             </p>
                             <h5 class="font-splatoon2 title is-5">Notes &amp; Issues</h5>
                             <p>
-                                <strong>Salmon Run:</strong>
-                                The SplatNet API doesn't provide a way to see maps, available weapons, or upcoming Salmon Run times.
-                                Upcoming times and weapons are manually entered.
-                            </p>
-                            <p>
                                 <strong>Splatfests:</strong>
                                 Only North American Splatfests are updated automatically.
                                 There may be a slight delay in updating Splatfest schedules for other regions.
