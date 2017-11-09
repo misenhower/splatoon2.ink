@@ -198,16 +198,6 @@ body.has-modal #main {
             transform: scale(1.2);
         }
     }
-
-    .calendar-attribution {
-        background: rgba(0,0,0,0.5);
-        font-family: $family-sans-serif;
-        font-size: 0.7rem;
-        padding: 2px 20px;
-        a {
-            color: mix($green, $white-ter, 25%);
-        }
-    }
 }
 
 .splatfest {

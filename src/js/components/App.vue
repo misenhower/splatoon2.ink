@@ -88,10 +88,10 @@
                             </div>
                         </div>
 
-                        <div class="column" v-if="coop || coopCalendar">
+                        <div class="column" v-if="coopSchedules">
                             <div class="salmon-run tilt-left">
                                 <div class="hook-box">
-                                    <SalmonRunBox :coop="coop" :coopCalendar="coopCalendar" :now="now"></SalmonRunBox>
+                                    <SalmonRunBox :coop="coop" :coopSchedules="coopSchedules" :now="now"></SalmonRunBox>
                                 </div>
                             </div>
                         </div>
@@ -177,11 +177,11 @@ export default {
             now: null,
             splatnet: {
                 schedules: null,
+                coopSchedules: null,
                 timeline: null,
                 merchandises: null,
                 festivals: null,
             },
-            salmonruncalendar: null,
             aboutOpen: false,
             splatNetGearOpen: false,
         };
@@ -229,11 +229,11 @@ export default {
             if (this.splatnet.timeline && this.splatnet.timeline.coop && this.splatnet.timeline.coop.schedule.end_time > this.now)
                 return this.splatnet.timeline.coop;
         },
-        coopCalendar() {
-            if (this.salmonruncalendar) {
-                let schedules = this.salmonruncalendar.schedules.filter(this.filterEndTime);
-                if (schedules.length > 0)
-                    return schedules;
+        coopSchedules() {
+            if (this.splatnet.coopSchedules) {
+                let details = this.splatnet.coopSchedules.details.filter(this.filterEndTime);
+                let schedules = this.splatnet.coopSchedules.schedules.filter(this.filterEndTime);
+                return { details, schedules };
             }
         },
 
@@ -257,7 +257,7 @@ export default {
 
         // Other
         bottomRowHasThreeColumns() {
-            return this.selectedFestival && !this.isSelectedFestivalActive && (this.coop || this.coopCalendar) && this.newWeapons;
+            return this.selectedFestival && !this.isSelectedFestivalActive && (this.coop || this.coopSchedules) && this.newWeapons;
         },
     },
     created() {
@@ -306,7 +306,12 @@ export default {
                 .then(response => this.splatnet.schedules = response.data)
                 .catch(e => console.error(e));
 
-            // Co-op (Salmon Run) data
+            // Co-op schedules
+            axios.get('/data/coop-schedules.json')
+                .then(response => this.splatnet.coopSchedules = response.data)
+                .catch(e => console.error(e));
+
+            // Timeline data (Salmon Run weapon of the month and new weapon availability)
             axios.get('/data/timeline.json')
                 .then(response => this.splatnet.timeline = response.data)
                 .catch(e => console.error(e));
@@ -319,11 +324,6 @@ export default {
             // Splatnet merchandise data
             axios.get('/data/merchandises.json')
                 .then(response => this.splatnet.merchandises = response.data)
-                .catch(e => console.error(e));
-
-            // Salmon Run calendar data (upcoming Salmon Run schedules)
-            axios.get('/data/salmonruncalendar.json')
-                .then(response => this.salmonruncalendar = response.data)
                 .catch(e => console.error(e));
         },
         updateNow() {

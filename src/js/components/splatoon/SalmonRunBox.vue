@@ -90,11 +90,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div v-if="showSourceBar" class="has-text-right calendar-attribution">
-                    Salmon Run schedule courtesy of
-                    <a href="https://www.reddit.com/r/splatoon/comments/6pgqy4/i_couldnt_find_a_calendar_online_with_a_list_of/" target="_blank">thejellydude</a>
-                </div>
             </div>
         </div>
 
@@ -112,7 +107,7 @@ import SalmonRunGearDialog from './SalmonRunGearDialog.vue';
 
 export default {
     components: { SalmonRunDetailsBar, SalmonRunGearDialog },
-    props: ['coop', 'coopCalendar', 'now', 'screenshotMode'],
+    props: ['coop', 'coopSchedules', 'now', 'screenshotMode'],
     data() {
         return {
             gearDialogOpen: false,
@@ -120,17 +115,16 @@ export default {
     },
     computed: {
         allSchedules() {
+            // Combine the "schedules" and "details" sections into one list of schedules
             let results = {};
 
-            // "Official" schedule from SplatNet
-            if (this.coop && this.coop.schedule.end_time > this.now)
-                results[this.coop.schedule.start_time] = this.coop.schedule;
+            // Add the less-detailed schedules in first
+            for (let schedule of this.coopSchedules.schedules)
+                results[schedule.start_time] = schedule;
 
-            // Other schedules
-            if (this.coopCalendar) {
-                for (let schedule of this.coopCalendar)
-                    results[schedule.start_time] = schedule;
-            }
+            // Add/replace the schedules that have map/weapon details
+            for (let schedule of this.coopSchedules.details)
+                results[schedule.start_time] = schedule;
 
             return Object.values(results).sort((a, b) => { return a.start_time - b.start_time });
         },
@@ -138,9 +132,6 @@ export default {
         currentSchedule() {
             if (this.allSchedules.length > 0 && this.allSchedules[0].start_time <= this.now)
                 return this.allSchedules[0];
-        },
-        showSourceBar() {
-            return this.upcomingSchedules && this.upcomingSchedules.find(s => s.source == 'thejellydude');
         },
     },
 }

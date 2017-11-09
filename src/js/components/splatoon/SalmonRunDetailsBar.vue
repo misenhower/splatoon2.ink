@@ -15,7 +15,8 @@
                 <div class="columns is-mobile is-slimmer">
                     <div class="column" v-for="weapon in schedule.weapons">
                         <div class="image is-square weapon">
-                            <img :src="weapon.image | localSplatNetImageUrl" :title="weapon.name" />
+                            <img :src="weapon.image | localSplatNetImageUrl" :title="weapon.name" v-if="weapon" />
+                            <img src="~@/img/salmon-run-random-weapon.png" title="Random" style="padding: 8px" v-else />
                         </div>
                     </div>
                 </div>

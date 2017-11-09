@@ -7,19 +7,16 @@ class SalmonRunTweet extends TwitterPostBase {
     getName() { return 'Salmon Run'; }
 
     getSalmonRunSchedules() {
-        let schedules = {};
+        let results = {};
+        let coopSchedules = readData('coop-schedules.json');
 
-        let timeline = readData('timeline.json').coop;
-        if (timeline)
-            schedules[timeline.start_time] = timeline;
+        for (let schedule of coopSchedules.schedules)
+            results[schedule.start_time] = schedule;
 
-        let calendar = readData('salmonruncalendar.json').schedules;
-        if (calendar) {
-            for (let schedule of calendar)
-                schedules[schedule.start_time] = schedule;
-        }
+        for (let schedule of coopSchedules.details)
+            results[schedule.start_time] = schedule;
 
-        return Object.values(schedules);
+        return Object.values(results);
     }
 
     getData() {

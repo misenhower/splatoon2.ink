@@ -57,9 +57,9 @@ export default {
     data() {
         return {
             schedules: null,
+            coopSchedules: null,
             merchandises: null,
             timeline: null,
-            salmonruncalendar: null,
             festivals: null,
         };
     },
@@ -79,11 +79,8 @@ export default {
                 return this.merchandises[this.merchandises.length - 1];
         },
         latestSalmonRun() {
-            if (this.salmonruncalendar)
-                return this.salmonruncalendar.schedules[0];
-
-            if (this.timeline && this.timeline.coop)
-                return this.timeline.coop;
+            if (this.coopSchedules)
+                return this.coopSchedules.details[0];
         },
         newWeaponAvailability() {
             if (this.timeline && this.timeline.weapon_availability && this.timeline.weapon_availability.availabilities) {
@@ -108,12 +105,12 @@ export default {
     created() {
         axios.get('data/schedules.json')
             .then(response => this.schedules = response.data);
+        axios.get('data/coop-schedules.json')
+            .then(response => this.coopSchedules = response.data);
         axios.get('data/merchandises.json')
             .then(response => this.merchandises = response.data.merchandises);
         axios.get('data/timeline.json')
             .then(response => this.timeline = response.data);
-        axios.get('data/salmonruncalendar.json')
-            .then(response => this.salmonruncalendar = response.data);
         axios.get('data/festivals.json')
             .then(response => this.festivals = response.data);
     },

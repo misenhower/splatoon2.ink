@@ -3,8 +3,9 @@
         <div class="salmon-run tilt-left">
             <div class="hook-box">
                 <SalmonRunBox
+                    v-if="coopSchedules"
                     :coop="coop"
-                    :coopCalendar="coopCalendar"
+                    :coopSchedules="coopSchedules"
                     :now="now"
                     :screenshotMode="true"
                     ></SalmonRunBox>
@@ -23,8 +24,8 @@ export default {
     props: ['startTime'],
     data() {
         return {
+            coopSchedules: null,
             timeline: null,
-            salmonruncalendar: null,
         };
     },
     computed: {
@@ -35,19 +36,19 @@ export default {
             if (this.timeline && this.timeline.coop && this.timeline.coop.schedule.end_time > this.now)
                 return this.timeline.coop;
         },
-        coopCalendar() {
-            if (this.salmonruncalendar) {
-                let schedules = this.salmonruncalendar.schedules.filter(s => s.start_time == this.now);
-                if (schedules.length > 0)
-                    return schedules;
+        coopSchedules() {
+            if (this.coopSchedules) {
+                let details = this.splatnet.coopSchedules.details.filter(s => s.start_time == this.now);
+                let schedules = this.splatnet.coopSchedules.schedules.filter(s => s.start_time == this.now);
+                return { details, schedules };
             }
         },
     },
     created() {
+        axios.get('data/coop-schedules.json')
+            .then(response => this.coopSchedules = response.data)
         axios.get('data/timeline.json')
             .then(response => this.timeline = response.data)
-        axios.get('data/salmonruncalendar.json')
-            .then(response => this.salmonruncalendar = response.data)
     },
 }
 </script>
