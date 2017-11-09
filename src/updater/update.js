@@ -4,7 +4,6 @@ const fs = require('fs');
 const mkdirp = require('mkdirp');
 const splatnet = require('./splatnet');
 const retrieveWeapons = require('./retrieveWeapons');
-const salmoncalendar = require('./salmoncalendar');
 const raven = require('raven');
 
 const dataPath = path.resolve('public/data');
@@ -29,6 +28,27 @@ async function updateSchedules() {
                     await maybeDownloadImage(schedule.stage_a.image);
                     await maybeDownloadImage(schedule.stage_b.image);
                 }
+            }
+        }
+    }
+}
+
+async function updateCoopSchedules() {
+    let data = await handleRequest({
+        title: 'co-op schedules',
+        filename: `${dataPath}/coop-schedules.json`,
+        request: splatnet.getCoopSchedules(),
+    });
+
+    // Download images
+    if (data) {
+        for (let schedule of data.details) {
+            await maybeDownloadImage(schedule.stage.image);
+
+            for (let weapon of schedule.weapons) {
+                // Mystery weapons are null, so we have to make sure we don't attempt to download their images
+                if (weapon)
+                    await maybeDownloadImage(weapon.image);
             }
         }
     }
@@ -154,21 +174,16 @@ async function updateWeapons() {
         await maybeDownloadImage(weapon.image);
 }
 
-function updateSalmonRunCalendar() {
-    return handleRequest({
-        title: 'Salmon Run calendar',
-        filename: `${dataPath}/salmonruncalendar.json`,
-        request: salmoncalendar.getSchedules(),
-    });
-}
-
 async function updateAll() {
     await updateSchedules();
+    await updateCoopSchedules();
     await updateTimeline();
     await updateFestivals();
     await updateMerchandises();
-    await updateWeapons();
-    await updateSalmonRunCalendar();
+
+    // We don't need to maintain the weapons database anymore since Salmon Run data is now available via SplatNet.
+    // Leaving this here for now though just in case we need it in the future.
+    // await updateWeapons();
 
     return 'Done.';
 }
@@ -235,11 +250,11 @@ function maybeDownloadImage(imagePath) {
 
 module.exports = {
     updateSchedules,
+    updateCoopSchedules,
     updateTimeline,
     updateFestivals,
     updateMerchandises,
     updateWeapons,
-    updateSalmonRunCalendar,
     updateAll,
 }
 

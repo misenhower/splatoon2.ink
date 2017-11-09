@@ -19,6 +19,11 @@ async function getSchedules() {
     return response.data;
 }
 
+async function getCoopSchedules() {
+    let response = await api.get('coop_schedules');
+    return response.data;
+}
+
 async function getTimeline() {
     let response = await api.get('timeline');
     return response.data;
@@ -85,6 +90,7 @@ async function getImage(imagePath) {
 
 module.exports = {
     getSchedules,
+    getCoopSchedules,
     getTimeline,
     getNAFestivals,
     getEUFestivals,
