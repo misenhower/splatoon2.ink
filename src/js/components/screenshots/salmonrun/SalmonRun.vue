@@ -5,7 +5,7 @@
                 <SalmonRunBox
                     v-if="coopSchedules"
                     :coop="coop"
-                    :coopSchedules="coopSchedules"
+                    :coopSchedules="filteredCoopSchedules"
                     :now="now"
                     :screenshotMode="true"
                     ></SalmonRunBox>
@@ -36,10 +36,10 @@ export default {
             if (this.timeline && this.timeline.coop && this.timeline.coop.schedule.end_time > this.now)
                 return this.timeline.coop;
         },
-        coopSchedules() {
+        filteredCoopSchedules() {
             if (this.coopSchedules) {
-                let details = this.splatnet.coopSchedules.details.filter(s => s.start_time == this.now);
-                let schedules = this.splatnet.coopSchedules.schedules.filter(s => s.start_time == this.now);
+                let details = this.coopSchedules.details.filter(s => s.start_time == this.now);
+                let schedules = this.coopSchedules.schedules.filter(s => s.start_time == this.now);
                 return { details, schedules };
             }
         },
