@@ -10,12 +10,18 @@
             <div class="image">
                 <img :src="image" />
             </div>
-            <div class="alpha">
-                {{ festival.names.alpha_short }}
+
+            <div class="labels">
+                <div class="alpha">
+                    {{ festival.names.alpha_short }}
+                </div>
+
+                <div class="bravo">
+                    {{ festival.names.bravo_short }}
+                </div>
             </div>
-            <div class="bravo">
-                {{ festival.names.bravo_short }}
-            </div>
+
+            <SplatfestResultsBox :festival="festival" :results="results" v-if="results && !screenshotMode" />
         </div>
 
         <div class="has-text-centered is-size-5 title-color festival-period-container" v-if="!screenshotMode">
@@ -29,13 +35,19 @@
         </div>
 
         <div class="splatfest-content has-text-centered" v-if="!screenshotMode">
-            <template v-if="festival.times.start <= now">
+            <template v-if="state == 'upcoming'">
+                in
+                {{ festival.times.start - now | duration }}
+            </template>
+
+            <template v-else-if="state == 'active'">
                 {{ festival.times.end - now | duration }}
                 remaining
             </template>
-            <template v-else>
-                in
-                {{ festival.times.start - now | duration }}
+
+            <template v-else-if="state == 'past' && !results && festival.times.result > now">
+                results in
+                {{ festival.times.result - now | duration }}
             </template>
         </div>
 
@@ -49,19 +61,30 @@
 
 <script>
 import Vue from 'vue';
+import SplatfestResultsBox from './SplatfestResultsBox.vue';
 
 export default {
-    props: ['festival', 'now', 'screenshotMode'],
+    components: { SplatfestResultsBox },
+    props: ['festival', 'results', 'now', 'screenshotMode'],
     computed: {
-        title() {
+        state() {
             if (this.festival.times.start > this.now)
-                return 'Upcoming Splatfest';
-            return 'Splatfest';
+                return 'upcoming';
+            if (this.festival.times.end > this.now)
+                return 'active';
+            return 'past';
+        },
+        title() {
+            switch (this.state) {
+                case 'upcoming': return 'Upcoming Splatfest';
+                case 'active':   return 'Splatfest';
+                case 'past':     return 'Recent Splatfest';
+            }
         },
         image() {
             if (this.festival)
                 return Vue.filter('localSplatNetImageUrl')(this.festival.images.panel);
-        }
+        },
     }
 }
 </script>

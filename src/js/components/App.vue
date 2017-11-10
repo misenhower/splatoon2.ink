@@ -83,7 +83,7 @@
                         <div class="column" v-if="selectedFestival && !isSelectedFestivalActive">
                             <div class="splatfest tilt-right" style="margin-top: 40px">
                                 <div class="hook-box">
-                                    <SplatfestBox :festival="selectedFestival" :now="now"></SplatfestBox>
+                                    <SplatfestBox :festival="selectedFestival" :results="selectedFestivalResults" :now="now"></SplatfestBox>
                                 </div>
                             </div>
                         </div>
@@ -213,15 +213,17 @@ export default {
         showFestivalRegionDropdown() {
             if (this.festivals)
                 return Object.values(this.festivals).some(arr => arr.length > 0);
-                // return this.festivals.na.length > 0 || this.festivals.eu.length > 0 || this.festivals.jp.length > 0;
         },
         selectedFestival() {
             if (this.festivals && this.selectedRegionKey)
                 return this.festivals[this.selectedRegionKey][0];
         },
+        selectedFestivalResults() {
+            if (this.selectedFestival)
+                return this.splatnet.festivals[this.selectedRegionKey].results.find(r => r.festival_id == this.selectedFestival.festival_id);
+        },
         isSelectedFestivalActive() {
-            return this.selectedFestival && this.selectedFestival.times.start <= this.now;
-            // return this.festival && this.festival.times.start <= this.now && this.festival.times.end > this.now;
+            return this.selectedFestival && this.selectedFestival.times.start <= this.now && this.selectedFestival.times.end > this.now;
         },
 
         // Salmon Run
@@ -333,7 +335,10 @@ export default {
             return item.end_time > this.now;
         },
         filterFestivals(item) {
-            return item.times.end > this.now;
+            // We want to show future/current festivals and festivals that ended recently (so we can show their results)
+            // Filter based on the result time and show festival results for 2 days
+            let cutoff = item.times.result + 172800; // 2 days
+            return cutoff > this.now;
         },
     },
 }

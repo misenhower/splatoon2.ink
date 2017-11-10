@@ -9,6 +9,7 @@ $bg-mask-product: url(../img/bg-mask-product.png);
 $bg-mask-title-squid: url(../img/bg-mask-title-squid.png);
 $bg-mask-hook: url(../img/bg-mask-hook.png);
 $bg-mask-banner: url(../img/bg-mask-banner.png);
+$bg-mask-ink-splat: url(../img/bg-mask-ink-splat.svg);
 
 // Colors
 $bg-battle-regular: #19d719;
@@ -78,5 +79,12 @@ $bg-battle-league: #f02d7d;
     mask-image: $bg-mask-banner;
     mask-repeat: no-repeat;
     mask-size: 100% 100%;
+    mask-position: center;
+}
+
+.bg-mask-ink-splat {
+    mask-image: $bg-mask-ink-splat;
+    mask-repeat: no-repeat;
+    mask-size: contain;
     mask-position: center;
 }

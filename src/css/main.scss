@@ -221,20 +221,61 @@ body.has-modal #main {
     .panel-container {
         position: relative;
 
-        .alpha, .bravo {
-            @extend .font-splatoon1;
-            @extend .title-color;
-            @extend .is-size-5;
+        .labels {
+            .alpha, .bravo {
+                @extend .font-splatoon1;
+                @extend .title-color;
+                @extend .is-size-5;
+                position: absolute;
+                bottom: 0.25rem;
+            }
+
+            .alpha {
+                left: 0.25rem;
+            }
+
+            .bravo {
+                right: 0.25rem;
+            }
+        }
+
+        .results {
             position: absolute;
-            bottom: 0.25rem;
-        }
+            top: 25px;
+            left: 15%;
+            right: 15%;
 
-        .alpha {
-            left: 0.25rem;
-        }
+            background: rgba($white-ter, 0.75);
+            border-radius: 15px;
+            padding: 10px;
 
-        .bravo {
-            right: 0.25rem;
+            .result {
+                background: rgba($black-ter, 0.65);
+                border-radius: 200px;
+
+                margin: 10px 0 0 0;
+
+                .level-item {
+                    padding: 8px 0;
+                    position: relative;
+
+                    .winner-mark {
+                        @extend .bg-mask-ink-splat;
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        bottom: 0;
+                        left: 0;
+
+                        z-index: 0;
+                        margin: -5px;
+                    }
+
+                    .title {
+                        z-index: 1;
+                    }
+                }
+            }
         }
     }
 
