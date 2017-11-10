@@ -94,9 +94,9 @@ async function updateFestivals() {
         filename: `${dataPath}/festivals.json`,
         request: async function() {
             return {
-                na: await splatnet.getNAFestivals(),
-                eu: await splatnet.getEUFestivals(),
-                jp: await splatnet.getJPFestivals(),
+                na: await splatnet.getCombinedFestivals('NA'),
+                eu: await splatnet.getCombinedFestivals('EU'),
+                jp: await splatnet.getCombinedFestivals('JP'),
             };
         }(),
     });
@@ -104,8 +104,7 @@ async function updateFestivals() {
     // Download banner/stage images
     if (data) {
         for (let region of ['na', 'eu', 'jp']) {
-            let festival = data[region].festivals[0];
-            if (festival) {
+            for (let festival of data[region].festivals) {
                 await maybeDownloadImage(festival.images.alpha);
                 await maybeDownloadImage(festival.images.bravo);
                 await maybeDownloadImage(festival.images.panel);

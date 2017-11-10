@@ -6,60 +6,64 @@ const axios = require('axios');
 // SplatNet2 API
 const userAgent = process.env.SPLATNET_USER_AGENT;
 const splatnetBaseUrl = 'https://app.splatoon2.nintendo.net';
-const api = axios.create({
-    baseURL: `${splatnetBaseUrl}/api/`,
-    headers: {
-        'User-Agent': userAgent,
-        'Cookie': `iksm_session=${process.env.NINTENDO_SESSION_ID}`,
-    },
-});
 
-async function getSchedules() {
-    let response = await api.get('schedules');
+function createApiClient(sessionId) {
+    return axios.create({
+        baseURL: `${splatnetBaseUrl}/api/`,
+        headers: {
+            'User-Agent': userAgent,
+            'Cookie': `iksm_session=${sessionId}`,
+        },
+    });
+}
+
+const api = {
+    NA: createApiClient(process.env.NINTENDO_SESSION_ID_NA),
+    EU: createApiClient(process.env.NINTENDO_SESSION_ID_EU),
+    JP: createApiClient(process.env.NINTENDO_SESSION_ID_JP),
+}
+
+async function getSchedules(region = 'NA') {
+    let response = await api[region].get('schedules');
     return response.data;
 }
 
-async function getCoopSchedules() {
-    let response = await api.get('coop_schedules');
+async function getCoopSchedules(region = 'NA') {
+    let response = await api[region].get('coop_schedules');
     return response.data;
 }
 
-async function getTimeline() {
-    let response = await api.get('timeline');
+async function getTimeline(region = 'NA') {
+    let response = await api[region].get('timeline');
     return response.data;
 }
 
-async function getNAFestivals() {
-    let response = await api.get('festivals/active');
+async function getActiveFestivals(region = 'NA') {
+    let response = await api[region].get('festivals/active');
     return response.data;
 }
 
-function getManualFestivals(region) {
-    let filePath = path.resolve('manual-festivals.json');
-    if (!fs.existsSync(filePath))
-        return { festivals: [] };
-
-    let regionalFestivals = JSON.parse(fs.readFileSync(filePath));
-    if (!regionalFestivals || !regionalFestivals[region])
-        return { festivals: [] };
-
-    return { festivals: regionalFestivals[region] };
-}
-
-async function getEUFestivals() {
-    return getManualFestivals('eu');
-}
-
-async function getJPFestivals() {
-    return getManualFestivals('jp');
-}
-
-async function getMerchandises() {
-    let response = await api.get('onlineshop/merchandises');
+async function getPastFestivals(region = 'NA') {
+    let response = await api[region].get('festivals/pasts');
     return response.data;
 }
 
-async function getLeagueMatchRanking(year, month, day, hour, type = 'T', region = 'ALL') {
+async function getCombinedFestivals(region = 'NA') {
+    let active = await getActiveFestivals(region);
+    let past = await getPastFestivals(region);
+
+    return {
+        festivals: active.festivals.concat(past.festivals),
+        results: past.results,
+    };
+}
+
+async function getMerchandises(region = 'NA') {
+    let response = await api[region].get('onlineshop/merchandises');
+    return response.data;
+}
+
+async function getLeagueMatchRanking(year, month, day, hour, type = 'T', region = 'ALL', apiRegion = 'NA') {
     // Hour should be in multiples of 2, e.g., 00, 02, 04, ..., 22.
     // Type should be 'T' (team) or 'P' (pair).
     // Region should be 'ALL', 'JP', 'US', or 'EU'.
@@ -73,13 +77,13 @@ async function getLeagueMatchRanking(year, month, day, hour, type = 'T', region 
     day = ('0' + day).substr(-2);
     hour = ('0' + hour).substr(-2);
 
-    let response = await api.get(`league_match_ranking/${year}${month}${day}${hour}${type}/${region}`);
+    let response = await api[apiRegion].get(`league_match_ranking/${year}${month}${day}${hour}${type}/${region}`);
     return response.data;
 }
 
-async function getResults(id = null) {
+async function getResults(id = null, region = 'NA') {
     let url = (id) ? `results/${id}` : 'results';
-    let response = await api.get(url);
+    let response = await api[region].get(url);
     return response.data;
 }
 
@@ -92,9 +96,7 @@ module.exports = {
     getSchedules,
     getCoopSchedules,
     getTimeline,
-    getNAFestivals,
-    getEUFestivals,
-    getJPFestivals,
+    getCombinedFestivals,
     getMerchandises,
     getLeagueMatchRanking,
     getResults,
