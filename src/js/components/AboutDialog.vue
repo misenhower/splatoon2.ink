@@ -36,12 +36,6 @@
                                 <a href="https://twitter.com/mattisenhower" target="_blank">Follow me on Twitter</a>
                                 or <a href="mailto:matt@isenhower.com" target="_blank">email me</a> with any questions!
                             </p>
-                            <h5 class="font-splatoon2 title is-5">Notes &amp; Issues</h5>
-                            <p>
-                                <strong>Splatfests:</strong>
-                                Only North American Splatfests are updated automatically.
-                                There may be a slight delay in updating Splatfest schedules for other regions.
-                            </p>
                         </div>
                     </div>
                 </div>
