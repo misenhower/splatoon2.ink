@@ -50,7 +50,12 @@
     }
 
     .splatfest {
-        transform: scale(1.2) rotate(-1.4deg);
+        transform: scale(1.1) rotate(-1.4deg);
+    }
+
+    .splatfest-results {
+        width: 250px;
+        transform: scale(1.35);
     }
 
     .twitter-logo {

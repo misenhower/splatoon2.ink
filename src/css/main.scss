@@ -239,43 +239,11 @@ body.has-modal #main {
             }
         }
 
-        .results {
+        .splatfest-results {
             position: absolute;
             top: 25px;
             left: 15%;
             right: 15%;
-
-            background: rgba($white-ter, 0.75);
-            border-radius: 15px;
-            padding: 10px;
-
-            .result {
-                background: rgba($black-ter, 0.65);
-                border-radius: 200px;
-
-                margin: 10px 0 0 0;
-
-                .level-item {
-                    padding: 8px 0;
-                    position: relative;
-
-                    .winner-mark {
-                        @extend .bg-mask-ink-splat;
-                        position: absolute;
-                        top: 0;
-                        right: 0;
-                        bottom: 0;
-                        left: 0;
-
-                        z-index: 0;
-                        margin: -5px;
-                    }
-
-                    .title {
-                        z-index: 1;
-                    }
-                }
-            }
         }
     }
 
@@ -288,6 +256,42 @@ body.has-modal #main {
         @extend .bg-stripes;
         background-size: 53px 53px;
         padding: 4px 20px;
+    }
+}
+
+.splatfest-results {
+    @extend .text-shadow;
+
+    background: rgba($white-ter, 0.75);
+    border-radius: 15px;
+    padding: 10px;
+
+    .result {
+        background: rgba($black-ter, 0.65);
+        border-radius: 200px;
+
+        margin: 10px 0 0 0;
+
+        .level-item {
+            padding: 8px 0;
+            position: relative;
+
+            .winner-mark {
+                @extend .bg-mask-ink-splat;
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+
+                z-index: 0;
+                margin: -5px;
+            }
+
+            .title {
+                z-index: 1;
+            }
+        }
     }
 }
 

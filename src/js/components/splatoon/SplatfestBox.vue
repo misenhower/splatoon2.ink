@@ -52,7 +52,10 @@
         </div>
 
         <div class="has-text-centered is-size-5 title-color festival-period-container" v-if="screenshotMode">
-            <span class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }">
+            <span class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }" v-if="state == 'upcoming'">
+                in {{ festival.times.start - now | shortDuration }}
+            </span>
+            <span class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }" v-if="state == 'active'">
                 {{ festival.times.end - now | durationHours }} remaining
             </span>
         </div>
@@ -75,11 +78,11 @@ export default {
             return 'past';
         },
         title() {
-            switch (this.state) {
-                case 'upcoming': return 'Upcoming Splatfest';
-                case 'active':   return 'Splatfest';
-                case 'past':     return 'Recent Splatfest';
-            }
+            if (this.state == 'upcoming')
+                return 'Upcoming Splatfest';
+            if (this.state == 'past' && !this.screenshotMode)
+                return 'Recent Splatfest';
+            return 'Splatfest';
         },
         image() {
             if (this.festival)

@@ -1,7 +1,5 @@
 <template>
-    <div class="results">
-
-
+    <div class="splatfest-results">
         <div class="level is-marginless">
             <div class="level-item">
                 <div class="image is-48x48" :title="festival.names.alpha_short">
