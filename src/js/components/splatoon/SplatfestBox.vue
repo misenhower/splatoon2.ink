@@ -1,13 +1,13 @@
 <template>
-    <div class="font-splatoon2">
+    <div class="font-splatoon2" :class="{ 'has-results': results }">
         <div class="splatfest-header">
             <h2 class="title is-3 is-size-2-fullhd font-splatoon1">
                 {{ title }}
             </h2>
         </div>
 
-        <div class="panel-container">
-            <div class="image">
+        <div class="panel-container" :class="{ 'is-hidden-mobile' : results }">
+            <div class="image panel-image">
                 <img :src="image" />
             </div>
 
@@ -21,6 +21,10 @@
                 </div>
             </div>
 
+            <SplatfestResultsBox :festival="festival" :results="results" v-if="results && !screenshotMode" />
+        </div>
+
+        <div class="mobile-results is-hidden-tablet" v-if="results">
             <SplatfestResultsBox :festival="festival" :results="results" v-if="results && !screenshotMode" />
         </div>
 

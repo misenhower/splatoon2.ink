@@ -1,6 +1,6 @@
 <template>
     <div class="splatfest-results">
-        <div class="level is-marginless">
+        <div class="level is-marginless is-mobile">
             <div class="level-item">
                 <div class="image is-48x48" :title="festival.names.alpha_short">
                     <img :src="festival.images.alpha | localSplatNetImageUrl" />

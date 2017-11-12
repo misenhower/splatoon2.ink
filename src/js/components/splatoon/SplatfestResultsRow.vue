@@ -1,5 +1,5 @@
 <template>
-    <div class="level result">
+    <div class="level is-mobile result">
         <div class="level-item">
             <div class="winner-mark" :style="{ background: festival.colors.alpha.css_rgb }" v-if="winner == 'alpha'"></div>
             <div class="font-splatoon1 title is-4">{{ rates.alpha }}%</div>

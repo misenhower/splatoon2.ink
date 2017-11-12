@@ -222,6 +222,14 @@ body.has-modal #main {
         padding: 5px 15px 10px;
     }
 
+    .has-results .panel-container .panel-image {
+        overflow: hidden;
+
+        img {
+            filter: blur(3px);
+        }
+    }
+
     .panel-container {
         position: relative;
 
@@ -251,6 +259,12 @@ body.has-modal #main {
         }
     }
 
+    .mobile-results {
+        .splatfest-results {
+            border-radius: 0;
+        }
+    }
+
     .festival-period-container {
         margin-bottom: 10px;
     }
@@ -267,7 +281,7 @@ body.has-modal #main {
 .splatfest-results {
     @extend .text-shadow;
 
-    background: rgba($white-ter, 0.75);
+    background: rgba($grey-lighter, 0.75);
     border-radius: 15px;
     padding: 10px;
 
