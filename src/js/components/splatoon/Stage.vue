@@ -54,7 +54,7 @@ export default {
         },
         largeImage() {
             if (this.stageDetails)
-                return Vue.filter('localSplatNetImageUrl')(this.stageDetails.largeImage || this.stageDetails.image);
+                return this.stageDetails.largeImage || Vue.filter('localSplatNetImageUrl')(this.stageDetails.image);
         },
         style() {
             return {
