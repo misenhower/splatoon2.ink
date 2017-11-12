@@ -46,7 +46,7 @@
                 <!-- Loading spinner -->
                 <div v-if="loading" class="has-text-centered">
                     <span class="icon is-large">
-                        <span class="fa fa-spin squid-refresh"></span>
+                        <span class="fa fa-3x fa-spin squid-refresh"></span>
                     </span>
                 </div>
 
