@@ -30,8 +30,9 @@
                     <template v-if="!isToday">
                         {{ schedule.start_time | date }}
                     </template>
-                    {{ schedule.start_time | time }} &ndash;
-                    {{ schedule.end_time | time }}
+                    <span class="nowrap">{{ schedule.start_time | time }}</span>
+                    &ndash;
+                    <span class="nowrap">{{ schedule.end_time | time }}</span>
                 </div>
             </div>
             <div class="column is-8">
