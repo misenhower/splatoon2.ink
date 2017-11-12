@@ -60,12 +60,12 @@
         </div>
 
         <div class="has-text-centered is-size-5 title-color festival-period-container" v-if="screenshotMode">
-            <span class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }" v-if="state == 'upcoming'">
+            <div class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }" v-if="state == 'upcoming'">
                 in {{ festival.times.start - now | shortDuration }}
-            </span>
-            <span class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }" v-if="state == 'active'">
+            </div>
+            <div class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }" v-if="state == 'active'">
                 {{ festival.times.end - now | durationHours }} remaining
-            </span>
+            </div>
         </div>
     </div>
 </template>
