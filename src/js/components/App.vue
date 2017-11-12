@@ -19,7 +19,13 @@
                 </div>
 
                 <div class="level">
-                    <div class="level-left"></div>
+                    <div class="level-left">
+                        <div class="level-item">
+                            <a href="https://twitter.com/Splatoon2inkbot" target="_blank" class="button is-translucent-dark is-rounded">
+                                <span class="font-splatoon2">Get updates via Twitter!</span>
+                            </a>
+                        </div>
+                    </div>
                     <div class="level-right">
                         <div class="level-item" v-if="showFestivalRegionDropdown">
                             <Dropdown :options="regions" v-model="selectedRegionKey" style="margin: 0 -12px"></Dropdown>
