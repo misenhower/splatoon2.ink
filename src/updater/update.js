@@ -3,7 +3,6 @@ const path = require('path');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
 const splatnet = require('./splatnet');
-const retrieveWeapons = require('./retrieveWeapons');
 const raven = require('raven');
 
 const dataPath = path.resolve('public/data');
@@ -139,51 +138,12 @@ async function updateMerchandises() {
     }
 }
 
-async function updateWeapons() {
-    // This one is handled a little differently since we need to add to the existing data
-    // instead of just overwriting it. We don't have a way to retrieve a complete set
-    // of weapon data, so we have to make sure not to lose any weapons we already know about.
-
-    let filename = `${dataPath}/weapons.json`;
-
-    // Look for weapons used over the past 24 hours if we don't have an existing list of weapons.
-    let iterations = 12;
-    let weapons = {};
-
-    if (fs.existsSync(filename)) {
-        weapons = JSON.parse(fs.readFileSync(filename));
-
-        // If we already have a weapons file, only retrieve the most recent results
-        iterations = 1;
-    }
-
-    // We're now ready to update the weapons
-    await handleRequest({
-        title: 'weapons',
-        filename,
-        request: retrieveWeapons(iterations),
-        transformer: responseData => {
-            // Add the new weapons to the existing list of weapons
-            return Object.assign(weapons, responseData);
-        },
-    });
-
-    // Get weapon images
-    for (let weapon of Object.values(weapons))
-        await maybeDownloadImage(weapon.image);
-}
-
 async function updateAll() {
     await updateSchedules();
     await updateCoopSchedules();
     await updateTimeline();
     await updateFestivals();
     await updateMerchandises();
-
-    // We don't need to maintain the weapons database anymore since Salmon Run data is now available via SplatNet.
-    // Leaving this here for now though just in case we need it in the future.
-    // await updateWeapons();
-
     return 'Done.';
 }
 
@@ -253,7 +213,6 @@ module.exports = {
     updateTimeline,
     updateFestivals,
     updateMerchandises,
-    updateWeapons,
     updateAll,
 }
 
