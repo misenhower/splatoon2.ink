@@ -73,11 +73,15 @@
                                     </div>
                                     <div class="column">
                                         <span class="title-color is-size-6">
-                                            {{ event.start_time | date }}
-                                            {{ event.start_time | time }}
+                                            <span class="nowrap">
+                                                {{ event.start_time | date({ weekday: 'short' }) }}
+                                                {{ event.start_time | time }}
+                                            </span>
                                             &ndash;
-                                            {{ event.end_time | date }}
-                                            {{ event.end_time | time }}
+                                            <span class="nowrap">
+                                                {{ event.end_time | date }}
+                                                {{ event.end_time | time }}
+                                            </span>
                                         </span>
                                         <span class="is-size-7 is-hidden-touch is-pulled-right">
                                             in {{ event.start_time - now | duration(true) }}

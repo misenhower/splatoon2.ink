@@ -25,6 +25,10 @@ body.has-modal #main {
     }
 }
 
+.nowrap {
+    white-space: nowrap;
+}
+
 .squid-refresh {
     &:before {
         @extend .font-splatoon2;
@@ -254,6 +258,7 @@ body.has-modal #main {
     .festival-period {
         @extend .bg-mask-banner;
         @extend .bg-stripes;
+        display: inline-block;
         background-size: 53px 53px;
         padding: 4px 20px;
     }

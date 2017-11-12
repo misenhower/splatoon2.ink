@@ -14,8 +14,8 @@ Vue.filter('localSplatNetImageUrl', function(value) {
 });
 
 // Short date format (e.g., 8/15 or 15/8)
-Vue.filter('date', function(value) {
-    return (new Date(value * 1000)).toLocaleDateString([], { month: 'numeric', day: 'numeric' });
+Vue.filter('date', function(value, options = undefined) {
+    return (new Date(value * 1000)).toLocaleDateString([], Object.assign({ month: 'numeric', day: 'numeric' }, options));
 });
 
 // Short localized time format (e.g., 1:23 PM or 13:23)

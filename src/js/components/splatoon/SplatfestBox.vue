@@ -25,13 +25,17 @@
         </div>
 
         <div class="has-text-centered is-size-5 title-color festival-period-container" v-if="!screenshotMode">
-            <span class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }">
-                {{ festival.times.start | date }}
-                {{ festival.times.start | time }}
+            <div class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }">
+                <span class="nowrap">
+                    {{ festival.times.start | date({ weekday: 'short' }) }}
+                    {{ festival.times.start | time }}
+                </span>
                 &ndash;
-                {{ festival.times.end | date }}
-                {{ festival.times.end | time }}
-            </span>
+                <span class="nowrap">
+                    {{ festival.times.end | date }}
+                    {{ festival.times.end | time }}
+                </span>
+            </div>
         </div>
 
         <div class="splatfest-content has-text-centered" v-if="!screenshotMode">
