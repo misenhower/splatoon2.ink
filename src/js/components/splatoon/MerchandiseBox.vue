@@ -43,7 +43,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="level-right">
+                        <div class="level-right" v-if="originalGear.price">
                             <div class="level-item">
                                 <div>
                                     <img class="cash" src="~@/img/cash.png" />

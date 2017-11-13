@@ -70,14 +70,18 @@ function applyData(oldData, newData) {
         let regex = /\{\{GearList\/Item.*?filter/g;
         let row;
         while (row = regex.exec(response.data)) {
-            let details = /name=(.*?)\|brand=(.*?)\|cost=(.*?)\|ability=(.*?)\|rarity=(.*?)\|/.exec(row[0]);
-            if (details) {
+            // Format: name=value|brand=value|...
+            let details = row[0].split('|')
+                .reduce((map, kvp) => { kvp = kvp.split('='); map[kvp[0]] = kvp[1]; return map; }, {});
+
+            // Make sure we have the necessary info
+            if (details.name && details.brand && details.ability && details.rarity) {
                 inkipediaGear[key].push({
-                    name: he.decode(details[1]),
-                    brand: details[2],
-                    price: parseInt(details[3].replace(',', '')),
-                    skill: details[4],
-                    rarity: parseInt(details[5]) - 1,
+                    name: he.decode(details.name),
+                    brand: he.decode(details.brand),
+                    price: details.cost ? parseInt(details.cost.replace(',', '')) : null,
+                    skill: he.decode(details.ability),
+                    rarity: parseInt(details.rarity) - 1,
                 });
             }
         }
@@ -85,8 +89,15 @@ function applyData(oldData, newData) {
 
     // Process Inkipedia gear
     for (let item of [].concat(Object.values(inkipediaGear.head), Object.values(inkipediaGear.clothes), Object.values(inkipediaGear.shoes))) {
-        item.brand = Object.values(brands).find(b => b.name == item.brand).id;
-        item.skill = Object.values(skills).find(s => s.name == item.skill).id;
+        let brand = Object.values(brands).find(b => b.name == item.brand);
+        if (!brand)
+            throw `Couldn't find brand: ${item.brand}`;
+        item.brand = brand.id;
+
+        let skill = Object.values(skills).find(s => s.name == item.skill);
+        if (!skill)
+            throw `Couldn't find skill: ${item.skill}`;
+        item.skill = skill.id;
     }
 
     // Write out the data

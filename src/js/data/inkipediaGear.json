@@ -22,6 +22,13 @@
             "skill": "107"
         },
         {
+            "brand": "98",
+            "name": "Armor Jacket Replica",
+            "price": null,
+            "rarity": 1,
+            "skill": "5"
+        },
+        {
             "brand": "1",
             "name": "B-ball Jersey (Away)",
             "price": 800,
@@ -41,6 +48,13 @@
             "price": 3800,
             "rarity": 1,
             "skill": "13"
+        },
+        {
+            "brand": "0",
+            "name": "Basic Tee",
+            "price": null,
+            "rarity": 0,
+            "skill": "8"
         },
         {
             "brand": "9",
@@ -118,6 +132,13 @@
             "price": 3100,
             "rarity": 1,
             "skill": "8"
+        },
+        {
+            "brand": "5",
+            "name": "Brown FA-11 Bomber",
+            "price": null,
+            "rarity": 1,
+            "skill": "12"
         },
         {
             "brand": "6",
@@ -218,6 +239,13 @@
             "skill": "5"
         },
         {
+            "brand": "5",
+            "name": "Gray FA-11 Bomber",
+            "price": null,
+            "rarity": 1,
+            "skill": "13"
+        },
+        {
             "brand": "7",
             "name": "Gray Hoodie",
             "price": 1900,
@@ -232,6 +260,13 @@
             "skill": "6"
         },
         {
+            "brand": "0",
+            "name": "Green V-Neck Limited Tee",
+            "price": null,
+            "rarity": 1,
+            "skill": "9"
+        },
+        {
             "brand": "4",
             "name": "Green-Check Shirt",
             "price": 2000,
@@ -244,6 +279,20 @@
             "price": 4100,
             "rarity": 1,
             "skill": "1"
+        },
+        {
+            "brand": "98",
+            "name": "Hero Hoodie Replica",
+            "price": null,
+            "rarity": 1,
+            "skill": "2"
+        },
+        {
+            "brand": "98",
+            "name": "Hero Jacket Replica",
+            "price": null,
+            "rarity": 1,
+            "skill": "4"
         },
         {
             "brand": "3",
@@ -379,6 +428,20 @@
             "skill": "4"
         },
         {
+            "brand": "99",
+            "name": "Power Armor",
+            "price": null,
+            "rarity": 1,
+            "skill": "8"
+        },
+        {
+            "brand": "99",
+            "name": "Power Armor Mk I",
+            "price": null,
+            "rarity": 1,
+            "skill": "11"
+        },
+        {
             "brand": "15",
             "name": "Prune Parashooter",
             "price": 7800,
@@ -407,6 +470,13 @@
             "skill": "4"
         },
         {
+            "brand": "0",
+            "name": "Red V-Neck Limited Tee",
+            "price": null,
+            "rarity": 1,
+            "skill": "8"
+        },
+        {
             "brand": "11",
             "name": "Red Vector Tee",
             "price": 500,
@@ -433,6 +503,27 @@
             "price": 700,
             "rarity": 0,
             "skill": "3"
+        },
+        {
+            "brand": "99",
+            "name": "Samurai Jacket",
+            "price": null,
+            "rarity": 1,
+            "skill": "5"
+        },
+        {
+            "brand": "99",
+            "name": "School Cardigan",
+            "price": null,
+            "rarity": 1,
+            "skill": "3"
+        },
+        {
+            "brand": "99",
+            "name": "School Uniform",
+            "price": null,
+            "rarity": 1,
+            "skill": "2"
         },
         {
             "brand": "8",
@@ -477,6 +568,13 @@
             "skill": "12"
         },
         {
+            "brand": "0",
+            "name": "Splatfest Tee",
+            "price": null,
+            "rarity": 2,
+            "skill": "108"
+        },
+        {
             "brand": "4",
             "name": "Squid Satin Jacket",
             "price": 9200,
@@ -489,6 +587,13 @@
             "price": 900,
             "rarity": 0,
             "skill": "11"
+        },
+        {
+            "brand": "99",
+            "name": "Squinja Suit",
+            "price": null,
+            "rarity": 1,
+            "skill": "6"
         },
         {
             "brand": "2",
@@ -668,6 +773,13 @@
             "skill": "100"
         },
         {
+            "brand": "98",
+            "name": "Armor Helmet Replica",
+            "price": null,
+            "rarity": 1,
+            "skill": "102"
+        },
+        {
             "brand": "4",
             "name": "Backwards Cap",
             "price": 700,
@@ -766,6 +878,20 @@
             "skill": "7"
         },
         {
+            "brand": "98",
+            "name": "Hero Headphones Replica",
+            "price": null,
+            "rarity": 1,
+            "skill": "6"
+        },
+        {
+            "brand": "98",
+            "name": "Hero Headset Replica",
+            "price": null,
+            "rarity": 1,
+            "skill": "3"
+        },
+        {
             "brand": "2",
             "name": "Hickory Work Cap",
             "price": 8700,
@@ -857,6 +983,20 @@
             "skill": "10"
         },
         {
+            "brand": "99",
+            "name": "Power Mask",
+            "price": null,
+            "rarity": 1,
+            "skill": "12"
+        },
+        {
+            "brand": "99",
+            "name": "Power Mask Mk I",
+            "price": null,
+            "rarity": 1,
+            "skill": "11"
+        },
+        {
             "brand": "8",
             "name": "Retro Specs",
             "price": 500,
@@ -869,6 +1009,13 @@
             "price": 2300,
             "rarity": 1,
             "skill": "101"
+        },
+        {
+            "brand": "99",
+            "name": "Samurai Helmet",
+            "price": null,
+            "rarity": 1,
+            "skill": "9"
         },
         {
             "brand": "5",
@@ -906,11 +1053,25 @@
             "skill": "6"
         },
         {
+            "brand": "99",
+            "name": "Squid Clip-Ons",
+            "price": null,
+            "rarity": 1,
+            "skill": "100"
+        },
+        {
             "brand": "0",
             "name": "Squid Facemask",
             "price": 300,
             "rarity": 0,
             "skill": "0"
+        },
+        {
+            "brand": "99",
+            "name": "Squid Hairclip",
+            "price": null,
+            "rarity": 1,
+            "skill": "4"
         },
         {
             "brand": "5",
@@ -925,6 +1086,13 @@
             "price": 1300,
             "rarity": 0,
             "skill": "5"
+        },
+        {
+            "brand": "99",
+            "name": "Squinja Mask",
+            "price": null,
+            "rarity": 1,
+            "skill": "8"
         },
         {
             "brand": "7",
@@ -995,6 +1163,13 @@
             "price": 8000,
             "rarity": 2,
             "skill": "101"
+        },
+        {
+            "brand": "0",
+            "name": "White Headband",
+            "price": null,
+            "rarity": 0,
+            "skill": "2"
         }
     ],
     "shoes": [
@@ -1004,6 +1179,13 @@
             "price": 600,
             "rarity": 0,
             "skill": "3"
+        },
+        {
+            "brand": "98",
+            "name": "Armor Boot Replicas",
+            "price": null,
+            "rarity": 1,
+            "skill": "0"
         },
         {
             "brand": "17",
@@ -1104,6 +1286,20 @@
             "skill": "109"
         },
         {
+            "brand": "2",
+            "name": "Cream Basics",
+            "price": null,
+            "rarity": 0,
+            "skill": "6"
+        },
+        {
+            "brand": "99",
+            "name": "Fringed Loafers",
+            "price": null,
+            "rarity": 1,
+            "skill": "13"
+        },
+        {
             "brand": "1",
             "name": "Gold Hi-Horses",
             "price": 7000,
@@ -1116,6 +1312,20 @@
             "price": 8500,
             "rarity": 2,
             "skill": "12"
+        },
+        {
+            "brand": "98",
+            "name": "Hero Runner Replicas",
+            "price": null,
+            "rarity": 1,
+            "skill": "9"
+        },
+        {
+            "brand": "98",
+            "name": "Hero Snowboots Replicas",
+            "price": null,
+            "rarity": 1,
+            "skill": "1"
         },
         {
             "brand": "2",
@@ -1223,6 +1433,20 @@
             "skill": "110"
         },
         {
+            "brand": "99",
+            "name": "Power Boots",
+            "price": null,
+            "rarity": 1,
+            "skill": "0"
+        },
+        {
+            "brand": "99",
+            "name": "Power Boots Mk I",
+            "price": null,
+            "rarity": 1,
+            "skill": "12"
+        },
+        {
             "brand": "9",
             "name": "Pro Trail Boots",
             "price": 9800,
@@ -1286,6 +1510,20 @@
             "skill": "12"
         },
         {
+            "brand": "99",
+            "name": "Samurai Shoes",
+            "price": null,
+            "rarity": 1,
+            "skill": "7"
+        },
+        {
+            "brand": "99",
+            "name": "School Shoes",
+            "price": null,
+            "rarity": 1,
+            "skill": "1"
+        },
+        {
             "brand": "3",
             "name": "Smoky Wingtips",
             "price": 8600,
@@ -1297,6 +1535,13 @@
             "name": "Snow Delta Straps",
             "price": 8800,
             "rarity": 2,
+            "skill": "4"
+        },
+        {
+            "brand": "99",
+            "name": "Squinja Boots",
+            "price": null,
+            "rarity": 1,
             "skill": "4"
         },
         {
