@@ -278,9 +278,7 @@ export default {
         }, 200);
 
         // Periodically retrieve updated data
-        this.updateDataTimer = setInterval(() => {
-            this.updateData();
-        }, 15 * 60 * 1000); // 15 minutes
+        this.scheduleUpdateData();
         this.updateData();
     },
     beforeDestroy() {
@@ -307,6 +305,25 @@ export default {
             key = (region) ? region.key : null;
             this.actualSelectedRegionKey = key;
             localStorage.setItem('selected-region', key);
+        },
+        scheduleUpdateData() {
+            let date = new Date;
+
+            // If we're more than 20 seconds past the current hour, schedule the update for the next hour
+            if (date.getMinutes() !== 0 || date.getSeconds() >= 20)
+                date.setHours(date.getHours() + 1);
+            date.setMinutes(0);
+
+            // Random number of seconds past the hour (so all open browsers don't hit the server at the same time)
+            let minSec = 25;
+            let maxSec = 60;
+            date.setSeconds(Math.floor(Math.random() * (maxSec - minSec + 1)) + minSec);
+
+            // Set the timeout
+            this.updateDataTimer = setTimeout(() => {
+                this.updateData();
+                this.scheduleUpdateData();
+            }, (date - new Date));
         },
         updateData() {
             // Main map schedules
