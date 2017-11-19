@@ -1,5 +1,5 @@
 <template>
-    <div class="font-splatoon2" :class="{ 'has-results': results }">
+    <div class="font-splatoon2" :class="{ 'has-results': results && !screenshotMode }">
         <div class="splatfest-header">
             <h2 class="title is-3 is-size-2-fullhd font-splatoon1">
                 {{ title }}
