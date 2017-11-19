@@ -27,8 +27,7 @@ async function captureScreenshot(options) {
 
     // Navigate to the URL
     await page.goto(options.url, {
-        waitUntil: 'networkidle', // Wait until the network is idle
-        networkIdleTimeout: 500, // 500ms
+        waitUntil: 'networkidle0', // Wait until the network is idle
     });
 
     // Take the screenshot
