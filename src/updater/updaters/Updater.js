@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
 const jsonpath = require('jsonpath');
-const splatnet = require('../splatnet');
+const SplatNet = require('../splatnet');
 const raven = require('raven');
 
 const dataPath = path.resolve('public/data');
@@ -36,7 +36,8 @@ class Updater {
     }
 
     getData() {
-        return this.options.request();
+        let splatnet = new SplatNet;
+        return this.options.request(splatnet);
     }
 
     async handleRequest(request) {
@@ -109,6 +110,7 @@ class Updater {
         // Otherwise, download the image
         try {
             this.info(`Downloading image: ${imagePath}`);
+            let splatnet = new SplatNet;
             let image = await this.handleRequest(splatnet.getImage(imagePath));
             this.writeFile(localPath, image);
         } catch (e) { }

@@ -1,8 +1,8 @@
 require('./bootstrap');
-const splatnet = require('./splatnet');
 
 const Updater = require('./updaters/Updater');
 const OriginalGearImageUpdater = require('./updaters/OriginalGearImageUpdater');
+const FestivalsUpdater = require('./updaters/FestivalsUpdater');
 
 const updaters = [
     // Original gear images
@@ -12,7 +12,7 @@ const updaters = [
     new Updater({
         name: 'Schedules',
         filename: 'schedules.json',
-        request: () => splatnet.getSchedules(),
+        request: (splatnet) => splatnet.getSchedules(),
         imagePaths: [
             '$..stage_a.image',
             '$..stage_b.image',
@@ -23,7 +23,7 @@ const updaters = [
     new Updater({
         name: 'Co-op Schedules',
         filename: 'coop-schedules.json',
-        request: () => splatnet.getCoopSchedules(),
+        request: (splatnet) => splatnet.getCoopSchedules(),
         imagePaths: [
             '$..stage.image',
             '$..weapons[*].image',
@@ -34,7 +34,7 @@ const updaters = [
     new Updater({
         name: 'Timeline',
         filename: 'timeline.json',
-        request: () => splatnet.getTimeline(),
+        request: (splatnet) => splatnet.getTimeline(),
         rootKeys: ['coop', 'weapon_availability'],
         imagePaths: [
             '$.coop..gear.image',
@@ -46,29 +46,13 @@ const updaters = [
     }),
 
     // Festivals
-    new Updater({
-        name: 'Festivals',
-        filename: 'festivals.json',
-        async request() {
-            return {
-                na: await splatnet.getCombinedFestivals('NA'),
-                eu: await splatnet.getCombinedFestivals('EU'),
-                jp: await splatnet.getCombinedFestivals('JP'),
-            };
-        },
-        imagePaths: [
-            '$..images.alpha',
-            '$..images.bravo',
-            '$..images.panel',
-            '$..special_stage.image',
-        ],
-    }),
+    new FestivalsUpdater,
 
     // Merchandises
     new Updater({
         name: 'Merchandises',
         filename: 'merchandises.json',
-        request: () => splatnet.getMerchandises(),
+        request: (splatnet) => splatnet.getMerchandises(),
         rootKeys: ['merchandises'],
         imagePaths: [
             '$..gear.image',
