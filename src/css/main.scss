@@ -230,7 +230,8 @@ body.has-modal #main {
         overflow: hidden;
 
         img {
-            filter: blur(3px);
+            // Disabling blur for now since it seems to be broken in Chrome
+            //filter: blur(3px);
         }
     }
 
