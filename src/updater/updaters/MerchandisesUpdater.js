@@ -19,8 +19,15 @@ class MerchandisesUpdater extends Updater {
     }
 
     processData(data) {
-        for (let merchandise of data.merchandises)
-            merchandise.original_gear = getOriginalGear(merchandise.gear);
+        for (let merchandise of data.merchandises) {
+            let originalGear = getOriginalGear(merchandise.gear);
+
+            // We don't need the brand data since it should match the SplatNet gear's brand
+            if (originalGear)
+                delete originalGear.brand
+
+            merchandise.original_gear = originalGear;
+        }
 
         return data;
     }
