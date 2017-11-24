@@ -113,6 +113,11 @@ class Updater {
             let splatnet = new SplatNet;
             let image = await this.handleRequest(splatnet.getImage(imagePath));
             this.writeFile(localPath, image);
+
+            // Temporary: Also save the file to the old path for now
+            // This allows for old versions of the site to continue downloading images
+            let oldPath = path.resolve('public/assets/img/splatnet') + '/' + path.basename(imagePath);
+            this.writeFile(oldPath, image);
         } catch (e) { }
     }
 
