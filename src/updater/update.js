@@ -3,6 +3,7 @@ require('./bootstrap');
 const Updater = require('./updaters/Updater');
 const OriginalGearImageUpdater = require('./updaters/OriginalGearImageUpdater');
 const FestivalsUpdater = require('./updaters/FestivalsUpdater');
+const MerchandisesUpdater = require('./updaters/MerchandisesUpdater');
 
 const updaters = [
     // Original gear images
@@ -49,18 +50,7 @@ const updaters = [
     new FestivalsUpdater,
 
     // Merchandises
-    new Updater({
-        name: 'Merchandises',
-        filename: 'merchandises.json',
-        request: (splatnet) => splatnet.getMerchandises(),
-        rootKeys: ['merchandises'],
-        imagePaths: [
-            '$..gear.image',
-            '$..gear.brand.image',
-            '$..gear.brand.frequent_skill.image',
-            '$..skill.image',
-        ],
-    }),
+    new MerchandisesUpdater,
 ];
 
 async function updateAll() {

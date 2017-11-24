@@ -29,25 +29,25 @@
             {{ merchandise.gear.name }}
 
             <div class="info-overlay">
-                <div class="info-overlay-container original-gear" v-if="originalGear">
+                <div class="info-overlay-container original-gear" v-if="merchandise.original_gear">
                     <div class="is-size-7">Original Gear</div>
 
                     <div class="level" style="margin: 0 3px">
                         <div class="level-left">
                             <div class="level-item">
                                 <div class="skill-img-bg strikethrough">
-                                    <img :src="originalGear.skill.image | localSplatNetImageUrl" :title="originalGear.skill.name" />
+                                    <img :src="merchandise.original_gear.skill.image | localSplatNetImageUrl" :title="merchandise.original_gear.skill.name" />
                                 </div>
-                                <div class="sub" v-for="i in originalGear.rarity + 1">
+                                <div class="sub" v-for="i in merchandise.original_gear.rarity + 1">
                                     <img src="~@/img/blank-skill-slot.png" />
                                 </div>
                             </div>
                         </div>
-                        <div class="level-right" v-if="originalGear.price">
+                        <div class="level-right" v-if="merchandise.original_gear.price">
                             <div class="level-item">
                                 <div>
                                     <img class="cash" src="~@/img/cash.png" />
-                                    <span class="strikethrough">{{ originalGear.price }}</span>
+                                    <span class="strikethrough">{{ merchandise.original_gear.price }}</span>
                                 </div>
                             </div>
                         </div>
@@ -74,14 +74,7 @@
 </template>
 
 <script>
-import { getOriginalGear } from '@/js/splatoon';
-
 export default {
     props: ['merchandise', 'now'],
-    computed: {
-        originalGear() {
-            return getOriginalGear(this.merchandise.gear);
-        },
-    },
 }
 </script>

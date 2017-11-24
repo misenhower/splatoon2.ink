@@ -22,6 +22,9 @@ class Updater {
         // Filter the root keys if necessary
         data = this.filterRootKeys(data);
 
+        // Apply any other processing
+        data = this.processData(data);
+
         // Convert the data to a JSON string
         let dataString = JSON.stringify(data);
 
@@ -38,6 +41,10 @@ class Updater {
     getData() {
         let splatnet = new SplatNet;
         return this.options.request(splatnet);
+    }
+
+    processData(data) {
+        return data;
     }
 
     async handleRequest(request) {
