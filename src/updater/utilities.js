@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const mkdirp = require('mkdirp');
 
 const dataPath = path.resolve('public/data');
 
@@ -15,6 +16,12 @@ function readJson(filename) {
     return JSON.parse(fs.readFileSync(filename));
 }
 module.exports.readJson = readJson;
+
+function writeJson(filename, data) {
+    mkdirp(path.dirname(filename));
+    fs.writeFileSync(filename, JSON.stringify(data));
+}
+module.exports.writeJson = writeJson;
 
 function readData(filename) {
     return readJson(`${dataPath}/${filename}`);

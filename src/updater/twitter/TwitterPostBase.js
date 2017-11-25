@@ -1,9 +1,9 @@
 const path = require('path');
 const fs = require('fs');
 const { postMediaTweet } = require('./client');
-const { getTopOfCurrentHour, readJson } = require('../utilities');
+const { getTopOfCurrentHour, readJson, writeJson } = require('../utilities');
 
-const lastTweetTimesPath = path.resolve('twitter-lastTweetTimes.json');
+const lastTweetTimesPath = path.resolve('storage/twitter-lastTweetTimes.json');
 
 class TwitterPostBase {
     maybePostTweet() {
@@ -84,7 +84,7 @@ class TwitterPostBase {
 
         lastTweetTimes[key] = time;
 
-        fs.writeFileSync(lastTweetTimesPath, JSON.stringify(lastTweetTimes));
+        writeJson(lastTweetTimesPath, lastTweetTimes);
     }
 
     shouldPostForCurrentTime() {
