@@ -398,6 +398,8 @@ body.has-modal #main {
     @extend .product-box;
     @extend .bg-circles;
 
+    position: relative;
+
     mask-size: 500px 800px;
 
     background-color: $white-ter;
