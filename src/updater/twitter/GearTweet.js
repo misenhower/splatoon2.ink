@@ -1,6 +1,6 @@
 const TwitterPostBase = require('./TwitterPostBase');
 const { captureGearScreenshot } = require('../screenshots');
-const { readData, getTopOfCurrentHour } = require('./utilities');
+const { readData, getTopOfCurrentHour } = require('../utilities');
 
 class GearTweet extends TwitterPostBase {
     getKey() { return 'gear'; }

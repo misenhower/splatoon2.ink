@@ -1,6 +1,6 @@
 const TwitterPostBase = require('./TwitterPostBase');
 const { captureNewWeaponScreenshot } = require('../screenshots');
-const { readData } = require('./utilities');
+const { readData } = require('../utilities');
 
 class NewWeaponTweet extends TwitterPostBase {
     getKey() { return 'weapon'; }

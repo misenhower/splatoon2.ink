@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const { postMediaTweet } = require('./client');
-const { getTopOfCurrentHour, readJson } = require('./utilities');
+const { getTopOfCurrentHour, readJson } = require('../utilities');
 
 const lastTweetTimesPath = path.resolve('twitter-lastTweetTimes.json');
 

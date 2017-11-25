@@ -1,6 +1,6 @@
 const TwitterPostBase = require('./TwitterPostBase');
 const { captureSalmonRunScreenshot } = require('../screenshots');
-const { readData } = require('./utilities');
+const { readData } = require('../utilities');
 
 class SalmonRunTweet extends TwitterPostBase {
     getKey() { return 'salmonrun'; }

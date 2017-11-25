@@ -1,6 +1,6 @@
 const TwitterPostBase = require('./TwitterPostBase');
 const { captureScheduleScreenshot } = require('../screenshots');
-const { readData } = require('./utilities');
+const { readData } = require('../utilities');
 
 class ScheduleTweet extends TwitterPostBase {
     getKey() { return 'schedule'; }

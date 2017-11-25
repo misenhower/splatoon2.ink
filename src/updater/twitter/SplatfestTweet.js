@@ -1,6 +1,6 @@
 const TwitterPostBase = require('./TwitterPostBase');
 const { captureSplatfestScreenshot } = require('../screenshots');
-const { readData } = require('./utilities');
+const { readData } = require('../utilities');
 const regions = require('../../js/regions');
 
 class SplatfestTweet extends TwitterPostBase {
