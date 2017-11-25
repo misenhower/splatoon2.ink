@@ -1,6 +1,7 @@
 require('./bootstrap');
 
 const Updater = require('./updaters/Updater');
+const SchedulesUpdater = require('./updaters/SchedulesUpdater');
 const OriginalGearImageUpdater = require('./updaters/OriginalGearImageUpdater');
 const FestivalsUpdater = require('./updaters/FestivalsUpdater');
 const MerchandisesUpdater = require('./updaters/MerchandisesUpdater');
@@ -10,15 +11,7 @@ const updaters = [
     new OriginalGearImageUpdater(),
 
     // Schedules
-    new Updater({
-        name: 'Schedules',
-        filename: 'schedules.json',
-        request: (splatnet) => splatnet.getSchedules(),
-        imagePaths: [
-            '$..stage_a.image',
-            '$..stage_b.image',
-        ],
-    }),
+    new SchedulesUpdater,
 
     // Co-op Schedules
     new Updater({

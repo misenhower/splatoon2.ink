@@ -23,7 +23,7 @@ class Updater {
         data = this.filterRootKeys(data);
 
         // Apply any other processing
-        data = this.processData(data);
+        data = await this.processData(data);
 
         // Convert the data to a JSON string
         let dataString = JSON.stringify(data);

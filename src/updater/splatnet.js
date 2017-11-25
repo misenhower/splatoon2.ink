@@ -45,6 +45,10 @@ class SplatNet {
         return this.getResponse('coop_schedules');
     }
 
+    getStages() {
+        return this.getResponse('data/stages');
+    }
+
     getTimeline() {
         return this.getResponse('timeline');
     }
