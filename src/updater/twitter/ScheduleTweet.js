@@ -13,6 +13,10 @@ class ScheduleTweet extends TwitterPostBase {
         return readData('schedules.json');
     }
 
+    getStages() {
+        return readJson(stagesPath);
+    }
+
     getData() {
         return this.getSchedules().regular.find(s => s.start_time == this.getDataTime());
     }
@@ -27,7 +31,7 @@ class ScheduleTweet extends TwitterPostBase {
 
     getText(data) {
         // Load known stages
-        let stages = readJson(stagesPath);
+        let stages = this.getStages();
 
         for (let stage of [data.stage_a, data.stage_b]) {
             let stageInfo = stages.find(s => s.id == stage.id);

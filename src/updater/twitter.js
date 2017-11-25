@@ -4,6 +4,7 @@ const ScheduleTweet = require('./twitter/ScheduleTweet');
 const GearTweet = require('./twitter/GearTweet');
 const SalmonRunTweet = require('./twitter/SalmonRunTweet');
 const NewWeaponTweet = require('./twitter/NewWeaponTweet');
+const NewStageTweet = require('./twitter/NewStageTweet');
 const SplatfestTweet = require('./twitter/SplatfestTweet');
 
 let tweets = [
@@ -11,6 +12,7 @@ let tweets = [
     new GearTweet,
     new SalmonRunTweet,
     new NewWeaponTweet,
+    new NewStageTweet,
     new SplatfestTweet('na'),
     new SplatfestTweet('eu'),
     new SplatfestTweet('jp'),
