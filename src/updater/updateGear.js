@@ -55,19 +55,18 @@ function applyData(oldData, newData) {
     }
 
     // Retrieve data from Inkipedia
-    let inkipediaGear = {};
-    let inkipediaSources = {
-        head: 'https://splatoonwiki.org/w/index.php?title=Template:Gear/S2_Headgear&action=edit',
-        clothes: 'https://splatoonwiki.org/w/index.php?title=Template:Gear/S2_Clothing&action=edit',
-        shoes: 'https://splatoonwiki.org/w/index.php?title=Template:Gear/S2_Shoes&action=edit',
-    }
+    let inkipediaGear = { clothes: [], head: [], shoes: [] };
+    let inkipediaSources = [
+        'https://splatoonwiki.org/w/index.php?title=Template:Gear/S2_Headgear&action=edit',
+        'https://splatoonwiki.org/w/index.php?title=Template:Gear/S2_Clothing&action=edit',
+        'https://splatoonwiki.org/w/index.php?title=Template:Gear/S2_Shoes&action=edit',
+        'https://splatoonwiki.org/w/index.php?title=List_of_updates_in_Splatoon_2/Version_2.0.0&action=edit',
+    ];
 
-    for (let key in inkipediaSources) {
-        inkipediaGear[key] = [];
+    for (let url of inkipediaSources) {
+        let response = await axios.get(url);
 
-        let response = await axios.get(inkipediaSources[key]);
-
-        let regex = /\{\{GearList\/Item.*?filter/g;
+        let regex = /\{\{GearList\/Item.*?\}\}/g;
         let row;
         while (row = regex.exec(response.data)) {
             // Format: name=value|brand=value|...
@@ -75,7 +74,17 @@ function applyData(oldData, newData) {
                 .reduce((map, kvp) => { kvp = kvp.split('='); map[kvp[0]] = kvp[1]; return map; }, {});
 
             // Make sure we have the necessary info
-            if (details.name && details.brand && details.ability && details.rarity) {
+            // console.log(details);
+            if (details.category && details.name && details.brand && details.ability && details.rarity) {
+                let key;
+                switch (details.category) {
+                    case 'Clothing': key = 'clothes'; break;
+                    case 'Headgear': key = 'head'; break;
+                    case 'Shoes': key = 'shoes'; break;
+                }
+                if (!key)
+                    continue;
+
                 inkipediaGear[key].push({
                     name: he.decode(details.name),
                     brand: he.decode(details.brand),
