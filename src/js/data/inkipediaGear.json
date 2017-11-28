@@ -990,7 +990,7 @@
         {
             "brand": "4",
             "name": "Olive Zekko Parka",
-            "price": null,
+            "price": 3800,
             "rarity": 1,
             "skill": "4"
         },
@@ -1136,7 +1136,7 @@
         },
         {
             "brand": "11",
-            "name": "Takoroka Rainbow Tie Die",
+            "name": "Takoroka Rainbow Tie Dye",
             "price": 850,
             "rarity": 0,
             "skill": "9"
