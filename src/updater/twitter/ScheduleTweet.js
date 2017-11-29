@@ -18,30 +18,40 @@ class ScheduleTweet extends TwitterPostBase {
     }
 
     getData() {
-        return this.getSchedules().regular.find(s => s.start_time == this.getDataTime());
+        let regular = this.getSchedules().regular.find(s => s.start_time == this.getDataTime());
+        let gachi = this.getSchedules().gachi.find(s => s.start_time == this.getDataTime());
+        let league = this.getSchedules().league.find(s => s.start_time == this.getDataTime());
+
+        if (!regular)
+            return null;
+
+        return { regular, gachi, league };
     }
 
     getTestData() {
-        return this.getSchedules().regular[0];
+        let regular = this.getSchedules().regular[0];
+        let gachi = this.getSchedules().gachi[0];
+        let league = this.getSchedules().league[0];
+        return { regular, gachi, league };
     }
 
     getImage(data) {
-        return captureScheduleScreenshot(data.start_time);
+        return captureScheduleScreenshot(data.regular.start_time);
     }
 
     getText(data) {
         // Load known stages
         let stages = this.getStages();
 
-        for (let stage of [data.stage_a, data.stage_b]) {
+        for (let stage of [data.regular.stage_a, data.regular.stage_b]) {
             let stageInfo = stages.find(s => s.id == stage.id);
 
             // If this is the first time the stage has been available, return some different text
-            if (stageInfo && stageInfo.first_available == data.start_time)
+            if (stageInfo && stageInfo.first_available == data.regular.start_time)
                 return `New stage ${stage.name} is now open! #maprotation #splatoon2`;
         }
 
-        return 'Current Splatoon 2 map rotation #maprotation';
+        return `Splatoon 2 map rotation: Ranked game mode: ${data.gachi.rule.name}, League game mode: ${data.league.rule.name} #maprotation`;
     }
 }
 

@@ -32,7 +32,7 @@ class SalmonRunTweet extends TwitterPostBase {
     }
 
     getText(data) {
-        return 'Salmon Run is now open! #salmonrun #splatoon2';
+        return `Salmon Run is now open on ${data.stage.name}! #salmonrun #splatoon2`;
     }
 }
 
