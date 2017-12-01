@@ -132,14 +132,18 @@ body.has-modal #main {
         padding-bottom: 0;
     }
 
-    .salmon-run-header, .salmon-run-content {
+    .salmon-run-header {
         padding-left: 10px;
         padding-right: 10px;
         padding-bottom: 10px;
     }
 
     .salmon-run-content {
-        padding: 10px;
+        padding: 0 10px 5px 10px;
+
+        @include mobile {
+            padding-top: 5px;
+        }
     }
 
     .salmon-run-ad-img {
@@ -181,13 +185,28 @@ body.has-modal #main {
         }
     }
 
+    .salmon-run-open {
+        margin-top: 10px;
+
+        .salmon-run-details {
+            margin-left: -5px;
+            margin-right: -5px;
+        }
+    }
+
     .salmon-run-future {
         background: rgba(0,0,0,0.7);
         padding: 5px 10px 10px;
-        margin: 2px -5px;
+        margin-left: -5px;
+        margin-right: -5px;
         border-radius: 12px;
+        border-bottom-right-radius: 28px;
         overflow: hidden;
         line-height: 20px;
+
+        @include mobile {
+            border-bottom-left-radius: 28px;
+        }
 
         .event:not(:last-child) {
             border-bottom: 0.1rem dashed $grey;

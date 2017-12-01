@@ -34,7 +34,7 @@
             </div>
             <div class="column">
                 <div class="salmon-run-content">
-                    <div v-if="currentSchedule">
+                    <div class="salmon-run-open" v-if="currentSchedule">
                         <div class="is-size-5 title-squid font-splatoon1">
                             Now open!
                         </div>
@@ -56,7 +56,9 @@
                             </div>
                         </template>
 
-                        <SalmonRunDetailsBar :schedule="currentSchedule"></SalmonRunDetailsBar>
+                        <div class="salmon-run-details">
+                            <SalmonRunDetailsBar :schedule="currentSchedule"></SalmonRunDetailsBar>
+                        </div>
                     </div>
 
                     <div v-if="!screenshotMode && upcomingSchedules.length > 0">
