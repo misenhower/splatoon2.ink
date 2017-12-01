@@ -200,12 +200,12 @@ body.has-modal #main {
         margin-left: -5px;
         margin-right: -5px;
         border-radius: 12px;
-        border-bottom-right-radius: 28px;
+        border-bottom-right-radius: 27px;
         overflow: hidden;
         line-height: 20px;
 
         @include mobile {
-            border-bottom-left-radius: 28px;
+            border-bottom-left-radius: 27px;
         }
 
         .event:not(:last-child) {
