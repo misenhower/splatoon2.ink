@@ -25,7 +25,7 @@
                     </div>
                     <div class="salmon-run-gear-image hand" @click="gearDialogOpen = true" :title="coop.reward_gear.gear.name">
                         <div class="image is-32x32">
-                            <img :src="coop.reward_gear.gear.image | localSplatNetImageUrl" style="margin-top: -5px" />
+                            <img :src="coop.reward_gear.gear.image | localSplatNetImageUrl" />
                         </div>
                     </div>
                 </template>
