@@ -63,9 +63,10 @@
             <div class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }" v-if="state == 'upcoming'">
                 in {{ festival.times.start - now | shortDuration }}
             </div>
-            <div class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }" v-if="state == 'active'">
+            <div class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }" v-else-if="state == 'active'">
                 {{ festival.times.end - now | durationHours }} remaining
             </div>
+            <div v-else>&nbsp;</div>
         </div>
     </div>
 </template>
