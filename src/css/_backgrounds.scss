@@ -1,5 +1,6 @@
 // Images
 $bg-squids: url(../img/bg-squids.png);
+$bg-squids-light: url(../img/bg-squids-light.png);
 $bg-stripes: url(../img/bg-stripes.png);
 $bg-dots: url(../img/bg-dots.png);
 $bg-spots: url(../img/bg-spots.png);
@@ -21,6 +22,12 @@ $bg-battle-league: #f02d7d;
     background-image: $bg-squids;
     background-position: top;
     background-size: 360px 360px;
+}
+
+.bg-squids-light {
+    background-image: $bg-squids-light;
+    background-position: top;
+    background-size: 270px 270px;
 }
 
 .bg-stripes {

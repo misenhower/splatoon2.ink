@@ -17,6 +17,10 @@ body.has-modal #main {
     filter: blur(4px);
 }
 
+.level.is-mobile .level-item:last-child {
+    margin-right: 0;
+}
+
 .fa {
     &:before {
         display: inline-block;
@@ -281,6 +285,8 @@ body.has-modal #main {
     }
 
     .mobile-results {
+        position: relative;
+
         .splatfest-results {
             border-radius: 0;
         }
@@ -302,27 +308,66 @@ body.has-modal #main {
 .splatfest-results {
     @extend .text-shadow;
 
-    background: rgba($grey-lighter, 0.75);
+    overflow: hidden;
+    background-color: rgba($grey-light, 0.75);
+
+    .background {
+        @extend .bg-squids-light;
+        opacity: 0.5;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+
     border-radius: 15px;
     padding: 10px;
 
+    .results-header {
+        position: relative;
+
+        // We need to elevate the "Results" text out of its column container
+        // since otherwise it's too wide to fit
+        .results-header-text {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image {
+            margin: 0 auto;
+        }
+    }
+
     .result {
-        background: rgba($black-ter, 0.65);
+        background: rgba($black, 0.75);
         border-radius: 200px;
 
         margin: 10px 0 0 0;
 
-        .level-item {
+        .column {
             padding: 8px 0;
             position: relative;
 
-            .winner-mark {
-                @extend .bg-mask-ink-splat;
+            .winner-mark, .title {
                 position: absolute;
                 top: 0;
                 right: 0;
                 bottom: 0;
                 left: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .winner-mark {
+                @extend .bg-mask-ink-splat;
 
                 z-index: 0;
                 margin: -5px;
@@ -330,6 +375,10 @@ body.has-modal #main {
 
             .title {
                 z-index: 1;
+
+                .percent {
+                    font-size: 14px;
+                }
             }
         }
     }

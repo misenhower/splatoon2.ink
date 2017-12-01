@@ -1,17 +1,21 @@
 <template>
     <div class="splatfest-results">
-        <div class="level is-marginless is-mobile">
-            <div class="level-item">
+        <div class="background"></div>
+
+        <div class="columns is-marginless is-gapless is-mobile results-header">
+            <div class="title is-4 font-splatoon1 has-text-centered is-marginless results-header-text">Results</div>
+
+            <div class="column">
                 <div class="image is-48x48" :title="festival.names.alpha_short">
                     <img :src="festival.images.alpha | localSplatNetImageUrl" />
                 </div>
             </div>
 
-            <div class="level-item">
-                <div class="title is-4 font-splatoon1 has-text-centered is-marginless">Results</div>
+            <div class="column is-3">
+                <!-- Intentionally left blank since "Results" doesn't quite fit the horizontal space -->
             </div>
 
-            <div class="level-item">
+            <div class="column">
                 <div class="image is-48x48" :title="festival.names.bravo_short">
                     <img :src="festival.images.bravo | localSplatNetImageUrl" />
                 </div>
