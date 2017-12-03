@@ -7,13 +7,13 @@
 
         <div class="main-content-wrapper">
             <div class="weapon-special-sub">
-                <div class="image-wrapper" :title="`Special: ${weapon.special.name}`">
+                <div class="image-wrapper" :title="specialName">
                     <div class="image is-24x24">
                         <img :src="weapon.special.image_a | localSplatNetImageUrl" />
                     </div>
                 </div>
 
-                <div class="image-wrapper" :title="`Sub: ${weapon.sub.name}`">
+                <div class="image-wrapper" :title="subName">
                     <div class="image is-24x24">
                         <img :src="weapon.sub.image_a | localSplatNetImageUrl" />
                     </div>
@@ -25,7 +25,7 @@
             </div>
 
             <div class="weapon-name has-text-centered is-size-5">
-                {{ weapon.name }}
+                {{ name }}
             </div>
         </div>
 
@@ -38,5 +38,18 @@ export default {
         weapon: {},
         title: { default: 'New Weapon' },
     },
+    computed: {
+        name() {
+            return this.$t(`splatnet.weapons.${this.weapon.id}.name`, this.weapon.name);
+        },
+        subName() {
+            let sub = this.weapon.sub;
+            return 'Sub: ' + this.$t(`splatnet.weapon_subs.${sub.id}.name`, sub.name);
+        },
+        specialName() {
+            let special = this.weapon.special;
+            return 'Special: ' + this.$t(`splatnet.weapon_specials.${special.id}.name`, special.name);
+        },
+    }
 }
 </script>

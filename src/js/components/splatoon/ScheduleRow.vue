@@ -2,7 +2,7 @@
     <div>
         <div class="level is-mobile is-marginless is-hidden-tablet">
             <div class="level-left">
-                <div class="level-item title-color is-size-5">{{ schedule.rule.name }}</div>
+                <div class="level-item title-color is-size-5">{{ ruleName }}</div>
             </div>
             <div class="level-right">
                 <div class="level-item has-text-right">
@@ -21,7 +21,7 @@
 
         <div class="columns is-slim" v-if="schedule">
             <div class="column has-text-centered is-hidden-mobile" style="margin-top: auto; margin-bottom: auto;">
-                <div class="title is-size-5-fullhd is-size-5-touch" :class="ruleNameClass">{{ schedule.rule.name }}</div>
+                <div class="title is-size-5-fullhd is-size-5-touch" :class="ruleNameClass">{{ ruleName }}</div>
                 <div class="subtitle is-size-6-fullhd is-size-6-touch" :class="scheduleClass">
                     <template v-if="schedule.start_time > now">
                         in {{ schedule.start_time - now | duration }}
@@ -56,6 +56,10 @@ export default {
             let now = new Date(this.now * 1000);
             let start = new Date(this.schedule.start_time * 1000);
             return (now.getDate() == start.getDate() && now.getMonth() == start.getMonth() && now.getFullYear() == start.getFullYear());
+        },
+        ruleName() {
+            let rule = this.schedule.rule;
+            return this.$t(`splatnet.rules.${rule.key}.name`, rule.name);
         },
         ruleNameClass() { return this.smallSize ? 'is-6' : 'is-5' },
         scheduleClass() { return this.smallSize ? 'is-7' : 'is-6' },

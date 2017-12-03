@@ -5,7 +5,7 @@
         <div class="main-schedule" v-if="currentSchedule">
             <div class="level is-mobile top-bar">
                 <div class="level-left">
-                    <div class="level-item title-color is-size-5">{{ currentSchedule.rule.name }}</div>
+                    <div class="level-item title-color is-size-5">{{ currentRuleName }}</div>
                 </div>
                 <div class="level-right">
                     <div class="level-item">
@@ -78,6 +78,10 @@ export default {
         currentSchedule() {
             if (this.schedules && this.schedules[0] && this.schedules[0].start_time <= this.now)
                 return this.schedules[0];
+        },
+        currentRuleName() {
+            let rule = this.currentSchedule.rule;
+            return this.$t(`splatnet.rules.${rule.key}.name`, rule.name);
         },
         upcomingSchedules() {
             if (this.schedules) {

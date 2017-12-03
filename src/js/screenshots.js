@@ -1,6 +1,9 @@
 // Entry point for the automated screenshots page
 
 import Vue from 'vue';
+import store from './store';
+
+import './i18n';
 import './directives.js';
 import './filters.js';
 
@@ -27,6 +30,7 @@ const router = new VueRouter({ routes });
 import Screenshots from './components/Screenshots.vue';
 new Vue({
     render: h => h(Screenshots),
+    store,
     router,
 }).$mount('#app');
 

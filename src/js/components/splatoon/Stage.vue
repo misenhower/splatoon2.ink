@@ -1,7 +1,7 @@
 <template>
     <div class="stage-image" :class="{ hand: clickable }" :style="style" @click="click" v-if="stageDetails">
         <figure class="image is-16by9"></figure>
-        <span class="stage-title" v-if="showTitle">{{ stageDetails.name }}</span>
+        <span class="stage-title" v-if="showTitle">{{ name }}</span>
 
         <Modal v-if="isOpen" @close="isOpen = false">
             <div class="modal-content tilt-right-slight is-wide">
@@ -10,7 +10,7 @@
                 </p>
                 <p class="has-text-centered">
                     <span class="font-splatoon2">
-                        {{ stageDetails.name }}
+                        {{ name }}
                     </span>
                 </p>
             </div>
@@ -35,6 +35,7 @@ export default {
         stage: {},
         showTitle: { default: true },
         clickable: { default: true },
+        isSalmonRun: { default: false },
     },
     data() {
         return {
@@ -47,6 +48,12 @@ export default {
                 // Merge our known data with potentially new data from Splatnet
                 return Object.assign({}, SplatoonStages.find(stage => stage.id === this.stage.id), this.stage);
             }
+        },
+        name() {
+            if (this.isSalmonRun)
+                return this.$t(`splatnet.coop_stages.${this.stage.image}.name`, this.stage.name);
+
+            return this.$t(`splatnet.stages.${this.stageDetails.id}.name`, this.stageDetails.name);
         },
         image() {
             if (this.stageDetails)

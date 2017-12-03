@@ -25,7 +25,7 @@
                     <div class="salmon-run-gear-text">
                         This month's gear
                     </div>
-                    <div class="salmon-run-gear-image hand" @click="gearDialogOpen = true" :title="coop.reward_gear.gear.name">
+                    <div class="salmon-run-gear-image hand" @click="gearDialogOpen = true" :title="rewardGearName">
                         <div class="image is-32x32">
                             <img :src="coop.reward_gear.gear.image | localSplatNetImageUrl" />
                         </div>
@@ -138,6 +138,12 @@ export default {
         currentSchedule() {
             if (this.allSchedules.length > 0 && this.allSchedules[0].start_time <= this.now)
                 return this.allSchedules[0];
+        },
+        rewardGearName() {
+            if (this.coop.reward_gear) {
+                let gear = this.coop.reward_gear.gear;
+                return this.$t(`splatnet.gear.${gear.id}.name`, gear.name);
+            }
         },
     },
 }

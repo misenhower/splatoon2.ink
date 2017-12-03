@@ -6,7 +6,7 @@
             <div class="title is-4 font-splatoon1 has-text-centered is-marginless results-header-text">Results</div>
 
             <div class="column">
-                <div class="image is-48x48" :title="festival.names.alpha_short">
+                <div class="image is-48x48" :title="$t(`splatnet.festivals.${festival.festival_id}.names.alpha_short`, festival.names.alpha_short)">
                     <img :src="festival.images.alpha | localSplatNetImageUrl" />
                 </div>
             </div>
@@ -16,7 +16,7 @@
             </div>
 
             <div class="column">
-                <div class="image is-48x48" :title="festival.names.bravo_short">
+                <div class="image is-48x48" :title="$t(`splatnet.festivals.${festival.festival_id}.names.bravo_short`, festival.names.bravo_short)">
                     <img :src="festival.images.bravo | localSplatNetImageUrl" />
                 </div>
             </div>

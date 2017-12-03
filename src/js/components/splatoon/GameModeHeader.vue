@@ -10,8 +10,7 @@
             </div>
             <div class="level-item">
                 <h2 class="title is-3 is-size-2-fullhd is-size-4-mobile font-splatoon1">
-                    <template v-if="isFestival">Splatfest Battle</template>
-                    <template v-else>{{ gameMode.name }}</template>
+                    <template>{{ name }}</template>
                 </h2>
             </div>
         </div>
@@ -24,6 +23,11 @@ export default {
     computed: {
         isFestival() {
             return this.festival && this.festival.times.start <= this.now && this.festival.times.end > this.now;
+        },
+        name() {
+            if (this.isFestival)
+                return 'Splatfest Battle';
+            return this.$t(`splatnet.game_modes.${this.gameMode.key}.name`, this.gameMode.name);
         },
     },
 }

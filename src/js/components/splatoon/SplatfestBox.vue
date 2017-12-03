@@ -13,11 +13,11 @@
 
             <div class="labels">
                 <div class="alpha">
-                    {{ festival.names.alpha_short }}
+                    {{ $t(`splatnet.festivals.${festival.festival_id}.names.alpha_short`, festival.names.alpha_short) }}
                 </div>
 
                 <div class="bravo">
-                    {{ festival.names.bravo_short }}
+                    {{ $t(`splatnet.festivals.${festival.festival_id}.names.bravo_short`, festival.names.bravo_short) }}
                 </div>
             </div>
 
