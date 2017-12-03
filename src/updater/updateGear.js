@@ -7,7 +7,7 @@ const fs = require('fs');
 const mkdirp = require('mkdirp');
 const axios = require('axios');
 const retrieveGearData = require('./retrieveGearData');
-const stringify = require('json-stable-stringify');
+const { writeFormattedJson } = require('./utilities');
 const he = require('he');
 
 const dataPath = path.resolve('src/js/data');
@@ -110,7 +110,7 @@ function applyData(oldData, newData) {
     }
 
     // Write out the data
-    fs.writeFileSync(brandsFilename, stringify(brands, { space: 4 }));
-    fs.writeFileSync(skillsFilename, stringify(skills, { space: 4 }));
-    fs.writeFileSync(inkipediaGearFilename, stringify(inkipediaGear, { space: 4 }));
+    writeFormattedJson(brandsFilename, brands);
+    writeFormattedJson(skillsFilename, skills);
+    writeFormattedJson(inkipediaGearFilename, inkipediaGear);
 })();

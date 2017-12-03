@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const mkdirp = require('mkdirp');
+const stringify = require('json-stable-stringify');
 
 const dataPath = path.resolve('public/data');
 
@@ -22,6 +23,12 @@ function writeJson(filename, data) {
     fs.writeFileSync(filename, JSON.stringify(data));
 }
 module.exports.writeJson = writeJson;
+
+function writeFormattedJson(filename, data) {
+    mkdirp(path.dirname(filename));
+    fs.writeFileSync(filename, stringify(data, { space: 4 }));
+}
+module.exports.writeFormattedJson = writeFormattedJson;
 
 function readData(filename) {
     return readJson(`${dataPath}/${filename}`);
