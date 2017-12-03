@@ -190,6 +190,7 @@ export default {
             },
             aboutOpen: false,
             splatNetGearOpen: false,
+            language: null,
         };
     },
     computed: {
@@ -269,6 +270,7 @@ export default {
         },
     },
     created() {
+        this.loadLanguage();
         this.loadRegion(true);
         window.addEventListener('storage', this.loadRegion);
 
@@ -287,6 +289,10 @@ export default {
         window.removeEventListener('storage', this.loadRegion);
     },
     methods: {
+        loadLanguage() {
+            this.language = regions.detectSplatoonLanguage();
+            this.$i18n.set(this.language || 'en');
+        },
         loadRegion(autoDetect = false) {
             // Get the previously-selected region from local storage
             let key = localStorage.getItem('selected-region');
@@ -326,6 +332,13 @@ export default {
             }, (date - new Date));
         },
         updateData() {
+            // Language data
+            if (this.language) {
+                axios.get(`/data/lang/${this.language}.json`)
+                    .then(response => this.$i18n.add(this.language, { splatnet: response.data }))
+                    .catch(e => console.error(e));
+            }
+
             // Main map schedules
             axios.get('/data/schedules.json')
                 .then(response => this.splatnet.schedules = response.data)

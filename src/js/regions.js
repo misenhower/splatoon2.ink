@@ -23,6 +23,19 @@ function getRegionByKey(key) {
     return splatoonRegions.find(r => r.key == key);
 }
 
+function detectSplatoonLanguage() {
+    let browserLanguages = window.navigator.languages.map(l => l.toLowerCase());
+    let availableLanguages = languages.map(l => l.language.toLowerCase());
+
+    // Try to find a match based on the first part of the available languages (i.e., match "es" for "es-ES")
+    for (let language of browserLanguages) {
+        for (let availableLanguage of availableLanguages) {
+            if (language.startsWith(availableLanguage))
+                return availableLanguage;
+        }
+    }
+}
+
 function detectSplatoonRegion() {
     if (window.navigator && window.navigator.language)
         return detectSplatoonRegionFromLanguage(window.navigator.language);
@@ -80,5 +93,6 @@ module.exports = {
     splatoonRegions,
     languages,
     getRegionByKey,
+    detectSplatoonLanguage,
     detectSplatoonRegion,
 }
