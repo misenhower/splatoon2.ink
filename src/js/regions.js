@@ -5,6 +5,20 @@ const splatoonRegions = [
     { key: 'jp', name: 'Japan', demonym: 'Japanese' },
 ];
 
+const languages = [
+    { region: 'NA', language: 'en' },
+    { region: 'NA', language: 'es-MX' },
+    { region: 'NA', language: 'fr-CA' },
+    { region: 'EU', language: 'en' },
+    { region: 'EU', language: 'de' },
+    { region: 'EU', language: 'nl' },
+    { region: 'EU', language: 'fr' },
+    { region: 'EU', language: 'it' },
+    { region: 'EU', language: 'ru' },
+    { region: 'EU', language: 'es' },
+    { region: 'JP', language: 'ja' },
+];
+
 function getRegionByKey(key) {
     return splatoonRegions.find(r => r.key == key);
 }
@@ -64,6 +78,7 @@ function detectSplatoonRegionFromLanguage(language) {
 
 module.exports = {
     splatoonRegions,
+    languages,
     getRegionByKey,
     detectSplatoonRegion,
 }

@@ -15,6 +15,32 @@ class MerchandisesUpdater extends Updater {
                 '$..gear.brand.frequent_skill.image',
                 '$..skill.image',
             ],
+            localization: [
+                {
+                    name: 'gear',
+                    entities: '$..gear',
+                    id: 'id',
+                    values: 'name',
+                },
+                {
+                    name: 'brands',
+                    entities: '$..gear.brand',
+                    id: 'id',
+                    values: 'name',
+                },
+                {
+                    name: 'skills',
+                    entities: '$..gear.brand.frequent_skill',
+                    id: 'id',
+                    values: 'name',
+                },
+                {
+                    name: 'skills',
+                    entities: '$..skill',
+                    id: 'id',
+                    values: 'name',
+                },
+            ],
         });
     }
 

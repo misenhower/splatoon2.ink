@@ -2,47 +2,20 @@ require('./bootstrap');
 
 const Updater = require('./updaters/Updater');
 const SchedulesUpdater = require('./updaters/SchedulesUpdater');
+const CoopSchedulesUpdater = require('./updaters/CoopSchedulesUpdater');
+const TimelineUpdater = require('./updaters/TimelineUpdater');
 const OriginalGearImageUpdater = require('./updaters/OriginalGearImageUpdater');
 const FestivalsUpdater = require('./updaters/FestivalsUpdater');
 const MerchandisesUpdater = require('./updaters/MerchandisesUpdater');
 
 const updaters = [
-    // Original gear images
-    new OriginalGearImageUpdater(),
-
-    // Schedules
+    new OriginalGearImageUpdater,
     new SchedulesUpdater,
-
-    // Co-op Schedules
-    new Updater({
-        name: 'Co-op Schedules',
-        filename: 'coop-schedules.json',
-        request: (splatnet) => splatnet.getCoopSchedules(),
-        imagePaths: [
-            '$..stage.image',
-            '$..weapons[*].image',
-        ],
-    }),
-
-    // Timeline
-    new Updater({
-        name: 'Timeline',
-        filename: 'timeline.json',
-        request: (splatnet) => splatnet.getTimeline(),
-        rootKeys: ['coop', 'weapon_availability'],
-        imagePaths: [
-            '$.coop..gear.image',
-            '$.coop..gear.brand.image',
-            '$.weapon_availability..weapon.image',
-            '$.weapon_availability..weapon.special.image_a',
-            '$.weapon_availability..weapon.sub.image_a',
-        ],
-    }),
-
-    // Festivals
-    new FestivalsUpdater,
-
-    // Merchandises
+    new CoopSchedulesUpdater,
+    new TimelineUpdater,
+    new FestivalsUpdater('NA'),
+    new FestivalsUpdater('EU'),
+    new FestivalsUpdater('JP'),
     new MerchandisesUpdater,
 ];
 

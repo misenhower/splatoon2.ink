@@ -16,6 +16,29 @@ class SchedulesUpdater extends Updater {
                 '$..stage_a.image',
                 '$..stage_b.image',
             ],
+            localization: [
+                {
+                    name: 'stages',
+                    entities: [
+                        '$..stage_a',
+                        '$..stage_b',
+                    ],
+                    id: 'id',
+                    values: 'name',
+                },
+                {
+                    name: 'game_modes',
+                    entities: '$..game_mode',
+                    id: 'key',
+                    values: 'name',
+                },
+                {
+                    name: 'rules',
+                    entities: '$..rule',
+                    id: 'key',
+                    values: ['name', 'multiline_name'],
+                },
+            ],
         });
     }
 

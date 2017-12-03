@@ -1,9 +1,12 @@
 const path = require('path');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
+const _ = require('lodash');
 const jsonpath = require('jsonpath');
 const SplatNet = require('../splatnet');
 const raven = require('raven');
+const { languages } = require('../../js/regions');
+const LocalizationProcessor = require('../LocalizationProcessor');
 
 const dataPath = path.resolve('public/data');
 const splatnetAssetPath = path.resolve('public/assets/splatnet');
@@ -16,11 +19,17 @@ class Updater {
     async update() {
         this.info('Updating data...');
 
+        // Use the first language as the default
+        let languageInfo = this.getLanguages()[0];
+
         // Retrieve the data
-        let data = await this.handleRequest(this.getData());
+        let data = await this.handleRequest(this.getData(languageInfo));
 
         // Filter the root keys if necessary
         data = this.filterRootKeys(data);
+
+        // Update localizations
+        data = await this.updateLocalizations(data, languageInfo);
 
         // Apply any other processing
         data = await this.processData(data);
@@ -38,8 +47,8 @@ class Updater {
         this.info('Done.');
     }
 
-    getData() {
-        let splatnet = new SplatNet;
+    getData({ region, language }) {
+        let splatnet = new SplatNet(region, language);
         return this.options.request(splatnet);
     }
 
@@ -73,6 +82,50 @@ class Updater {
             }
 
             return result;
+        }
+
+        return data;
+    }
+
+    getLanguages() {
+        // Only return one entry per language
+        // (i.e., only return "region: NA language: en" and not "region: EU language: en")
+        return _.uniqBy(languages, 'language');
+    }
+
+    forEachLanguage(callback) {
+        for (let languageInfo of this.getLanguages())
+            this.forEachRuleset(languageInfo, callback);
+    }
+
+    forEachRuleset(languageInfo, callback) {
+        for (let ruleset of (this.options.localization)) {
+            let processor = new LocalizationProcessor(ruleset, languageInfo);
+            callback(processor, languageInfo);
+        }
+    }
+
+    async updateLocalizations(data, initialLanguageInfo) {
+        if (this.options.localization) {
+            // Update localization data for the initial language
+            this.forEachRuleset(initialLanguageInfo, processor => processor.updateLocalizations(data));
+
+            // Do we need to retrieve data for any other languages?
+            let missingLanguages = [];
+            this.forEachLanguage((processor, languageInfo) => {
+                if (missingLanguages.indexOf(languageInfo) === -1) {
+                    if (!processor.hasLocalizations(data))
+                        missingLanguages.push(languageInfo);
+                }
+            });
+
+            // Retrieve data for missing languages
+            for (let missingLanguageInfo of missingLanguages) {
+                this.info(`Retrieving localized data for region: ${missingLanguageInfo.region}, language: ${missingLanguageInfo.language}`);
+                let localData = await this.handleRequest(this.getData(missingLanguageInfo));
+                localData = this.filterRootKeys(localData);
+                this.forEachRuleset(missingLanguageInfo, processor => processor.updateLocalizations(localData));
+            }
         }
 
         return data;
