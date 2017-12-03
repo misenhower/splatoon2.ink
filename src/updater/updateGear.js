@@ -60,7 +60,6 @@ function applyData(oldData, newData) {
         'https://splatoonwiki.org/w/index.php?title=Template:Gear/S2_Headgear&action=edit',
         'https://splatoonwiki.org/w/index.php?title=Template:Gear/S2_Clothing&action=edit',
         'https://splatoonwiki.org/w/index.php?title=Template:Gear/S2_Shoes&action=edit',
-        'https://splatoonwiki.org/w/index.php?title=List_of_updates_in_Splatoon_2/Version_2.0.0&action=edit',
     ];
 
     for (let url of inkipediaSources) {
