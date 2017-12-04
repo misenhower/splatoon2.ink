@@ -24,7 +24,8 @@
         "battle": "Splatfest Battle",
         "recent": "Recent Splatfest",
         "title": "Splatfest",
-        "upcoming": "Upcoming Splatfest"
+        "upcoming": "Upcoming Splatfest",
+        "results_in": "results in {time}"
     },
     "splatnet_gear": {
         "button": "SplatNet Gear",
@@ -35,5 +36,22 @@
         "next": "Next",
         "now": "Now",
         "soon": "Soon!"
+    },
+    "time": {
+        "in": "in {time}",
+        "remaining": "{time} remaining",
+        "dhm": "{days} {hours} {minutes}",
+        "dhms": "{days} {hours} {minutes} {seconds}",
+        "hm": "{hours} {minutes}",
+        "hms": "{hours} {minutes} {seconds}",
+        "ms": "{minutes} {seconds}",
+        "seconds": "{seconds} second ::: {seconds} seconds",
+        "minutes": "{minutes} minute ::: {minutes} minutes",
+        "hours": "{hours} hour ::: {hours} hours",
+        "days": "{days} day ::: {days} days",
+        "secondsShort": "{seconds}s ::: {seconds}s",
+        "minutesShort": "{minutes}m ::: {minutes}m",
+        "hoursShort": "{hours}h ::: {hours}h",
+        "daysShort": "{days}d ::: {days}d"
     }
 }

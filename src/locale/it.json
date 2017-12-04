@@ -24,7 +24,8 @@
         "battle": "Partite tematiche",
         "recent": "Festival",
         "title": "Festival",
-        "upcoming": "Festival"
+        "upcoming": "Festival",
+        "results_in": "risultati in {time}"
     },
     "splatnet_gear": {
         "button": "Calama-zone",
@@ -35,5 +36,22 @@
         "next": "Prossimi",
         "now": "Adesso",
         "soon": "Presto!"
+    },
+    "time": {
+        "in": "tra {time}",
+        "remaining": "{time} rimanenti",
+        "dhm": "{days} {hours} {minutes}",
+        "dhms": "{days} {hours} {minutes} {seconds}",
+        "hm": "{hours} {minutes}",
+        "hms": "{hours} {minutes} {seconds}",
+        "ms": "{minutes} {seconds}",
+        "seconds": "{seconds} secondo ::: {seconds} secondi",
+        "minutes": "{minutes} minuto ::: {minutes} minuti",
+        "hours": "{hours} ora ::: {hours} ore",
+        "days": "{days} giorno ::: {days} giorni",
+        "secondsShort": "{seconds}s ::: {seconds}s",
+        "minutesShort": "{minutes}m ::: {minutes}m",
+        "hoursShort": "{hours}o ::: {hours}o",
+        "daysShort": "{days}g ::: {days}g"
     }
 }

@@ -43,28 +43,18 @@
         </div>
 
         <div class="splatfest-content has-text-centered" v-if="!screenshotMode">
-            <template v-if="state == 'upcoming'">
-                in
-                {{ festival.times.start - now | duration }}
-            </template>
-
-            <template v-else-if="state == 'active'">
-                {{ festival.times.end - now | duration }}
-                remaining
+            <template v-if="state == 'upcoming' || state == 'active'">
+                {{ formattedDuration }}
             </template>
 
             <template v-else-if="state == 'past' && !results && festival.times.result > now">
-                results in
-                {{ festival.times.result - now | duration }}
+                {{ resultsIn }}
             </template>
         </div>
 
         <div class="has-text-centered is-size-5 title-color festival-period-container" v-if="screenshotMode">
-            <div class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }" v-if="state == 'upcoming'">
-                in {{ festival.times.start - now | shortDuration }}
-            </div>
-            <div class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }" v-else-if="state == 'active'">
-                {{ festival.times.end - now | durationHours }} remaining
+            <div class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }" v-if="state == 'upcoming' || state == 'active'">
+                {{ screenshotModeDuration }}
             </div>
             <div v-else>&nbsp;</div>
         </div>
@@ -96,6 +86,34 @@ export default {
         image() {
             if (this.festival)
                 return Vue.filter('localSplatNetImageUrl')(this.festival.images.panel);
+        },
+        formattedDuration() {
+            let time;
+
+            switch (this.state) {
+                case 'upcoming':
+                    time = Vue.filter('duration')(this.festival.times.start - this.now);
+                    return this.$t('time.in', { time });
+                case 'active':
+                    time = Vue.filter('duration')(this.festival.times.end - this.now);
+                    return this.$t('time.remaining', { time });
+            }
+        },
+        resultsIn() {
+            let time = Vue.filter('duration')(this.festival.times.result - this.now);
+            return this.$t('splatfest.results_in', { time });
+        },
+        screenshotModeDuration() {
+            let time;
+
+            switch (this.state) {
+                case 'upcoming':
+                    time = Vue.filter('shortDuration')(this.festival.times.start - this.now);
+                    return this.$t('time.in', { time });
+                case 'active':
+                    time = Vue.filter('durationHours')(this.festival.times.end - this.now);
+                    return this.$t('time.remaining', { time });
+            }
         },
     }
 }

@@ -24,7 +24,8 @@
         "battle": "フェスマッチ",
         "recent": "フェス",
         "title": "フェス",
-        "upcoming": "フェス"
+        "upcoming": "フェス",
+        "results_in": "結果発表 {time}"
     },
     "splatnet_gear": {
         "button": "ゲソタウン",
@@ -35,5 +36,22 @@
         "next": "つぎ",
         "now": "今",
         "soon": "もうすぐ"
+    },
+    "time": {
+        "in": "{time}後",
+        "remaining": "残り{time}",
+        "dhm": "{days}{hours}{minutes}",
+        "dhms": "{days}{hours}{minutes}{seconds}",
+        "hm": "{hours}{minutes}",
+        "hms": "{hours}{minutes}{seconds}",
+        "ms": "{minutes}{seconds}",
+        "seconds": "{seconds}秒 ::: {seconds}秒",
+        "minutes": "{minutes}分 ::: {minutes}分",
+        "hours": "{hours}時間 ::: {hours}時間",
+        "days": "{days}日 ::: {days}日",
+        "secondsShort": "{seconds}秒 ::: {seconds}秒",
+        "minutesShort": "{minutes}分 ::: {minutes}分",
+        "hoursShort": "{hours}時間 ::: {hours}時間",
+        "daysShort": "{days}日 ::: {days}日"
     }
 }

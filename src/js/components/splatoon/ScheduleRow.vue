@@ -8,7 +8,7 @@
                 <div class="level-item has-text-right">
                     <div>
                         <template v-if="schedule.start_time > now">
-                            in {{ schedule.start_time - now | duration }}<span class="is-hidden-mobile">,&nbsp;</span>
+                            {{ timeFromNow }}<span class="is-hidden-mobile">,&nbsp;</span>
                         </template>
                         <div class="is-size-7">
                             {{ schedule.start_time | time }} &ndash;
@@ -24,7 +24,7 @@
                 <div class="title is-size-5-fullhd is-size-5-touch" :class="ruleNameClass">{{ ruleName }}</div>
                 <div class="subtitle is-size-6-fullhd is-size-6-touch" :class="scheduleClass">
                     <template v-if="schedule.start_time > now">
-                        in {{ schedule.start_time - now | duration }}
+                        {{ timeFromNow }}
                         <br />
                     </template>
                     <template v-if="!isToday">
@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import Stage from './Stage.vue';
 
 export default {
@@ -63,6 +64,10 @@ export default {
         },
         ruleNameClass() { return this.smallSize ? 'is-6' : 'is-5' },
         scheduleClass() { return this.smallSize ? 'is-7' : 'is-6' },
+        timeFromNow() {
+            let time = Vue.filter('duration')(this.schedule.start_time - this.now);
+            return this.$t('time.in', { time });
+        },
     }
 }
 </script>

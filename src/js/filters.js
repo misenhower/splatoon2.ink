@@ -1,4 +1,5 @@
 import Vue from 'vue';
+const $t = Vue.i18n.translate;
 
 // Local hosting of SplatNet images
 Vue.filter('localSplatNetImageUrl', function(value) {
@@ -42,34 +43,34 @@ Vue.filter('duration', function(value, hideSeconds = false) {
         minutes = ('0' + minutes).substr(-2);
     seconds = ('0' + seconds).substr(-2);
 
-    if (days) {
-        if (hideSeconds)
-            return `${negative}${days}d ${hours}h ${minutes}m`;
-        return `${negative}${days}d ${hours}h ${minutes}m ${seconds}s`;
-    }
-    if (hours) {
-        if (hideSeconds)
-            return `${negative}${hours}h ${minutes}m`;
-        return `${negative}${hours}h ${minutes}m ${seconds}s`;
-    }
-    return `${negative}${minutes}m ${seconds}s`;
+    // Format for translation
+    days = days && $t('time.daysShort', { days }, parseInt(days));
+    hours = hours && $t('time.hoursShort', { hours }, parseInt(hours));
+    minutes = $t('time.minutesShort', { minutes }, parseInt(minutes));
+    seconds = $t('time.secondsShort', { seconds }, parseInt(seconds));
+
+    if (days)
+        return negative + $t((hideSeconds) ? 'time.dhm' : 'time.dhms', { days, hours, minutes, seconds });
+    if (hours)
+        return negative + $t((hideSeconds) ? 'time.hm' : 'time.hms', { hours, minutes, seconds });
+    return negative + $t('time.ms', { minutes, seconds });
 });
 
 Vue.filter('shortDuration', function (value) {
     let { negative, days, hours, minutes, seconds } = getDurationParts(value);
 
     if (days)
-        return (days == 1) ? `${negative}1 day` : `${negative}${days} days`;
+        return $t('time.days', { days: negative + days }, days);
     if (hours)
-        return (hours == 1) ? `${negative}1 hour` : `${negative}${hours} hours`;
+        return $t('time.hours', { hours: negative + hours }, hours);
     if (minutes)
-        return (minutes == 1) ? `${negative}1 minute` : `${negative}${minutes} minutes`;
-    return (seconds == 1) ? `${negative}1 second` : `${negative}${seconds} seconds`;
+        return $t('time.minutes', { minutes: negative + minutes }, minutes);
+    return $t('time.seconds', { seconds: negative + seconds }, seconds);
 });
 
 Vue.filter('durationHours', function (value) {
     let { negative, days, hours, minutes, seconds } = getDurationParts(value);
 
     hours += 24 * days;
-    return (hours == 1) ? `${negative}1 hour` : `${negative}${hours} hours`;
+    return $t('time.hours', { hours: negative + hours }, hours);
 });

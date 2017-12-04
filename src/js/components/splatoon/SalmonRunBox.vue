@@ -86,7 +86,7 @@
                                             </span>
                                         </span>
                                         <span class="is-size-7 is-hidden-touch is-pulled-right">
-                                            in {{ event.start_time - now | duration(true) }}
+                                            {{ event.start_time - now | duration(true) | timeIn }}
                                         </span>
                                     </div>
                                 </div>
@@ -108,6 +108,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import SalmonRunDetailsBar from './SalmonRunDetailsBar.vue';
 import SalmonRunGearDialog from './SalmonRunGearDialog.vue';
 
@@ -118,6 +119,11 @@ export default {
         return {
             gearDialogOpen: false,
         };
+    },
+    filters: {
+        timeIn(time) {
+            return Vue.i18n.translate('time.in', { time });
+        },
     },
     computed: {
         allSchedules() {

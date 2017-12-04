@@ -24,7 +24,8 @@
         "battle": "Festimatch",
         "recent": "Festival",
         "title": "Festival",
-        "upcoming": "Festival"
+        "upcoming": "Festival",
+        "results_in": "résultats en {time}"
     },
     "splatnet_gear": {
         "button": "Boutique SplatNet",
@@ -35,5 +36,22 @@
         "next": "Suivants",
         "now": "À présent",
         "soon": "Bientôt!"
+    },
+    "time": {
+        "in": "dans {time}",
+        "remaining": "{time} restants",
+        "dhm": "{days} {hours} {minutes}",
+        "dhms": "{days} {hours} {minutes} {seconds}",
+        "hm": "{hours} {minutes}",
+        "hms": "{hours} {minutes} {seconds}",
+        "ms": "{minutes} {seconds}",
+        "seconds": "{seconds} seconde ::: {seconds} secondes",
+        "minutes": "{minutes} minute ::: {minutes} minutes",
+        "hours": "{hours} heure ::: {hours} heures",
+        "days": "{days} jour ::: {days} jours",
+        "secondsShort": "{seconds}s ::: {seconds}s",
+        "minutesShort": "{minutes}m ::: {minutes}m",
+        "hoursShort": "{hours}h ::: {hours}h",
+        "daysShort": "{days}j ::: {days}j"
     }
 }

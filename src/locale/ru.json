@@ -24,7 +24,8 @@
         "battle": "Сплатфест-бой",
         "recent": "Сплатфест",
         "title": "Сплатфест",
-        "upcoming": "Сплатфест"
+        "upcoming": "Сплатфест",
+        "results_in": "результаты за {time}"
     },
     "splatnet_gear": {
         "button": "«Щупозон»",
@@ -35,5 +36,22 @@
         "next": "Далее",
         "now": "Теперь",
         "soon": "Далее"
+    },
+    "time": {
+        "in": "через {time}",
+        "remaining": "Осталось: {time}",
+        "dhm": "{days} {hours} {minutes}",
+        "dhms": "{days} {hours} {minutes} {seconds}",
+        "hm": "{hours} {minutes}",
+        "hms": "{hours} {minutes} {seconds}",
+        "ms": "{minutes} {seconds}",
+        "seconds": "{seconds} секунда ::: {seconds} секунды",
+        "minutes": "{minutes} минута ::: {minutes} минута",
+        "hours": "{hours} час ::: {hours} часа",
+        "days": "{days} день ::: {days} дня",
+        "secondsShort": "{seconds} секунда ::: {seconds} секунды",
+        "minutesShort": "{minutes} минута ::: {minutes} минута",
+        "hoursShort": "{hours} час ::: {hours} часа",
+        "daysShort": "{days} день ::: {days} дня"
     }
 }

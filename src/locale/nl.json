@@ -24,7 +24,8 @@
         "battle": "Splatfest-gevecht",
         "recent": "Splatfest",
         "title": "Splatfest",
-        "upcoming": "Splatfest"
+        "upcoming": "Splatfest",
+        "results_in": "resultaten in {time}"
     },
     "splatnet_gear": {
         "button": "Tentashop",
@@ -35,5 +36,22 @@
         "next": "Volgende",
         "now": "Nu",
         "soon": "Binnenkort!"
+    },
+    "time": {
+        "in": "over {time}",
+        "remaining": "Nog {time}",
+        "dhm": "{days} {hours} {minutes}",
+        "dhms": "{days} {hours} {minutes} {seconds}",
+        "hm": "{hours} {minutes}",
+        "hms": "{hours} {minutes} {seconds}",
+        "ms": "{minutes} {seconds}",
+        "seconds": "{seconds} seconde ::: {seconds} seconden",
+        "minutes": "{minutes} minuut ::: {minutes} minuten",
+        "hours": "{hours} uur ::: {hours} uur",
+        "days": "{days} dag ::: {days} dagen",
+        "secondsShort": "{seconds}s ::: {seconds}s",
+        "minutesShort": "{minutes}m ::: {minutes}m",
+        "hoursShort": "{hours}u ::: {hours}u",
+        "daysShort": "{days}d ::: {days}d"
     }
 }

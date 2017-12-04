@@ -24,7 +24,8 @@
         "battle": "Splatfestkämpfe",
         "recent": "Splatfest",
         "title": "Splatfest",
-        "upcoming": "Splatfest"
+        "upcoming": "Splatfest",
+        "results_in": "Ergebnisse in {time}"
     },
     "splatnet_gear": {
         "button": "TentaWorld",
@@ -35,5 +36,22 @@
         "next": "Demnächst",
         "now": "Jetzt",
         "soon": "Demnächst"
+    },
+    "time": {
+        "in": "in {time}",
+        "remaining": "Noch {time}",
+        "dhm": "{days} {hours} {minutes}",
+        "dhms": "{days} {hours} {minutes} {seconds}",
+        "hm": "{hours} {minutes}",
+        "hms": "{hours} {minutes} {seconds}",
+        "ms": "{minutes} {seconds}",
+        "seconds": "{seconds} Sekunde ::: {seconds} Sekunden",
+        "minutes": "{minutes} Minute ::: {minutes} Minuten",
+        "hours": "{hours} Stunde ::: {hours} Stunden",
+        "days": "{days} Tag ::: {days} Tage",
+        "secondsShort": "{seconds}Sek ::: {seconds}Sek",
+        "minutesShort": "{minutes}Min ::: {minutes}Min",
+        "hoursShort": "{hours}Std ::: {hours}Std",
+        "daysShort": "{days}Tg ::: {days}Tg"
     }
 }
