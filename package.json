@@ -8,7 +8,8 @@
     "splatnet": "node src/updater/update.js updateAll",
     "twitter": "node src/updater/twitter.js maybePostTweets",
     "twitter-test": "node src/updater/twitter.js testScreenshots",
-    "cron": "node src/updater/cron.js"
+    "cron": "node src/updater/cron.js",
+    "locale-man": "node node_modules/locale-man/ -l en,es,es-MX,fr,fr-CA,de,nl,it,ru,ja -o src/locale"
   },
   "dependencies": {
     "autoprefixer": "^7.1.2",
@@ -55,5 +56,8 @@
     "vuex-i18n": "^1.8.0",
     "webpack": "^3.4.1",
     "webpack-dev-server": "^2.6.1"
+  },
+  "devDependencies": {
+    "locale-man": "^0.0.5"
   }
 }
