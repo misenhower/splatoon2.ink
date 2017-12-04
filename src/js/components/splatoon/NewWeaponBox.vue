@@ -2,7 +2,7 @@
     <div class="new-weapon-box font-splatoon2">
 
         <div class="font-splatoon1 is-size-5 title-squid">
-            {{ title }}
+            {{ displayTitle }}
         </div>
 
         <div class="main-content-wrapper">
@@ -36,9 +36,12 @@
 export default {
     props: {
         weapon: {},
-        title: { default: 'New Weapon' },
+        title: {},
     },
     computed: {
+        displayTitle() {
+            return this.title || this.$t('new_weapon');
+        },
         name() {
             return this.$t(`splatnet.weapons.${this.weapon.id}.name`, this.weapon.name);
         },

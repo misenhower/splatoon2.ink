@@ -10,13 +10,13 @@
 
         <div class="column" :class="{ 'is-5': mini }" style="display: flex; align-items: center;" v-if="schedule.weapons">
             <div style="width: 100%">
-                <div class="has-text-centered" v-if="!mini">Supplied Weapons</div>
+                <div class="has-text-centered" v-if="!mini">{{ $t('coop.supplied_weapons') }}</div>
 
                 <div class="columns is-mobile is-slimmer">
                     <div class="column" v-for="weapon in schedule.weapons">
                         <div class="image is-square weapon">
                             <img :src="weapon.image | localSplatNetImageUrl" :title="$t(`splatnet.weapons.${weapon.id}.name`, weapon.name)" v-if="weapon" />
-                            <img src="~@/img/salmon-run-random-weapon.png" title="Random" style="padding: 8px" v-else />
+                            <img src="~@/img/salmon-run-random-weapon.png" :title="$t('coop.random_weapon')" style="padding: 8px" v-else />
                         </div>
                     </div>
                 </div>

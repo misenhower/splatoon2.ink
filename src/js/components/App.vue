@@ -38,7 +38,7 @@
 
                         <div class="level-item" v-if="merchandises && merchandises.length">
                             <button class="button is-translucent-dark is-rounded" @click="splatNetGearOpen = true">
-                                <span class="font-splatoon2">SplatNet Gear</span>
+                                <span class="font-splatoon2">{{ $t('splatnet_gear.button') }}</span>
                             </button>
                         </div>
                     </div>
@@ -163,6 +163,7 @@
 
 <script>
 import axios from 'axios';
+import { mapActions } from 'vuex';
 import regions from '@/js/regions';
 import Dropdown from './Dropdown.vue';
 import ScheduleBox from './splatoon/ScheduleBox.vue';
@@ -178,7 +179,6 @@ export default {
     components: { Dropdown, ScheduleBox, SalmonRunBox, SplatfestBox, NewWeaponBox, AboutDialog, SplatNetGearDialog },
     data() {
         return {
-            regions: regions.splatoonRegions,
             actualSelectedRegionKey: null,
             now: null,
             splatnet: {
@@ -197,6 +197,12 @@ export default {
         loading() { return !this.splatnet.schedules; },
 
         // Selected region
+        regions() {
+            return regions.splatoonRegions.map(({ key }) => {
+                let name = (key) ? this.$t(`regions.${key}.name`) : this.$t('regions.global.name');
+                return { key, name };
+            });
+        },
         selectedRegionKey: {
             get() { return this.actualSelectedRegionKey; },
             set(value) { this.setRegion(value); },
@@ -289,8 +295,10 @@ export default {
         window.removeEventListener('storage', this.loadRegion);
     },
     methods: {
+        ...mapActions(['loadLocale']),
         loadLanguage() {
             this.language = regions.detectSplatoonLanguage();
+            this.loadLocale(this.language);
             this.$i18n.set(this.language || 'en');
         },
         loadRegion(autoDetect = false) {

@@ -26,7 +26,7 @@ export default {
         },
         name() {
             if (this.isFestival)
-                return 'Splatfest Battle';
+                return this.$t('splatfest.battle');
             return this.$t(`splatnet.game_modes.${this.gameMode.key}.name`, this.gameMode.name);
         },
     },

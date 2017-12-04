@@ -26,7 +26,7 @@
 
         <template v-if="upcomingSchedules && upcomingSchedules[0]">
             <div class="is-size-5 title-squid font-splatoon1">
-                Next
+                {{ $t('times.next') }}
             </div>
 
             <ScheduleRow

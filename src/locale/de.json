@@ -1,0 +1,39 @@
+{
+    "coop": {
+        "random_weapon": "Zufall",
+        "supplied_weapons": "Verfügbare Waffen",
+        "this_months_gear": "Ausrüstung des Monats",
+        "title": "Salmon Run"
+    },
+    "new_weapon": "Neue Waffe",
+    "regions": {
+        "eu": {
+            "name": "Europa"
+        },
+        "global": {
+            "name": "Alle Regionen"
+        },
+        "jp": {
+            "name": "Japan"
+        },
+        "na": {
+            "name": "Nordamerika, Australien, Neuseeland"
+        }
+    },
+    "splatfest": {
+        "battle": "Splatfestkämpfe",
+        "recent": "Splatfest",
+        "title": "Splatfest",
+        "upcoming": "Splatfest"
+    },
+    "splatnet_gear": {
+        "button": "TentaWorld",
+        "title": "TentaWorld"
+    },
+    "times": {
+        "future": "Danach",
+        "next": "Demnächst",
+        "now": "Jetzt",
+        "soon": "Demnächst"
+    }
+}

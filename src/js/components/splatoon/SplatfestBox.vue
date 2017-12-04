@@ -88,10 +88,10 @@ export default {
         },
         title() {
             if (this.state == 'upcoming')
-                return 'Upcoming Splatfest';
+                return this.$t('splatfest.upcoming');
             if (this.state == 'past' && !this.screenshotMode)
-                return 'Recent Splatfest';
-            return 'Splatfest';
+                return this.$t('splatfest.recent');
+            return this.$t('splatfest.title');
         },
         image() {
             if (this.festival)

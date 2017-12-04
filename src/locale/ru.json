@@ -1,0 +1,39 @@
+{
+    "coop": {
+        "random_weapon": "Случайное",
+        "supplied_weapons": "Табельное оружие",
+        "this_months_gear": "Снаряжение месяца",
+        "title": "Salmon Run"
+    },
+    "new_weapon": "Новое оружие",
+    "regions": {
+        "eu": {
+            "name": "Европа"
+        },
+        "global": {
+            "name": "Все регионы"
+        },
+        "jp": {
+            "name": "Япония"
+        },
+        "na": {
+            "name": "Северная Америка, Австралия, Новая Зеландия"
+        }
+    },
+    "splatfest": {
+        "battle": "Сплатфест-бой",
+        "recent": "Сплатфест",
+        "title": "Сплатфест",
+        "upcoming": "Сплатфест"
+    },
+    "splatnet_gear": {
+        "button": "«Щупозон»",
+        "title": "«Щупозон»"
+    },
+    "times": {
+        "future": "Скоро",
+        "next": "Далее",
+        "now": "Теперь",
+        "soon": "Далее"
+    }
+}

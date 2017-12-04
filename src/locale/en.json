@@ -1,0 +1,39 @@
+{
+    "coop": {
+        "random_weapon": "Random",
+        "supplied_weapons": "Supplied Weapons",
+        "this_months_gear": "This month's gear",
+        "title": "Salmon Run"
+    },
+    "new_weapon": "New Weapon",
+    "regions": {
+        "eu": {
+            "name": "Europe"
+        },
+        "global": {
+            "name": "All regions"
+        },
+        "jp": {
+            "name": "Japan"
+        },
+        "na": {
+            "name": "North America, AU/NZ"
+        }
+    },
+    "splatfest": {
+        "battle": "Splatfest Battle",
+        "recent": "Recent Splatfest",
+        "title": "Splatfest",
+        "upcoming": "Upcoming Splatfest"
+    },
+    "splatnet_gear": {
+        "button": "SplatNet Gear",
+        "title": "Current SplatNet Gear"
+    },
+    "times": {
+        "future": "Future",
+        "next": "Next",
+        "now": "Now",
+        "soon": "Soon!"
+    }
+}

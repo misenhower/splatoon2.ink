@@ -1,0 +1,39 @@
+{
+    "coop": {
+        "random_weapon": "Al azar",
+        "supplied_weapons": "Armas disponibles",
+        "this_months_gear": "Objeto del mes",
+        "title": "Salmon Run"
+    },
+    "new_weapon": "Nueva Arma",
+    "regions": {
+        "eu": {
+            "name": "Europa"
+        },
+        "global": {
+            "name": "Todas las regiones"
+        },
+        "jp": {
+            "name": "Japón"
+        },
+        "na": {
+            "name": "América, Australia y Nueva Zelanda"
+        }
+    },
+    "splatfest": {
+        "battle": "Festival del Teñido",
+        "recent": "Festival",
+        "title": "Festival",
+        "upcoming": "Festival"
+    },
+    "splatnet_gear": {
+        "button": "Tienda SplatNet",
+        "title": "Tienda SplatNet"
+    },
+    "times": {
+        "future": "Posteriores",
+        "next": "Próximo",
+        "now": "Ahora",
+        "soon": "Siguiente"
+    }
+}

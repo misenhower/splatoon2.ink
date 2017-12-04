@@ -1,0 +1,39 @@
+{
+    "coop": {
+        "random_weapon": "Willekeurig",
+        "supplied_weapons": "Beschikbare wapens",
+        "this_months_gear": "Uitrusting van de maand",
+        "title": "Salmon Run"
+    },
+    "new_weapon": "Nieuw Wapen",
+    "regions": {
+        "eu": {
+            "name": "Europa"
+        },
+        "global": {
+            "name": "Alle regio's"
+        },
+        "jp": {
+            "name": "Japan"
+        },
+        "na": {
+            "name": "Noord-Amerika, Australië, Nieuw-Zeeland"
+        }
+    },
+    "splatfest": {
+        "battle": "Splatfest-gevecht",
+        "recent": "Splatfest",
+        "title": "Splatfest",
+        "upcoming": "Splatfest"
+    },
+    "splatnet_gear": {
+        "button": "Tentashop",
+        "title": "Tentashop"
+    },
+    "times": {
+        "future": "Daarna",
+        "next": "Volgende",
+        "now": "Nu",
+        "soon": "Binnenkort!"
+    }
+}

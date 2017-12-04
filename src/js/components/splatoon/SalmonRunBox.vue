@@ -10,7 +10,7 @@
                     </div>
                     <div class="level-item">
                         <h2 class="title is-3 is-size-2-fullhd font-splatoon1">
-                            Salmon Run
+                            {{ $t('coop.title') }}
                         </h2>
                     </div>
                 </div>
@@ -23,7 +23,7 @@
 
                 <template v-if="!screenshotMode && coop && coop.reward_gear">
                     <div class="salmon-run-gear-text">
-                        This month's gear
+                        {{ $t('coop.this_months_gear') }}
                     </div>
                     <div class="salmon-run-gear-image hand" @click="gearDialogOpen = true" :title="rewardGearName">
                         <div class="image is-32x32">
@@ -64,7 +64,7 @@
                     <div v-if="!screenshotMode && upcomingSchedules.length > 0">
                         <div class="salmon-run-future">
                             <div class="is-size-6 title-squid font-splatoon1">
-                                Soon
+                                {{ $t('times.soon') }}
                             </div>
                             <div v-for="event in upcomingSchedules" class="event">
                                 <div class="columns is-marginless is-gapless is-mobile">

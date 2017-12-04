@@ -2,8 +2,8 @@
     <div>
         <div v-if="first">
             <div class="is-size-5 title-squid font-splatoon1">
-                <span v-if="first.start_time <= this.now">Now</span>
-                <span v-else>Soon!</span>
+                <span v-if="first.start_time <= this.now">{{ $t('times.now') }}</span>
+                <span v-else>{{ $t('times.soon') }}</span>
             </div>
 
             <ScheduleRow :schedule="first" :now="now"></ScheduleRow>
@@ -11,7 +11,7 @@
         <template>
             <div v-if="second">
                 <div class="is-size-5 title-squid font-splatoon1" style="margin-top: 10px">
-                    Next
+                    {{ $t('times.next') }}
                 </div>
 
                 <ScheduleRow :schedule="second" :now="now"></ScheduleRow>
@@ -19,7 +19,7 @@
 
             <div v-if="others && others.length">
                 <div class="is-size-5 title-squid font-splatoon1" style="margin-top: 10px">
-                    Future
+                    {{ $t('times.future') }}
                 </div>
 
                 <ScheduleRow

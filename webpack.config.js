@@ -27,6 +27,7 @@ module.exports = function(env) {
         output: {
             path: path.resolve(__dirname, './public'),
             filename: 'assets/js/[name].[hash:6].js',
+            chunkFilename: 'assets/js/[name].[hash:6].js',
         },
         devtool: (production) ? false : '#cheap-module-eval-source-map',
         devServer: { overlay: true },

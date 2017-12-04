@@ -1,0 +1,39 @@
+{
+    "coop": {
+        "random_weapon": "Aléatoire",
+        "supplied_weapons": "Armes fournies",
+        "this_months_gear": "Pièce d'équipement du mois",
+        "title": "Salmon Run"
+    },
+    "new_weapon": "Nouvelle arme",
+    "regions": {
+        "eu": {
+            "name": "Europe"
+        },
+        "global": {
+            "name": "Toutes les régions"
+        },
+        "jp": {
+            "name": "Japon"
+        },
+        "na": {
+            "name": "Amérique du Nord, Australie, Nouvelle-Zélande"
+        }
+    },
+    "splatfest": {
+        "battle": "Festimatchs",
+        "recent": "Festival",
+        "title": "Festival",
+        "upcoming": "Festival"
+    },
+    "splatnet_gear": {
+        "button": "Céphalochic",
+        "title": "Céphalochic"
+    },
+    "times": {
+        "future": "Prochains",
+        "next": "Suivants",
+        "now": "À présent",
+        "soon": "Bientôt !"
+    }
+}

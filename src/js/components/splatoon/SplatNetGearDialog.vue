@@ -2,7 +2,7 @@
     <Modal @close="$emit('close')">
         <div class="modal-content">
             <div class="splatnet-gear-dialog">
-                <h3 class="title is-3 has-text-centered font-splatoon1 text-shadow">Current SplatNet Gear</h3>
+                <h3 class="title is-3 has-text-centered font-splatoon1 text-shadow">{{ $t('splatnet_gear.title') }}</h3>
                 <div class="columns is-marginless is-multiline is-mobile is-centered">
                     <div class="column is-half-mobile is-one-third-tablet" v-for="(merchandise, index) in merchandises">
                         <MerchandiseBox

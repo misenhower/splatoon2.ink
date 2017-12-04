@@ -1,0 +1,39 @@
+{
+    "coop": {
+        "random_weapon": "ランダム",
+        "supplied_weapons": "支給ブキ",
+        "this_months_gear": "今月のギア",
+        "title": "SALMON RUN"
+    },
+    "new_weapon": "新しいブキ",
+    "regions": {
+        "eu": {
+            "name": "欧州"
+        },
+        "global": {
+            "name": "すべての地域"
+        },
+        "jp": {
+            "name": "日本"
+        },
+        "na": {
+            "name": "北米、オセアニア"
+        }
+    },
+    "splatfest": {
+        "battle": "フェスマッチ",
+        "recent": "フェス",
+        "title": "フェス",
+        "upcoming": "フェス"
+    },
+    "splatnet_gear": {
+        "button": "ゲソタウン",
+        "title": "ゲソタウン"
+    },
+    "times": {
+        "future": "そのつぎ",
+        "next": "つぎ",
+        "now": "今",
+        "soon": "もうすぐ"
+    }
+}

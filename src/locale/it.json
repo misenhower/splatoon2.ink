@@ -1,0 +1,39 @@
+{
+    "coop": {
+        "random_weapon": "Casuale",
+        "supplied_weapons": "Armi fornite",
+        "this_months_gear": "Equipaggiamento del mese",
+        "title": "Salmon Run"
+    },
+    "new_weapon": "Nuova Arma",
+    "regions": {
+        "eu": {
+            "name": "Europa"
+        },
+        "global": {
+            "name": "Tutte le regioni"
+        },
+        "jp": {
+            "name": "Giappone"
+        },
+        "na": {
+            "name": "America del Nord, Australia, Nuova Zelanda"
+        }
+    },
+    "splatfest": {
+        "battle": "Partite tematiche",
+        "recent": "Festival",
+        "title": "Festival",
+        "upcoming": "Festival"
+    },
+    "splatnet_gear": {
+        "button": "Calama-zone",
+        "title": "Calama-zone"
+    },
+    "times": {
+        "future": "Successivi",
+        "next": "Prossimi",
+        "now": "Adesso",
+        "soon": "Presto!"
+    }
+}
