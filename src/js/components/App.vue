@@ -343,7 +343,7 @@ export default {
         updateData() {
             // Language data
             if (this.language) {
-                axios.get(`/data/lang/${this.language}.json`)
+                axios.get(`/data/locale/${this.language}.json`)
                     .then(response => this.$i18n.add(this.language, { splatnet: response.data }))
                     .catch(e => console.error(e));
             }

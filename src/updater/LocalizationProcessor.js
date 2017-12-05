@@ -5,7 +5,7 @@ const jsonpath = require('jsonpath');
 const _ = require('lodash');
 const { readJson, writeJson } = require('./utilities');
 
-const localizationsPath = path.resolve('public/data/lang');
+const localizationsPath = path.resolve('public/data/locale');
 
 class LocalizationProcessor {
     constructor(ruleset, languageInfo) {
