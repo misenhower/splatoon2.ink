@@ -32,6 +32,14 @@
                                 If you'd like to use this site's data in your own site/bot/app, please review the data access policy
                                 <a href="https://github.com/misenhower/splatoon2.ink/wiki/Data-access-policy" target="_blank">here</a>.
                             </p>
+                            <h5 class="font-splatoon2 title is-5">
+                                Donations
+                            </h5>
+                            <p>
+                                If you'd like to support ongoing development and maintenance of this site, please consider
+                                <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7KETJ7PSE5PQC" target="_blank">making a donation</a>.
+                                Thanks :)
+                            </p>
                             <p>
                                 <a href="https://twitter.com/mattisenhower" target="_blank">Follow me on Twitter</a>
                                 or <a href="mailto:matt@isenhower.com" target="_blank">email me</a> with any questions!
