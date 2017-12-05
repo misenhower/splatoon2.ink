@@ -40,7 +40,7 @@
                         </div>
                         <template v-if="screenshotMode">
                             <div class="title-color is-size-5">
-                                {{ currentSchedule.end_time - now | durationHours }} remaining
+                                {{ currentSchedule.end_time - now | durationHours | time.remaining }}
                             </div>
                         </template>
                         <template v-else>
@@ -52,7 +52,7 @@
                                 {{ currentSchedule.end_time | time }}
                             </div>
                             <div>
-                                {{ currentSchedule.end_time - now | duration }} remaining
+                                {{ currentSchedule.end_time - now | duration | time.remaining }}
                             </div>
                         </template>
 
@@ -86,7 +86,7 @@
                                             </span>
                                         </span>
                                         <span class="is-size-7 is-hidden-touch is-pulled-right">
-                                            {{ event.start_time - now | duration(true) | timeIn }}
+                                            {{ event.start_time - now | duration(true) | time.in }}
                                         </span>
                                     </div>
                                 </div>
@@ -119,11 +119,6 @@ export default {
         return {
             gearDialogOpen: false,
         };
-    },
-    filters: {
-        timeIn(time) {
-            return Vue.i18n.translate('time.in', { time });
-        },
     },
     computed: {
         allSchedules() {

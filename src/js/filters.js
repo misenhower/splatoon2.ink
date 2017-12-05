@@ -74,3 +74,11 @@ Vue.filter('durationHours', function (value) {
     hours += 24 * days;
     return $t('time.hours', { hours: negative + hours }, hours);
 });
+
+Vue.filter('time.in', function(time) {
+    return $t('time.in', { time });
+});
+
+Vue.filter('time.remaining', function (time) {
+    return $t('time.remaining', { time });
+});
