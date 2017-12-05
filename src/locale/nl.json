@@ -42,7 +42,8 @@
         "future": "Daarna",
         "next": "Volgende",
         "now": "Nu",
-        "soon": "Binnenkort!"
+        "soon": "Binnenkort!",
+        "open": "Open!"
     },
     "time": {
         "in": "over {time}",

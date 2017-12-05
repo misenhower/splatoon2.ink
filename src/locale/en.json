@@ -42,7 +42,8 @@
         "future": "Future",
         "next": "Next",
         "now": "Now",
-        "soon": "Soon!"
+        "soon": "Soon!",
+        "open": "Now open!"
     },
     "time": {
         "in": "in {time}",

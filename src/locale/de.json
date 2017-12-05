@@ -42,7 +42,8 @@
         "future": "Danach",
         "next": "Demnächst",
         "now": "Jetzt",
-        "soon": "Demnächst"
+        "soon": "Demnächst",
+        "open": "Geöffnet!"
     },
     "time": {
         "in": "in {time}",

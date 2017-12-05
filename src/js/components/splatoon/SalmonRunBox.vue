@@ -36,7 +36,7 @@
                 <div class="salmon-run-content">
                     <div class="salmon-run-open" v-if="currentSchedule">
                         <div class="is-size-5 title-squid font-splatoon1">
-                            Now open!
+                            {{ $t('times.open') }}
                         </div>
                         <template v-if="screenshotMode">
                             <div class="title-color is-size-5">

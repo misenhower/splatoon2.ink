@@ -42,7 +42,8 @@
         "future": "Successivi",
         "next": "Prossimi",
         "now": "Adesso",
-        "soon": "Presto!"
+        "soon": "Presto!",
+        "open": "In corso!"
     },
     "time": {
         "in": "tra {time}",

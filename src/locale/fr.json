@@ -42,7 +42,8 @@
         "future": "Prochains",
         "next": "Suivants",
         "now": "À présent",
-        "soon": "Bientôt !"
+        "soon": "Bientôt !",
+        "open": "Ouvert !"
     },
     "time": {
         "in": "dans {time}",
