@@ -123,6 +123,7 @@
                                     <NewWeaponBox
                                         :weapon="weapon"
                                         :class="(index % 2 == 0) ? 'tilt-right' : 'tilt-left'"
+                                        style="min-width: 250px"
                                         ></NewWeaponBox>
                                 </div>
                             </div>
