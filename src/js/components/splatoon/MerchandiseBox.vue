@@ -55,12 +55,12 @@
                 </div>
 
                 <div class="info-overlay-container common-ability" v-if="merchandise.gear.brand.frequent_skill">
-                    <div class="is-size-7">{{ brandName }}</div>
+                    <div class="is-size-7">{{ $t('gear.frequent_ability') }}</div>
                     <div>
                         <div class="skill-img-bg">
                             <img :src="merchandise.gear.brand.frequent_skill.image | localSplatNetImageUrl" :title="frequentSkillName" />
                         </div>
-                        Common Ability
+                        {{ brandName }}
                     </div>
                 </div>
             </div>

@@ -60,5 +60,8 @@
         "minutesShort": "{minutes}Min ::: {minutes}Min",
         "hoursShort": "{hours}Std ::: {hours}Std",
         "daysShort": "{days}Tg ::: {days}Tg"
+    },
+    "gear": {
+        "frequent_ability": "Wahrscheinlicher Effekt"
     }
 }

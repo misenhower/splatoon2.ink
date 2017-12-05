@@ -60,5 +60,8 @@
         "minutesShort": "{minutes}分 ::: {minutes}分",
         "hoursShort": "{hours}時間 ::: {hours}時間",
         "daysShort": "{days}日 ::: {days}日"
+    },
+    "gear": {
+        "frequent_ability": "つきやすいギアパワー"
     }
 }

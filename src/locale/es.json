@@ -60,5 +60,8 @@
         "minutesShort": "{minutes}m ::: {minutes}m",
         "hoursShort": "{hours}h ::: {hours}h",
         "daysShort": "{days}d ::: {days}d"
+    },
+    "gear": {
+        "frequent_ability": "Potenciadores comunes"
     }
 }

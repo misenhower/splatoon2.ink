@@ -60,5 +60,8 @@
         "minutesShort": "{minutes} минута ::: {minutes} минута",
         "hoursShort": "{hours} час ::: {hours} часа",
         "daysShort": "{days} день ::: {days} дня"
+    },
+    "gear": {
+        "frequent_ability": "Обычное свойство снаряжения"
     }
 }

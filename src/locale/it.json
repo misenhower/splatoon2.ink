@@ -60,5 +60,8 @@
         "minutesShort": "{minutes}m ::: {minutes}m",
         "hoursShort": "{hours}o ::: {hours}o",
         "daysShort": "{days}g ::: {days}g"
+    },
+    "gear": {
+        "frequent_ability": "Abilità comune"
     }
 }

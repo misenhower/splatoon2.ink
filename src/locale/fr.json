@@ -60,5 +60,8 @@
         "minutesShort": "{minutes}m ::: {minutes}m",
         "hoursShort": "{hours}h ::: {hours}h",
         "daysShort": "{days}j ::: {days}j"
+    },
+    "gear": {
+        "frequent_ability": "Bonus courant"
     }
 }
