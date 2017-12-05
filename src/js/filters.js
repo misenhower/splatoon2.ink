@@ -1,5 +1,6 @@
 import Vue from 'vue';
 const $t = Vue.i18n.translate;
+const currentLocale = Vue.i18n.locale;
 
 // Local hosting of SplatNet images
 Vue.filter('localSplatNetImageUrl', function(value) {
@@ -10,12 +11,12 @@ Vue.filter('localSplatNetImageUrl', function(value) {
 
 // Short date format (e.g., 8/15 or 15/8)
 Vue.filter('date', function(value, options = undefined) {
-    return (new Date(value * 1000)).toLocaleDateString([], Object.assign({ month: 'numeric', day: 'numeric' }, options));
+    return (new Date(value * 1000)).toLocaleDateString([currentLocale()], Object.assign({ month: 'numeric', day: 'numeric' }, options));
 });
 
 // Short localized time format (e.g., 1:23 PM or 13:23)
 Vue.filter('time', function(value) {
-    return (new Date(value * 1000)).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    return (new Date(value * 1000)).toLocaleTimeString([currentLocale()], { hour: 'numeric', minute: '2-digit' });
 });
 
 function getDurationParts(value) {
