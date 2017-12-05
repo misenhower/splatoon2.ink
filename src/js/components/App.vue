@@ -336,6 +336,7 @@ export default {
         setLanguage(key) {
             this.language = key;
             localStorage.setItem('selected-language', key);
+            this.updateLanguageData();
         },
         loadRegion(autoDetect = false) {
             // Get the previously-selected region from local storage
@@ -375,13 +376,15 @@ export default {
                 this.scheduleUpdateData();
             }, (date - new Date));
         },
-        updateData() {
-            // Language data
+        updateLanguageData() {
             if (this.language) {
                 axios.get(`/data/locale/${this.language}.json`)
                     .then(response => this.$i18n.add(this.language, { splatnet: response.data }))
                     .catch(e => console.error(e));
             }
+        },
+        updateData() {
+            this.updateLanguageData();
 
             // Main map schedules
             axios.get('/data/schedules.json')
