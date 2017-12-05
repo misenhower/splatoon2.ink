@@ -25,7 +25,14 @@
         "recent": "Festival",
         "title": "Festival",
         "upcoming": "Festival",
-        "results_in": "résultats en {time}"
+        "results_in": "résultats en {time}",
+        "results": {
+            "title": "Résultats !",
+            "votes": "Votes",
+            "solo": "Solo",
+            "team": "Équipes",
+            "%": " %"
+        }
     },
     "splatnet_gear": {
         "button": "Céphalochic",

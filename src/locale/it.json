@@ -25,7 +25,14 @@
         "recent": "Festival",
         "title": "Festival",
         "upcoming": "Festival",
-        "results_in": "risultati in {time}"
+        "results_in": "risultati in {time}",
+        "results": {
+            "title": "Risultati!",
+            "votes": "Voti",
+            "solo": "In solitaria",
+            "team": "In squadra",
+            "%": "%"
+        }
     },
     "splatnet_gear": {
         "button": "Calama-zone",

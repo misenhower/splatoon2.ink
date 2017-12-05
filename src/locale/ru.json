@@ -25,7 +25,14 @@
         "recent": "Сплатфест",
         "title": "Сплатфест",
         "upcoming": "Сплатфест",
-        "results_in": "результаты за {time}"
+        "results_in": "результаты за {time}",
+        "results": {
+            "title": "Итоги!",
+            "votes": "Симпатии",
+            "solo": "«Соло»",
+            "team": "«Команда»",
+            "%": "%"
+        }
     },
     "splatnet_gear": {
         "button": "«Щупозон»",

@@ -3,7 +3,9 @@
         <div class="background"></div>
 
         <div class="columns is-marginless is-gapless is-mobile results-header">
-            <div class="title is-4 font-splatoon1 has-text-centered is-marginless results-header-text">Results</div>
+            <div class="title is-4 font-splatoon1 has-text-centered is-marginless results-header-text">
+                {{ $t('splatfest.results.title') }}
+            </div>
 
             <div class="column">
                 <div class="image is-48x48" :title="$t(`splatnet.festivals.${festival.festival_id}.names.alpha_short`, festival.names.alpha_short)">
@@ -22,9 +24,9 @@
             </div>
         </div>
 
-        <SplatfestResultsRow title="Votes" :festival="festival" :rates="results.rates.vote" />
-        <SplatfestResultsRow title="Solo" :festival="festival" :rates="results.rates.solo" />
-        <SplatfestResultsRow title="Team" :festival="festival" :rates="results.rates.team" />
+        <SplatfestResultsRow :title="$t('splatfest.results.votes')" :festival="festival" :rates="results.rates.vote" />
+        <SplatfestResultsRow :title="$t('splatfest.results.solo')" :festival="festival" :rates="results.rates.solo" />
+        <SplatfestResultsRow :title="$t('splatfest.results.team')" :festival="festival" :rates="results.rates.team" />
     </div>
 </template>
 

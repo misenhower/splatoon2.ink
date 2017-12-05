@@ -25,7 +25,14 @@
         "recent": "Festival",
         "title": "Festival",
         "upcoming": "Festival",
-        "results_in": "resultados en {time}"
+        "results_in": "resultados en {time}",
+        "results": {
+            "title": "¡Resultados!",
+            "votes": "Votos",
+            "solo": "Individual",
+            "team": "En equipo",
+            "%": " %"
+        }
     },
     "splatnet_gear": {
         "button": "Tentatienda",

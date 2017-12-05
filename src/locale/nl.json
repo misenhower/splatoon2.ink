@@ -25,7 +25,14 @@
         "recent": "Splatfest",
         "title": "Splatfest",
         "upcoming": "Splatfest",
-        "results_in": "resultaten in {time}"
+        "results_in": "resultaten in {time}",
+        "results": {
+            "title": "Resultaten!",
+            "votes": "Stemmen",
+            "solo": "Solo",
+            "team": "Team",
+            "%": "%"
+        }
     },
     "splatnet_gear": {
         "button": "Tentashop",

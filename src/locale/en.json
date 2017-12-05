@@ -25,7 +25,14 @@
         "recent": "Recent Splatfest",
         "title": "Splatfest",
         "upcoming": "Upcoming Splatfest",
-        "results_in": "results in {time}"
+        "results_in": "results in {time}",
+        "results": {
+            "title": "Results!",
+            "votes": "Votes",
+            "solo": "Solo",
+            "team": "Team",
+            "%": "%"
+        }
     },
     "splatnet_gear": {
         "button": "SplatNet Gear",
