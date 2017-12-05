@@ -41,7 +41,7 @@
                 <span class="icon squid-icon-tilt">
                     <span class="fa squid-squid"></span>
                 </span>
-                <span class="font-splatoon2">All Upcoming Stages</span>
+                <span class="font-splatoon2">{{ $t('ui.all_upcoming_stages') }}</span>
             </button>
         </p>
 

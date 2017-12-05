@@ -13,7 +13,7 @@
 
                     <div class="level-right">
                         <div class="level-item">
-                            <h3 class="subtitle is-3 font-splatoon2 is-inline">Map Schedules</h3>
+                            <h3 class="subtitle is-3 font-splatoon2 is-inline">{{ $t('ui.map_schedules') }}</h3>
                         </div>
                     </div>
                 </div>
@@ -22,7 +22,7 @@
                     <div class="level-left">
                         <div class="level-item">
                             <a href="https://twitter.com/Splatoon2inkbot" target="_blank" class="button is-translucent-dark is-rounded">
-                                <span class="font-splatoon2">Get updates via Twitter!</span>
+                                <span class="font-splatoon2">{{ $t('ui.get_updates_via_twitter') }}</span>
                             </a>
                         </div>
                     </div>
@@ -136,10 +136,9 @@
         <!-- Footer -->
         <div class="hero-foot has-text-centered has-text-grey is-size-7" style="margin-bottom: 0.5rem">
             <div class="container is-fluid">
-                This website is not affiliated with Nintendo.
-                All product names, logos, and brands are property of their respective owners.
+                {{ $t('ui.disclaimer') }}
                 &ndash;
-                <a href="#" @click.prevent="aboutOpen = true">About</a>
+                <a href="#" @click.prevent="aboutOpen = true">{{ $t('ui.about') }}</a>
                 &ndash;
                 <a href="https://twitter.com/Splatoon2inkbot" target="_blank">Twitter</a>
                 &ndash;

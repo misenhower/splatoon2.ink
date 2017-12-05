@@ -64,5 +64,7 @@
     },
     "gear": {
         "frequent_ability": "Abilità comune"
+    },
+    "ui": {
     }
 }
