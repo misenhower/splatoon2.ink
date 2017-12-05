@@ -6,17 +6,17 @@ const splatoonRegions = [
 ];
 
 const languages = [
-    { region: 'NA', language: 'en' },
-    { region: 'NA', language: 'es-MX' },
-    { region: 'NA', language: 'fr-CA' },
-    { region: 'EU', language: 'en' },
-    { region: 'EU', language: 'de' },
-    { region: 'EU', language: 'nl' },
-    { region: 'EU', language: 'fr' },
-    { region: 'EU', language: 'it' },
-    { region: 'EU', language: 'ru' },
-    { region: 'EU', language: 'es' },
-    { region: 'JP', language: 'ja' },
+    { region: 'NA', language: 'en',    name: 'English' },
+    { region: 'EU', language: 'en',    name: 'English (UK)' },
+    { region: 'EU', language: 'es',    name: 'Español' },
+    { region: 'NA', language: 'es-MX', name: 'Español (MX)' },
+    { region: 'EU', language: 'fr',    name: 'Français' },
+    { region: 'NA', language: 'fr-CA', name: 'Français (CA)' },
+    { region: 'EU', language: 'de',    name: 'Deutsch' },
+    { region: 'EU', language: 'nl',    name: 'Nederlands' },
+    { region: 'EU', language: 'it',    name: 'Italiano' },
+    { region: 'EU', language: 'ru',    name: 'Pусский' },
+    { region: 'JP', language: 'ja',    name: '日本語' },
 ];
 
 function getRegionByKey(key) {

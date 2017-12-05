@@ -28,7 +28,7 @@
                     </div>
                     <div class="level-right">
                         <div class="level-item" v-if="showFestivalRegionDropdown">
-                            <Dropdown :options="regions" v-model="selectedRegionKey" style="margin: 0 -12px"></Dropdown>
+                            <Dropdown :options="regions" v-model="selectedRegionKey" style="margin: 0 -12px" class="font-splatoon2" />
                         </div>
 
 
@@ -138,9 +138,12 @@
             <div class="container is-fluid">
                 This website is not affiliated with Nintendo.
                 All product names, logos, and brands are property of their respective owners.
+                &ndash;
                 <a href="#" @click.prevent="aboutOpen = true">About</a>
                 &ndash;
                 <a href="https://twitter.com/Splatoon2inkbot" target="_blank">Twitter</a>
+                &ndash;
+                <Dropdown :options="languages" v-model="selectedLanguageKey" tag="a" class="is-up" />
             </div>
         </div>
 
@@ -181,6 +184,7 @@ export default {
     data() {
         return {
             actualSelectedRegionKey: null,
+            actualSelectedLanguageKey: null,
             now: null,
             splatnet: {
                 schedules: null,
@@ -193,6 +197,13 @@ export default {
             splatNetGearOpen: false,
             language: null,
         };
+    },
+    watch: {
+        language(value) {
+            if (value)
+                this.loadLocale(value);
+            this.$i18n.set(value || 'en');
+        },
     },
     computed: {
         loading() { return !this.splatnet.schedules; },
@@ -207,6 +218,22 @@ export default {
         selectedRegionKey: {
             get() { return this.actualSelectedRegionKey; },
             set(value) { this.setRegion(value); },
+        },
+
+        // Selected langauge
+        languages() {
+            return regions.languages
+                .reduce((languages, languageInfo) => {
+                    // Remove duplicates
+                    if (!languages.find(li => li.language == languageInfo.language))
+                        languages.push(languageInfo)
+                    return languages;
+                }, [])
+                .map(({ language, name }) => ({ key: language, name }));
+        },
+        selectedLanguageKey: {
+            get() { return this.language; },
+            set(value) { this.setLanguage(value); },
         },
 
         // Normal battles
@@ -279,6 +306,7 @@ export default {
     created() {
         this.loadLanguage();
         this.loadRegion(true);
+        window.addEventListener('storage', this.loadLanguage);
         window.addEventListener('storage', this.loadRegion);
 
         this.updateNow();
@@ -293,14 +321,21 @@ export default {
     beforeDestroy() {
         clearInterval(this.updateNowTimer);
         clearInterval(this.updateDataTimer);
+        window.removeEventListener('storage', this.loadLanguage);
         window.removeEventListener('storage', this.loadRegion);
     },
     methods: {
         ...mapActions(['loadLocale']),
         loadLanguage() {
-            this.language = regions.detectSplatoonLanguage();
-            this.loadLocale(this.language);
-            this.$i18n.set(this.language || 'en');
+            let language = localStorage.getItem('selected-language');
+            let languageInfo = regions.languages.find(li => li.language === language);
+            if (!languageInfo)
+                language = regions.detectSplatoonLanguage();
+            this.language = language;
+        },
+        setLanguage(key) {
+            this.language = key;
+            localStorage.setItem('selected-language', key);
         },
         loadRegion(autoDetect = false) {
             // Get the previously-selected region from local storage
