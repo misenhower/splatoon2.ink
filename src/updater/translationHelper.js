@@ -4,7 +4,7 @@ require('./bootstrap');
 const path = require('path');
 const fs = require('fs');
 const _ = require('lodash');
-const { readJson, writeFormattedJson } = require('./utilities');
+const { readJson } = require('./utilities');
 const { languages } = require('../js/regions');
 const SplatNet = require('./splatnet');
 
@@ -18,7 +18,7 @@ function copyTranslation(source, destination) {
         let output = readJson(outputFile);
         console.log(`${language}: ${sourceLang[source]}`);
         _.setWith(output, destination, sourceLang[source], Object);
-        writeFormattedJson(outputFile, output);
+        fs.writeFileSync(outputFile, JSON.stringify(output, null, 4) + '\n');
     }
 }
 
