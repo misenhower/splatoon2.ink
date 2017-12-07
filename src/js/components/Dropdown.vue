@@ -16,7 +16,7 @@
         </div>
         <div class="dropdown-menu" role="menu">
             <div class="dropdown-content font-splatoon2 has-text-left">
-                <a href="#" class="dropdown-item" v-for="option in options" :class="{ 'is-active': option.key == value }" @click.prevent="$emit('input', option.key)">
+                <a href="#" class="dropdown-item" v-for="option in options" :class="{ 'is-active': option.key == value }" @click.prevent="select(option)" @touchstart.stop @touchend.prevent="select(option)">
                     {{ option.name }}
                 </a>
             </div>
@@ -45,6 +45,10 @@ export default {
     methods: {
         hide() {
             this.isOpen = false;
+        },
+        select(option) {
+            this.$emit('input', option.key);
+            this.hide();
         },
     },
 }
