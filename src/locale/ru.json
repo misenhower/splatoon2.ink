@@ -53,14 +53,14 @@
         "hm": "{hours} {minutes}",
         "hms": "{hours} {minutes} {seconds}",
         "ms": "{minutes} {seconds}",
-        "seconds": "{seconds} секунда ::: {seconds} секунды",
-        "minutes": "{minutes} минута ::: {minutes} минута",
-        "hours": "{hours} час ::: {hours} часа",
-        "days": "{days} день ::: {days} дня",
-        "secondsShort": "{seconds} секунда ::: {seconds} секунды",
-        "minutesShort": "{minutes} минута ::: {minutes} минута",
-        "hoursShort": "{hours} час ::: {hours} часа",
-        "daysShort": "{days} день ::: {days} дня"
+        "seconds": "{seconds} секунда ::: {seconds} секунды ::: {seconds} секунд",
+        "minutes": "{minutes} минута ::: {minutes} минуты ::: {minutes} минут",
+        "hours": "{hours} час ::: {hours} часа ::: {hours} часов",
+        "days": "{days} день ::: {days} дня ::: {days} дней",
+        "secondsShort": "{seconds} секунда ::: {seconds} секунды ::: {seconds} секунд",
+        "minutesShort": "{minutes} минута ::: {minutes} минуты ::: {minutes} минут",
+        "hoursShort": "{hours} час ::: {hours} часа ::: {hours} часов",
+        "daysShort": "{days} день ::: {days} дня ::: {days} дней"
     },
     "gear": {
         "frequent_ability": "Обычное свойство снаряжения"
