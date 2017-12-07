@@ -39,6 +39,13 @@
     }
 }
 
+@include tablet {
+    .dropdown.is-right-tablet .dropdown-menu {
+        left: auto;
+        right: 0;
+    }
+}
+
 .button.is-translucent {
     @extend .text-shadow;
 

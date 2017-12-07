@@ -1,5 +1,5 @@
 <template>
-    <div class="dropdown is-right" :class="{ 'is-active': isOpen }">
+    <div class="dropdown" :class="{ 'is-active': isOpen }">
         <div class="dropdown-trigger">
             <button class="button is-clear font-splatoon2" @click="isOpen = !isOpen" v-click-outside="hide" v-if="tag == 'button'">
                 <span v-if="selectedOption">{{ selectedOption.name }}</span>

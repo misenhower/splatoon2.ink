@@ -28,7 +28,7 @@
                     </div>
                     <div class="level-right">
                         <div class="level-item" v-if="showFestivalRegionDropdown">
-                            <Dropdown :options="regions" v-model="selectedRegionKey" style="margin: 0 -12px" class="font-splatoon2" />
+                            <Dropdown :options="regions" v-model="selectedRegionKey" style="margin: 0 -12px" class="font-splatoon2 is-right-tablet" />
                         </div>
 
 
@@ -142,7 +142,7 @@
                 &ndash;
                 <a href="https://twitter.com/Splatoon2inkbot" target="_blank">Twitter</a>
                 &ndash;
-                <Dropdown :options="languages" v-model="selectedLanguageKey" tag="a" class="is-up" />
+                <Dropdown :options="languages" v-model="selectedLanguageKey" tag="a" class="is-right is-up" />
             </div>
         </div>
 
