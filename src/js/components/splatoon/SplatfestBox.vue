@@ -100,7 +100,7 @@ export default {
         },
         image() {
             if (this.festival)
-                return Vue.filter('localSplatNetImageUrl')(this.festival.images.panel) + '?1';
+                return Vue.filter('localSplatNetImageUrl')(this.festival.images.panel);
         },
         teamNames() {
             return {
