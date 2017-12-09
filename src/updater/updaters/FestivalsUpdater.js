@@ -3,7 +3,7 @@ const mkdirp = require('mkdirp');
 const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
-const { readJson, writeJson } = require('../utilities');
+const { readJson } = require('../utilities');
 const { languages } = require('../../js/regions');
 
 class FestivalsUpdater extends Updater {
@@ -37,17 +37,17 @@ class FestivalsUpdater extends Updater {
         this.region = region;
     }
 
-    writeFile(filename, regionData) {
-        mkdirp(path.dirname(filename));
-
+    processData(regionData) {
         // Load existing data since we only need to modify this region's data
         let data = {};
+        let filename = this.getFilename();
         if (fs.existsSync(filename))
             data = readJson(filename);
 
         let region = this.region.toLowerCase();
-        data[region] = JSON.parse(regionData);
-        writeJson(filename, data);
+        data[region] = regionData;
+
+        return data;
     }
 
     getLanguages() {
