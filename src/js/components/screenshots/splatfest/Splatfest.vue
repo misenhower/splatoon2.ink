@@ -53,6 +53,11 @@ export default {
         },
     },
     created() {
+        if (this.region == 'jp') {
+            this.$i18n.add('ja', require('@/locale/ja'));
+            this.$i18n.set('ja');
+        }
+
         axios.get('data/festivals.json')
             .then(response => this.festivals = response.data)
     },

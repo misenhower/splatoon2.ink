@@ -2,6 +2,7 @@ const TwitterPostBase = require('./TwitterPostBase');
 const { captureSplatfestScreenshot } = require('../screenshots');
 const { readData } = require('../utilities');
 const regions = require('../../js/regions');
+const { getSplatfestWinner } = require('../../js/splatoon');
 
 class SplatfestTweet extends TwitterPostBase {
     constructor(region) {
@@ -26,6 +27,11 @@ class SplatfestTweet extends TwitterPostBase {
         return festivals[this.region].festivals;
     }
 
+    getResults() {
+        let festivals = readData('festivals.json');
+        return festivals[this.region].results;
+    }
+
     getData() {
         // Festival announced
         let festival = this.getFestivals().find(f => f.times.announce == this.getDataTime());
@@ -39,8 +45,12 @@ class SplatfestTweet extends TwitterPostBase {
 
         // Festival results
         festival = this.getFestivals().find(f => f.times.result == this.getDataTime());
-        if (festival)
-            return { festival, type: 'result' };
+        if (festival) {
+            // We only want to post the results tweet if we actually have results
+            let results = this.getResults().find(r => r.festival_id == festival.festival_id);
+            if (results)
+                return { festival, results, type: 'result' };
+        }
     }
 
     getTestData() {
@@ -54,11 +64,19 @@ class SplatfestTweet extends TwitterPostBase {
     getText(data) {
         switch (data.type) {
             case 'announce':
-                return `You can now vote in the ${this.regionDemonym} Splatfest! #splatfest #splatoon2`;
+                return `You can now vote in the next ${this.regionDemonym} Splatfest! #splatfest #splatoon2`;
             case 'start':
                 return `The ${this.regionDemonym} Splatfest is now open! #splatfest #splatoon2`;
             case 'result':
-                return `Results are in for the ${this.regionDemonym} Splatfest! #splatfest #splatoon2`;
+                let winner = getSplatfestWinner(data.results);
+
+                // Just hardcoding this in here for now to avoid dealing with loading the Vuex store separately
+                // since I might be moving everything over to Vuex in the future anyway.
+                let resultsFormat = (this.region == 'jp') ? '{team}チームの勝利！' : 'Team {team} wins!';
+                let teamName = (winner == 'alpha') ? data.festival.names.alpha_short : data.festival.names.bravo_short;
+                let results = resultsFormat.replace('{team}', teamName);
+
+                return `${this.regionDemonym} Splatfest results: ${results} #splatfest #splatoon2`;
         }
     }
 }

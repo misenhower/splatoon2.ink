@@ -73,6 +73,7 @@
 <script>
 import Vue from 'vue';
 import SplatfestResultsBox from './SplatfestResultsBox.vue';
+import { getSplatfestWinner } from '@/js/splatoon';
 
 export default {
     components: { SplatfestResultsBox },
@@ -111,15 +112,7 @@ export default {
             if (!this.results)
                 return;
 
-            // Which team won?
-            let points = { alpha: 0, bravo: 0 };
-            for (let key of ['vote', 'solo', 'team']) {
-                let rates = this.results.rates[key];
-                let winner = (rates.alpha > rates.bravo) ? 'alpha' : 'bravo';
-                points[winner]++;
-            }
-
-            let winner = (points.alpha > points.bravo) ? 'alpha' : 'bravo';
+            let winner = getSplatfestWinner(this.results);
 
             let team = `<span style="color: ${this.festival.colors[winner].css_rgb}">${this.teamNames[winner]}</span>`;
             return this.$t('splatfest.team_name_wins', { team });
