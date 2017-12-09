@@ -85,7 +85,7 @@ export default {
         },
         image() {
             if (this.festival)
-                return Vue.filter('localSplatNetImageUrl')(this.festival.images.panel);
+                return Vue.filter('localSplatNetImageUrl')(this.festival.images.panel) + '?1';
         },
         formattedDuration() {
             let time;
