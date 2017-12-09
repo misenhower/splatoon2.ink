@@ -32,7 +32,8 @@
             "solo": "Individual",
             "team": "En equipo",
             "%": " %"
-        }
+        },
+        "team_name_wins": "¡Gana el Equipo {team}!"
     },
     "splatnet_gear": {
         "button": "Tienda SplatNet",
@@ -65,6 +66,5 @@
     "gear": {
         "frequent_ability": "Potenciador común"
     },
-    "ui": {
-    }
+    "ui": {}
 }

@@ -32,7 +32,8 @@
             "solo": "Solo",
             "team": "Team",
             "%": "%"
-        }
+        },
+        "team_name_wins": "Team {team} wins!"
     },
     "splatnet_gear": {
         "button": "SplatNet Gear",

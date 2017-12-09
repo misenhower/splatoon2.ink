@@ -4,7 +4,7 @@
             <div class="level-item">
                 <div class="splatfest tilt-left" v-if="festival">
                     <div class="hook-box">
-                        <SplatfestBox :festival="festival" :now="now" :screenshotMode="true" />
+                        <SplatfestBox :festival="festival" :now="now" :results="results" :screenshotMode="true" />
                     </div>
                 </div>
             </div>

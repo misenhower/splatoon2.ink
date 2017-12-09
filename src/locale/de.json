@@ -32,7 +32,8 @@
             "solo": "Solo",
             "team": "Team",
             "%": " %"
-        }
+        },
+        "team_name_wins": "Team {team} hat gewonnen!"
     },
     "splatnet_gear": {
         "button": "TentaWorld",
@@ -65,6 +66,5 @@
     "gear": {
         "frequent_ability": "Wahrscheinlicher Effekt"
     },
-    "ui": {
-    }
+    "ui": {}
 }

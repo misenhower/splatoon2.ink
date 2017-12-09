@@ -32,7 +32,8 @@
             "solo": "In solitaria",
             "team": "In squadra",
             "%": "%"
-        }
+        },
+        "team_name_wins": "Vince la squadra {team}!"
     },
     "splatnet_gear": {
         "button": "Calama-zone",
@@ -65,6 +66,5 @@
     "gear": {
         "frequent_ability": "Abilità comune"
     },
-    "ui": {
-    }
+    "ui": {}
 }

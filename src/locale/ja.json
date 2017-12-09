@@ -32,7 +32,8 @@
             "solo": "ソロ",
             "team": "チーム",
             "%": "%"
-        }
+        },
+        "team_name_wins": "{team}チームの勝利！"
     },
     "splatnet_gear": {
         "button": "ゲソタウン",
@@ -65,6 +66,5 @@
     "gear": {
         "frequent_ability": "つきやすいギアパワー"
     },
-    "ui": {
-    }
+    "ui": {}
 }

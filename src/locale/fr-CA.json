@@ -32,7 +32,8 @@
             "solo": "Solo",
             "team": "Équipes",
             "%": " %"
-        }
+        },
+        "team_name_wins": "Victoire de l'équipe {team}!"
     },
     "splatnet_gear": {
         "button": "Boutique SplatNet",

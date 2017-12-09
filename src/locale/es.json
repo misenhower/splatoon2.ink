@@ -32,7 +32,8 @@
             "solo": "Individual",
             "team": "En equipo",
             "%": " %"
-        }
+        },
+        "team_name_wins": "¡Gana el equipo {team}!"
     },
     "splatnet_gear": {
         "button": "Tentatienda",
@@ -65,6 +66,5 @@
     "gear": {
         "frequent_ability": "Potenciadores comunes"
     },
-    "ui": {
-    }
+    "ui": {}
 }
