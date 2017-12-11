@@ -9,6 +9,11 @@ Vue.filter('localSplatNetImageUrl', function(value) {
     return 'assets/splatnet' + value;
 });
 
+Vue.filter('numberFormat', function(value) {
+    if (value)
+        return value.toLocaleString([currentLocale()]);
+});
+
 // Short date format (e.g., 8/15 or 15/8)
 Vue.filter('date', function(value, options = undefined) {
     return (new Date(value * 1000)).toLocaleDateString([currentLocale()], Object.assign({ month: 'numeric', day: 'numeric' }, options));
