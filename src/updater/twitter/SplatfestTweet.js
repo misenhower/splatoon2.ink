@@ -2,7 +2,6 @@ const TwitterPostBase = require('./TwitterPostBase');
 const { captureSplatfestScreenshot } = require('../screenshots');
 const { readData } = require('../utilities');
 const regions = require('../../js/regions');
-const { getSplatfestWinner } = require('../../js/splatoon');
 
 class SplatfestTweet extends TwitterPostBase {
     constructor(region) {
@@ -68,7 +67,7 @@ class SplatfestTweet extends TwitterPostBase {
             case 'start':
                 return `The ${this.regionDemonym} Splatfest is now open! #splatfest #splatoon2`;
             case 'result':
-                let winner = getSplatfestWinner(data.results);
+                let winner = data.results.summary.total ? 'bravo' : 'alpha';
 
                 // Just hardcoding this in here for now to avoid dealing with loading the Vuex store separately
                 // since I might be moving everything over to Vuex in the future anyway.

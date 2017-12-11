@@ -24,9 +24,9 @@
             </div>
         </div>
 
-        <SplatfestResultsRow :title="$t('splatfest.results.votes')" :festival="festival" :rates="results.rates.vote" />
-        <SplatfestResultsRow :title="$t('splatfest.results.solo')" :festival="festival" :rates="results.rates.solo" />
-        <SplatfestResultsRow :title="$t('splatfest.results.team')" :festival="festival" :rates="results.rates.team" />
+        <SplatfestResultsRow :festival="festival" :results="results" type="vote" />
+        <SplatfestResultsRow :festival="festival" :results="results" type="solo" />
+        <SplatfestResultsRow :festival="festival" :results="results" type="team" />
     </div>
 </template>
 

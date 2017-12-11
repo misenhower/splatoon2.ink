@@ -22,19 +22,6 @@ function getOriginalGear(gear) {
     });
 }
 
-function getSplatfestWinner(results) {
-    let points = { alpha: 0, bravo: 0 };
-
-    for (let key of ['vote', 'solo', 'team']) {
-        let rates = results.rates[key];
-        let winner = (rates.alpha > rates.bravo) ? 'alpha' : 'bravo';
-        points[winner]++;
-    }
-
-    return (points.alpha > points.bravo) ? 'alpha' : 'bravo';
-}
-
 module.exports = {
     getOriginalGear,
-    getSplatfestWinner,
 }

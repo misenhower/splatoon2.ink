@@ -112,7 +112,7 @@ export default {
             if (!this.results)
                 return;
 
-            let winner = getSplatfestWinner(this.results);
+            let winner = this.results.summary.total ? 'bravo' : 'alpha';
 
             let team = `<span style="color: ${this.festival.colors[winner].css_rgb}">${this.teamNames[winner]}</span>`;
             return this.$t('splatfest.team_name_wins', { team });

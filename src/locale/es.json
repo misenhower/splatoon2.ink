@@ -28,7 +28,7 @@
         "results_in": "resultados en {time}",
         "results": {
             "title": "¡Resultados!",
-            "votes": "Votos",
+            "vote": "Votos",
             "solo": "Individual",
             "team": "En equipo",
             "%": " %"

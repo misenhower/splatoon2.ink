@@ -28,7 +28,7 @@
         "results_in": "結果発表 {time}",
         "results": {
             "title": "結果発表！",
-            "votes": "得票率",
+            "vote": "得票率",
             "solo": "ソロ",
             "team": "チーム",
             "%": "%"
