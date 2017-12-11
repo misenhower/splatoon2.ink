@@ -355,7 +355,7 @@ body.has-modal #main {
             padding: 8px 0;
             position: relative;
 
-            .winner-mark, .title {
+            .winner-mark, .winner-mark-shadow, .title {
                 position: absolute;
                 top: 0;
                 right: 0;
@@ -371,6 +371,14 @@ body.has-modal #main {
 
                 z-index: 0;
                 margin: -5px;
+            }
+
+            .winner-mark-shadow {
+                background: $bg-mask-ink-splat;
+                background-repeat: no-repeat;
+                background-position: center;
+                margin: -4px -6px -6px -4px;
+                opacity: 0.25;
             }
 
             .title {
