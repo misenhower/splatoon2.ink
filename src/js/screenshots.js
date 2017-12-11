@@ -14,6 +14,7 @@ import ScreenshotHelper from './components/screenshots/ScreenshotHelper.vue';
 import Schedules from './components/screenshots/schedules/Schedules.vue';
 import SplatNetGear from './components/screenshots/splatnetgear/SplatNetGear.vue';
 import SalmonRun from './components/screenshots/salmonrun/SalmonRun.vue';
+import SalmonRunGear from './components/screenshots/salmonrun/SalmonRunGear.vue';
 import NewWeapon from './components/screenshots/newweapon/NewWeapon.vue';
 import Splatfest from './components/screenshots/splatfest/Splatfest.vue';
 const routes = [
@@ -21,6 +22,7 @@ const routes = [
     { path: '/schedules/:startTime', component: Schedules, props: true },
     { path: '/splatNetGear/:startTime/:endTime', component: SplatNetGear, props: true },
     { path: '/salmonRun/:startTime', component: SalmonRun, props: true },
+    { path: '/salmonRunGear/:now', component: SalmonRunGear, props: true },
     { path: '/newWeapon/:releaseTime', component: NewWeapon, props: true },
     { path: '/splatfest/:region/:startTime', component: Splatfest, props: true },
 ];

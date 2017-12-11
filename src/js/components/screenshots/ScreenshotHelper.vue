@@ -26,6 +26,14 @@
                     </strong>
                 </div>
 
+                <div v-if="salmonRunGear">
+                    <strong>
+                        <router-link :to="`/salmonRunGear/${salmonRunGear.available_time}`">
+                            Salmon Run Gear
+                        </router-link>
+                    </strong>
+                </div>
+
                 <div v-if="newWeaponAvailability">
                     <strong>
                         <router-link :to="`/newWeapon/${newWeaponAvailability.release_time}`">
@@ -81,6 +89,10 @@ export default {
         latestSalmonRun() {
             if (this.coopSchedules)
                 return this.coopSchedules.details[0];
+        },
+        salmonRunGear() {
+            if (this.timeline)
+                return this.timeline.coop.reward_gear;
         },
         newWeaponAvailability() {
             if (this.timeline && this.timeline.weapon_availability && this.timeline.weapon_availability.availabilities) {

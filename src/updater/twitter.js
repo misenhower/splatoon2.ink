@@ -3,6 +3,7 @@ const { canTweet } = require('./twitter/client');
 const ScheduleTweet = require('./twitter/ScheduleTweet');
 const GearTweet = require('./twitter/GearTweet');
 const SalmonRunTweet = require('./twitter/SalmonRunTweet');
+const SalmonRunGearTweet = require('./twitter/SalmonRunGearTweet');
 const NewWeaponTweet = require('./twitter/NewWeaponTweet');
 const NewStageTweet = require('./twitter/NewStageTweet');
 const SplatfestTweet = require('./twitter/SplatfestTweet');
@@ -11,6 +12,7 @@ let tweets = [
     new ScheduleTweet,
     new GearTweet,
     new SalmonRunTweet,
+    new SalmonRunGearTweet,
     new NewWeaponTweet,
     new NewStageTweet,
     new SplatfestTweet('na'),
