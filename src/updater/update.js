@@ -20,8 +20,11 @@ const updaters = [
 ];
 
 async function updateAll() {
-    for (let updater of updaters)
-        await updater.update();
+    for (let updater of updaters) {
+        try {
+            await updater.update();
+        } catch (e) { }
+    }
 
     return 'Done';
 }
