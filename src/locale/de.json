@@ -22,9 +22,9 @@
     },
     "splatfest": {
         "battle": "Splatfestkämpfe",
-        "recent": "Splatfest",
+        "recent": "Vergangene Splatfeste",
         "title": "Splatfest",
-        "upcoming": "Splatfest",
+        "upcoming": "Bevorstehende Splatfeste",
         "results_in": "Ergebnisse in {time}",
         "results": {
             "title": "Ergebnis",
@@ -37,7 +37,8 @@
     },
     "splatnet_gear": {
         "button": "TentaWorld",
-        "title": "TentaWorld"
+        "title": "TentaWorld",
+        "original_gear": "Originale Ausrüstung"
     },
     "times": {
         "future": "Danach",
