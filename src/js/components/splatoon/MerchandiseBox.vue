@@ -30,7 +30,7 @@
 
             <div class="info-overlay">
                 <div class="info-overlay-container original-gear" v-if="merchandise.original_gear">
-                    <div class="is-size-7">Original Gear</div>
+                    <div class="is-size-7">{{ $t('splatnet_gear.original_gear') }}</div>
 
                     <div class="level" style="margin: 0 3px">
                         <div class="level-left">

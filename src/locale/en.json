@@ -37,7 +37,8 @@
     },
     "splatnet_gear": {
         "button": "SplatNet Gear",
-        "title": "Current SplatNet Gear"
+        "title": "Current SplatNet Gear",
+        "original_gear": "Original Gear"
     },
     "times": {
         "future": "Future",
