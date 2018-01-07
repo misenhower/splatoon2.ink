@@ -36,7 +36,7 @@ class NewWeaponTweet extends TwitterPostBase {
 
     getText(data) {
         if (data.length == 1)
-            return `New weapon now available: ${data[0].weapon.name} #splatoon2`;
+            return `NEW WEAPON: The ${data[0].weapon.name} is now available! #splatoon2`;
 
         let text = `New weapons now available:`;
         for (let availability of data)
