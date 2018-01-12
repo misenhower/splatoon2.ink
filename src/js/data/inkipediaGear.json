@@ -568,6 +568,13 @@
             "skill": "104"
         },
         {
+            "brand": "16",
+            "name": "Milky Eminence Jacket",
+            "price": null,
+            "rarity": 2,
+            "skill": "3"
+        },
+        {
             "brand": "7",
             "name": "Mint Tee",
             "price": 400,
@@ -1361,6 +1368,13 @@
             "skill": "3"
         },
         {
+            "brand": "16",
+            "name": "Eminence Cuff",
+            "price": null,
+            "rarity": 2,
+            "skill": "0"
+        },
+        {
             "brand": "17",
             "name": "Face Visor",
             "price": 10300,
@@ -2152,6 +2166,13 @@
             "price": 2400,
             "rarity": 1,
             "skill": "2"
+        },
+        {
+            "brand": "16",
+            "name": "Milky Enperrials",
+            "price": null,
+            "rarity": 2,
+            "skill": "4"
         },
         {
             "brand": "1",
