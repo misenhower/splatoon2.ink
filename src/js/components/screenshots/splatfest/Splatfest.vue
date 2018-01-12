@@ -38,10 +38,15 @@ export default {
         regionInfo() {
             return regions.splatoonRegions.find(r => r.key == this.region);
         },
+        isGlobal() {
+            return this.$route.query.global == 'true';
+        },
         title() {
+            let region = (this.isGlobal) ? 'Global' : this.regionInfo.demonym;
+
             if (this.results)
-                return `${this.regionInfo.demonym} Splatfest Results`;
-            return `${this.regionInfo.demonym} Splatfest`;
+                return `${region} Splatfest Results`;
+            return `${region} Splatfest`;
         },
         festival() {
             if (this.festivals)
