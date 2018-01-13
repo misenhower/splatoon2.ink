@@ -23,7 +23,9 @@ async function updateAll() {
     for (let updater of updaters) {
         try {
             await updater.update();
-        } catch (e) { }
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     return 'Done';

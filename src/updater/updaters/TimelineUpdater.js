@@ -18,7 +18,7 @@ class TimelineUpdater extends Updater {
                 {
                     name: 'gear',
                     entities: '$.coop..gear',
-                    id: 'id',
+                    id: ['kind', 'id'],
                     values: 'name',
                 },
                 {

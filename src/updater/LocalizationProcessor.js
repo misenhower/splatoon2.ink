@@ -37,16 +37,27 @@ class LocalizationProcessor {
         writeJson(this.getFilename(), this.data);
     }
 
-    getExpression(id, valueKey) {
-        return [this.ruleset.name, id, valueKey];
+    getExpression(ids, valueKey) {
+        return [this.ruleset.name, ...ids, valueKey];
     }
 
-    readValue(id, valueKey) {
-        return _.get(this.data, this.getExpression(id, valueKey));
+    readValue(ids, valueKey) {
+        return _.get(this.data, this.getExpression(ids, valueKey));
     }
 
-    writeValue(id, valueKey, newValue) {
-        return _.setWith(this.data, this.getExpression(id, valueKey), newValue, Object);
+    writeValue(ids, valueKey, newValue) {
+        return _.setWith(this.data, this.getExpression(ids, valueKey), newValue, Object);
+    }
+
+    getIdValues(entity) {
+        let idParts = this.ruleset.id;
+
+        // Support multi-part IDs
+        if (!Array.isArray(idParts))
+            idParts = [idParts];
+
+        // Get the ID part values
+        return idParts.map(id => _.get(entity, id));
     }
 
     eachEntity(data, callback) {
@@ -67,10 +78,10 @@ class LocalizationProcessor {
 
     updateLocalizationsForEntity(entity) {
         for (let valueKey of this.valueExpressions) {
-            let id = _.get(entity, this.ruleset.id);
+            let ids = this.getIdValues(entity);
             let value = _.get(entity, valueKey);
 
-            this.writeValue(id, valueKey, value);
+            this.writeValue(ids, valueKey, value);
         }
 
         this.writeData();
@@ -83,9 +94,9 @@ class LocalizationProcessor {
 
     hasLocalizationsForEntity(entity) {
         for (let valueKey of this.valueExpressions) {
-            let id = _.get(entity, this.ruleset.id);
+            let ids = this.getIdValues(entity);
 
-            if (this.readValue(id, valueKey) === undefined)
+            if (this.readValue(ids, valueKey) === undefined)
                 return false;
         }
 

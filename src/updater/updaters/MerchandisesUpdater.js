@@ -19,7 +19,7 @@ class MerchandisesUpdater extends Updater {
                 {
                     name: 'gear',
                     entities: '$..gear',
-                    id: 'id',
+                    id: ['kind', 'id'],
                     values: 'name',
                 },
                 {

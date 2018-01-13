@@ -96,7 +96,7 @@ export default {
         },
         gearName() {
             let gear = this.merchandise.gear;
-            return this.$t(`splatnet.gear.${gear.id}.name`, gear.name);
+            return this.$t(`splatnet.gear.${gear.kind}.${gear.id}.name`, gear.name);
         },
     },
 }
