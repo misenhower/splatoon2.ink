@@ -39,8 +39,8 @@ export default {
     methods: {
         resultTitle(team) {
             if (this.type == 'vote')
-                return this.results.team_participants[team];
-            return this.results.team_scores[`${team}_${this.type}`];
+                return this.results.team_participants && this.results.team_participants[team];
+            return this.results.team_scores && this.results.team_scores[`${team}_${this.type}`];
         },
     },
 }
