@@ -419,7 +419,7 @@ export default {
         filterFestivals(item) {
             // We want to show future/current festivals and festivals that ended recently (so we can show their results)
             // Filter based on the result time and show festival results for 2 days
-            let cutoff = item.times.result + 172800; // 2 days
+            let cutoff = item.times.result + 86400 * 3; // 3 days
             return cutoff > this.now;
         },
     },
