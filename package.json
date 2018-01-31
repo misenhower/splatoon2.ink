@@ -58,6 +58,7 @@
     "webpack-dev-server": "^2.6.1"
   },
   "devDependencies": {
-    "locale-man": "^0.0.5"
+    "locale-man": "^0.0.5",
+    "shipit-cli": "^3.0.0"
   }
 }
