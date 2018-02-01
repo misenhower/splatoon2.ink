@@ -536,6 +536,10 @@ body.has-modal #main {
         position: relative;
     }
 
+    &.salmon-run-gear .gear-name {
+        padding: 10px 0;
+    }
+
     .info-overlay {
         position: absolute;
         bottom: 0;

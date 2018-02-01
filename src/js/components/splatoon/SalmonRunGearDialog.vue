@@ -2,7 +2,7 @@
     <Modal @close="$emit('close')">
         <div class="modal-content" style="max-width: 300px; overflow: visible">
             <div class="tilt-right" style="overflow: hidden">
-                <MerchandiseBox :merchandise="merchandise" />
+                <MerchandiseBox :merchandise="merchandise" class="salmon-run-gear" />
             </div>
         </div>
     </Modal>

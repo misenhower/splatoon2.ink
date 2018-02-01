@@ -1,7 +1,7 @@
 <template>
     <Wrapper title="Salmon Run Gear" :time="now">
         <div class="tilt-left salmon-run-gear" style="display: flex; align-items: center; justify-content: center;" v-if="merchandise">
-            <MerchandiseBox :merchandise="merchandise" />
+            <MerchandiseBox :merchandise="merchandise" class="salmon-run-gear" />
         </div>
     </Wrapper>
 </template>
