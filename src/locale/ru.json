@@ -33,7 +33,8 @@
             "team": "«Команда»",
             "%": "%"
         },
-        "team_name_wins": "Победа — {team}!"
+        "team_name_wins": "Победа — {team}!",
+        "previous": "История"
     },
     "splatnet_gear": {
         "button": "«Щупозон»",

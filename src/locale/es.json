@@ -33,7 +33,8 @@
             "team": "En equipo",
             "%": " %"
         },
-        "team_name_wins": "¡Gana el equipo {team}!"
+        "team_name_wins": "¡Gana el equipo {team}!",
+        "previous": "Festivales anteriores"
     },
     "splatnet_gear": {
         "button": "Tentatienda",

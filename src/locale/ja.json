@@ -33,7 +33,8 @@
             "team": "チーム",
             "%": "%"
         },
-        "team_name_wins": "{team}チームの勝利！"
+        "team_name_wins": "{team}チームの勝利！",
+        "previous": "これまでのフェス"
     },
     "splatnet_gear": {
         "button": "ゲソタウン",

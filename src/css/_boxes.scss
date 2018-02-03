@@ -5,18 +5,12 @@
     padding-top: 35px;
 }
 
-.modal-card-product-box {
+.modal-rounded-box {
     .modal-card-head {
-        @extend .bg-mask-product;
-        mask-size: 730px 1168px;
-        background-position-y: bottom;
-
         border: none;
 
         border-top-left-radius: 32px;
         border-top-right-radius: 32px;
-
-        padding-top: 45px;
 
         display: block; // Fixes issues with .level
     }
@@ -41,6 +35,17 @@
                 background: rgba($white-ter, 0.8);
             }
         }
+    }
+}
+
+.modal-card-product-box {
+    @extend .modal-rounded-box;
+
+    .modal-card-head {
+        @extend .bg-mask-product;
+        mask-size: 730px 1168px;
+        background-position-y: bottom;
+        padding-top: 45px;
     }
 }
 

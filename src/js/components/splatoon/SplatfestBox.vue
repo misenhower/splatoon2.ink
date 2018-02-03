@@ -32,7 +32,7 @@
             <div v-if="!results" class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }">
                 <template v-if="!screenshotMode">
                     <span class="nowrap">
-                        {{ festival.times.start | date({ weekday: 'short' }) }}
+                        {{ festival.times.start | date(dateOptions) }}
                         {{ festival.times.start | time }}
                     </span>
                     &ndash;
@@ -51,7 +51,11 @@
                 </template>
             </div>
 
-            <div v-else class="festival-period" style="background-color: #333" v-html="teamWins"></div>
+            <SplatfestWinnerBar
+                v-else
+                :festival="festival"
+                :results="results"
+                />
         </div>
 
         <div class="splatfest-content has-text-centered" v-if="!screenshotMode">
@@ -73,11 +77,11 @@
 <script>
 import Vue from 'vue';
 import SplatfestResultsBox from './SplatfestResultsBox.vue';
-import { getSplatfestWinner } from '@/js/splatoon';
+import SplatfestWinnerBar from './SplatfestWinnerBar.vue';
 
 export default {
-    components: { SplatfestResultsBox },
-    props: ['festival', 'results', 'now', 'screenshotMode'],
+    components: { SplatfestResultsBox, SplatfestWinnerBar },
+    props: ['festival', 'results', 'now', 'screenshotMode', 'historyMode'],
     filters: {
         resultsIn(time) {
             return Vue.i18n.translate('splatfest.results_in', { time });
@@ -90,6 +94,11 @@ export default {
             if (this.festival.times.end > this.now)
                 return 'active';
             return 'past';
+        },
+        dateOptions() {
+            if (this.historyMode)
+                return { year: 'numeric' };
+            return { weekday: 'short' };
         },
         title() {
             if (this.state == 'upcoming')
@@ -107,15 +116,6 @@ export default {
                 alpha: this.$t(`splatnet.festivals.${this.festival.festival_id}.names.alpha_short`, this.festival.names.alpha_short),
                 bravo: this.$t(`splatnet.festivals.${this.festival.festival_id}.names.bravo_short`, this.festival.names.bravo_short),
             };
-        },
-        teamWins() {
-            if (!this.results)
-                return;
-
-            let winner = this.results.summary.total ? 'bravo' : 'alpha';
-
-            let team = `<span style="color: ${this.festival.colors[winner].css_rgb}">${this.teamNames[winner]}</span>`;
-            return this.$t('splatfest.team_name_wins', { team });
         },
     },
 }

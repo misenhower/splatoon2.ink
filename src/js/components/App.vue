@@ -141,6 +141,10 @@
                 <a href="#" @click.prevent="aboutOpen = true">{{ $t('ui.about') }}</a>
                 &ndash;
                 <a href="https://twitter.com/Splatoon2inkbot" target="_blank">Twitter</a>
+                <template v-if="splatnet.festivals">
+                    &ndash;
+                    <a href="#" @click.prevent="splatfestHistoryOpen = true">{{ $t('splatfest.previous') }}</a>
+                </template>
                 &ndash;
                 <Dropdown :options="languages" v-model="selectedLanguageKey" tag="a" class="is-right is-up" />
             </div>
@@ -153,6 +157,13 @@
             :now="now"
             @close="splatNetGearOpen = false"
             ></SplatNetGearDialog>
+        <SplatfestHistoryDialog
+            v-if="splatfestHistoryOpen"
+            :allFestivals="splatnet.festivals"
+            :now="now"
+            :initialRegion="selectedRegionKey"
+            @close="splatfestHistoryOpen = false"
+            />
     </div>
 </template>
 
@@ -175,11 +186,12 @@ import SplatfestBox from './splatoon/SplatfestBox.vue';
 import NewWeaponBox from './splatoon/NewWeaponBox.vue';
 import AboutDialog from './AboutDialog.vue';
 import SplatNetGearDialog from './splatoon/SplatNetGearDialog.vue';
+import SplatfestHistoryDialog from './splatoon/SplatfestHistoryDialog.vue';
 
 const localStorage = window.localStorage;
 
 export default {
-    components: { Dropdown, ScheduleBox, SalmonRunBox, SplatfestBox, NewWeaponBox, AboutDialog, SplatNetGearDialog },
+    components: { Dropdown, ScheduleBox, SalmonRunBox, SplatfestBox, NewWeaponBox, AboutDialog, SplatNetGearDialog, SplatfestHistoryDialog },
     data() {
         return {
             actualSelectedRegionKey: null,
@@ -194,6 +206,7 @@ export default {
             },
             aboutOpen: false,
             splatNetGearOpen: false,
+            splatfestHistoryOpen: false,
             language: null,
         };
     },

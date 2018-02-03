@@ -3,8 +3,8 @@
         <figure class="image is-16by9"></figure>
         <span class="stage-title" v-if="showTitle">{{ name }}</span>
 
-        <Modal v-if="isOpen" @close="isOpen = false">
-            <div class="modal-content tilt-right-slight is-wide">
+        <Modal v-if="isOpen" @close="isOpen = false" class="is-xwide">
+            <div class="modal-content tilt-right-slight">
                 <p class="image is-16by9" @click="isOpen = false">
                     <img :src="largeImage" />
                 </p>
@@ -17,12 +17,6 @@
         </Modal>
     </div>
 </template>
-
-<style>
-.modal-content.is-wide {
-    width: 1200px;
-}
-</style>
 
 <script>
 import Vue from 'vue';

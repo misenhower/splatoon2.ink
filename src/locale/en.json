@@ -33,7 +33,8 @@
             "team": "Team",
             "%": "%"
         },
-        "team_name_wins": "Team {team} wins!"
+        "team_name_wins": "Team {team} wins!",
+        "previous": "Previous Splatfests"
     },
     "splatnet_gear": {
         "button": "SplatNet Gear",

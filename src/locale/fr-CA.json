@@ -33,7 +33,8 @@
             "team": "Équipes",
             "%": " %"
         },
-        "team_name_wins": "Victoire de l'équipe {team}!"
+        "team_name_wins": "Victoire de l'équipe {team}!",
+        "previous": "Festivals terminés"
     },
     "splatnet_gear": {
         "button": "Boutique SplatNet",

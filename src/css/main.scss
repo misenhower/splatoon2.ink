@@ -290,18 +290,18 @@ body.has-modal #main {
             border-radius: 0;
         }
     }
+}
 
-    .festival-period-container {
-        margin-top: -5px;
-    }
+.festival-period-container {
+    margin-top: -5px;
+}
 
-    .festival-period {
-        @extend .bg-mask-banner;
-        @extend .bg-stripes;
-        display: inline-block;
-        background-size: 53px 53px;
-        padding: 4px 20px;
-    }
+.festival-period {
+    @extend .bg-mask-banner;
+    @extend .bg-stripes;
+    display: inline-block;
+    background-size: 53px 53px;
+    padding: 4px 20px;
 }
 
 .splatfest-results {
@@ -464,6 +464,28 @@ body.has-modal #main {
     background: rgba($grey-light, 0.25);
     border-radius: 20px;
     padding: 15px;
+}
+
+.splatfest-history-dialog {
+    .modal-card-head, .modal-card-body {
+        background: rgba($grey-light, 0.25);
+    }
+
+    .splatfest-history-row:first-child {
+        margin-top: 25px;
+    }
+
+    .splatfest-history-row:not(:last-child) {
+        margin-bottom: 50px;
+    }
+
+    .splatfest-results-container {
+        width: 325px;
+
+        .splatfest-results {
+            position: relative;
+        }
+    }
 }
 
 .merchandise-box {

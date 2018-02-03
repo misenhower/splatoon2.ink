@@ -33,7 +33,8 @@
             "team": "In squadra",
             "%": "%"
         },
-        "team_name_wins": "Vince la squadra {team}!"
+        "team_name_wins": "Vince la squadra {team}!",
+        "previous": "Festival terminati"
     },
     "splatnet_gear": {
         "button": "Calama-zone",

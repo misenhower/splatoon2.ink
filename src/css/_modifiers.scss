@@ -184,3 +184,18 @@
         padding-right: 0.2rem;
     }
 }
+
+@include tablet {
+    .modal {
+        &.is-wide {
+            .modal-content, .modal-card {
+                width: 1000px;
+            }
+        }
+        &.is-xwide {
+            .modal-content, .modal-card {
+                width: 1200px;
+            }
+        }
+    }
+}
