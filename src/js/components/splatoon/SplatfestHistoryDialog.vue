@@ -17,7 +17,7 @@
                 </div>
             </div>
 
-            <div class="modal-card-body">
+            <div class="modal-card-body" ref="body">
                 <div v-for="(info, index) in festivals" class="splatfest-history-row" :key="info.festival.festival_id">
                     <div class="level">
                         <div class="level-item">
@@ -81,12 +81,22 @@ export default {
             });
         },
     },
+    watch: {
+        region() {
+            this.scrollToTop();
+        },
+    },
     created() {
         if (this.initialRegion)
             this.region = this.initialRegion;
     },
     mounted() {
         analytics.event('Splatfest History', 'Open');
+    },
+    methods: {
+        scrollToTop() {
+            this.$refs.body.scrollTop = 0;
+        },
     },
 }
 </script>
