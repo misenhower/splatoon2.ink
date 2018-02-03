@@ -16,8 +16,6 @@ export default {
             if (!this.festival || !this.results)
                 return;
 
-                console.log(this.festival,this.results)
-
             let winner = this.results.summary.total ? 'bravo' : 'alpha';
 
             let team = `<span style="color: ${this.festival.colors[winner].css_rgb}">${this.teamNames[winner]}</span>`;
