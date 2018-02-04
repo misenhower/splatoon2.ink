@@ -111,7 +111,7 @@ class SplatfestTweet extends TwitterPostBase {
         switch (data.type) {
             case 'announce':
                 region = (isSimultaneous) ? 'global' : this.regionDemonym;
-                return `You can now vote in the next ${region} Splatfest! #splatfest #splatoon2`;
+                return `You can now vote in the next ${region} Splatfest: ${data.festival.names.alpha_short} vs ${data.festival.names.bravo_short}! #splatfest #splatoon2`;
             case 'start':
                 if (isSimultaneous)
                     return `The global Splatfest is now open! #splatfest #splatoon2`;
