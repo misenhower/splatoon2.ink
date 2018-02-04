@@ -11,14 +11,9 @@
                 <img :src="image" />
             </div>
 
-            <div class="labels">
-                <div class="alpha">
-                    {{ teamNames.alpha }}
-                </div>
-
-                <div class="bravo">
-                    {{ teamNames.bravo }}
-                </div>
+            <div class="columns is-gapless labels">
+                <div class="column" v-text="teamNames.alpha"></div>
+                <div class="column has-text-right" v-text="teamNames.bravo"></div>
             </div>
 
             <SplatfestResultsBox :festival="festival" :results="results" v-if="results && !screenshotMode" />
@@ -113,8 +108,8 @@ export default {
         },
         teamNames() {
             return {
-                alpha: this.$t(`splatnet.festivals.${this.festival.festival_id}.names.alpha_short`, this.festival.names.alpha_short),
-                bravo: this.$t(`splatnet.festivals.${this.festival.festival_id}.names.bravo_short`, this.festival.names.bravo_short),
+                alpha: this.$t(`splatnet.festivals.${this.festival.festival_id}.names.alpha_long`, this.festival.names.alpha_long),
+                bravo: this.$t(`splatnet.festivals.${this.festival.festival_id}.names.bravo_long`, this.festival.names.bravo_long),
             };
         },
     },

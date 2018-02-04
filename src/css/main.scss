@@ -258,20 +258,17 @@ body.has-modal #main {
         position: relative;
 
         .labels {
-            .alpha, .bravo {
-                @extend .font-splatoon1;
-                @extend .title-color;
-                @extend .is-size-5;
-                position: absolute;
-                bottom: 0.25rem;
-            }
+            @extend .font-splatoon1;
+            @extend .title-color;
+            @extend .is-size-5;
+            position: absolute;
+            bottom: 0.25rem;
+            left: 0.25rem;
+            right: 0.25rem;
+            white-space: pre-line;
 
-            .alpha {
-                left: 0.25rem;
-            }
-
-            .bravo {
-                right: 0.25rem;
+            .column {
+                margin-top: auto;
             }
         }
 
