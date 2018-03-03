@@ -40,6 +40,10 @@
                                     :results="info.results"
                                     :historyMode="true"
                                     />
+
+                                <div v-else-if="info.festival.times.result > now" class="has-text-centered font-splatoon2 is-size-5">
+                                    {{ info.festival.times.result - now | duration | resultsIn }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -50,6 +54,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import analytics from '@/js/analytics';
 import regions from '@/js/regions';
 import Modal from '@/js/components/Modal.vue';
@@ -60,6 +65,11 @@ import SplatfestResultsBox from './SplatfestResultsBox.vue';
 export default {
     components: { Modal, Dropdown, SplatfestBox, SplatfestResultsBox },
     props: ['allFestivals', 'now', 'initialRegion'],
+    filters: {
+        resultsIn(time) {
+            return Vue.i18n.translate('splatfest.results_in', { time });
+        },
+    },
     data() {
         return {
             region: 'na',
