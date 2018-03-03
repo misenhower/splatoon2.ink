@@ -22,9 +22,9 @@
     },
     "splatfest": {
         "battle": "Splatfestkämpfe",
-        "recent": "Vergangene Splatfeste",
+        "recent": "Vergangenes Splatfest",
         "title": "Splatfest",
-        "upcoming": "Bevorstehende Splatfeste",
+        "upcoming": "Bevorstehendes Splatfest",
         "results_in": "Ergebnisse in {time}",
         "results": {
             "title": "Ergebnis",
