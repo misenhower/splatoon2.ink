@@ -25,7 +25,7 @@ class NewStageTweet extends TwitterPostBase {
     getText(data) {
         let hours = (data.first_available - this.getDataTime()) / 60 / 60;
         let duration = (hours == 1) ? '1 hour' : `${hours} hours`;
-        return `The first schedules for ${data.name} have been posted! Start playing the new stage when this tweet is ${duration} old. #splatoon2`;
+        return `NEW STAGE: The first schedules for ${data.name} have been posted! Start playing the new stage when this tweet is ${duration} old. #splatoon2`;
     }
 }
 

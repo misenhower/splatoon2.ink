@@ -48,7 +48,7 @@ class ScheduleTweet extends TwitterPostBase {
 
             // If this is the first time the stage has been available, return some different text
             if (stageInfo && stageInfo.first_available == data.regular.start_time)
-                return `New stage ${stage.name} is now open! #maprotation #splatoon2`;
+                return `NEW STAGE: ${stage.name} is now open! #maprotation #splatoon2`;
         }
 
         return `Splatoon 2 map rotation: Ranked game mode: ${data.gachi.rule.name}, League game mode: ${data.league.rule.name} #maprotation`;
