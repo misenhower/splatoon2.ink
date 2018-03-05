@@ -51,7 +51,7 @@ Vue.filter('duration', function(value, hideSeconds = false) {
 
     // Format for translation
     days = days && $t('time.daysShort', { days }, parseInt(days));
-    hours = hours && $t('time.hoursShort', { hours }, parseInt(hours));
+    hours = (days || hours) && $t('time.hoursShort', { hours }, parseInt(hours));
     minutes = $t('time.minutesShort', { minutes }, parseInt(minutes));
     seconds = $t('time.secondsShort', { seconds }, parseInt(seconds));
 
