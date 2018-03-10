@@ -1,25 +1,22 @@
 const TwitterPostBase = require('./TwitterPostBase');
 const { captureSplatfestScreenshot } = require('../screenshots');
 const { readData } = require('../utilities');
-const regions = require('../../js/regions');
+const { splatoonRegions } = require('../../js/regions');
 
 class SplatfestTweet extends TwitterPostBase {
     constructor(region) {
         super();
 
         this.region = region;
-
-        let regionInfo = this.getRegionInfo();
-        this.regionName = regionInfo.name;
-        this.regionDemonym = regionInfo.demonym;
+        this.regionInfo = this.getRegionInfo();
     }
 
     getRegionInfo() {
-        return regions.splatoonRegions.find(r => r.key == this.region);
+        return splatoonRegions.find(r => r.key == this.region);
     }
 
     getKey() { return `splatfest-${this.region}`; }
-    getName() { return `Splatfest: ${this.regionName}`; }
+    getName() { return `Splatfest: ${this.regionInfo.name}`; }
 
     getFestivals(region = null) {
         region = region || this.region;
@@ -54,42 +51,24 @@ class SplatfestTweet extends TwitterPostBase {
         }
     }
 
-    isGlobal() {
-        // Is this a global Splatfest?
-
+    // Which regions have this Splatfest?
+    regions() {
         let festival = this.getData();
         if (!festival)
             return false;
 
-        // Look for the same festival ID in each region
-        for (let region of ['na', 'eu', 'jp']) {
-            // If the festival ID doesn't exist in this region, it's not a global festival
-            if (!this.getFestivals(region).find(f => f.festival_id == festival.festival.festival_id))
-                return false;
-        }
-
-        // If we reach this point, this festival ID exists in all regions
-        return true;
+        return ['na', 'eu', 'jp'].filter(region => this.getFestivals(region).find(f => f.festival_id == festival.festival.festival_id));
     }
 
+    // Is the current event (e.g., announcement, results, etc.) occurring simultaneously across all regions?
     isSimultaneous() {
-        // Is the current event (e.g., announcement, results, etc.) occurring simultaneously across all regions?
-
-        let festivalIds = { na: null, eu: null, jp: null };
-        for (let region in festivalIds) {
-            let f = this.getData(region)
-            if (f)
-                festivalIds[region] = f.festival.festival_id;
-        }
-
-        // Make sure we have a festival ID and that all festival IDs are the same
-        return (festivalIds.na && festivalIds.na == festivalIds.eu && festivalIds.na == festivalIds.jp);
+        return this.regions().every(region => this.getData(region))
     }
 
     shouldPostForCurrentTime() {
         if (super.shouldPostForCurrentTime()) {
-            // If this is a simultaneous event, only post the tweets from the NA instance to prevent duplicate tweets
-            return (this.region == 'na' || !this.isSimultaneous());
+            // Prevent duplicate tweets for Splatfests occurring in multiple regions
+            return (this.region == this.regions()[0] || !this.isSimultaneous());
         }
 
         return false;
@@ -100,24 +79,25 @@ class SplatfestTweet extends TwitterPostBase {
     }
 
     getImage(data) {
-        return captureSplatfestScreenshot(this.region, data.festival.times[data.type], this.isSimultaneous());
+        return captureSplatfestScreenshot(this.region, data.festival.times[data.type], this.regions());
     }
 
     getText(data) {
-        let isGlobal = this.isGlobal();
+        let regions = this.regions();
         let isSimultaneous = this.isSimultaneous();
-        let region;
+        let isGlobal = regions.length === 3;
+
+        let regionDemonyms = regions.map(region => splatoonRegions.find(r => r.key == region).demonym).join('/');
 
         switch (data.type) {
             case 'announce':
-                region = (isSimultaneous) ? 'global' : this.regionDemonym;
-                return `You can now vote in the next ${region} Splatfest: ${data.festival.names.alpha_short} vs ${data.festival.names.bravo_short}! #splatfest #splatoon2`;
+                return `You can now vote in the next ${isGlobal ? 'global' : regionDemonyms} Splatfest: ${data.festival.names.alpha_short} vs ${data.festival.names.bravo_short}! #splatfest #splatoon2`;
+
             case 'start':
                 if (isSimultaneous)
-                    return `The global Splatfest is now open! #splatfest #splatoon2`;
-                if (isGlobal)
-                    return `The global Splatfest is now open in ${this.regionName}! #splatfest #splatoon2`;
-                return `The ${this.regionDemonym} Splatfest is now open! #splatfest #splatoon2`;
+                    return `The ${isGlobal ? 'global' : regionDemonyms} Splatfest is now open! #splatfest #splatoon2`;
+                return `The Splatfest is now open in ${this.regionInfo.name}! #splatfest #splatoon2`;
+
             case 'result':
                 let winner = data.results.summary.total ? 'bravo' : 'alpha';
 
@@ -127,8 +107,7 @@ class SplatfestTweet extends TwitterPostBase {
                 let teamName = (winner == 'alpha') ? data.festival.names.alpha_short : data.festival.names.bravo_short;
                 let results = resultsFormat.replace('{team}', teamName);
 
-                region = (isGlobal) ? 'Global' : this.regionDemonym;
-                return `${region} Splatfest results: ${results} #splatfest #splatoon2`;
+                return `${isGlobal ? 'Global' : regionDemonyms} Splatfest results: ${results} #splatfest #splatoon2`;
         }
     }
 }

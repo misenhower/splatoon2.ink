@@ -21,7 +21,7 @@ import axios from 'axios';
 import Wrapper from '@/js/components/screenshots/Wrapper.vue';
 import SplatfestBox from '@/js/components/splatoon/SplatfestBox.vue';
 import SplatfestResultsBox from '@/js/components/splatoon/SplatfestResultsBox.vue';
-import regions from '@/js/regions';
+import { splatoonRegions } from '@/js/regions';
 
 export default {
     components: { Wrapper, SplatfestBox, SplatfestResultsBox },
@@ -35,18 +35,22 @@ export default {
         now() {
             return this.startTime;
         },
-        regionInfo() {
-            return regions.splatoonRegions.find(r => r.key == this.region);
+        regions() {
+            let regions = this.$route.query.regions;
+            if (regions)
+                regions = regions.split(',');
+            else
+                regions = [this.region];
+
+            return regions;
         },
-        isGlobal() {
-            return this.$route.query.global == 'true';
+        displayRegions() {
+            if (this.regions.length === 3)
+                return 'Global';
+            return this.regions.map(region => splatoonRegions.find(r => r.key == region).demonym).join('/');
         },
         title() {
-            let region = (this.isGlobal) ? 'Global' : this.regionInfo.demonym;
-
-            if (this.results)
-                return `${region} Splatfest Results`;
-            return `${region} Splatfest`;
+            return `${this.displayRegions} Splatfest`;
         },
         festival() {
             if (this.festivals)
