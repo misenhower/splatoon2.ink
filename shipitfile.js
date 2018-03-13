@@ -41,6 +41,10 @@ module.exports = shipit => {
         return shipit.remote('sudo docker-compose restart app', options());
     });
 
+    shipit.blTask('splatnet', () => {
+        return shipit.remote(dockerApp + 'yarn splatnet', options());
+    });
+
     // Combination Tasks
 
     shipit.blTask('deploy', [
