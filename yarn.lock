@@ -1100,6 +1100,10 @@ bulma@^0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/bulma/-/bulma-0.6.1.tgz#5f21a77c0c06f7d80051c06628c23516081bd649"
 
+byline@4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/byline/-/byline-4.2.1.tgz#f74a66fa6d8feff88b2725e0b2b0cf830cdf3f86"
+
 bytes@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/bytes/-/bytes-3.0.0.tgz#d32815404d689699f85a4ea4fa8755dd13a96048"
@@ -1493,6 +1497,17 @@ cosmiconfig@^2.1.0, cosmiconfig@^2.1.1:
     os-homedir "^1.0.1"
     parse-json "^2.2.0"
     require-from-string "^1.1.0"
+
+cozy-ical@^1.1.22:
+  version "1.1.22"
+  resolved "https://registry.yarnpkg.com/cozy-ical/-/cozy-ical-1.1.22.tgz#99206ffcd28dfca576e4889b9faa57b98cc1033a"
+  dependencies:
+    byline "4.2.1"
+    extend "3.0.0"
+    moment-timezone "0.5.3"
+    printit "0.1.19"
+    rrule "2.1.0"
+    uuid "2.0.1"
 
 create-ecdh@^4.0.0:
   version "4.0.0"
@@ -2247,6 +2262,10 @@ extend-shallow@^3.0.0:
   dependencies:
     assign-symbols "^1.0.0"
     is-extendable "^1.0.1"
+
+extend@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.0.tgz#5a474353b9f3353ddd8176dfd37b91c83a46f1d4"
 
 extend@^3.0.0, extend@~3.0.0, extend@~3.0.1:
   version "3.0.1"
@@ -3874,11 +3893,21 @@ mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkd
   dependencies:
     minimist "0.0.8"
 
+moment-timezone@0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.3.tgz#34ba53bd719677975bee9d0e8ba799ad9373f082"
+  dependencies:
+    moment ">= 2.6.0"
+
 moment-timezone@^0.5.13, moment-timezone@^0.5.x:
   version "0.5.14"
   resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.14.tgz#4eb38ff9538b80108ba467a458f3ed4268ccfcb1"
   dependencies:
     moment ">= 2.9.0"
+
+"moment@>= 2.6.0":
+  version "2.22.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.0.tgz#7921ade01017dd45186e7fee5f424f0b8663a730"
 
 "moment@>= 2.9.0":
   version "2.19.3"
@@ -4755,6 +4784,10 @@ pretty-hrtime@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/pretty-hrtime/-/pretty-hrtime-1.0.3.tgz#b7e3ea42435a4c9b2759d99e0f201eb195802ee1"
 
+printit@0.1.19:
+  version "0.1.19"
+  resolved "https://registry.yarnpkg.com/printit/-/printit-0.1.19.tgz#b5ef5201d8077be411e483fb777659335d5626dc"
+
 private@^0.1.6, private@^0.1.7, private@~0.1.5:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/private/-/private-0.1.8.tgz#2381edb3689f7a53d653190060fcf822d2f368ff"
@@ -5269,6 +5302,10 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
   dependencies:
     hash-base "^2.0.0"
     inherits "^2.0.1"
+
+rrule@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/rrule/-/rrule-2.1.0.tgz#6c5b3699e2e549f1dfc2609fe7ecf61c8ebad291"
 
 run-async@^2.2.0:
   version "2.3.0"
@@ -6134,6 +6171,10 @@ utila@~0.4:
 utils-merge@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
+
+uuid@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-2.0.1.tgz#c2a30dedb3e535d72ccf82e343941a50ba8533ac"
 
 uuid@3.0.0:
   version "3.0.0"
