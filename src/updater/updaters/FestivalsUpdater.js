@@ -12,6 +12,7 @@ class FestivalsUpdater extends Updater {
         super({
             name: `Festivals ${region}`,
             filename: 'festivals.json',
+            calendarFilename: `festivals-${region.toLowerCase()}.ics`,
             request: (splatnet) => splatnet.getCombinedFestivals(),
             imagePaths: [
                 '$..images.alpha',
@@ -66,6 +67,21 @@ class FestivalsUpdater extends Updater {
     getLanguages() {
         // Return all languages for this region
         return _.filter(languages, { region: this.region });
+    }
+
+    getCalendarTitle() {
+        return `Splatfests (${this.region})`;
+    }
+
+    getCalendarEntries(data) {
+        let festivals = data[this.region.toLowerCase()].festivals;
+
+        return festivals.map(festival => ({
+            id: `festival-${this.region}-${festival.festival_id}`,
+            title: `${this.region} Splatfest: ${festival.names.alpha_short} vs. ${festival.names.bravo_short}`,
+            start_time: festival.times.start,
+            end_time: festival.times.end,
+        }));
     }
 }
 

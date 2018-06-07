@@ -4,6 +4,8 @@ const mkdirp = require('mkdirp');
 const _ = require('lodash');
 const jsonpath = require('jsonpath');
 const SplatNet = require('../splatnet');
+const iCal = require('cozy-ical');
+const moment = require('moment-timezone');
 const raven = require('raven');
 const { languages } = require('../../js/regions');
 const LocalizationProcessor = require('../LocalizationProcessor');
@@ -40,6 +42,9 @@ class Updater {
         // Write the data to disk
         this.writeFile(this.getFilename(), dataString);
 
+        // Update calendar events
+        this.updateCalendarEvents(data);
+
         // Download images if necessary
         await this.downloadImages(data);
 
@@ -48,6 +53,11 @@ class Updater {
 
     getFilename() {
         return `${dataPath}/${this.options.filename}`;
+    }
+
+    getCalendarFilename() {
+        if (this.options.calendarFilename)
+            return `${dataPath}/${this.options.calendarFilename}`;
     }
 
     getData({ region, language }) {
@@ -181,6 +191,65 @@ class Updater {
         // This allows for old versions of the site to continue downloading images
         let oldPath = path.resolve('public/assets/img/splatnet') + '/' + path.basename(imagePath);
         this.writeFile(oldPath, image);
+    }
+
+    /**
+     * Calendar output
+     */
+
+    updateCalendarEvents(data) {
+        let filename = this.getCalendarFilename();
+        if (!filename)
+            return;
+
+        let events = this.getCalendarEntries(data);
+        let ical = this.getiCalData(events);
+        this.writeFile(filename, ical);
+    }
+
+    getCalendarTitle() {
+        return this.options.name;
+    }
+
+    getCalendarEntries(data) {
+        //
+    }
+
+    getiCalData(events) {
+        // "events" variable should be an array of events in the following format:
+        // {
+        //     id: 'Some Unique ID',
+        //     title: 'Some Event',
+        //     description: 'Optional description',
+        //     location: 'Optional location',
+        //     start_time: <timestamp>,
+        //     end_time: <timestamp>,
+        // }
+
+        // Create a calendar object
+        const calendar = new iCal.VCalendar({
+            title: this.getCalendarTitle(),
+            organization: 'https://splatoon2.ink'
+        });
+
+        // Set the calendar's native time zone to UTC
+        calendar.add(new iCal.VTimezone({ timezone: 'Etc/UTC' }));
+
+        // Add event entries
+        for (let event of events) {
+            calendar.add(new iCal.VEvent({
+                uid: event.id,
+                summary: event.title,
+                description: event.description,
+                location: event.location,
+                startDate: moment.unix(event.start_time).utc(),
+                endDate: moment.unix(event.end_time).utc(),
+                stampDate: new Date(),
+            }));
+        }
+
+        // Convert the calendar to an ICS string
+        return calendar.toString();
     }
 
     /**
