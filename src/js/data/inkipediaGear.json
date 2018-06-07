@@ -157,7 +157,7 @@
         {
             "brand": "7",
             "name": "Black Hoodie",
-            "price": null,
+            "price": 2900,
             "rarity": 1,
             "skill": "11"
         },
@@ -346,14 +346,14 @@
         {
             "brand": "1",
             "name": "Dakro Golden Tee",
-            "price": null,
+            "price": 1010,
             "rarity": 0,
             "skill": "106"
         },
         {
             "brand": "1",
             "name": "Dakro Nana Tee",
-            "price": null,
+            "price": 1010,
             "rarity": 0,
             "skill": "8"
         },
@@ -920,7 +920,7 @@
         {
             "brand": "17",
             "name": "Panda Kung-Fu Zip-Up",
-            "price": null,
+            "price": 10280,
             "rarity": 2,
             "skill": "10"
         },
@@ -1326,7 +1326,7 @@
         {
             "brand": "11",
             "name": "Takoroka Jersey",
-            "price": null,
+            "price": 8960,
             "rarity": 2,
             "skill": "7"
         },
@@ -2499,7 +2499,7 @@
         {
             "brand": "11",
             "name": "Athletic Arrows",
-            "price": null,
+            "price": 1200,
             "rarity": 0,
             "skill": "110"
         },
