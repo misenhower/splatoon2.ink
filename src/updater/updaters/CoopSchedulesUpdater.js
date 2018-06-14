@@ -9,7 +9,7 @@ class CoopSchedulesUpdater extends Updater {
             request: (splatnet) => splatnet.getCoopSchedules(),
             imagePaths: [
                 '$..stage.image',
-                '$..weapons[*].image',
+                '$..weapons[*].weapon.image',
             ],
             localization: [
                 {
@@ -20,19 +20,19 @@ class CoopSchedulesUpdater extends Updater {
                 },
                 {
                     name: 'weapons',
-                    entities: '$..weapons[?(@.id)]',
+                    entities: '$..weapons[?(@.id)].weapon',
                     id: 'id',
                     values: 'name',
                 },
                 {
                     name: 'weapon_subs',
-                    entities: '$..weapons[?(@.id)].sub',
+                    entities: '$..weapons[?(@.id)].weapon.sub',
                     id: 'id',
                     values: 'name',
                 },
                 {
                     name: 'weapon_specials',
-                    entities: '$..weapons[?(@.id)].special',
+                    entities: '$..weapons[?(@.id)].weapon.special',
                     id: 'id',
                     values: 'name',
                 },
@@ -60,6 +60,7 @@ class CoopSchedulesUpdater extends Updater {
             event.title = `Salmon Run on ${eventDetails.stage.name}`;
             event.location = eventDetails.stage.name;
             let weapons = eventDetails.weapons
+                .map(weapon => weapon ? weapon.weapon : null)
                 .map(weapon => weapon ? weapon.name : 'Random')
                 .map(weapon => `\n • ${weapon}`)
                 .join('');
