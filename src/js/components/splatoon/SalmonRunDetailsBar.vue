@@ -8,12 +8,12 @@
             {{ stageName }}
         </div>
 
-        <div class="column" :class="{ 'is-5': mini }" style="display: flex; align-items: center;" v-if="schedule.weapons">
+        <div class="column" :class="{ 'is-5': mini }" style="display: flex; align-items: center;" v-if="weapons">
             <div style="width: 100%">
                 <div class="has-text-centered" v-if="!mini">{{ $t('coop.supplied_weapons') }}</div>
 
                 <div class="columns is-mobile is-slimmer">
-                    <div class="column" v-for="weapon in schedule.weapons">
+                    <div class="column" v-for="weapon in weapons">
                         <div class="image is-square weapon">
                             <img :src="weapon.image | localSplatNetImageUrl" :title="$t(`splatnet.weapons.${weapon.id}.name`, weapon.name)" v-if="weapon" />
                             <img src="~@/img/salmon-run-random-weapon.png" :title="$t('coop.random_weapon')" style="padding: 8px" v-else />
@@ -35,6 +35,10 @@ export default {
         stageName() {
             let stage = this.schedule.stage;
             return this.$t(`splatnet.coop_stages.${stage.image}.name`, stage.name);
+        },
+        weapons() {
+            if (this.schedule.weapons)
+                return this.schedule.weapons.map(w => w.weapon);
         },
     },
 }
