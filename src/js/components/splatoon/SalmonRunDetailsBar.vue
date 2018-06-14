@@ -38,7 +38,7 @@ export default {
         },
         weapons() {
             if (this.schedule.weapons)
-                return this.schedule.weapons.map(w => w.weapon);
+                return this.schedule.weapons.map(w => w ? w.weapon : null);
         },
     },
 }
