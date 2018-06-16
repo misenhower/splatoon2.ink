@@ -20,6 +20,10 @@ const routes = [
             },
         ],
     },
+    {
+        path: '*',
+        component: require('./components/404.vue').default,
+    },
 ];
 
 const router = new VueRouter({

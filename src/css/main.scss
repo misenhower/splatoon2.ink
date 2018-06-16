@@ -709,3 +709,26 @@ body.has-modal #main {
     margin-left: -5px;
     line-height: 0.45rem;
 }
+
+.error404 {
+    @extend .text-shadow;
+    max-width: 500px;
+    margin: auto;
+
+    .hook-box, .hook-box:before {
+        background-color: #888;
+        @extend .bg-stripes-gradient;
+
+        padding-left: 0;
+        padding-right: 0;
+        padding-bottom: 0;
+    }
+
+    .box-header {
+        padding: 5px 15px 10px;
+    }
+
+    .box-footer {
+        padding: 5px 15px 10px;
+    }
+}
