@@ -10,12 +10,19 @@ class CoopSchedulesUpdater extends Updater {
             imagePaths: [
                 '$..stage.image',
                 '$..weapons[*].weapon.image',
+                '$..coop_special_weapon.image'
             ],
             localization: [
                 {
                     name: 'coop_stages',
                     entities: '$..stage',
                     id: 'image', // Unfortunately these don't have an ID, so we'll just match them by image URL
+                    values: 'name',
+                },
+                {
+                    name: 'coop_special_weapons',
+                    entities: '$..coop_special_weapon',
+                    id: 'image', // These don't have a name either
                     values: 'name',
                 },
                 {
