@@ -1,5 +1,5 @@
 <template>
-    <Modal @close="$emit('close')" class="is-wide splatfest-history-dialog modal-rounded-box">
+    <Modal @close="$emit('close')" class="is-wide splatfest-history-dialog modal-rounded-box" v-if="allFestivals">
         <div class="modal-card">
             <div class="modal-card-head">
                 <div class="level">

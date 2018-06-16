@@ -30,7 +30,10 @@ module.exports = function(env) {
             chunkFilename: 'assets/js/[name].[hash:6].js',
         },
         devtool: (production) ? false : '#cheap-module-eval-source-map',
-        devServer: { overlay: true },
+        devServer: {
+            overlay: true,
+            historyApiFallback: true,
+        },
         module: {
             loaders: [
                 {
