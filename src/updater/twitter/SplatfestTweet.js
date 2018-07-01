@@ -49,6 +49,11 @@ class SplatfestTweet extends TwitterPostBase {
             if (results)
                 return { festival, results, type: 'result' };
         }
+
+        // Festival ended
+        festival = this.getFestivals(region).find(f => f.times.end == this.getDataTime());
+        if (festival)
+            return { festival, type: 'end' };
     }
 
     // Which regions have this Splatfest?
@@ -97,6 +102,13 @@ class SplatfestTweet extends TwitterPostBase {
                 if (isSimultaneous)
                     return `The ${isGlobal ? 'global' : regionDemonyms} Splatfest is now open! #splatfest #splatoon2`;
                 return `The Splatfest is now open in ${this.regionInfo.name}! #splatfest #splatoon2`;
+
+            case 'end':
+                let hours = (data.festival.times.result - this.getDataTime()) / 60 / 60;
+                let duration = (hours == 1) ? '1 hour' : `${hours} hours`;
+                if (isSimultaneous)
+                    return `The ${isGlobal ? 'global' : regionDemonyms} Splatfest is now closed. Results will be posted in ${duration}! #splatfest #splatoon2`;
+                return `The Splatfest is now closed in ${this.regionInfo.name}. Results will be posted in ${duration}! #splatfest #splatoon2`;
 
             case 'result':
                 let winner = data.results.summary.total ? 'bravo' : 'alpha';

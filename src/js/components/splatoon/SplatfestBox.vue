@@ -45,6 +45,9 @@
                     <template v-if="state == 'upcoming'">
                         {{ festival.times.start - now | shortDuration | time.in }}
                     </template>
+                    <template v-else-if="state == 'past' && !results && festival.times.result > now">
+                        {{ festival.times.result - now | durationHours | resultsIn }}
+                    </template>
                     <template v-else>
                         {{ festival.times.end - now | durationHours | time.remaining }}
                     </template>
