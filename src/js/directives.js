@@ -4,6 +4,9 @@ import Vue from 'vue';
 import vClickOutside from 'v-click-outside';
 Vue.use(vClickOutside);
 
+import VueClipboard from 'vue-clipboard2';
+Vue.use(VueClipboard);
+
 // Simple v-portal directive to push modal popups to the end of the DOM.
 // This helps when launching a popup inside of an element with position: relative.
 Vue.directive('portal', {

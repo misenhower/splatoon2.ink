@@ -4,6 +4,7 @@
 @import './modifiers';
 @import './backgrounds';
 @import './boxes';
+@import '~bulma-tooltip';
 
 html {
     @extend .bg-squids;
@@ -418,6 +419,39 @@ body.has-modal #main {
         height: 250px;
         shape-outside: polygon(0 0, 100% 0, 100% 100%, 50% 100%, 50% 50%, 0 50%);
         margin: -40px -55px 0 0;
+    }
+}
+
+.calendar-box {
+    position: relative;
+    margin-top: 100px;
+    margin-bottom: 100px;
+
+    .hook-box, .hook-box:before {
+        background-color: $purple;
+        @extend .bg-stripes-gradient;
+    }
+
+    @include desktop {
+        .hook-box:before {
+            mask-position: calc(50% - 20px) top;
+            background-position-x: -20px !important;
+        }
+        .hook-box {
+            margin: 0 40px 0 0;
+        }
+    }
+
+    .hook-box {
+        padding: 25px;
+        overflow: visible;
+    }
+
+    .hero-image {
+        width: 300px;
+        height: 307px;
+        shape-outside: polygon(0 0, 100% 0, 100% 100%, 20% 100%, 20% 80%, 0 80%);
+        margin: -60px -55px 0 0;
     }
 }
 

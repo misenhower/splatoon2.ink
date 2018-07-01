@@ -13,6 +13,10 @@ const routes = [
                 component: require('./components/AboutDialog.vue').default,
             },
             {
+                path: 'calendars',
+                component: require('./components/CalendarDialog.vue').default,
+            },
+            {
                 path: 'splatnet',
             },
             {
