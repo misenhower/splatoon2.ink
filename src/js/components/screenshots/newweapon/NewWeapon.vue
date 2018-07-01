@@ -1,6 +1,6 @@
 <template>
     <Wrapper :title="title" :time="releaseTime">
-        <div class="new-weapon" v-if="newWeapons">
+        <div :class="{ 'new-weapons-large': newWeapons.length <= 3 }" v-if="newWeapons">
             <div style="display: flex; align-items: center; justify-content: center;">
                 <div v-for="(weapon, index) in newWeapons" style="margin: 0 20px">
                     <NewWeaponBox
