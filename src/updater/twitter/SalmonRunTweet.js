@@ -32,7 +32,7 @@ class SalmonRunTweet extends TwitterPostBase {
     }
 
     getText(data) {
-        let hasMysteryWeapon = data.weapons.some(w => w === null);
+        let hasMysteryWeapon = data.weapons.some(w => w === null || w.coop_special_weapon);
 
         if (hasMysteryWeapon)
             return `Salmon Run is now open on ${data.stage.name} with MYSTERY WEAPONS! #salmonrun #splatoon2`;
