@@ -10,13 +10,13 @@
         </div>
         <div class="dropdown-menu" role="menu">
             <div class="dropdown-content font-splatoon2 has-text-left">
-                <a :href="googleLink" target="_blank" class="dropdown-item">
+                <a :href="googleLink" target="_blank" class="dropdown-item" @touchstart.stop @touchend.stop>
                     Google Calendar
                 </a>
-                <a :href="webcalLink" target="_blank" class="dropdown-item">
-                    Apple Calendar/Outlook
+                <a :href="webcalLink" target="_blank" class="dropdown-item" @touchstart.stop @touchend.stop>
+                    Apple/Android/Outlook Calendar
                 </a>
-                <a :href="directLink" target="_blank" class="dropdown-item" @click.prevent.stop="hide" v-clipboard:copy="directLink" v-clipboard:success="onCopy">
+                <a :href="directLink" target="_blank" class="dropdown-item" @click.prevent.stop="hide" v-clipboard:copy="directLink" v-clipboard:success="onCopy" @touchstart.stop @touchend.stop>
                     Copy ICS Link
                 </a>
             </div>
