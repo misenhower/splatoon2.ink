@@ -16,16 +16,16 @@ module.exports = function(env) {
         resolve: { alias: { '@': path.resolve(__dirname, './src') } },
         entry: {
             main: [
-                './src/js/main.js',
-                './src/css/main.scss',
+                './src/web/main.js',
+                './src/web/assets/css/main.scss',
             ],
             screenshots: [
-                './src/js/screenshots.js',
-                './src/css/screenshots.scss',
+                './src/web/screenshots.js',
+                './src/web/assets/css/screenshots.scss',
             ],
         },
         output: {
-            path: path.resolve(__dirname, './public'),
+            path: path.resolve(__dirname, './dist'),
             filename: 'assets/js/[name].[hash:6].js',
             chunkFilename: 'assets/js/[name].[hash:6].js',
         },
@@ -86,8 +86,8 @@ module.exports = function(env) {
         plugins: [
             // Remove old files
             // new CleanWebpackPlugin([
-            //     'public/assets/css/*',
-            //     'public/assets/js/*',
+            //     'dist/assets/css/*',
+            //     'dist/assets/js/*',
             // ]),
             new webpack.DefinePlugin({
                 'GOOGLE_ANALYTICS_ID': JSON.stringify(process.env.GOOGLE_ANALYTICS_ID),
@@ -100,8 +100,8 @@ module.exports = function(env) {
             // Remove unused CSS styles
             new PurifyCSSPlugin({
                 paths: [
-                    ...glob.sync(path.join(__dirname, 'src/html/**/*.html')),
-                    ...glob.sync(path.join(__dirname, 'src/js/components/**/*.vue')),
+                    ...glob.sync(path.join(__dirname, 'public/**/*.html')),
+                    ...glob.sync(path.join(__dirname, 'src/web/components/**/*.vue')),
                 ],
                 minimize: production,
                 purifyOptions: {
@@ -121,19 +121,19 @@ module.exports = function(env) {
             new HtmlWebpackPlugin({
                 inject: false,
                 filename: 'index.html',
-                template: 'src/html/index.html',
+                template: 'public/index.html',
                 minify: { collapseWhitespace: true },
             }),
             // Build HTML used for screenshot generation
             new HtmlWebpackPlugin({
                 inject: false,
                 filename: 'screenshots.html',
-                template: 'src/html/screenshots.html',
+                template: 'public/screenshots.html',
                 minify: { collapseWhitespace: true },
             }),
             // Copy additional favicons
             new CopyWebpackPlugin([
-                { from: 'src/icons/public' },
+                { from: 'public' },
             ]),
         ],
     }

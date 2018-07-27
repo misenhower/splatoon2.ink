@@ -4,11 +4,14 @@
     "dev": "webpack",
     "watch": "npm run dev -- --watch",
     "build": "webpack -p --env production",
-    "serve": "webpack-dev-server --hot --content-base public/",
-    "splatnet": "node src/updater/update.js updateAll",
-    "twitter": "node src/updater/twitter.js maybePostTweets",
-    "twitter-test": "node src/updater/twitter.js testScreenshots",
-    "cron": "node src/updater/cron.js",
+    "serve": "webpack-dev-server --hot --content-base dist/",
+    "splatnet": "node src/app splatnet",
+    "twitter": "node src/app twitter",
+    "twitter:test": "node src/app twitterTest",
+    "cron": "node src/app/cron",
+    "utility:updateGear": "node src/utility updateGear",
+    "utility:getSplatNetLanguageFiles": "node src/utility getSplatNetLanguageFiles",
+    "utility:copyTranslation": "node src/utility copyTranslation",
     "locale-man": "node node_modules/locale-man/ -l en,es,es-MX,fr,fr-CA,de,nl,it,ru,ja -o src/locale"
   },
   "dependencies": {
@@ -39,6 +42,7 @@
     "lodash": "^4.17.4",
     "make-runnable": "^1.3.6",
     "mkdirp": "^0.5.1",
+    "module-alias": "^2.1.0",
     "moment-timezone": "^0.5.13",
     "node-sass": "^4.5.3",
     "postcss-loader": "^2.0.6",
@@ -63,5 +67,8 @@
   "devDependencies": {
     "locale-man": "^0.0.5",
     "shipit-cli": "^3.0.0"
+  },
+  "_moduleAliases": {
+    "@": "src"
   }
 }
