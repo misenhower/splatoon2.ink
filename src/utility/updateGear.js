@@ -3,7 +3,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const mkdirp = require('mkdirp');
+const mkdirp = require('mkdirp').sync;
 const axios = require('axios');
 const retrieveGearData = require('./retrieveGearData');
 const { writeFormattedJson } = require('@/common/utilities');

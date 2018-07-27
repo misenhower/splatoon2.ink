@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const mkdirp = require('mkdirp');
+const mkdirp = require('mkdirp').sync;
 const _ = require('lodash');
 const jsonpath = require('jsonpath');
 const SplatNet = require('@/common/splatnet');

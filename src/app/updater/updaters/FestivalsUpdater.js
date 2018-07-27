@@ -1,5 +1,5 @@
 const Updater = require('./Updater');
-const mkdirp = require('mkdirp');
+const mkdirp = require('mkdirp').sync;
 const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');

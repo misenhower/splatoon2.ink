@@ -2,7 +2,7 @@
 // These files aren't used directly, but are just downloaded for help with updating manual translation files.
 
 const path = require('path');
-const mkdirp = require('mkdirp');
+const mkdirp = require('mkdirp').sync;
 const { writeFormattedJson } = require('@/common/utilities');
 const { languages } = require('@/common/regions');
 const SplatNet = require('@/common/splatnet');

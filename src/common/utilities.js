@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const mkdirp = require('mkdirp');
+const mkdirp = require('mkdirp').sync;
 const stringify = require('json-stable-stringify');
 
 const dataPath = path.resolve('dist/data');
