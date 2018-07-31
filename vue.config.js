@@ -43,13 +43,14 @@ module.exports = {
       }),
     ]
   },
-  chainWebpack: config => {
-    config.plugin('prefetch-index').tap(options => {
-      options[0].fileBlacklist = options[0].fileBlacklist || [];
-      options[0].fileBlacklist.push(/lang-.+?\.js$/);
-      return options;
-    });
-  },
+  // Disabling this for now due to issues with the modern build
+  // chainWebpack: config => {
+  //   config.plugin('prefetch-index').tap(options => {
+  //     options[0].fileBlacklist = options[0].fileBlacklist || [];
+  //     options[0].fileBlacklist.push(/lang-.+?\.js$/);
+  //     return options;
+  //   });
+  // },
   devServer: {
     contentBase: [
       './public',
