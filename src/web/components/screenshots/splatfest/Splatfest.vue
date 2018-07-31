@@ -21,7 +21,7 @@ import axios from 'axios';
 import Wrapper from '@/web/components/screenshots/Wrapper.vue';
 import SplatfestBox from '@/web/components/splatoon/SplatfestBox.vue';
 import SplatfestResultsBox from '@/web/components/splatoon/SplatfestResultsBox.vue';
-import { splatoonRegions } from '@/common/regions';
+import { splatoonRegions } from '@/common/regions.esm';
 
 export default {
     components: { Wrapper, SplatfestBox, SplatfestResultsBox },

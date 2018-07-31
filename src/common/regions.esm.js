@@ -1,11 +1,14 @@
-const splatoonRegions = [
+// This is the same as regions.js but formatted for ES6 modules.
+// Temporary fix for importing with vue-cli until I find something that works with nodejs as well.
+
+export const splatoonRegions = [
     { key: null, name: 'Global', demonym: 'Global' },
     { key: 'na', name: 'North America & Oceania', demonym: 'North American & Oceanian' },
     { key: 'eu', name: 'Europe', demonym: 'European' },
     { key: 'jp', name: 'Japan', demonym: 'Japanese' },
 ];
 
-const languages = [
+export const languages = [
     { region: 'NA', language: 'en',    name: 'English' },
     { region: 'EU', language: 'en',    name: 'English (UK)' },
     { region: 'EU', language: 'es',    name: 'Español' },
@@ -19,11 +22,11 @@ const languages = [
     { region: 'JP', language: 'ja',    name: '日本語' },
 ];
 
-function getRegionByKey(key) {
+export function getRegionByKey(key) {
     return splatoonRegions.find(r => r.key == key);
 }
 
-function detectSplatoonLanguage() {
+export function detectSplatoonLanguage() {
     let browserLanguages = window.navigator.languages || [window.navigator.language];
     browserLanguages = browserLanguages.map(l => l.toLowerCase());
     let availableLanguages = languages.map(l => l.language.toLowerCase());
@@ -37,7 +40,7 @@ function detectSplatoonLanguage() {
     }
 }
 
-function detectSplatoonRegion() {
+export function detectSplatoonRegion() {
     if (window.navigator && window.navigator.language)
         return detectSplatoonRegionFromLanguage(window.navigator.language);
     return null;
@@ -88,12 +91,4 @@ function detectSplatoonRegionFromLanguage(language) {
     }
 
     return null;
-}
-
-module.exports = {
-    splatoonRegions,
-    languages,
-    getRegionByKey,
-    detectSplatoonLanguage,
-    detectSplatoonRegion,
 }

@@ -181,7 +181,7 @@
 <script>
 import axios from 'axios';
 import { mapActions } from 'vuex';
-import regions from '@/common/regions';
+import * as regions from '@/common/regions.esm';
 import Dropdown from './Dropdown.vue';
 import ScheduleBox from './splatoon/ScheduleBox.vue';
 import SalmonRunBox from './splatoon/SalmonRunBox.vue';

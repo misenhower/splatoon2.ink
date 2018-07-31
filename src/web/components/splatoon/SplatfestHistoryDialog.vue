@@ -56,7 +56,7 @@
 <script>
 import Vue from 'vue';
 import analytics from '@/web/analytics';
-import regions from '@/common/regions';
+import * as regions from '@/common/regions.esm';
 import Modal from '@/web/components/Modal.vue';
 import Dropdown from '@/web/components/Dropdown.vue';
 import SplatfestBox from './SplatfestBox.vue';

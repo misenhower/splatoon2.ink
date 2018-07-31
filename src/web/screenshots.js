@@ -7,6 +7,8 @@ import './i18n';
 import './directives.js';
 import './filters.js';
 
+import './assets/css/screenshots.scss';
+
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 

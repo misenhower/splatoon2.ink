@@ -8,25 +8,25 @@
     <meta name="description" content="Splatoon 2 map rotation, upcoming Salmon Run schedules, SplatNet gear, and Splatfest info.">
     <meta property="og:title" content="Splatoon 2 Map Schedules">
     <meta property="og:description" content="Current/upcoming maps and Salmon Run schedules.">
-    <meta property="og:image" content="https://splatoon2.ink/<%= require('../src/web/assets/icons/apple-touch-icon.png') %>">
+    <meta property="og:image" content="https://splatoon2.ink/apple-touch-icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Splatoon2.ink">
-    <% for (var css in htmlWebpackPlugin.files.chunks.main.css) { %>
-    <link href="<%= htmlWebpackPlugin.files.chunks.main.css[css] %>" rel="stylesheet">
-    <% } %>
-    <link rel="apple-touch-icon" sizes="180x180" href="<%= require('../src/web/assets/icons/apple-touch-icon.png') %>">
-    <link rel="icon" type="image/png" sizes="32x32" href="<%= require('../src/web/assets/icons/favicon-32x32.png') %>">
-    <link rel="icon" type="image/png" sizes="16x16" href="<%= require('../src/web/assets/icons/favicon-16x16.png') %>">
+    <link rel="apple-touch-icon" sizes="180x180" href="<%= BASE_URL %>apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="<%= BASE_URL %>favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<%= BASE_URL %>favicon-16x16.png">
     <link rel="manifest" href="/manifest.json">
     <meta name="msapplication-config" content="/browserconfig.xml">
-    <link rel="mask-icon" href="<%= require('../src/web/assets/icons/safari-pinned-tab.svg') %>" color="#ff470f">
-    <link rel="shortcut icon" href="<%= require('../src/web/assets/icons/favicon.ico') %>">
+    <link rel="mask-icon" href="<%= BASE_URL %>safari-pinned-tab.svg" color="#ff470f">
+    <link rel="shortcut icon" href="<%= BASE_URL %>favicon.ico">
     <meta name="theme-color" content="#cccccc">
+    <% if (process.env.VUE_APP_GOOGLE_ANALYTICS_ID) { %>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<%= VUE_APP_GOOGLE_ANALYTICS_ID %>"></script>
+    <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', '<%= VUE_APP_GOOGLE_ANALYTICS_ID %>');</script>
+    <% } %>
 </head>
 <body>
     <div id="app"></div>
-    <script src="<%= htmlWebpackPlugin.files.chunks.main.entry %>"></script>
-    <script async src='https://www.google-analytics.com/analytics.js'></script>
 </body>
 </html>

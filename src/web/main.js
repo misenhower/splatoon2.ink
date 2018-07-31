@@ -6,6 +6,8 @@ import './i18n';
 import './directives.js';
 import './filters.js';
 
+import './assets/css/main.scss';
+
 // Start the Vue app with our root component
 import App from './components/App.vue';
 new Vue({
