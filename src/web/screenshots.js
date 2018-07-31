@@ -4,8 +4,8 @@ import Vue from 'vue';
 import store from './store';
 
 import './i18n';
-import './directives.js';
-import './filters.js';
+import './support/directives.js';
+import './support/filters.js';
 
 import './assets/css/screenshots.scss';
 
@@ -37,6 +37,3 @@ new Vue({
     store,
     router,
 }).$mount('#app');
-
-// Start analytics
-require('./analytics');

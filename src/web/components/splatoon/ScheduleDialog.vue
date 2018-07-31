@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import analytics from '@/web/analytics';
+import analytics from '@/web/support/analytics';
 import Modal from '@/web/components/Modal.vue';
 import GameModeHeader from './GameModeHeader.vue';
 import ScheduleList from './ScheduleList.vue';

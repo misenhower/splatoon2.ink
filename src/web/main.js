@@ -3,8 +3,8 @@ import store from './store';
 import router from './router';
 
 import './i18n';
-import './directives.js';
-import './filters.js';
+import './support/directives.js';
+import './support/filters.js';
 
 import './assets/css/main.scss';
 
@@ -15,6 +15,3 @@ new Vue({
     store,
     router,
 }).$mount('#app');
-
-// Start analytics
-require('./analytics');

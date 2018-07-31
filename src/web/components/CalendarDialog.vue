@@ -70,7 +70,7 @@
 </style>
 
 <script>
-import analytics from '@/web/analytics';
+import analytics from '@/web/support/analytics';
 import Modal from './Modal.vue';
 import CalendarLink from './CalendarLink.vue';
 

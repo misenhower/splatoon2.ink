@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import analytics from '@/web/analytics';
+import analytics from '@/web/support/analytics';
 import Modal from '@/web/components/Modal.vue';
 import MerchandiseBox from './MerchandiseBox.vue';
 

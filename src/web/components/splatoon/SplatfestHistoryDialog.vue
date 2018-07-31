@@ -55,7 +55,7 @@
 
 <script>
 import Vue from 'vue';
-import analytics from '@/web/analytics';
+import analytics from '@/web/support/analytics';
 import * as regions from '@/common/regions.esm';
 import Modal from '@/web/components/Modal.vue';
 import Dropdown from '@/web/components/Dropdown.vue';

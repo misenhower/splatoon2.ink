@@ -21,7 +21,7 @@
 <script>
 import Vue from 'vue';
 import Modal from '@/web/components/Modal.vue';
-import SplatoonStages from '@/web/splatoonStages';
+import SplatoonStages from '@/web/support/stages';
 
 export default {
     components: { Modal },
