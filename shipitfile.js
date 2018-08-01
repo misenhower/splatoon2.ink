@@ -23,7 +23,7 @@ module.exports = shipit => {
     // JS
 
     shipit.blTask('install-js-deps', () => {
-        return shipit.remote(dockerApp + 'yarn install --production', options());
+        return shipit.remote(dockerApp + 'yarn install', options());
     });
 
     shipit.blTask('build-js', ['install-js-deps'], () => {
