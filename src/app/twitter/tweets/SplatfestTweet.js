@@ -57,8 +57,10 @@ class SplatfestTweet extends TwitterPostBase {
     }
 
     // Which regions have this Splatfest?
-    regions() {
-        let festival = this.getData();
+    regions(festival = null) {
+        if (!festival)
+            festival = this.getData();
+
         if (!festival)
             return false;
 
@@ -84,7 +86,7 @@ class SplatfestTweet extends TwitterPostBase {
     }
 
     getImage(data) {
-        return captureSplatfestScreenshot(this.region, data.festival.times[data.type], this.regions());
+        return captureSplatfestScreenshot(this.region, data.festival.times[data.type], this.regions(data));
     }
 
     getText(data) {
