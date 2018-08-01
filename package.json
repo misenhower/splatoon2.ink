@@ -23,6 +23,7 @@
     "cron": "^1.2.1",
     "delay": "^2.0.0",
     "dotenv": "^4.0.0",
+    "ecstatic": "^3.2.1",
     "he": "^1.1.1",
     "json-stable-stringify": "^1.0.1",
     "jsonpath": "^1.0.0",

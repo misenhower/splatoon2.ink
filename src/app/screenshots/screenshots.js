@@ -1,19 +1,31 @@
 const path = require('path');
 const { URL } = require('url');
+const http = require('http');
+const ecstatic = require('ecstatic');
 const puppeteer = require('puppeteer');
 
-const htmlPath = path.resolve('./dist/screenshots.html');
-const htmlUrl = new URL('file://'+htmlPath);
 const viewport = {
     width: 1012, // Twitter's in-stream image width is 506px, 506*2 = 1012
     height: 600,
 };
 
+function startHttpServer() {
+    return new Promise((resolve, reject) => {
+        const handler = ecstatic({ root: './dist' });
+        const server = http.createServer(handler);
+        server.on('listening', () => resolve(server));
+        server.listen();
+    });
+}
+
 async function captureScreenshot(options) {
+    // Create an HTTP server
+    const server = await startHttpServer();
+    const { port } = server.address();
+
     // Launch a new Chrome instance
     const browser = await puppeteer.launch({
         args: [
-            '--disable-web-security', // This allows us to retrieve file:// URLs via JS
             '--no-sandbox', // Allow running as root inside the Docker container
         ],
         // headless: false, // For testing
@@ -25,60 +37,57 @@ async function captureScreenshot(options) {
     page.setViewport(thisViewport);
 
     // Navigate to the URL
-    await page.goto(options.url, {
+    let url = new URL(`http://localhost:${port}/screenshots.html`);
+    url.hash = options.hash;
+    await page.goto(url, {
         waitUntil: 'networkidle0', // Wait until the network is idle
     });
 
     // Take the screenshot
     let result = await page.screenshot();
 
-    // Close the browser
+    // Close the browser and HTTP server
     await browser.close();
+    server.close();
 
     return result;
 }
 
 function captureScheduleScreenshot(startTime) {
-    let url = new URL(htmlUrl);
-    url.hash = `/schedules/${startTime}`;
+    let hash = `/schedules/${startTime}`;
 
-    return captureScreenshot({ url });
+    return captureScreenshot({ hash });
 }
 
 function captureGearScreenshot(startTime, endTime) {
-    let url = new URL(htmlUrl);
-    url.hash = `/splatNetGear/${startTime}/${endTime}`;
+    let hash = `/splatNetGear/${startTime}/${endTime}`;
 
-    return captureScreenshot({ url, viewport: { height: 700 } });
+    return captureScreenshot({ hash, viewport: { height: 700 } });
 }
 
 function captureSalmonRunScreenshot(startTime) {
-    let url = new URL(htmlUrl);
-    url.hash = `/salmonRun/${startTime}`;
+    let hash = `/salmonRun/${startTime}`;
 
-    return captureScreenshot({ url });
+    return captureScreenshot({ hash });
 }
 
 function captureSalmonRunGearScreenshot(startTime) {
-    let url = new URL(htmlUrl);
-    url.hash = `/salmonRunGear/${startTime}`;
+    let hash = `/salmonRunGear/${startTime}`;
 
-    return captureScreenshot({ url });
+    return captureScreenshot({ hash });
 }
 
 function captureNewWeaponScreenshot(releaseTime) {
-    let url = new URL(htmlUrl);
-    url.hash = `/newWeapon/${releaseTime}`;
+    let hash = `/newWeapon/${releaseTime}`;
 
-    return captureScreenshot({ url });
+    return captureScreenshot({ hash });
 }
 
 function captureSplatfestScreenshot(region, startTime, regions) {
-    let url = new URL(htmlUrl);
     regions = regions.join(',');
-    url.hash = `/splatfest/${region}/${startTime}?regions=${regions}`;
+    let hash = `/splatfest/${region}/${startTime}?regions=${regions}`;
 
-    return captureScreenshot({ url });
+    return captureScreenshot({ hash });
 }
 
 module.exports = {
