@@ -6,6 +6,10 @@ module.exports = shipit => {
             servers: process.env.SHIPIT_PRODUCTION_SERVER,
             dir: process.env.SHIPIT_PRODUCTION_DIR,
         },
+        staging: {
+            servers: process.env.SHIPIT_STAGING_SERVER,
+            dir: process.env.SHIPIT_STAGING_DIR,
+        },
     });
 
     const dockerApp = 'sudo docker-compose exec app ';
