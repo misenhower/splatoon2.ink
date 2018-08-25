@@ -53,39 +53,39 @@ async function captureScreenshot(options) {
     return result;
 }
 
-function captureScheduleScreenshot(startTime) {
-    let hash = `/schedules/${startTime}`;
+function captureScheduleScreenshot(now) {
+    let hash = `/schedules/${now}`;
 
     return captureScreenshot({ hash });
 }
 
-function captureGearScreenshot(startTime, endTime) {
-    let hash = `/splatNetGear/${startTime}/${endTime}`;
+function captureGearScreenshot(now) {
+    let hash = `/splatNetGear/${now}`;
 
     return captureScreenshot({ hash, viewport: { height: 700 } });
 }
 
-function captureSalmonRunScreenshot(startTime) {
-    let hash = `/salmonRun/${startTime}`;
+function captureSalmonRunScreenshot(now) {
+    let hash = `/salmonRun/${now}`;
 
     return captureScreenshot({ hash });
 }
 
-function captureSalmonRunGearScreenshot(startTime) {
-    let hash = `/salmonRunGear/${startTime}`;
+function captureSalmonRunGearScreenshot(now) {
+    let hash = `/salmonRunGear/${now}`;
 
     return captureScreenshot({ hash });
 }
 
-function captureNewWeaponScreenshot(releaseTime) {
-    let hash = `/newWeapon/${releaseTime}`;
+function captureNewWeaponScreenshot(now) {
+    let hash = `/newWeapon/${now}`;
 
     return captureScreenshot({ hash });
 }
 
-function captureSplatfestScreenshot(region, startTime, regions) {
+function captureSplatfestScreenshot(region, now, regions) {
     regions = regions.join(',');
-    let hash = `/splatfest/${region}/${startTime}?regions=${regions}`;
+    let hash = `/splatfest/${region}/${now}?regions=${regions}`;
 
     return captureScreenshot({ hash });
 }

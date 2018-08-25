@@ -74,5 +74,10 @@
         "get_updates_via_twitter": "Informiere dich über Twitter!",
         "all_upcoming_stages": "Alle bevorstehenden Arenen",
         "disclaimer": "Diese Website steht in keiner Verbindung zu Nintendo. Alle Produktnamen, Logos und Marken sind Eigentum der jeweiligen Inhaber."
+    },
+    "game_mode": {
+        "regular": "Standardkampf",
+        "ranked": "Rangkampf",
+        "league": "Ligakampf"
     }
 }

@@ -10,7 +10,7 @@
             <div class="main skill-img-bg" v-if="merchandise.skill">
                 <img :src="merchandise.skill.image | localSplatNetImageUrl" :title="skillName" />
             </div>
-            <div class="sub" v-for="i in merchandise.gear.rarity + 1">
+            <div class="sub" v-for="i in merchandise.gear.rarity + 1" :key="i">
                 <img src="~@/web/assets/img/blank-skill-slot.png" />
             </div>
         </div>
@@ -38,7 +38,7 @@
                                 <div class="skill-img-bg strikethrough">
                                     <img :src="merchandise.original_gear.skill.image | localSplatNetImageUrl" :title="originalSkillName" />
                                 </div>
-                                <div class="sub" v-for="i in merchandise.original_gear.rarity + 1">
+                                <div class="sub" v-for="i in merchandise.original_gear.rarity + 1" :key="i">
                                     <img src="~@/web/assets/img/blank-skill-slot.png" />
                                 </div>
                             </div>
@@ -74,9 +74,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
-    props: ['merchandise', 'now'],
+    props: ['merchandise'],
     computed: {
+        ...mapGetters('splatoon', ['now']),
         brandName() {
             let brand = this.merchandise.gear.brand;
             return this.$t(`splatnet.brands.${brand.id}.name`, brand.name);

@@ -21,43 +21,43 @@
             <div class="column is-4 salmon-run-ad-img">
                 <div class="image is-16by9 is-hidden-desktop"></div>
 
-                <template v-if="!screenshotMode && coop && coop.reward_gear">
+                <template v-if="!screenshotMode && rewardGear">
                     <div class="salmon-run-gear-text">
                         {{ $t('coop.this_months_gear') }}
                     </div>
                     <div class="salmon-run-gear-image hand" @click="gearDialogOpen = true" :title="rewardGearName">
                         <div class="image is-32x32">
-                            <img :src="coop.reward_gear.gear.image | localSplatNetImageUrl" />
+                            <img :src="rewardGear.image | localSplatNetImageUrl" />
                         </div>
                     </div>
                 </template>
             </div>
             <div class="column">
                 <div class="salmon-run-content">
-                    <div class="salmon-run-open" v-if="currentSchedule">
+                    <div class="salmon-run-open" v-if="activeSchedule">
                         <div class="is-size-5 title-squid font-splatoon1">
                             {{ $t('times.open') }}
                         </div>
                         <template v-if="screenshotMode">
                             <div class="title-color is-size-5">
-                                {{ currentSchedule.end_time - now | durationHours | time.remaining }}
+                                {{ activeSchedule.end_time - now | durationHours | time.remaining }}
                             </div>
                         </template>
                         <template v-else>
                             <div class="title-color is-size-5">
-                                {{ currentSchedule.start_time | date }}
-                                {{ currentSchedule.start_time | time }}
+                                {{ activeSchedule.start_time | date }}
+                                {{ activeSchedule.start_time | time }}
                                 &ndash;
-                                {{ currentSchedule.end_time | date }}
-                                {{ currentSchedule.end_time | time }}
+                                {{ activeSchedule.end_time | date }}
+                                {{ activeSchedule.end_time | time }}
                             </div>
                             <div>
-                                {{ currentSchedule.end_time - now | duration | time.remaining }}
+                                {{ activeSchedule.end_time - now | duration | time.remaining }}
                             </div>
                         </template>
 
                         <div class="salmon-run-details">
-                            <SalmonRunDetailsBar :schedule="currentSchedule"></SalmonRunDetailsBar>
+                            <SalmonRunDetailsBar :schedule="activeSchedule" />
                         </div>
                     </div>
 
@@ -66,7 +66,7 @@
                             <div class="is-size-6 title-squid font-splatoon1">
                                 {{ $t('times.soon') }}
                             </div>
-                            <div v-for="event in upcomingSchedules" class="event">
+                            <div v-for="event in upcomingSchedules" :key="event.key" class="event">
                                 <div class="columns is-marginless is-gapless is-mobile">
                                     <div class="column is-narrow" style="margin-right: 5px">
                                         <div class="image is-4by3" style="width: 23px">
@@ -91,7 +91,7 @@
                                     </div>
                                 </div>
 
-                                <SalmonRunDetailsBar :schedule="event" :mini="true"></SalmonRunDetailsBar>
+                                <SalmonRunDetailsBar :schedule="event" mini />
                             </div>
                         </div>
                     </div>
@@ -100,51 +100,33 @@
         </div>
 
         <SalmonRunGearDialog
-            v-if="gearDialogOpen && coop && coop.reward_gear"
-            :gear="coop.reward_gear.gear"
+            v-if="gearDialogOpen && rewardGear"
             @close="gearDialogOpen = false"
             />
     </div>
 </template>
 
 <script>
-import Vue from 'vue';
+import { mapGetters } from 'vuex';
 import SalmonRunDetailsBar from './SalmonRunDetailsBar.vue';
 import SalmonRunGearDialog from './SalmonRunGearDialog.vue';
 
 export default {
     components: { SalmonRunDetailsBar, SalmonRunGearDialog },
-    props: ['coop', 'coopSchedules', 'now', 'screenshotMode'],
+    props: {
+        screenshotMode: Boolean,
+    },
     data() {
         return {
             gearDialogOpen: false,
         };
     },
     computed: {
-        allSchedules() {
-            // Combine the "schedules" and "details" sections into one list of schedules
-            let results = {};
-
-            // Add the less-detailed schedules in first
-            for (let schedule of this.coopSchedules.schedules)
-                results[schedule.start_time] = schedule;
-
-            // Add/replace the schedules that have map/weapon details
-            for (let schedule of this.coopSchedules.details)
-                results[schedule.start_time] = schedule;
-
-            return Object.values(results).sort((a, b) => { return a.start_time - b.start_time });
-        },
-        upcomingSchedules() { return this.allSchedules.filter(schedule => schedule.start_time > this.now) },
-        currentSchedule() {
-            if (this.allSchedules.length > 0 && this.allSchedules[0].start_time <= this.now)
-                return this.allSchedules[0];
-        },
+        ...mapGetters('splatoon', ['now']),
+        ...mapGetters('splatoon/salmonRun', ['activeSchedule', 'upcomingSchedules', 'rewardGear']),
         rewardGearName() {
-            if (this.coop.reward_gear) {
-                let gear = this.coop.reward_gear.gear;
-                return this.$t(`splatnet.gear.${gear.id}.name`, gear.name);
-            }
+            if (this.rewardGear)
+                return this.$t(`splatnet.gear.${this.rewardGear.kind}.${this.rewardGear.id}.name`, this.rewardGear.name);
         },
     },
 }

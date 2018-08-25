@@ -9,18 +9,20 @@ const routes = [
         component: require('./components/Main.vue').default,
         children: [
             {
+                path: 'splatnet',
+                component: require('./components/splatoon/SplatNetGearDialog.vue').default,
+            },
+            {
+                path: 'splatfests',
+                component: require('./components/splatoon/SplatfestHistoryDialog.vue').default,
+            },
+            {
                 path: 'about',
                 component: require('./components/AboutDialog.vue').default,
             },
             {
                 path: 'calendars',
                 component: require('./components/CalendarDialog.vue').default,
-            },
-            {
-                path: 'splatnet',
-            },
-            {
-                path: 'splatfests',
             },
         ],
     },

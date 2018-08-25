@@ -29,7 +29,7 @@ export default {
         stage: {},
         showTitle: { default: true },
         clickable: { default: true },
-        isSalmonRun: { default: false },
+        isSalmonRun: Boolean,
     },
     data() {
         return {

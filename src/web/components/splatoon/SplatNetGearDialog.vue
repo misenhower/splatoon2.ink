@@ -4,12 +4,11 @@
             <div class="splatnet-gear-dialog">
                 <h3 class="title is-3 has-text-centered font-splatoon1 text-shadow">{{ $t('splatnet_gear.title') }}</h3>
                 <div class="columns is-marginless is-multiline is-mobile is-centered">
-                    <div class="column is-half-mobile is-one-third-tablet" v-for="(merchandise, index) in merchandises">
+                    <div class="column is-half-mobile is-one-third-tablet" v-for="(merchandise, index) in merchandises" :key="merchandise.end_time">
                         <MerchandiseBox
                             :merchandise="merchandise"
-                            :now="now"
-                            :class="(index % 2 == 0) ? 'tilt-left' : 'tilt-right'"
-                            ></MerchandiseBox>
+                            :class="(index % 2 === 0) ? 'tilt-left' : 'tilt-right'"
+                            />
                     </div>
                 </div>
             </div>
@@ -18,13 +17,16 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import analytics from '@/web/support/analytics';
 import Modal from '@/web/components/Modal.vue';
 import MerchandiseBox from './MerchandiseBox.vue';
 
 export default {
     components: { Modal, MerchandiseBox },
-    props: ['merchandises', 'now'],
+    computed: {
+        ...mapGetters('splatoon/splatNetStore', ['merchandises']),
+    },
     mounted() {
         analytics.event('SplatNet Gear', 'Open');
     },

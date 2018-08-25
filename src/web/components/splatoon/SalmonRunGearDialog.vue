@@ -9,14 +9,17 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Modal from '@/web/components/Modal.vue';
 import MerchandiseBox from './MerchandiseBox.vue';
 
 export default {
     components: { Modal, MerchandiseBox },
-    props: ['gear'],
     computed: {
-        merchandise() { return { gear: this.gear }; },
+        ...mapGetters('splatoon/salmonRun', ['rewardGear']),
+        merchandise() {
+            return { gear: this.rewardGear };
+        },
     },
 }
 </script>

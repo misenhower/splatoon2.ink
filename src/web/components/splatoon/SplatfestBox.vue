@@ -1,12 +1,12 @@
 <template>
-    <div class="font-splatoon2" :class="{ 'has-results': results && !screenshotMode }">
+    <div class="font-splatoon2" :class="{ 'has-results': showingResults }">
         <div class="splatfest-header">
             <h2 class="title is-3 is-size-2-fullhd font-splatoon1">
                 {{ title }}
             </h2>
         </div>
 
-        <div class="panel-container" :class="{ 'is-hidden-mobile' : results }">
+        <div class="panel-container" :class="{ 'is-hidden-mobile' : festival.results }">
             <div class="image panel-image">
                 <img :src="image" />
             </div>
@@ -21,15 +21,15 @@
                 <div class="column has-text-right" v-text="teamNames.short.bravo"></div>
             </div>
 
-            <SplatfestResultsBox :festival="festival" :results="results" v-if="results && !screenshotMode" />
+            <SplatfestResultsBox :festival="festival" v-if="showingResults" />
         </div>
 
-        <div class="mobile-results is-hidden-tablet" v-if="results">
-            <SplatfestResultsBox :festival="festival" :results="results" v-if="results && !screenshotMode" />
+        <div class="mobile-results is-hidden-tablet" v-if="festival.results">
+            <SplatfestResultsBox :festival="festival" v-if="showingResults" />
         </div>
 
         <div class="has-text-centered is-size-5 title-color festival-period-container">
-            <div v-if="!results" class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }">
+            <div v-if="!festival.results" class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }">
                 <template v-if="!screenshotMode">
                     <span class="nowrap">
                         {{ festival.times.start | date(dateOptions) }}
@@ -42,10 +42,10 @@
                     </span>
                 </template>
                 <template v-else>
-                    <template v-if="state == 'upcoming'">
+                    <template v-if="festival.state == 'upcoming'">
                         {{ festival.times.start - now | shortDuration | time.in }}
                     </template>
-                    <template v-else-if="state == 'past' && !results && festival.times.result > now">
+                    <template v-else-if="festival.state == 'past' && !results && festival.times.result > now">
                         {{ festival.times.result - now | durationHours | resultsIn }}
                     </template>
                     <template v-else>
@@ -54,23 +54,19 @@
                 </template>
             </div>
 
-            <SplatfestWinnerBar
-                v-else
-                :festival="festival"
-                :results="results"
-                />
+            <SplatfestWinnerBar :festival="festival" v-else />
         </div>
 
         <div class="splatfest-content has-text-centered" v-if="!screenshotMode">
-            <template v-if="state == 'upcoming'">
+            <template v-if="festival.state == 'upcoming'">
                 {{ festival.times.start - now | duration | time.in }}
             </template>
 
-            <template v-else-if="state == 'active'">
+            <template v-else-if="festival.state == 'active'">
                 {{ festival.times.end - now | duration | time.remaining }}
             </template>
 
-            <template v-else-if="state == 'past' && !results && festival.times.result > now">
+            <template v-else-if="festival.state == 'past' && !festival.results && festival.times.result > now">
                 {{ festival.times.result - now | duration | resultsIn }}
             </template>
         </div>
@@ -79,24 +75,26 @@
 
 <script>
 import Vue from 'vue';
+import { mapGetters } from 'vuex';
 import SplatfestResultsBox from './SplatfestResultsBox.vue';
 import SplatfestWinnerBar from './SplatfestWinnerBar.vue';
 
 export default {
     components: { SplatfestResultsBox, SplatfestWinnerBar },
-    props: ['festival', 'results', 'now', 'screenshotMode', 'historyMode'],
+    props: {
+        festival: null,
+        screenshotMode: Boolean,
+        historyMode: Boolean,
+    },
     filters: {
         resultsIn(time) {
             return Vue.i18n.translate('splatfest.results_in', { time });
         },
     },
     computed: {
-        state() {
-            if (this.festival.times.start > this.now)
-                return 'upcoming';
-            if (this.festival.times.end > this.now)
-                return 'active';
-            return 'past';
+        ...mapGetters('splatoon', ['now']),
+        showingResults() {
+            return this.festival.results && !this.screenshotMode && !this.historyMode;
         },
         dateOptions() {
             if (this.historyMode)
@@ -104,9 +102,9 @@ export default {
             return { weekday: 'short' };
         },
         title() {
-            if (this.state == 'upcoming')
+            if (this.festival.state == 'upcoming')
                 return this.$t('splatfest.upcoming');
-            if (this.state == 'past' && !this.screenshotMode)
+            if (this.festival.state == 'past' && !this.screenshotMode)
                 return this.$t('splatfest.recent');
             return this.$t('splatfest.title');
         },

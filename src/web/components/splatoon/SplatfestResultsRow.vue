@@ -4,7 +4,7 @@
             <div class="winner-mark-shadow" v-if="winner == 'alpha'"></div>
             <div class="winner-mark" :style="{ background: festival.colors.alpha.css_rgb }" v-if="winner == 'alpha'"></div>
             <div class="font-splatoon2 title is-4" :title="alphaTitle | numberFormat">
-                <div>{{ results.rates[type].alpha | wholePercent }}<span class="percent">.{{ results.rates[type].alpha | partialPercent }}{{ $t('splatfest.results.%') }}</span></div>
+                <div>{{ rates.alpha | wholePercent }}<span class="percent">.{{ rates.alpha | partialPercent }}{{ $t('splatfest.results.%') }}</span></div>
             </div>
         </div>
 
@@ -16,7 +16,7 @@
             <div class="winner-mark-shadow" v-if="winner == 'bravo'"></div>
             <div class="winner-mark" :style="{ background: festival.colors.bravo.css_rgb }" v-if="winner == 'bravo'"></div>
             <div class="font-splatoon2 title is-4" :title="bravoTitle | numberFormat">
-                <div>{{ results.rates[type].bravo | wholePercent }}<span class="percent">.{{ results.rates[type].bravo | partialPercent }}{{ $t('splatfest.results.%') }}</span></div>
+                <div>{{ rates.bravo | wholePercent }}<span class="percent">.{{ rates.bravo | partialPercent }}{{ $t('splatfest.results.%') }}</span></div>
             </div>
         </div>
     </div>
@@ -24,16 +24,19 @@
 
 <script>
 export default {
-    props: ['festival', 'results', 'type'],
+    props: ['festival', 'type'],
     computed: {
         winner() {
-            return this.results.summary[this.type] ? 'bravo' : 'alpha';
+            return this.festival.results.summary[this.type] ? 'bravo' : 'alpha';
         },
         alphaTitle() {
             return this.resultTitle('alpha');
         },
         bravoTitle() {
             return this.resultTitle('bravo');
+        },
+        rates() {
+            return this.festival.results.rates[this.type];
         },
     },
     filters: {
@@ -47,8 +50,8 @@ export default {
     methods: {
         resultTitle(team) {
             if (this.type == 'vote')
-                return this.results.team_participants && this.results.team_participants[team];
-            return this.results.team_scores && this.results.team_scores[`${team}_${this.type}`];
+                return this.festival.results.team_participants && this.festival.results.team_participants[team];
+            return this.festival.results.team_scores && this.festival.results.team_scores[`${team}_${this.type}`];
         },
     },
 }

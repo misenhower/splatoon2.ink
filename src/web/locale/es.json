@@ -67,5 +67,10 @@
     "gear": {
         "frequent_ability": "Potenciadores comunes"
     },
-    "ui": {}
+    "ui": {},
+    "game_mode": {
+        "regular": "Combate amistoso",
+        "ranked": "Combate competitivo",
+        "league": "Torneo"
+    }
 }

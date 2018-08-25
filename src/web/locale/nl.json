@@ -67,5 +67,10 @@
     "gear": {
         "frequent_ability": "Waarschijnlijk effect"
     },
-    "ui": {}
+    "ui": {},
+    "game_mode": {
+        "regular": "Standaardgevecht",
+        "ranked": "Profgevecht",
+        "league": "Toernooigevecht"
+    }
 }

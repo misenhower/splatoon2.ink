@@ -1,5 +1,5 @@
 <template>
-    <div v-if="schedule">
+    <div v-if="schedule" :class="mode">
         <h3 class="title is-3 font-splatoon1 has-text-centered">
             {{ schedule.game_mode.name }}
         </h3>
@@ -24,6 +24,11 @@ import Stage from '@/web/components/splatoon/Stage.vue';
 
 export default {
     components: { Stage },
-    props: ['schedule'],
+    props: ['mode'],
+    computed: {
+        schedule() {
+            return this.$store.getters[`splatoon/schedules/${this.mode}/activeSchedule`];
+        },
+    },
 }
 </script>

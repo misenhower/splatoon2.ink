@@ -30,15 +30,15 @@
                             <div class="font-splatoon2 is-size-7 has-text-grey-light time-table">
                                 <table>
                                     <tr>
-                                        <td colspan="3" class="is-size-6 has-text-white">{{ time | dateTime('en', 'UTC', 'MMMM D, YYYY HH:mm z') }}</td>
+                                        <td colspan="3" class="is-size-6 has-text-white">{{ now | dateTime('en', 'UTC', 'MMMM D, YYYY HH:mm z') }}</td>
                                     </tr>
                                     <tr>
-                                        <td>{{ time | dateTime('en-us', 'America/Los_Angeles') }}</td>
-                                        <td>{{ time | dateTime('en-gb', 'Europe/London') }}</td>
+                                        <td>{{ now | dateTime('en-us', 'America/Los_Angeles') }}</td>
+                                        <td>{{ now | dateTime('en-gb', 'Europe/London') }}</td>
                                     </tr>
                                     <tr>
-                                        <td>{{ time | dateTime('en-us', 'America/New_York') }}</td>
-                                        <td>{{ time | dateTime('ja-jp', 'Asia/Tokyo') }}</td>
+                                        <td>{{ now | dateTime('en-us', 'America/New_York') }}</td>
+                                        <td>{{ now | dateTime('ja-jp', 'Asia/Tokyo') }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -51,10 +51,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import moment from 'moment-timezone';
 
 export default {
-    props: ['title', 'time'],
+    props: ['title'],
     filters: {
         dateTime(value, locale, timeZone, format = 'LLL z') {
             let date = moment.unix(value).tz(timeZone);
@@ -62,5 +63,8 @@ export default {
             return date.format(format);
         },
     },
-}
+    computed: {
+        ...mapGetters('splatoon', ['now']),
+    },
+};
 </script>

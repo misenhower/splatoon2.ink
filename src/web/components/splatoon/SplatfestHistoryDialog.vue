@@ -1,5 +1,5 @@
 <template>
-    <Modal @close="$emit('close')" class="is-wide splatfest-history-dialog modal-rounded-box" v-if="allFestivals">
+    <Modal @close="$emit('close')" class="is-wide splatfest-history-dialog modal-rounded-box" v-if="allSplatfests">
         <div class="modal-card">
             <div class="modal-card-head">
                 <div class="level">
@@ -18,16 +18,12 @@
             </div>
 
             <div class="modal-card-body" ref="body">
-                <div v-for="(info, index) in festivals" class="splatfest-history-row" :key="info.festival.festival_id">
+                <div v-for="(festival, index) in festivals" class="splatfest-history-row" :key="festival.festival_id">
                     <div class="level">
                         <div class="level-item">
                             <div class="splatfest" :class="(index % 2 == 0) ? 'tilt-left' : 'tilt-right'">
                                 <div class="hook-box">
-                                    <SplatfestBox
-                                        :festival="info.festival"
-                                        :now="now"
-                                        :historyMode="true"
-                                        />
+                                    <SplatfestBox :festival="festival" history-mode />
                                 </div>
                             </div>
                         </div>
@@ -35,14 +31,14 @@
                         <div class="level-item">
                             <div class="splatfest-results-container">
                                 <SplatfestResultsBox
-                                    v-if="info.results"
-                                    :festival="info.festival"
-                                    :results="info.results"
-                                    :historyMode="true"
+                                    v-if="festival.results"
+                                    :festival="festival"
+                                    :results="festival.results"
+                                    history-mode
                                     />
 
-                                <div v-else-if="info.festival.times.result > now" class="has-text-centered font-splatoon2 is-size-5">
-                                    {{ info.festival.times.result - now | duration | resultsIn }}
+                                <div v-else-if="festival.times.result > now" class="has-text-centered font-splatoon2 is-size-5">
+                                    {{ festival.times.result - now | duration | resultsIn }}
                                 </div>
                             </div>
                         </div>
@@ -55,8 +51,8 @@
 
 <script>
 import Vue from 'vue';
+import { mapGetters } from 'vuex';
 import analytics from '@/web/support/analytics';
-import * as regions from '@/common/regions.esm';
 import Modal from '@/web/components/Modal.vue';
 import Dropdown from '@/web/components/Dropdown.vue';
 import SplatfestBox from './SplatfestBox.vue';
@@ -64,7 +60,6 @@ import SplatfestResultsBox from './SplatfestResultsBox.vue';
 
 export default {
     components: { Modal, Dropdown, SplatfestBox, SplatfestResultsBox },
-    props: ['allFestivals', 'now', 'initialRegion'],
     filters: {
         resultsIn(time) {
             return Vue.i18n.translate('splatfest.results_in', { time });
@@ -76,19 +71,23 @@ export default {
         };
     },
     computed: {
+        ...mapGetters('splatoon', ['now']),
+        ...mapGetters('splatoon/regions', { initialRegion: 'selectedKey' }),
+        allSplatfests() {
+            return {
+                na: this.$store.getters['splatoon/splatfests/na/allSplatfests'],
+                eu: this.$store.getters['splatoon/splatfests/eu/allSplatfests'],
+                jp: this.$store.getters['splatoon/splatfests/jp/allSplatfests'],
+            };
+        },
         regions() {
-            return regions.splatoonRegions.filter(({ key }) => key).map(({ key }) => {
+            return this.$store.state.splatoon.regions.all.map(({ key }) => {
                 let name = (key) ? this.$t(`regions.${key}.name`) : this.$t('regions.global.name');
                 return { key, name };
             });
         },
         festivals() {
-            let data = this.allFestivals[this.region];
-
-            return data.festivals.map(festival => {
-                let results = data.results.find(r => r.festival_id == festival.festival_id);
-                return { festival, results };
-            });
+            return this.allSplatfests[this.region];
         },
     },
     watch: {

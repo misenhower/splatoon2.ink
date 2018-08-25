@@ -1,25 +1,25 @@
 <template>
-    <div class="font-splatoon2" :class="cssClass" v-if="gameMode">
-        <GameModeHeader :gameMode="gameMode" :festival="festival" :now="now"></GameModeHeader>
+    <div class="font-splatoon2" :class="mode">
+        <GameModeHeader :mode="mode" />
 
-        <div class="main-schedule" v-if="currentSchedule">
+        <div class="main-schedule" v-if="activeSchedule">
             <div class="level is-mobile top-bar">
                 <div class="level-left">
-                    <div class="level-item title-color is-size-5">{{ currentRuleName }}</div>
+                    <div class="level-item title-color is-size-5">{{ activeRuleName }}</div>
                 </div>
                 <div class="level-right">
                     <div class="level-item">
-                        {{ currentSchedule.start_time | time }} &ndash;
-                        {{ currentSchedule.end_time | time }}
+                        {{ activeSchedule.start_time | time }} &ndash;
+                        {{ activeSchedule.end_time | time }}
                     </div>
                 </div>
             </div>
             <div class="is-clearfix"></div>
             <div class="columns is-mobile is-slim">
-                <div class="column"><Stage :stage="currentSchedule.stage_a"></Stage></div>
-                <div class="column"><Stage :stage="currentSchedule.stage_b"></Stage></div>
-                <template v-if="festival">
-                    <div class="column"><Stage :stage="festival.special_stage"></Stage></div>
+                <div class="column"><Stage :stage="activeSchedule.stage_a"></Stage></div>
+                <div class="column"><Stage :stage="activeSchedule.stage_b"></Stage></div>
+                <template v-if="selectedRegionHasActiveSplatfest">
+                    <div class="column"><Stage :stage="selectedRegionCurrentSplatfest.special_stage"></Stage></div>
                 </template>
             </div>
         </div>
@@ -29,11 +29,7 @@
                 {{ $t('times.next') }}
             </div>
 
-            <ScheduleRow
-                :schedule="upcomingSchedules[0]"
-                :now="now"
-                :smallSize="true"
-                ></ScheduleRow>
+            <ScheduleRow :schedule="upcomingSchedules[0]" is-small />
         </template>
 
         <p class="has-text-centered" style="margin-top: 10px">
@@ -47,16 +43,14 @@
 
         <ScheduleDialog
             v-if="dialogOpen"
-            :schedules="schedules"
-            :gameMode="gameMode"
-            :cssClass="cssClass"
-            :now="now"
+            :mode="mode"
             @close="dialogOpen = false"
-            ></ScheduleDialog>
+            />
     </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import GameModeHeader from './GameModeHeader.vue';
 import Stage from './Stage.vue';
 import ScheduleRow from './ScheduleRow.vue';
@@ -64,32 +58,31 @@ import ScheduleDialog from './ScheduleDialog.vue';
 
 export default {
     components: { GameModeHeader, Stage, ScheduleRow, ScheduleDialog },
-    props: ['schedules', 'cssClass', 'festival', 'now'],
+    props: ['mode'],
     data() {
         return {
             dialogOpen: false,
         };
     },
     computed: {
-        gameMode() {
-            if (this.schedules && this.schedules[0])
-                return this.schedules[0].game_mode;
-        },
-        currentSchedule() {
-            if (this.schedules && this.schedules[0] && this.schedules[0].start_time <= this.now)
-                return this.schedules[0];
-        },
-        currentRuleName() {
-            let rule = this.currentSchedule.rule;
-            return this.$t(`splatnet.rules.${rule.key}.name`, rule.name);
+        ...mapGetters('splatoon', ['now']),
+        ...mapGetters('splatoon/splatfests', [
+            'selectedRegionCurrentSplatfest',
+            'selectedRegionHasActiveSplatfest',
+        ]),
+
+        activeSchedule() {
+            return this.$store.getters[`splatoon/schedules/${this.mode}/activeSchedule`];
         },
         upcomingSchedules() {
-            if (this.schedules) {
-                if (this.currentSchedule)
-                    return this.schedules.slice(1);
-                return this.schedules;
+            return this.$store.getters[`splatoon/schedules/${this.mode}/upcomingSchedules`];
+        },
+        activeRuleName() {
+            if (this.activeSchedule) {
+                let rule = this.activeSchedule.rule;
+                return this.$t(`splatnet.rules.${rule.key}.name`, rule.name);
             }
-        }
+        },
     },
 }
 </script>

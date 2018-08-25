@@ -74,5 +74,10 @@
         "get_updates_via_twitter": "Get updates via Twitter!",
         "all_upcoming_stages": "All Upcoming Stages",
         "disclaimer": "This website is not affiliated with Nintendo. All product names, logos, and brands are property of their respective owners."
+    },
+    "game_mode": {
+        "regular": "Regular Battle",
+        "ranked": "Ranked Battle",
+        "league": "League Battle"
     }
 }

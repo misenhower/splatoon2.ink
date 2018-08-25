@@ -73,5 +73,10 @@
         "get_updates_via_twitter": "Soyez informés par Twitter !",
         "all_upcoming_stages": "Les stages à venir",
         "disclaimer": "Ce site internet n'est pas affilié à Nintendo. Tous les noms de produits, logos et marques appartiennent à leurs propriétaires respectifs."
+    },
+    "game_mode": {
+        "regular": "Match classique",
+        "ranked": "Match pro",
+        "league": "Match de ligue"
     }
 }

@@ -4,7 +4,7 @@
 
 <script>
 export default {
-    props: ['festival', 'results'],
+    props: ['festival'],
     computed: {
         teamNames() {
             return {
@@ -13,10 +13,10 @@ export default {
             };
         },
         teamWins() {
-            if (!this.festival || !this.results)
+            if (!this.festival || !this.festival.results)
                 return;
 
-            let winner = this.results.summary.total ? 'bravo' : 'alpha';
+            let winner = this.festival.results.summary.total ? 'bravo' : 'alpha';
 
             let team = `<span style="color: ${this.festival.colors[winner].css_rgb}">${this.teamNames[winner]}</span>`;
             return this.$t('splatfest.team_name_wins', { team });

@@ -37,8 +37,8 @@
             </div>
             <div class="column is-8">
                 <div class="columns is-mobile is-slim">
-                    <div class="column"><Stage :stage="schedule.stage_a"></Stage></div>
-                    <div class="column"><Stage :stage="schedule.stage_b"></Stage></div>
+                    <div class="column"><Stage :stage="schedule.stage_a" /></div>
+                    <div class="column"><Stage :stage="schedule.stage_b" /></div>
                 </div>
             </div>
         </div>
@@ -47,12 +47,17 @@
 
 <script>
 import Vue from 'vue';
+import { mapGetters } from 'vuex';
 import Stage from './Stage.vue';
 
 export default {
     components: { Stage },
-    props: ['schedule', 'now', 'smallSize'],
+    props: {
+        schedule: null,
+        isSmall: Boolean,
+    },
     computed: {
+        ...mapGetters('splatoon', ['now']),
         isToday() {
             let now = new Date(this.now * 1000);
             let start = new Date(this.schedule.start_time * 1000);
@@ -62,8 +67,8 @@ export default {
             let rule = this.schedule.rule;
             return this.$t(`splatnet.rules.${rule.key}.name`, rule.name);
         },
-        ruleNameClass() { return this.smallSize ? 'is-6' : 'is-5' },
-        scheduleClass() { return this.smallSize ? 'is-7' : 'is-6' },
+        ruleNameClass() { return this.isSmall ? 'is-6' : 'is-5' },
+        scheduleClass() { return this.isSmall ? 'is-7' : 'is-6' },
         timeFromNow() {
             let time = Vue.filter('duration')(this.schedule.start_time - this.now);
             return this.$t('time.in', { time });

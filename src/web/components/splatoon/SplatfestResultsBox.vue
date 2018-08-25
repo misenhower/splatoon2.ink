@@ -24,12 +24,12 @@
             </div>
         </div>
 
-        <SplatfestResultsRow :festival="festival" :results="results" type="vote" />
-        <SplatfestResultsRow :festival="festival" :results="results" type="solo" />
-        <SplatfestResultsRow :festival="festival" :results="results" type="team" />
+        <SplatfestResultsRow :festival="festival" type="vote" />
+        <SplatfestResultsRow :festival="festival" type="solo" />
+        <SplatfestResultsRow :festival="festival" type="team" />
 
         <div class="has-text-centered is-size-5 title-color font-splatoon2" style="margin-top: 10px;" v-if="historyMode">
-            <SplatfestWinnerBar :festival="festival" :results="results" />
+            <SplatfestWinnerBar :festival="festival" />
         </div>
     </div>
 </template>
@@ -40,6 +40,6 @@ import SplatfestWinnerBar from './SplatfestWinnerBar.vue';
 
 export default {
     components: { SplatfestResultsRow, SplatfestWinnerBar },
-    props: ['festival', 'results', 'historyMode'],
+    props: ['festival', 'historyMode'],
 }
 </script>

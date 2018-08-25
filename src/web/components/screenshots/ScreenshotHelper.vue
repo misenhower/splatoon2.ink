@@ -12,7 +12,7 @@
 
                 <div v-if="latestGear">
                     <strong>
-                        <router-link :to="`/splatNetGear/${topOfHour}/${latestGear.end_time}`">
+                        <router-link :to="`/splatNetGear/${latestGearTime}`">
                             SplatNet Gear
                         </router-link>
                     </strong>
@@ -48,7 +48,7 @@
                         <router-link
                             v-for="splatfest in splatfests"
                             :key="splatfest.region"
-                            :to="`/splatfest/${splatfest.region}/${splatfest.festival.times.start}`">
+                            :to="`/splatfest/${splatfest.region}/${splatfest.time}`">
                             {{ splatfest.region }}
                         </router-link>
                     </strong>
@@ -59,72 +59,40 @@
 </template>
 
 <script>
-import axios from 'axios';
-
 export default {
-    data() {
-        return {
-            schedules: null,
-            coopSchedules: null,
-            merchandises: null,
-            timeline: null,
-            festivals: null,
-        };
-    },
     computed: {
-        topOfHour() {
-            let date = new Date;
-            date.setUTCMinutes(0);
-            date.setUTCSeconds(0);
-            return Math.floor(date.getTime() / 1000);
-        },
         latestSchedule() {
-            if (this.schedules)
-                return this.schedules.regular[0];
+            return this.$store.state.splatoon.data.schedules
+                && this.$store.state.splatoon.data.schedules.regular[0];
         },
         latestGear() {
-            if (this.merchandises)
-                return this.merchandises[this.merchandises.length - 1];
+            return this.$store.state.splatoon.data.merchandises
+                && this.$store.state.splatoon.data.merchandises.merchandises[0];
+        },
+        latestGearTime() {
+            return this.latestGear && this.latestGear.end_time - (2 * 60 * 60); // 2 hours
         },
         latestSalmonRun() {
-            if (this.coopSchedules)
-                return this.coopSchedules.details[0];
+            return this.$store.state.splatoon.data.coop_schedules
+                && this.$store.state.splatoon.data.coop_schedules.schedules[0];
         },
         salmonRunGear() {
-            if (this.timeline)
-                return this.timeline.coop.reward_gear;
+            return this.$store.state.splatoon.data.timeline
+                && this.$store.state.splatoon.data.timeline.coop.reward_gear;
         },
         newWeaponAvailability() {
-            if (this.timeline && this.timeline.weapon_availability && this.timeline.weapon_availability.availabilities) {
-                return this.timeline.weapon_availability.availabilities[0];
-            }
+            return this.$store.state.splatoon.data.timeline
+                && this.$store.state.splatoon.data.timeline.weapon_availability
+                && this.$store.state.splatoon.data.timeline.weapon_availability.availabilities[0];
         },
         splatfests() {
-            if (this.festivals) {
-                let splatfests = [];
-
-                for (let region in this.festivals) {
-                    let festival = this.festivals[region].festivals[0];
-                    if (festival)
-                        splatfests.push({ region, festival });
-                }
-
-                if (splatfests.length)
-                    return splatfests;
+            if (this.$store.state.splatoon.data.festivals) {
+                return ['na', 'eu', 'jp'].map(region => ({
+                    region,
+                    time: this.$store.state.splatoon.data.festivals[region].festivals[0].times.start,
+                }));
             }
         },
     },
-    created() {
-        axios.get('data/schedules.json')
-            .then(response => this.schedules = response.data);
-        axios.get('data/coop-schedules.json')
-            .then(response => this.coopSchedules = response.data);
-        axios.get('data/merchandises.json')
-            .then(response => this.merchandises = response.data.merchandises);
-        axios.get('data/timeline.json')
-            .then(response => this.timeline = response.data);
-        axios.get('data/festivals.json')
-            .then(response => this.festivals = response.data);
-    },
-}
+};
 </script>
