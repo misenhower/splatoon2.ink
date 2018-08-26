@@ -46,7 +46,7 @@ export const actions = {
         let language = rootGetters['splatoon/languages/selectedLanguage'];
         if (language) {
             axios.get(`/data/locale/${language.language}.json`)
-                .then(response => dispatch('addLocale', {
+                .then(response => dispatch('i18n/addLocale', {
                     locale: language.language,
                     translations: { splatnet: response.data },
                 }, { root: true }))

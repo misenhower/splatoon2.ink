@@ -30,14 +30,14 @@ export const actions = {
         if (language) {
             dispatch('loadLocale', { locale: language.language });
             dispatch('splatoon/data/updateLanguage', null, { root: true });
-            dispatch('setLocale', { locale: language.language }, { root: true });
+            dispatch('i18n/setLocale', { locale: language.language }, { root: true });
         }
     },
     loadLocale({ dispatch }, { locale }) {
         // Disabling this for now due to issues with disabling prefetching with the modern build (see vue.config.js)
         // import(/* webpackChunkName: "lang-[request]" */ `@/web/locale/${locale}`)
-        //     .then(translations => dispatch('addLocale', { locale, translations: translations.default }, { root: true }));
+        //     .then(translations => dispatch('i18n/addLocale', { locale, translations: translations.default }, { root: true }));
 
-        dispatch('addLocale', { locale, translations: require(`@/web/locale/${locale}`) }, { root: true });
+        dispatch('i18n/addLocale', { locale, translations: require(`@/web/locale/${locale}`) }, { root: true });
     },
 };
