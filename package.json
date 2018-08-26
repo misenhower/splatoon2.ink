@@ -43,9 +43,9 @@
     "vuex-i18n": "^1.8.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.0-rc.9",
-    "@vue/cli-plugin-eslint": "^3.0.0-rc.9",
-    "@vue/cli-service": "^3.0.0-rc.9",
+    "@vue/cli-plugin-babel": "^3.0.1",
+    "@vue/cli-plugin-eslint": "^3.0.1",
+    "@vue/cli-service": "^3.0.1",
     "locale-man": "^0.0.5",
     "node-sass": "^4.9.2",
     "purify-css": "^1.2.5",
