@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 let updateDataTimer;
 
 export const namespaced = true;
@@ -45,12 +43,12 @@ export const actions = {
     updateLanguage({ dispatch, rootGetters }) {
         let language = rootGetters['splatoon/languages/selectedLanguage'];
         if (language) {
-            axios.get(`/data/locale/${language.language}.json`)
-                .then(response => dispatch('i18n/addLocale', {
+            fetch(`/data/locale/${language.language}.json`)
+                .then(response => response.json())
+                .then(data => dispatch('i18n/addLocale', {
                     locale: language.language,
-                    translations: { splatnet: response.data },
-                }, { root: true }))
-                .catch(e => console.error(e));
+                    translations: { splatnet: data },
+                }, { root: true }));
         }
     },
     updateAll({ dispatch }) {
@@ -96,10 +94,10 @@ for (let source of dataSources) {
     state[source.name] = null;
 
     // Actions
-    actions[source.actionName] = ({ commit }) => {
-        axios.get(source.url)
-            .then(({ data }) => commit(source.mutationName, { data }))
-            .catch(e => console.error(e));
+    actions[source.actionName] = async ({ commit }) => {
+        fetch(source.url)
+            .then(response => response.json())
+            .then(data => commit(source.mutationName, { data }));
     };
 
     // Mutations
