@@ -4,9 +4,7 @@ const currentLocale = Vue.i18n.locale;
 
 // Local hosting of SplatNet images
 Vue.filter('localSplatNetImageUrl', function(value) {
-    // Have to use a relative path here for the screenshot generator.
-    // May need to change this in the future.
-    return 'assets/splatnet' + value;
+    return '/assets/splatnet' + value;
 });
 
 Vue.filter('numberFormat', function(value) {

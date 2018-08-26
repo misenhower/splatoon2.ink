@@ -8,14 +8,40 @@ const routes = [
         path: '/',
         component: require('./components/Main.vue').default,
         children: [
+            // Schedules
+            {
+                path: 'schedules',
+                redirect: '/',
+            },
+            {
+                path: 'schedules/regular',
+                component: require('./components/splatoon/ScheduleDialog.vue').default,
+                props: { mode: 'regular' },
+            },
+            {
+                path: 'schedules/ranked',
+                component: require('./components/splatoon/ScheduleDialog.vue').default,
+                props: { mode: 'ranked' },
+            },
+            {
+                path: 'schedules/league',
+                component: require('./components/splatoon/ScheduleDialog.vue').default,
+                props: { mode: 'league' },
+            },
+
+            // Splatnet store
             {
                 path: 'splatnet',
                 component: require('./components/splatoon/SplatNetGearDialog.vue').default,
             },
+
+            // Splatfests
             {
                 path: 'splatfests',
                 component: require('./components/splatoon/SplatfestHistoryDialog.vue').default,
             },
+
+            // Other/misc
             {
                 path: 'about',
                 component: require('./components/AboutDialog.vue').default,

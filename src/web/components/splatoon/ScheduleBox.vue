@@ -33,19 +33,13 @@
         </template>
 
         <p class="has-text-centered" style="margin-top: 10px">
-            <button class="button is-translucent is-rounded" @click="dialogOpen = true">
+            <router-link :to="`/schedules/${mode}`" class="button is-translucent is-rounded">
                 <span class="icon squid-icon-tilt">
                     <span class="fa squid-squid"></span>
                 </span>
                 <span class="font-splatoon2">{{ $t('ui.all_upcoming_stages') }}</span>
-            </button>
+            </router-link>
         </p>
-
-        <ScheduleDialog
-            v-if="dialogOpen"
-            :mode="mode"
-            @close="dialogOpen = false"
-            />
     </div>
 </template>
 
@@ -54,16 +48,10 @@ import { mapGetters } from 'vuex';
 import GameModeHeader from './GameModeHeader.vue';
 import Stage from './Stage.vue';
 import ScheduleRow from './ScheduleRow.vue';
-import ScheduleDialog from './ScheduleDialog.vue';
 
 export default {
-    components: { GameModeHeader, Stage, ScheduleRow, ScheduleDialog },
+    components: { GameModeHeader, Stage, ScheduleRow },
     props: ['mode'],
-    data() {
-        return {
-            dialogOpen: false,
-        };
-    },
     computed: {
         ...mapGetters('splatoon', ['now']),
         ...mapGetters('splatoon/splatfests', [
