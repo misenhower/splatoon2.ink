@@ -86,3 +86,8 @@ Vue.filter('time.in', function(time) {
 Vue.filter('time.remaining', function (time) {
     return $t('time.remaining', { time });
 });
+
+Vue.filter('upperCase', function (value) {
+    if (value && value.toUpperCase)
+        return value.toUpperCase();
+});

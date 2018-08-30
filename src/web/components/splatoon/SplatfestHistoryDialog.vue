@@ -26,9 +26,9 @@
                 <div v-for="(festival, index) in festivals" class="splatfest-history-row" :key="festival.festival_id">
                     <div class="level">
                         <div class="level-item">
-                            <div class="splatfest" :class="(index % 2 == 0) ? 'tilt-left' : 'tilt-right'">
+                            <div class="splatfest show-regions" :class="(index % 2 == 0) ? 'tilt-left' : 'tilt-right'">
                                 <div class="hook-box">
-                                    <SplatfestBox :festival="festival" history-mode />
+                                    <SplatfestBox :festival="festival" history-mode show-regions />
                                 </div>
                             </div>
                         </div>

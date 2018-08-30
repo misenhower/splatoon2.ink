@@ -257,6 +257,27 @@ body.has-modal #main {
     .panel-container {
         position: relative;
 
+        .regions {
+            @extend .title-color;
+            @extend .is-size-7;
+
+            position: absolute;
+            top: 0.45rem;
+            right: 0.25rem;
+
+            opacity: 0;
+            transition: opacity 0.15s ease;
+
+            .region {
+                background: rgba($grey-dark, 0.9);
+                border: rgba($grey, 0.9);
+                color: $grey-lighter;
+                border-radius: 100px;
+                padding: 0.2rem 0.35rem;
+                margin-left: 0.2rem;
+            }
+        }
+
         .labels {
             @extend .font-splatoon1;
             @extend .title-color;
@@ -386,6 +407,12 @@ body.has-modal #main {
                 }
             }
         }
+    }
+}
+
+.splatfest.show-regions, .splatfest:hover {
+    .regions {
+        opacity: 1;
     }
 }
 

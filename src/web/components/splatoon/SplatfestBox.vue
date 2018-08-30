@@ -11,6 +11,10 @@
                 <img :src="image" />
             </div>
 
+            <div class="regions">
+                <span class="region" v-for="region in festival.regions" :key="region">{{ region | upperCase }}</span>
+            </div>
+
             <div class="columns is-gapless labels is-hidden-mobile">
                 <div class="column" v-text="teamNames.long.alpha"></div>
                 <div class="column has-text-right" v-text="teamNames.long.bravo"></div>
