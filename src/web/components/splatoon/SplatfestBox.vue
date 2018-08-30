@@ -6,7 +6,7 @@
             </h2>
         </div>
 
-        <div class="panel-container" :class="{ 'is-hidden-mobile' : festival.results }">
+        <div class="panel-container" :class="{ 'is-hidden-mobile' : showingResults }">
             <div class="image panel-image">
                 <img :src="image" />
             </div>
