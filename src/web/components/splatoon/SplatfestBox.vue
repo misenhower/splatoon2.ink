@@ -34,12 +34,12 @@
             <SplatfestResultsBox :festival="festival" v-if="showingResults" />
         </div>
 
-        <div class="mobile-results is-hidden-tablet" v-if="festival.results">
-            <SplatfestResultsBox :festival="festival" v-if="showingResults" />
+        <div class="mobile-results is-hidden-tablet" v-if="showingResults">
+            <SplatfestResultsBox :festival="festival" />
         </div>
 
         <div class="has-text-centered is-size-5 title-color festival-period-container">
-            <div v-if="!festival.results" class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }">
+            <div v-if="!showingResults" class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }">
                 <template v-if="!screenshotMode">
                     <span class="nowrap">
                         {{ festival.times.start | date(dateOptions) }}

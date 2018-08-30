@@ -40,6 +40,9 @@ import SplatfestWinnerBar from './SplatfestWinnerBar.vue';
 
 export default {
     components: { SplatfestResultsRow, SplatfestWinnerBar },
-    props: ['festival', 'historyMode'],
-}
+    props: {
+        festival: null,
+        historyMode: Boolean,
+    },
+};
 </script>
