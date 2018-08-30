@@ -12,7 +12,13 @@
             </div>
 
             <div class="regions">
-                <span class="region" v-for="region in festival.regions" :key="region">{{ region | upperCase }}</span>
+                <span class="region" v-for="region in festival.regions" :key="region">
+                    <span class="icon is-small">
+                        <img :src="require(`@/web/assets/img/region-${region}.svg`)" />
+                    </span>
+                    <span>{{ region | upperCase }}</span>
+
+                </span>
             </div>
 
             <div class="columns is-gapless labels is-hidden-mobile">

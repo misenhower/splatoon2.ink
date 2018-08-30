@@ -25,6 +25,10 @@
                                 <a href="https://splatoonwiki.org/wiki/Gear#In_Splatoon_2" target="_blank">Inkipedia</a>.
                             </p>
                             <p>
+                                Regional flag icons are from
+                                <a href="https://twemoji.twitter.com/" target="_blank">Twemoji</a>.
+                            </p>
+                            <p>
                                 Source code for this site is available on
                                 <a href="https://github.com/misenhower/splatoon2.ink" target="_blank">GitHub</a>.
                             </p>
