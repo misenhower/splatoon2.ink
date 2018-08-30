@@ -1,5 +1,5 @@
 <template>
-    <Modal @close="$emit('close')" class="is-wide splatfest-history-dialog modal-rounded-box" v-if="allSplatfests">
+    <Modal @close="$emit('close')" class="is-wide splatfest-history-dialog modal-rounded-box" v-if="festivals">
         <div class="modal-card">
             <div class="modal-card-head">
                 <div class="level">
@@ -8,11 +8,16 @@
                     </div>
 
                     <div class="level-right">
-                        <Dropdown
-                            :options="regions"
-                            v-model="region"
-                            style="margin: 0 -12px" class="font-splatoon2 is-right-tablet"
-                            />
+                        <DropdownBase
+                            :label="selectedRegion.name"
+                            style="margin: 0 -12px"
+                            class="font-splatoon2 is-right-tablet"
+                            trigger-class="button is-clear font-splatoon2"
+                            >
+                            <router-link v-for="region in regions" class="dropdown-item" :key="region.key" :to="region.route">
+                                {{ region.name }}
+                            </router-link>
+                        </DropdownBase>
                     </div>
                 </div>
             </div>
@@ -54,50 +59,41 @@ import Vue from 'vue';
 import { mapGetters } from 'vuex';
 import analytics from '@/web/support/analytics';
 import Modal from '@/web/components/Modal.vue';
-import Dropdown from '@/web/components/Dropdown.vue';
+import DropdownBase from '@/web/components/DropdownBase.vue';
 import SplatfestBox from './SplatfestBox.vue';
 import SplatfestResultsBox from './SplatfestResultsBox.vue';
 
 export default {
-    components: { Modal, Dropdown, SplatfestBox, SplatfestResultsBox },
+    components: { Modal, DropdownBase, SplatfestBox, SplatfestResultsBox },
     filters: {
         resultsIn(time) {
             return Vue.i18n.translate('splatfest.results_in', { time });
         },
     },
-    data() {
-        return {
-            region: 'na',
-        };
-    },
+    props: ['region'],
     computed: {
         ...mapGetters('splatoon', ['now']),
-        ...mapGetters('splatoon/regions', { initialRegion: 'selectedKey' }),
-        allSplatfests() {
-            return {
-                na: this.$store.getters['splatoon/splatfests/na/allSplatfests'],
-                eu: this.$store.getters['splatoon/splatfests/eu/allSplatfests'],
-                jp: this.$store.getters['splatoon/splatfests/jp/allSplatfests'],
-            };
-        },
         regions() {
             return this.$store.state.splatoon.regions.all.map(({ key }) => {
                 let name = (key) ? this.$t(`regions.${key}.name`) : this.$t('regions.global.name');
-                return { key, name };
+                let route = (key) ? `/splatfests/${key}` : '/splatfests';
+                return { key, name, route };
             });
         },
+        selectedRegion() {
+            let key = this.region || null;
+            return this.regions.find(r => r.key === key);
+        },
         festivals() {
-            return this.allSplatfests[this.region];
+            if (this.region)
+                return this.$store.getters[`splatoon/splatfests/${this.region}/allSplatfests`];
+            return this.$store.getters['splatoon/splatfests/allSplatfests'];
         },
     },
     watch: {
         region() {
             this.scrollToTop();
         },
-    },
-    created() {
-        if (this.initialRegion)
-            this.region = this.initialRegion;
     },
     mounted() {
         analytics.event('Splatfest History', 'Open');

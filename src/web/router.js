@@ -37,8 +37,9 @@ const routes = [
 
             // Splatfests
             {
-                path: 'splatfests',
+                path: 'splatfests/:region(na|eu|jp)?',
                 component: require('./components/splatoon/SplatfestHistoryDialog.vue').default,
+                props: true,
             },
 
             // Other/misc
