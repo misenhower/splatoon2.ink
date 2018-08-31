@@ -14,7 +14,7 @@
                             class="font-splatoon2 is-right-tablet"
                             trigger-class="button is-clear font-splatoon2"
                             >
-                            <router-link v-for="region in regions" class="dropdown-item" :key="region.key" :to="region.route">
+                            <router-link v-for="region in regions" class="dropdown-item" :key="region.key" :to="region.route" exact>
                                 {{ region.name }}
                             </router-link>
                         </DropdownBase>
