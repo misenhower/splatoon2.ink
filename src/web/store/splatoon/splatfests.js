@@ -73,6 +73,14 @@ function generateModule(region) {
                     return getters.allSplatfests.find(s => s.times.result > cutoff);
                 }
             },
+            heroWins(state, getters) {
+                if (getters.allSplatfests) {
+                    return {
+                        alpha: getters.allSplatfests.reduce((sum, festival) => sum + (festival.results && festival.results.summary.total === 0), 0),
+                        bravo: getters.allSplatfests.reduce((sum, festival) => sum + (festival.results && festival.results.summary.total === 1), 0),
+                    }
+                }
+            },
         },
     };
 }

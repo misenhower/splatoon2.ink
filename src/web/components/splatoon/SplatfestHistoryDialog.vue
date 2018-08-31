@@ -23,6 +23,21 @@
             </div>
 
             <div class="modal-card-body" ref="body">
+                <div class="columns idol-results" v-if="!region">
+                    <div class="column has-text-right is-hidden-mobile has-idol">
+                        <img src="~@/web/assets/img/pearl.png" width="173" height="290" />
+                    </div>
+                    <div class="column is-5">
+                        <div class="is-hidden-mobile" style="height: 85px"></div>
+                        <div class="idol-results-container">
+                            <IdolResultsBox />
+                        </div>
+                    </div>
+                    <div class="column has-text-left is-hidden-mobile has-idol">
+                        <img src="~@/web/assets/img/marina.png" width="172" height="339" />
+                    </div>
+                </div>
+
                 <div v-for="(festival, index) in festivals" class="splatfest-history-row" :key="festival.festival_id">
                     <div class="level">
                         <div class="level-item">
@@ -60,11 +75,12 @@ import { mapGetters } from 'vuex';
 import analytics from '@/web/support/analytics';
 import Modal from '@/web/components/Modal.vue';
 import DropdownBase from '@/web/components/DropdownBase.vue';
+import IdolResultsBox from './IdolResultsBox.vue';
 import SplatfestBox from './SplatfestBox.vue';
 import SplatfestResultsBox from './SplatfestResultsBox.vue';
 
 export default {
-    components: { Modal, DropdownBase, SplatfestBox, SplatfestResultsBox },
+    components: { Modal, DropdownBase, IdolResultsBox, SplatfestBox, SplatfestResultsBox },
     filters: {
         resultsIn(time) {
             return Vue.i18n.translate('splatfest.results_in', { time });

@@ -18,6 +18,10 @@ body.has-modal #main {
     filter: blur(4px);
 }
 
+.dropdown {
+    z-index: 100;
+}
+
 .level.is-mobile .level-item:last-child {
     margin-right: 0;
 }
@@ -543,9 +547,25 @@ body.has-modal #main {
 
     .splatfest-results-container {
         width: 325px;
+    }
 
+    .splatfest-results-container, .idol-results-container {
         .splatfest-results {
             position: relative;
+        }
+    }
+
+    .idol-results {
+        .has-idol {
+            align-self: flex-end;
+            z-index: 10;
+
+            &:first-child {
+                margin-right: -65px;
+            }
+            &:last-child {
+                margin-left: -65px;
+            }
         }
     }
 }
