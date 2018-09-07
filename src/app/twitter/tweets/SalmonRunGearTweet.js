@@ -28,7 +28,7 @@ class SalmonRunTweet extends TwitterPostBase {
 
     getText(data) {
         let monthName = moment.unix(data.available_time).tz('UTC').format('MMMM');
-        return `Next month's Salmon Run reward gear has been posted! ${monthName}'s gear is the ${data.gear.name}. #salmonrun #splatoon2`;
+        return `New Salmon Run reward gear has been posted! ${monthName}'s gear is the ${data.gear.name}. #salmonrun #splatoon2`;
     }
 }
 
