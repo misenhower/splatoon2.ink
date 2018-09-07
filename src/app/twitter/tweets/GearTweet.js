@@ -26,9 +26,8 @@ class GearTweet extends TwitterPostBase {
         return merchandises[merchandises.length - 1];
     }
 
-    getImage(data) {
-        let now = getTopOfCurrentHour();
-        return captureGearScreenshot(now);
+    getImage() {
+        return captureGearScreenshot(this.getDataTime());
     }
 
     getText(data) {
