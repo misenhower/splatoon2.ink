@@ -54,6 +54,11 @@ class SplatfestTweet extends TwitterPostBase {
         festival = this.getFestivals(region).find(f => f.times.end == this.getDataTime());
         if (festival)
             return { festival, type: 'end' };
+
+        // Festival 24-hour reminder
+        festival = this.getFestivals(region).find(f => f.times.start == this.getDataTime() + 24 * 60 * 60);
+        if (festival)
+            return { festival, type: 'reminder' };
     }
 
     // Which regions have this Splatfest?
@@ -86,7 +91,7 @@ class SplatfestTweet extends TwitterPostBase {
     }
 
     getImage(data) {
-        return captureSplatfestScreenshot(this.region, data.festival.times[data.type], this.regions(data));
+        return captureSplatfestScreenshot(this.region, this.getDataTime(), this.regions(data));
     }
 
     getText(data) {
@@ -104,6 +109,11 @@ class SplatfestTweet extends TwitterPostBase {
                 if (isSimultaneous)
                     return `The ${isGlobal ? 'global' : regionDemonyms} Splatfest is now open! #splatfest #splatoon2`;
                 return `The Splatfest is now open in ${this.regionInfo.name}! #splatfest #splatoon2`;
+
+            case 'reminder':
+                if (isSimultaneous)
+                    return `Reminder: The ${isGlobal ? 'global' : regionDemonyms} Splatfest starts in just 24 hours! #splatfest #splatoon2`;
+                return `Reminder: The Splatfest starts in ${this.regionInfo.name} in just 24 hours! #splatfest #splatoon2`;
 
             case 'end':
                 let hours = (data.festival.times.result - this.getDataTime()) / 60 / 60;
