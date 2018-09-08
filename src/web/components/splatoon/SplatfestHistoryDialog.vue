@@ -72,7 +72,6 @@
 <script>
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
-import analytics from '@/web/support/analytics';
 import Modal from '@/web/components/Modal.vue';
 import DropdownBase from '@/web/components/DropdownBase.vue';
 import IdolResultsBox from './IdolResultsBox.vue';
@@ -111,13 +110,10 @@ export default {
             this.scrollToTop();
         },
     },
-    mounted() {
-        analytics.event('Splatfest History', 'Open');
-    },
     methods: {
         scrollToTop() {
             this.$refs.body.scrollTop = 0;
         },
     },
-}
+};
 </script>

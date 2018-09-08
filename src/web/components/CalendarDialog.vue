@@ -70,14 +70,10 @@
 </style>
 
 <script>
-import analytics from '@/web/support/analytics';
 import Modal from './Modal.vue';
 import CalendarLink from './CalendarLink.vue';
 
 export default {
     components: { Modal, CalendarLink },
-    mounted() {
-        analytics.event('About', 'Open');
-    },
-}
+};
 </script>

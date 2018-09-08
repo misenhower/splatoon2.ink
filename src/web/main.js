@@ -3,8 +3,9 @@ import store from './store';
 import router from './router';
 
 import './i18n';
-import './support/directives.js';
-import './support/filters.js';
+import './support/directives';
+import './support/filters';
+import './support/analytics';
 
 import './assets/css/main.scss';
 

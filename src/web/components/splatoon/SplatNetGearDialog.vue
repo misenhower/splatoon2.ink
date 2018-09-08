@@ -18,7 +18,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import analytics from '@/web/support/analytics';
 import Modal from '@/web/components/Modal.vue';
 import MerchandiseBox from './MerchandiseBox.vue';
 
@@ -27,8 +26,5 @@ export default {
     computed: {
         ...mapGetters('splatoon/splatNetStore', ['merchandises']),
     },
-    mounted() {
-        analytics.event('SplatNet Gear', 'Open');
-    },
-}
+};
 </script>

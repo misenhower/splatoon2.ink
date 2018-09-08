@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import analytics from '@/web/support/analytics';
 import Modal from '@/web/components/Modal.vue';
 import GameModeHeader from './GameModeHeader.vue';
 import ScheduleList from './ScheduleList.vue';
@@ -20,8 +19,5 @@ import ScheduleList from './ScheduleList.vue';
 export default {
     components: { Modal, GameModeHeader, ScheduleList },
     props: ['mode'],
-    mounted() {
-        analytics.event('Schedule', 'Open', this.mode);
-    },
-}
+};
 </script>

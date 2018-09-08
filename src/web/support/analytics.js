@@ -1,11 +1,5 @@
-export default {
-    event(category, action, label = undefined) {
-        if (window.gtag) {
-            window.gtag('event', {
-                event_category: category,
-                event_action: action,
-                event_label: label,
-            });
-        }
-    },
-};
+import router from '@/web/router';
+
+// Track SPA page views
+if (process.env.VUE_APP_GOOGLE_ANALYTICS_ID && window.gtag)
+    router.afterEach(to => window.gtag('config', process.env.VUE_APP_GOOGLE_ANALYTICS_ID, { page_path: to.path }));
