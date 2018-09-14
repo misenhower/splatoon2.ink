@@ -80,7 +80,7 @@ function captureSalmonRunGearScreenshot(now) {
 function captureNewWeaponScreenshot(now) {
     let hash = `/newWeapon/${now}`;
 
-    return captureScreenshot({ hash });
+    return captureScreenshot({ hash, viewport: { height: 700 }  });
 }
 
 function captureSplatfestScreenshot(region, now, regions) {

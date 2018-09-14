@@ -86,7 +86,7 @@
 
                     <!-- Upcoming Splatfest and Salmon Run boxes -->
                     <div class="columns is-desktop" :class="{'limited-width': !bottomRowHasThreeColumns}">
-                        <div class="column" v-if="selectedRegionCurrentSplatfest && !selectedRegionHasActiveSplatfest">
+                        <div class="column" v-if="showSplatfestOnBottomRow">
                             <div class="splatfest tilt-right" style="margin-top: 40px">
                                 <div class="hook-box">
                                     <SplatfestBox :festival="selectedRegionCurrentSplatfest" />
@@ -102,32 +102,13 @@
                             </div>
                         </div>
 
-                        <div class="column is-narrow-desktop-only" :class="{'is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only': bottomRowHasThreeColumns }" style="margin-top: 40px" v-if="hasWeapons">
-                            <div class="new-weapon">
-                                <div class="columns">
-                                    <div class="column" v-for="(weapon, index) in weapons" :key="weapon.id">
-                                        <NewWeaponBox
-                                            :weapon="weapon"
-                                            :class="(index % 2 == 0) ? 'tilt-right' : 'tilt-left'"
-                                            />
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="column" style="margin-top: 40px" :class="{'is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only': bottomRowHasThreeColumns }" v-if="hasWeapons && showWeaponsNextToSalmonRun">
+                            <NewWeaponsContainer :max-weapons-per-row="3" />
                         </div>
                     </div>
 
-                    <div class="is-hidden-fullhd" style="margin-top: 20px" v-if="hasWeapons && bottomRowHasThreeColumns">
-                        <div class="new-weapon">
-                            <div style="display: flex; align-items: center; justify-content: center;">
-                                <div v-for="(weapon, index) in weapons" style="margin: 0 20px" :key="weapon.id">
-                                    <NewWeaponBox
-                                        :weapon="weapon"
-                                        :class="(index % 2 == 0) ? 'tilt-right' : 'tilt-left'"
-                                        style="min-width: 250px"
-                                        />
-                                </div>
-                            </div>
-                        </div>
+                    <div style="margin-top: 40px" :class="{ 'is-hidden-fullhd': bottomRowHasThreeColumns }" v-if="showExtraWeaponsAtBottom">
+                        <NewWeaponsContainer />
                     </div>
                 </div>
             </div>
@@ -170,10 +151,10 @@ import Dropdown from './Dropdown.vue';
 import ScheduleBox from './splatoon/ScheduleBox.vue';
 import SalmonRunBox from './splatoon/SalmonRunBox.vue';
 import SplatfestBox from './splatoon/SplatfestBox.vue';
-import NewWeaponBox from './splatoon/NewWeaponBox.vue';
+import NewWeaponsContainer from './splatoon/NewWeaponsContainer.vue';
 
 export default {
-    components: { Dropdown, ScheduleBox, SalmonRunBox, SplatfestBox, NewWeaponBox },
+    components: { Dropdown, ScheduleBox, SalmonRunBox, SplatfestBox, NewWeaponsContainer },
     computed: {
         ...mapGetters('splatoon/regions', ['selectedRegion']),
         ...mapGetters('splatoon/languages', ['selectedLanguage']),
@@ -237,11 +218,23 @@ export default {
         },
 
         // Other
+        showSplatfestOnBottomRow() {
+            return this.selectedRegionCurrentSplatfest && !this.selectedRegionHasActiveSplatfest;
+        },
+
+        showWeaponsNextToSalmonRun() {
+            let cutoff = (this.showSplatfestOnBottomRow) ? 3 : 6;
+            return this.hasWeapons && this.weapons.length <= cutoff;
+        },
+
+        showExtraWeaponsAtBottom() {
+            return this.hasWeapons && (!this.showWeaponsNextToSalmonRun || this.bottomRowHasThreeColumns);
+        },
+
         bottomRowHasThreeColumns() {
-            return this.selectedRegionCurrentSplatfest
-                && !this.selectedRegionHasActiveSplatfest
+            return this.showSplatfestOnBottomRow
                 && this.hasSalmonRun
-                && this.hasWeapons;
+                && this.showWeaponsNextToSalmonRun;
         },
     },
     created() {

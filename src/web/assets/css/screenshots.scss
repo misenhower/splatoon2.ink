@@ -50,7 +50,15 @@
         transform: scale(1.4);
     }
 
-    .new-weapons-large {
+    .new-weapon-box {
+        max-width: 200px;
+
+        .title-squid {
+            font-size: 1rem !important;
+        }
+    }
+
+    .new-weapons-large .column {
         transform: scale(1.25);
     }
 
