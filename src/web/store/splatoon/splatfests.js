@@ -76,8 +76,8 @@ function generateModule(region) {
             heroWins(state, getters) {
                 if (getters.allSplatfests) {
                     return {
-                        alpha: getters.allSplatfests.reduce((sum, festival) => sum + (festival.results && festival.results.summary.total === 0), 0),
-                        bravo: getters.allSplatfests.reduce((sum, festival) => sum + (festival.results && festival.results.summary.total === 1), 0),
+                        alpha: getters.allSplatfests.reduce((sum, festival) => sum + ((festival.results && festival.results.summary.total === 0) ? 1 : 0), 0),
+                        bravo: getters.allSplatfests.reduce((sum, festival) => sum + ((festival.results && festival.results.summary.total === 1) ? 1 : 0), 0),
                     }
                 }
             },
