@@ -18,9 +18,10 @@ body.has-modal #main {
     filter: blur(4px);
 }
 
-.dropdown {
-    z-index: 100;
-}
+// Disabling this for now to fix issues on the Calendars dialog
+// .dropdown {
+//     z-index: 100;
+// }
 
 .level.is-mobile .level-item:last-child {
     margin-right: 0;
