@@ -3,8 +3,13 @@
         <div class="column">
             <div class="winner-mark-shadow" v-if="winner == 'alpha'"></div>
             <div class="winner-mark" :style="{ background: festival.colors.alpha.css_rgb }" v-if="winner == 'alpha'"></div>
-            <div class="font-splatoon2 title is-4" :title="alphaTitle | numberFormat">
-                <div>{{ rates.alpha | wholePercent }}<span class="percent">.{{ rates.alpha | partialPercent }}{{ $t('splatfest.results.%') }}</span></div>
+            <div class="result-container">
+                <div class="font-splatoon2 title is-4" :title="alphaTitle | numberFormat">
+                    <div>{{ rates.alpha | wholePercent }}<span class="percent">.{{ rates.alpha | partialPercent }}{{ $t('splatfest.results.%') }}</span></div>
+                </div>
+                <div class="font-splatoon2 title is-7" v-if="showAverage">
+                    {{ averages.alpha | average }}
+                </div>
             </div>
         </div>
 
@@ -15,14 +20,21 @@
         <div class="column">
             <div class="winner-mark-shadow" v-if="winner == 'bravo'"></div>
             <div class="winner-mark" :style="{ background: festival.colors.bravo.css_rgb }" v-if="winner == 'bravo'"></div>
-            <div class="font-splatoon2 title is-4" :title="bravoTitle | numberFormat">
-                <div>{{ rates.bravo | wholePercent }}<span class="percent">.{{ rates.bravo | partialPercent }}{{ $t('splatfest.results.%') }}</span></div>
+            <div class="result-container">
+                <div class="font-splatoon2 title is-4" :title="bravoTitle | numberFormat">
+                    <div>{{ rates.bravo | wholePercent }}<span class="percent">.{{ rates.bravo | partialPercent }}{{ $t('splatfest.results.%') }}</span></div>
+                </div>
+                <div class="font-splatoon2 title is-7" v-if="showAverage">
+                    {{ averages.bravo | average }}
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import Vue from 'vue';
+
 export default {
     props: ['festival', 'type'],
     computed: {
@@ -38,6 +50,17 @@ export default {
         rates() {
             return this.festival.results.rates[this.type];
         },
+        averages() {
+            if (this.festival.results.contribution_alpha && this.festival.results.contribution_bravo) {
+                return {
+                    alpha: this.festival.results.contribution_alpha[this.type],
+                    bravo: this.festival.results.contribution_bravo[this.type],
+                };
+            }
+        },
+        showAverage() {
+            return ['regular', 'challenge'].indexOf(this.type) !== -1;
+        },
     },
     filters: {
         wholePercent(value) {
@@ -45,6 +68,9 @@ export default {
         },
         partialPercent(value) {
             return value.toString().slice(-2);
+        },
+        average(average) {
+            return Vue.i18n.translate('splatfest.results.average', { average });
         },
     },
     methods: {

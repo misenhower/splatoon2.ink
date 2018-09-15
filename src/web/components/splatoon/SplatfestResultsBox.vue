@@ -25,8 +25,15 @@
         </div>
 
         <SplatfestResultsRow :festival="festival" type="vote" />
-        <SplatfestResultsRow :festival="festival" type="solo" />
-        <SplatfestResultsRow :festival="festival" type="team" />
+
+        <template v-if="!isResultsV4">
+            <SplatfestResultsRow :festival="festival" type="solo" />
+            <SplatfestResultsRow :festival="festival" type="team" />
+        </template>
+        <template v-else>
+            <SplatfestResultsRow :festival="festival" type="regular" />
+            <SplatfestResultsRow :festival="festival" type="challenge" />
+        </template>
 
         <div class="has-text-centered is-size-5 title-color font-splatoon2" style="margin-top: 10px;" v-if="historyMode">
             <SplatfestWinnerBar :festival="festival" />
@@ -43,6 +50,12 @@ export default {
     props: {
         festival: null,
         historyMode: Boolean,
+    },
+    computed: {
+        isResultsV4() {
+            // Not sure what the exact value will be, but the SplatNet app checks for a festival_version value greater than 1
+            return this.festival.results.festival_version > 1;
+        },
     },
 };
 </script>

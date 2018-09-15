@@ -379,10 +379,10 @@ body.has-modal #main {
         margin: 10px 0 0 0;
 
         .column {
-            padding: 8px 0;
+            padding: 12px 0;
             position: relative;
 
-            .winner-mark, .winner-mark-shadow, .title {
+            .winner-mark, .winner-mark-shadow, .result-container {
                 position: absolute;
                 top: 0;
                 right: 0;
@@ -391,6 +391,7 @@ body.has-modal #main {
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                flex-flow: column;
             }
 
             .winner-mark {
@@ -408,7 +409,7 @@ body.has-modal #main {
                 opacity: 0.25;
             }
 
-            .title {
+            .result-container {
                 z-index: 1;
 
                 .percent {

@@ -31,6 +31,9 @@
             "vote": "Votes",
             "solo": "Solo",
             "team": "Team",
+            "regular": "Normal",
+            "challenge": "Challenge",
+            "average": "Average {average}",
             "%": "%"
         },
         "team_name_wins": "Team {team} wins!",
