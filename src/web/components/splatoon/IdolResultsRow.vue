@@ -3,8 +3,10 @@
         <div class="column">
             <div class="winner-mark-shadow" v-if="winner == 'alpha'"></div>
             <div class="winner-mark" style="background: #f2327b" v-if="winner == 'alpha'"></div>
-            <div class="font-splatoon2 title is-4">
-                <div>{{ heroWins.alpha }}</div>
+            <div class="result-container">
+                <div class="font-splatoon2 title is-4">
+                    <div>{{ heroWins.alpha }}</div>
+                </div>
             </div>
         </div>
 
@@ -17,8 +19,10 @@
         <div class="column">
             <div class="winner-mark-shadow" v-if="winner == 'bravo'"></div>
             <div class="winner-mark" style="background: #10dc85" v-if="winner == 'bravo'"></div>
-            <div class="font-splatoon2 title is-4">
-                <div>{{ heroWins.bravo }}</div>
+            <div class="result-container">
+                <div class="font-splatoon2 title is-4">
+                    <div>{{ heroWins.bravo }}</div>
+                </div>
             </div>
         </div>
     </div>
