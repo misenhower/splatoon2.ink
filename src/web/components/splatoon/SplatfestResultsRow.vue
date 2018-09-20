@@ -8,7 +8,8 @@
                     <div>{{ rates.alpha | wholePercent }}<span class="percent">.{{ rates.alpha | partialPercent }}{{ $t('splatfest.results.%') }}</span></div>
                 </div>
                 <div class="font-splatoon2 title is-7" v-if="showAverage">
-                    {{ averages.alpha | average }}
+                    {{ $t('splatfest.results.average') }}
+                    {{ averages.alpha }}
                 </div>
             </div>
         </div>
@@ -25,7 +26,8 @@
                     <div>{{ rates.bravo | wholePercent }}<span class="percent">.{{ rates.bravo | partialPercent }}{{ $t('splatfest.results.%') }}</span></div>
                 </div>
                 <div class="font-splatoon2 title is-7" v-if="showAverage">
-                    {{ averages.bravo | average }}
+                    {{ $t('splatfest.results.average') }}
+                    {{ averages.bravo }}
                 </div>
             </div>
         </div>
@@ -68,9 +70,6 @@ export default {
         },
         partialPercent(value) {
             return value.toString().slice(-2);
-        },
-        average(average) {
-            return Vue.i18n.translate('splatfest.results.average', { average });
         },
     },
     methods: {

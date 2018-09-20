@@ -31,7 +31,10 @@
             "vote": "Votes",
             "solo": "Solo",
             "team": "Équipes",
-            "%": " %"
+            "%": " %",
+            "regular": "Normal",
+            "challenge": "Défi",
+            "average": "Moyenne :"
         },
         "team_name_wins": "Victoire de l'équipe {team}!",
         "previous": "Festivals terminés"

@@ -31,7 +31,10 @@
             "vote": "Stemmen",
             "solo": "Solo",
             "team": "Team",
-            "%": "%"
+            "%": "%",
+            "regular": "Standaard",
+            "challenge": "Pro",
+            "average": "Gemiddelde"
         },
         "team_name_wins": "Overwinning voor team {team}!",
         "previous": "Vorige Splatfests"

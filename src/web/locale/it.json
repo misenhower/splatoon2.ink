@@ -31,7 +31,10 @@
             "vote": "Voti",
             "solo": "In solitaria",
             "team": "In squadra",
-            "%": "%"
+            "%": "%",
+            "regular": "Normale",
+            "challenge": "Sfida",
+            "average": "Media:"
         },
         "team_name_wins": "Vince la squadra {team}!",
         "previous": "Festival terminati"

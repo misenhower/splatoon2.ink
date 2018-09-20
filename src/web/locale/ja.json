@@ -31,7 +31,10 @@
             "vote": "得票率",
             "solo": "ソロ",
             "team": "チーム",
-            "%": "%"
+            "%": "%",
+            "regular": "レギュラー",
+            "challenge": "チャレンジ",
+            "average": "へいきん"
         },
         "team_name_wins": "{team}チームの勝利！",
         "previous": "これまでのフェス"

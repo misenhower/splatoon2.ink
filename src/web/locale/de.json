@@ -31,7 +31,10 @@
             "vote": "Stimmen",
             "solo": "Solo",
             "team": "Team",
-            "%": " %"
+            "%": " %",
+            "regular": "Standard",
+            "challenge": "Profi",
+            "average": "Durchschnitt"
         },
         "team_name_wins": "Team {team} hat gewonnen!",
         "previous": "Bisherige Splatfeste"

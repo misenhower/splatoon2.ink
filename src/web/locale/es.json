@@ -31,7 +31,10 @@
             "vote": "Votos",
             "solo": "Individual",
             "team": "En equipo",
-            "%": " %"
+            "%": " %",
+            "regular": "Normal",
+            "challenge": "Desafío",
+            "average": "Media:"
         },
         "team_name_wins": "¡Gana el equipo {team}!",
         "previous": "Festivales anteriores"

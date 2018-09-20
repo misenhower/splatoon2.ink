@@ -33,7 +33,7 @@
             "team": "Team",
             "regular": "Normal",
             "challenge": "Challenge",
-            "average": "Average {average}",
+            "average": "Average",
             "%": "%"
         },
         "team_name_wins": "Team {team} wins!",
