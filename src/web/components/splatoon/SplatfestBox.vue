@@ -12,7 +12,7 @@
             </div>
 
             <div class="regions">
-                <span class="region" v-for="region in festival.regions" :key="region">
+                <span class="region" v-for="(data, region) in festival.regions" :key="region">
                     <span class="icon is-small">
                         <img :src="require(`@/web/assets/img/region-${region}.svg`)" />
                     </span>

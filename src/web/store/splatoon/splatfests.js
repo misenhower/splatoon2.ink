@@ -12,11 +12,6 @@ export const getters = {
                 let { festivals, results } = data[region];
 
                 for (let festival of festivals) {
-                    if (splatfests[festival.festival_id]) {
-                        splatfests[festival.festival_id].regions.push(region);
-                        continue;
-                    }
-
                     let state;
                     if (festival.times.start > now)
                         state = 'upcoming';
@@ -25,10 +20,25 @@ export const getters = {
                     else
                         state = 'past';
 
+                    let regionData = { state, times: festival.times };
+
+                    if (splatfests[festival.festival_id]) {
+                        let splatfest = splatfests[festival.festival_id];
+
+                        // Add this region's data
+                        splatfest.regions[region] = regionData;
+
+                        // Extend the times (so we get the earliest starting time and the latest ending time)
+                        splatfest.times.start = Math.min(splatfest.times.start, regionData.times.start);
+                        splatfest.times.end = Math.max(splatfest.times.end, regionData.times.end);
+
+                        continue;
+                    }
+
                     splatfests[festival.festival_id] = {
                         ...festival,
-                        regions: [region],
-                        state,
+                        times: { ...festival.times }, // Make a copy of the Splatfest times so we can modify them based on other regions
+                        regions: { [region]: regionData },
                         results: results.find(r => r.festival_id === festival.festival_id),
                     };
                 }
@@ -61,7 +71,9 @@ function generateModule(region) {
         getters: {
             allSplatfests(state, getters, rootState, rootGetters) {
                 return rootGetters['splatoon/splatfests/allSplatfests']
-                    && rootGetters['splatoon/splatfests/allSplatfests'].filter(s => s.regions.includes(region));
+                    && rootGetters['splatoon/splatfests/allSplatfests']
+                    .filter(s => s.regions.hasOwnProperty(region)) // Only show Splatfests for this region
+                    .map(s => ({ ...s, ...s.regions[region] })); // Apply this region's data
             },
             currentSplatfest(state, getters, { splatoon }) {
                 let now = splatoon.now;
