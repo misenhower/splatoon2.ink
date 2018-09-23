@@ -7,9 +7,9 @@ Vue.filter('localSplatNetImageUrl', function(value) {
     return '/assets/splatnet' + value;
 });
 
-Vue.filter('numberFormat', function(value) {
+Vue.filter('numberFormat', function(value, maximumFractionDigits = undefined) {
     if (value)
-        return value.toLocaleString([currentLocale()]);
+        return value.toLocaleString([currentLocale()], { maximumFractionDigits });
 });
 
 // Short date format (e.g., 8/15 or 15/8)

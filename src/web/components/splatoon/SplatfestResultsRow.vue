@@ -9,7 +9,7 @@
                 </div>
                 <div class="font-splatoon2 title is-7" v-if="showAverage">
                     {{ $t('splatfest.results.average') }}
-                    {{ averages.alpha }}
+                    {{ averages.alpha | numberFormat(0) }}
                 </div>
             </div>
         </div>
@@ -27,7 +27,7 @@
                 </div>
                 <div class="font-splatoon2 title is-7" v-if="showAverage">
                     {{ $t('splatfest.results.average') }}
-                    {{ averages.bravo }}
+                    {{ averages.bravo | numberFormat(0) }}
                 </div>
             </div>
         </div>

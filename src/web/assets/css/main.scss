@@ -392,6 +392,10 @@ body.has-modal #main {
                 align-items: center;
                 justify-content: center;
                 flex-flow: column;
+
+                .title {
+                    margin-bottom: 0;
+                }
             }
 
             .winner-mark {
