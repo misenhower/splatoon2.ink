@@ -39,7 +39,7 @@
         </div>
 
         <div class="has-text-centered is-size-5 title-color festival-period-container">
-            <div v-if="!showingResults" class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }">
+            <div v-if="!showingResultsBar" class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }">
                 <template v-if="!screenshotMode">
                     <span class="nowrap">
                         {{ festival.times.start | date(dateOptions) }}
@@ -110,6 +110,9 @@ export default {
         ...mapGetters('splatoon', ['now']),
         showingResults() {
             return this.festival.results && !this.screenshotMode && !this.historyMode;
+        },
+        showingResultsBar() {
+            return this.showingResults || (this.festival.results && this.screenshotMode);
         },
         dateOptions() {
             if (this.historyMode)
