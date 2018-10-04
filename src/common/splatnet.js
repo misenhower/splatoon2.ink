@@ -71,6 +71,10 @@ class SplatNet {
         };
     }
 
+    getFestivalRankings(id) {
+        return this.getResponse(`festivals/${id}/rankings`);
+    }
+
     getMerchandises() {
         return this.getResponse('onlineshop/merchandises');
     }

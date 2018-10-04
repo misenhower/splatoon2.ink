@@ -4,8 +4,9 @@ const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
 const jsonpath = require('jsonpath');
-const { readJson } = require('@/common/utilities');
+const { readJson, writeJson } = require('@/common/utilities');
 const { languages } = require('@/common/regions');
+const SplatNet = require('@/common/splatnet');
 
 class FestivalsUpdater extends Updater {
     constructor(region) {
@@ -39,7 +40,7 @@ class FestivalsUpdater extends Updater {
         this.region = region;
     }
 
-    processData(regionData) {
+    async processData(regionData) {
         // Fix alpha/bravo images for the Chicken vs. Egg Splatfest.
         // For some reason these got swapped out with images that have an opaque background
         // even though they started out with transparent images.
@@ -51,6 +52,25 @@ class FestivalsUpdater extends Updater {
             "/images/festival/00e4c5fdccd3720d07127084fc1f4152.png",
             "/images/festival/d93df77468714c6211e9377f39a559f4.png"
         ));
+
+        // Download result ranking data
+        let festivalIds = jsonpath.query(regionData, '$.results..festival_id');
+        for (let id of festivalIds) {
+            let filename = `${this.getOutputPath()}/festivals/${this.region.toLowerCase()}-${id}-rankings.json`;
+
+            // Have we already downloaded these rankings?
+            if (!fs.existsSync(filename)) {
+                let splatnet = new SplatNet(this.region);
+                this.info(`Retrieving rankings for festival ID ${id}`);
+                try {
+                    let rankings  = await this.handleRequest(splatnet.getFestivalRankings(id));
+                    writeJson(filename, rankings);
+                }
+                catch (e) {
+                    // Do nothing
+                }
+            }
+        }
 
         // Load existing data since we only need to modify this region's data
         let data = {};

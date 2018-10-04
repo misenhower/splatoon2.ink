@@ -51,13 +51,17 @@ class Updater {
         this.info('Done.');
     }
 
+    getOutputPath() {
+        return dataPath;
+    }
+
     getFilename() {
-        return `${dataPath}/${this.options.filename}`;
+        return `${this.getOutputPath()}/${this.options.filename}`;
     }
 
     getCalendarFilename() {
         if (this.options.calendarFilename)
-            return `${dataPath}/${this.options.calendarFilename}`;
+            return `${this.getOutputPath()}/${this.options.calendarFilename}`;
     }
 
     getData({ region, language }) {
