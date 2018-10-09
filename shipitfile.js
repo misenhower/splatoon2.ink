@@ -12,7 +12,7 @@ module.exports = shipit => {
         },
     });
 
-    const dockerApp = 'sudo docker-compose exec app ';
+    const dockerApp = 'sudo docker-compose exec -T app ';
 
     function options() {
         return { cwd: shipit.config.dir };
