@@ -25,6 +25,7 @@
         "recent": "Recent Splatfest",
         "title": "Splatfest",
         "upcoming": "Upcoming Splatfest",
+        "global": "Global Splatfest",
         "results_in": "results in {time}",
         "results": {
             "title": "Results!",

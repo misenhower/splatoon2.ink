@@ -36,7 +36,31 @@ class ScheduleTweet extends TwitterPostBase {
     }
 
     getImage(data) {
-        return captureScheduleScreenshot(data.regular.start_time);
+        return captureScheduleScreenshot(data.regular.start_time, this.globalSplatfestOpenInAllRegions());
+    }
+
+    globalSplatfestOpenInAllRegions() {
+        let festivals = readData('festivals.json');
+        let time = this.getDataTime();
+
+        let festival;
+        let ids = [];
+
+        // Is there an open Splatfest in each region?
+        // (Checking NA last so we can return that one more easily)
+        for (let region of ['eu', 'jp', 'na']) {
+            festival = festivals[region].festivals.find(f => f.times.start <= time && f.times.end > time);
+            if (!festival)
+                return false;
+            ids.push(festival.festival_id);
+        }
+
+        console.log(ids);
+
+        // Only return the Splatfest if the festival IDs match across all regions
+        if (ids[0] === ids[1] && ids[0] === ids[2])
+            return festival;
+        return false;
     }
 
     getText(data) {
@@ -50,6 +74,11 @@ class ScheduleTweet extends TwitterPostBase {
             if (stageInfo && stageInfo.first_available == data.regular.start_time)
                 return `NEW STAGE: ${stage.name} is now open! #maprotation #splatoon2`;
         }
+
+        let festival = this.globalSplatfestOpenInAllRegions();
+
+        if (festival)
+            return `The global Splatfest is open in all regions! Join the Splatfest Battle on ${data.regular.stage_a.name}, ${data.regular.stage_b.name}, and ${festival.special_stage.name}. #splatfest #maprotation`;
 
         return `Splatoon 2 map rotation: Ranked game mode: ${data.gachi.rule.name}, League game mode: ${data.league.rule.name} #maprotation`;
     }

@@ -38,7 +38,7 @@
             <SplatfestResultsBox :festival="festival" />
         </div>
 
-        <div class="has-text-centered is-size-5 title-color festival-period-container">
+        <div class="has-text-centered is-size-5 title-color festival-period-container" v-if="!globalSplatfestMode">
             <div v-if="!showingResultsBar" class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }">
                 <template v-if="!screenshotMode">
                     <span class="nowrap">
@@ -72,7 +72,7 @@
             <SplatfestWinnerBar :festival="festival" v-else />
         </div>
 
-        <div class="splatfest-content has-text-centered" v-if="!screenshotMode">
+        <div class="splatfest-content has-text-centered" v-if="!screenshotMode && !globalSplatfestMode">
             <template v-if="festival.state == 'upcoming'">
                 {{ festival.times.start - now | duration | time.in }}
             </template>
@@ -85,6 +85,9 @@
                 {{ festival.times.result - now | duration | resultsIn }}
             </template>
         </div>
+
+        <!-- Spacer at the bottom -->
+        <div v-if="globalSplatfestMode">&nbsp;</div>
     </div>
 </template>
 
@@ -100,6 +103,7 @@ export default {
         festival: null,
         screenshotMode: Boolean,
         historyMode: Boolean,
+        globalSplatfestMode: Boolean,
     },
     filters: {
         resultsIn(time) {
@@ -120,6 +124,8 @@ export default {
             return { weekday: 'short' };
         },
         title() {
+            if (this.globalSplatfestMode)
+                return this.$t('splatfest.global');
             if (this.festival.state == 'upcoming')
                 return this.$t('splatfest.upcoming');
             if (this.festival.state == 'past' && !this.screenshotMode)

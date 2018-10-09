@@ -53,10 +53,12 @@ async function captureScreenshot(options) {
     return result;
 }
 
-function captureScheduleScreenshot(now) {
+function captureScheduleScreenshot(now, splatfestBattle = false) {
     let hash = `/schedules/${now}`;
 
-    return captureScreenshot({ hash });
+    let viewport = (splatfestBattle) ? { height: 780 } : undefined;
+
+    return captureScreenshot({ hash, viewport });
 }
 
 function captureGearScreenshot(now) {
