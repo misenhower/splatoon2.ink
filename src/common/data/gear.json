@@ -456,6 +456,13 @@
             "skill": "105"
         },
         {
+            "brand": "98",
+            "name": "Fresh Octo Tee",
+            "price": null,
+            "rarity": 0,
+            "skill": "1"
+        },
+        {
             "brand": "0",
             "name": "Friend Tee",
             "price": 1200,
@@ -764,6 +771,13 @@
             "skill": "0"
         },
         {
+            "brand": "99",
+            "name": "Marinated Top",
+            "price": null,
+            "rarity": 1,
+            "skill": "7"
+        },
+        {
             "brand": "9",
             "name": "Matcha Down Jacket",
             "price": 9100,
@@ -863,6 +877,20 @@
         },
         {
             "brand": "98",
+            "name": "Neo Octoling Armor",
+            "price": null,
+            "rarity": 1,
+            "skill": "105"
+        },
+        {
+            "brand": "98",
+            "name": "Null Armor Replica",
+            "price": null,
+            "rarity": 1,
+            "skill": "11"
+        },
+        {
+            "brand": "98",
             "name": "Octarian Retro",
             "price": 5000,
             "rarity": 1,
@@ -897,6 +925,13 @@
             "skill": "5"
         },
         {
+            "brand": "98",
+            "name": "Old-Timey Clothes",
+            "price": null,
+            "rarity": 1,
+            "skill": "106"
+        },
+        {
             "brand": "9",
             "name": "Olive Ski Jacket",
             "price": 11000,
@@ -908,6 +943,13 @@
             "name": "Olive Zekko Parka",
             "price": 3800,
             "rarity": 1,
+            "skill": "4"
+        },
+        {
+            "brand": "97",
+            "name": "Online Jersey",
+            "price": null,
+            "rarity": 2,
             "skill": "4"
         },
         {
@@ -937,6 +979,13 @@
             "price": 400,
             "rarity": 0,
             "skill": "1"
+        },
+        {
+            "brand": "99",
+            "name": "Pearlescent Hoodie",
+            "price": null,
+            "rarity": 1,
+            "skill": "107"
         },
         {
             "brand": "8",
@@ -1156,6 +1205,13 @@
             "skill": "2"
         },
         {
+            "brand": "98",
+            "name": "Sennyu Suit",
+            "price": null,
+            "rarity": 2,
+            "skill": "104"
+        },
+        {
             "brand": "8",
             "name": "Shirt & Tie",
             "price": 8400,
@@ -1308,6 +1364,13 @@
             "price": 300,
             "rarity": 0,
             "skill": "5"
+        },
+        {
+            "brand": "0",
+            "name": "SWC Logo Tee",
+            "price": null,
+            "rarity": 2,
+            "skill": "4"
         },
         {
             "brand": "11",
@@ -1620,6 +1683,13 @@
             "skill": "101"
         },
         {
+            "brand": "0",
+            "name": "Anglerfish Mask",
+            "price": null,
+            "rarity": 2,
+            "skill": "0"
+        },
+        {
             "brand": "15",
             "name": "Annaki Beret",
             "price": 11500,
@@ -1737,6 +1807,13 @@
             "price": 1500,
             "rarity": 1,
             "skill": "7"
+        },
+        {
+            "brand": "98",
+            "name": "Conductor Cap",
+            "price": null,
+            "rarity": 1,
+            "skill": "10"
         },
         {
             "brand": "10",
@@ -1865,6 +1942,13 @@
             "skill": "102"
         },
         {
+            "brand": "98",
+            "name": "Golden Toothpick",
+            "price": null,
+            "rarity": 2,
+            "skill": "5"
+        },
+        {
             "brand": "1",
             "name": "Golf Visor",
             "price": 400,
@@ -1905,6 +1989,13 @@
             "price": 9900,
             "rarity": 2,
             "skill": "13"
+        },
+        {
+            "brand": "0",
+            "name": "Hockey Mask",
+            "price": null,
+            "rarity": 2,
+            "skill": "2"
         },
         {
             "brand": "7",
@@ -1977,6 +2068,13 @@
             "skill": "11"
         },
         {
+            "brand": "0",
+            "name": "Kyonshi Hat",
+            "price": null,
+            "rarity": 2,
+            "skill": "3"
+        },
+        {
             "brand": "9",
             "name": "Lightweight Cap",
             "price": 800,
@@ -1984,11 +2082,25 @@
             "skill": "4"
         },
         {
+            "brand": "0",
+            "name": "Li'l Devil Horns",
+            "price": null,
+            "rarity": 2,
+            "skill": "1"
+        },
+        {
             "brand": "2",
             "name": "Long-Billed Cap",
             "price": 9800,
             "rarity": 2,
             "skill": "2"
+        },
+        {
+            "brand": "99",
+            "name": "Marinated Headphones",
+            "price": null,
+            "rarity": 1,
+            "skill": "6"
         },
         {
             "brand": "4",
@@ -2033,6 +2145,13 @@
             "skill": "8"
         },
         {
+            "brand": "98",
+            "name": "Null Visor Replica",
+            "price": null,
+            "rarity": 1,
+            "skill": "7"
+        },
+        {
             "brand": "5",
             "name": "Octo Tackle Helmet Deco",
             "price": 8888,
@@ -2052,6 +2171,20 @@
             "price": 1450,
             "rarity": 0,
             "skill": "102"
+        },
+        {
+            "brand": "98",
+            "name": "Octoling Shades",
+            "price": null,
+            "rarity": 1,
+            "skill": "101"
+        },
+        {
+            "brand": "98",
+            "name": "Old-Timey Hat",
+            "price": null,
+            "rarity": 1,
+            "skill": "103"
         },
         {
             "brand": "5",
@@ -2078,6 +2211,13 @@
             "brand": "7",
             "name": "Patched Hat",
             "price": 3600,
+            "rarity": 1,
+            "skill": "13"
+        },
+        {
+            "brand": "99",
+            "name": "Pearlescent Crown",
+            "price": null,
             "rarity": 1,
             "skill": "13"
         },
@@ -2136,6 +2276,34 @@
             "price": 3200,
             "rarity": 1,
             "skill": "8"
+        },
+        {
+            "brand": "8",
+            "name": "Sennyu Bon Bon Beanie",
+            "price": null,
+            "rarity": 2,
+            "skill": "1"
+        },
+        {
+            "brand": "5",
+            "name": "Sennyu Goggles",
+            "price": null,
+            "rarity": 2,
+            "skill": "11"
+        },
+        {
+            "brand": "5",
+            "name": "Sennyu Headphones",
+            "price": null,
+            "rarity": 2,
+            "skill": "0"
+        },
+        {
+            "brand": "8",
+            "name": "Sennyu Specs",
+            "price": null,
+            "rarity": 2,
+            "skill": "4"
         },
         {
             "brand": "9",
@@ -2833,6 +3001,13 @@
             "skill": "13"
         },
         {
+            "brand": "99",
+            "name": "Marinated Slip-Ons",
+            "price": null,
+            "rarity": 1,
+            "skill": "2"
+        },
+        {
             "brand": "8",
             "name": "Mawcasins",
             "price": 2400,
@@ -2910,6 +3085,13 @@
             "skill": "0"
         },
         {
+            "brand": "98",
+            "name": "Neo Octoling Boots",
+            "price": null,
+            "rarity": 1,
+            "skill": "110"
+        },
+        {
             "brand": "9",
             "name": "Neon Delta Straps",
             "price": 4800,
@@ -2931,6 +3113,27 @@
             "skill": "111"
         },
         {
+            "brand": "98",
+            "name": "Null Boots Replica",
+            "price": null,
+            "rarity": 1,
+            "skill": "111"
+        },
+        {
+            "brand": "98",
+            "name": "Old-Timey Shoes",
+            "price": null,
+            "rarity": 1,
+            "skill": "3"
+        },
+        {
+            "brand": "16",
+            "name": "Online Squidkid V",
+            "price": null,
+            "rarity": 2,
+            "skill": "109"
+        },
+        {
             "brand": "11",
             "name": "Orange Arrows",
             "price": 1100,
@@ -2945,7 +3148,7 @@
             "skill": "111"
         },
         {
-            "brand": "10",
+            "brand": "4",
             "name": "Orange Lo-Tops",
             "price": 800,
             "rarity": 0,
@@ -2978,6 +3181,13 @@
             "price": 600,
             "rarity": 0,
             "skill": "3"
+        },
+        {
+            "brand": "99",
+            "name": "Pearlescent Kicks",
+            "price": null,
+            "rarity": 1,
+            "skill": "5"
         },
         {
             "brand": "10",
@@ -3181,6 +3391,13 @@
             "price": 3260,
             "rarity": 1,
             "skill": "1"
+        },
+        {
+            "brand": "3",
+            "name": "Sennyu Inksoles",
+            "price": null,
+            "rarity": 2,
+            "skill": "109"
         },
         {
             "brand": "10",
