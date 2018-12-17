@@ -25,7 +25,7 @@
         "recent": "Festival",
         "title": "Festival",
         "upcoming": "Festival",
-        "results_in": "résultats en {time}",
+        "results_in": "résultats dans {time}",
         "results": {
             "title": "Résultats!",
             "vote": "Votes",
