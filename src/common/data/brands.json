@@ -24,7 +24,7 @@
         "name": "Takoroka"
     },
     "15": {
-        "frequent_skill": "13",
+        "frequent_skill": "201",
         "id": "15",
         "image": "/images/brand/0b09659e2770389dcb23d911359175e8686f85f5.png",
         "name": "Annaki"
@@ -36,7 +36,7 @@
         "name": "Enperry"
     },
     "17": {
-        "frequent_skill": "13",
+        "frequent_skill": "201",
         "id": "17",
         "image": "/images/brand/4b05e494bf9a547b4d625fd52dcdd930a6c4defc.png",
         "name": "Toni Kensa"
@@ -84,7 +84,7 @@
         "name": "Splash Mob"
     },
     "9": {
-        "frequent_skill": "12",
+        "frequent_skill": "200",
         "id": "9",
         "image": "/images/brand/80648c6e427eae4d32677797fa1be7c0e253fda5.png",
         "name": "Inkline"

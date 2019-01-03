@@ -12,7 +12,7 @@
             "name": "Anchor Sweat",
             "price": 2800,
             "rarity": 1,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "15",
@@ -40,7 +40,7 @@
             "name": "Annaki Flannel Hoodie",
             "price": 9999,
             "rarity": 2,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "15",
@@ -89,14 +89,14 @@
             "name": "Baby-Jelly Shirt",
             "price": 1350,
             "rarity": 0,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "8",
             "name": "Baby-Jelly Shirt & Tie",
             "price": 3800,
             "rarity": 1,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "6",
@@ -131,7 +131,7 @@
             "name": "Black 8-Bit FishFry",
             "price": 600,
             "rarity": 0,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "0",
@@ -222,7 +222,7 @@
             "name": "Black Velour Octoking Tee",
             "price": 2950,
             "rarity": 1,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "6",
@@ -257,7 +257,7 @@
             "name": "Brown FA-11 Bomber",
             "price": null,
             "rarity": 1,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "0",
@@ -278,14 +278,14 @@
             "name": "Carnivore Tee",
             "price": 500,
             "rarity": 0,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "2",
             "name": "Chili Octo Aloha",
             "price": 4850,
             "rarity": 1,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "9",
@@ -306,7 +306,7 @@
             "name": "Chirpy Chips Band Tee",
             "price": 900,
             "rarity": 0,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "11",
@@ -334,14 +334,14 @@
             "name": "Cycle King Jersey",
             "price": 8900,
             "rarity": 2,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "1",
             "name": "Cycling Shirt",
             "price": 2900,
             "rarity": 1,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "1",
@@ -369,14 +369,14 @@
             "name": "Dark Urban Vest",
             "price": 10000,
             "rarity": 2,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "4",
             "name": "Deep-Octo Satin Jacket",
             "price": 12300,
             "rarity": 2,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "7",
@@ -384,6 +384,13 @@
             "price": 7650,
             "rarity": 2,
             "skill": "9"
+        },
+        {
+            "brand": "99",
+            "name": "Enchanted Robe",
+            "price": null,
+            "rarity": 1,
+            "skill": "106"
         },
         {
             "brand": "9",
@@ -456,6 +463,13 @@
             "skill": "105"
         },
         {
+            "brand": "99",
+            "name": "Fresh Fish Gloves",
+            "price": null,
+            "rarity": 1,
+            "skill": "9"
+        },
+        {
             "brand": "98",
             "name": "Fresh Octo Tee",
             "price": null,
@@ -516,7 +530,7 @@
             "name": "Gray FA-11 Bomber",
             "price": null,
             "rarity": 1,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "7",
@@ -663,7 +677,7 @@
             "name": "Inkopolis Squaps Jersey",
             "price": 1250,
             "rarity": 0,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "9",
@@ -796,7 +810,7 @@
             "name": "Mint Tee",
             "price": 400,
             "rarity": 0,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "2",
@@ -946,13 +960,6 @@
             "skill": "4"
         },
         {
-            "brand": "97",
-            "name": "Online Jersey",
-            "price": null,
-            "rarity": 2,
-            "skill": "4"
-        },
-        {
             "brand": "8",
             "name": "Orange Cardigan",
             "price": 700,
@@ -999,7 +1006,7 @@
             "name": "Pink Hoodie",
             "price": 3400,
             "rarity": 1,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "8",
@@ -1062,7 +1069,7 @@
             "name": "Red Cuttlegear LS",
             "price": 5800,
             "rarity": 1,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "15",
@@ -1125,7 +1132,7 @@
             "name": "Retro Sweat",
             "price": 9000,
             "rarity": 2,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "3",
@@ -1167,7 +1174,7 @@
             "name": "Sage Polo",
             "price": 400,
             "rarity": 0,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "8",
@@ -1251,7 +1258,7 @@
             "name": "Sky-Blue Squideye",
             "price": 500,
             "rarity": 0,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "16",
@@ -1265,7 +1272,7 @@
             "name": "Slipstream United",
             "price": 1800,
             "rarity": 1,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "0",
@@ -1328,7 +1335,7 @@
             "name": "Squidstar Waistcoat",
             "price": 650,
             "rarity": 0,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "99",
@@ -1336,6 +1343,13 @@
             "price": null,
             "rarity": 1,
             "skill": "6"
+        },
+        {
+            "brand": "99",
+            "name": "Steel Platemail",
+            "price": null,
+            "rarity": 1,
+            "skill": "1"
         },
         {
             "brand": "9",
@@ -1364,13 +1378,6 @@
             "price": 300,
             "rarity": 0,
             "skill": "5"
-        },
-        {
-            "brand": "0",
-            "name": "SWC Logo Tee",
-            "price": null,
-            "rarity": 2,
-            "skill": "4"
         },
         {
             "brand": "11",
@@ -1412,7 +1419,7 @@
             "name": "Takoroka Windcrusher",
             "price": 8500,
             "rarity": 2,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "10",
@@ -1615,7 +1622,7 @@
             "name": "Zekko Baseball LS",
             "price": 800,
             "rarity": 0,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "4",
@@ -1681,13 +1688,6 @@
             "price": 12000,
             "rarity": 2,
             "skill": "101"
-        },
-        {
-            "brand": "0",
-            "name": "Anglerfish Mask",
-            "price": null,
-            "rarity": 2,
-            "skill": "0"
         },
         {
             "brand": "15",
@@ -1757,7 +1757,7 @@
             "name": "Black FishFry Bandana",
             "price": 1250,
             "rarity": 0,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "6",
@@ -1820,7 +1820,7 @@
             "name": "Cycle King Cap",
             "price": 2400,
             "rarity": 1,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "1",
@@ -1855,7 +1855,7 @@
             "name": "Do-Rag, Cap, & Glasses",
             "price": 9500,
             "rarity": 2,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "4",
@@ -1872,11 +1872,18 @@
             "skill": "0"
         },
         {
+            "brand": "99",
+            "name": "Enchanted Hat",
+            "price": null,
+            "rarity": 1,
+            "skill": "0"
+        },
+        {
             "brand": "17",
             "name": "Face Visor",
             "price": 10300,
             "rarity": 2,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "10",
@@ -1918,7 +1925,14 @@
             "name": "Forge Mask",
             "price": 1400,
             "rarity": 0,
-            "skill": "13"
+            "skill": "201"
+        },
+        {
+            "brand": "99",
+            "name": "Fresh Fish Head",
+            "price": null,
+            "rarity": 1,
+            "skill": "103"
         },
         {
             "brand": "6",
@@ -1988,14 +2002,7 @@
             "name": "Hockey Helmet",
             "price": 9900,
             "rarity": 2,
-            "skill": "13"
-        },
-        {
-            "brand": "0",
-            "name": "Hockey Mask",
-            "price": null,
-            "rarity": 2,
-            "skill": "2"
+            "skill": "201"
         },
         {
             "brand": "7",
@@ -2068,25 +2075,11 @@
             "skill": "11"
         },
         {
-            "brand": "0",
-            "name": "Kyonshi Hat",
-            "price": null,
-            "rarity": 2,
-            "skill": "3"
-        },
-        {
             "brand": "9",
             "name": "Lightweight Cap",
             "price": 800,
             "rarity": 0,
             "skill": "4"
-        },
-        {
-            "brand": "0",
-            "name": "Li'l Devil Horns",
-            "price": null,
-            "rarity": 2,
-            "skill": "1"
         },
         {
             "brand": "2",
@@ -2156,7 +2149,7 @@
             "name": "Octo Tackle Helmet Deco",
             "price": 8888,
             "rarity": 2,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "6",
@@ -2198,7 +2191,7 @@
             "name": "Painter's Mask",
             "price": 4500,
             "rarity": 1,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "2",
@@ -2212,14 +2205,14 @@
             "name": "Patched Hat",
             "price": 3600,
             "rarity": 1,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "99",
             "name": "Pearlescent Crown",
             "price": null,
             "rarity": 1,
-            "skill": "13"
+            "skill": "200"
         },
         {
             "brand": "5",
@@ -2240,7 +2233,7 @@
             "name": "Power Mask",
             "price": null,
             "rarity": 1,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "99",
@@ -2359,7 +2352,7 @@
             "name": "Splash Goggles",
             "price": 2800,
             "rarity": 1,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "7",
@@ -2446,6 +2439,13 @@
             "skill": "4"
         },
         {
+            "brand": "99",
+            "name": "Steel Helm",
+            "price": null,
+            "rarity": 1,
+            "skill": "5"
+        },
+        {
             "brand": "7",
             "name": "Straw Boater",
             "price": 550,
@@ -2506,7 +2506,7 @@
             "name": "Takoroka Mesh",
             "price": 400,
             "rarity": 0,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "11",
@@ -2597,7 +2597,7 @@
             "name": "Yamagiri Beanie",
             "price": 1280,
             "rarity": 0,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "4",
@@ -2676,7 +2676,7 @@
             "name": "Banana Basics",
             "price": 400,
             "rarity": 0,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "9",
@@ -2697,7 +2697,7 @@
             "name": "Black Dakroniks",
             "price": 1500,
             "rarity": 1,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "4",
@@ -2753,7 +2753,7 @@
             "name": "Blue Lo-Tops",
             "price": 800,
             "rarity": 0,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "3",
@@ -2876,10 +2876,24 @@
         },
         {
             "brand": "99",
+            "name": "Enchanted Boots",
+            "price": null,
+            "rarity": 1,
+            "skill": "3"
+        },
+        {
+            "brand": "99",
+            "name": "Fresh Fish Feet",
+            "price": null,
+            "rarity": 1,
+            "skill": "8"
+        },
+        {
+            "brand": "99",
             "name": "Fringed Loafers",
             "price": null,
             "rarity": 1,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "1",
@@ -2893,7 +2907,7 @@
             "name": "Gray Sea-Slug Hi-Tops",
             "price": 8500,
             "rarity": 2,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "3",
@@ -2914,7 +2928,7 @@
             "name": "Green Laceups",
             "price": 1300,
             "rarity": 0,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "9",
@@ -2956,7 +2970,7 @@
             "name": "Hunting Boots",
             "price": 11500,
             "rarity": 2,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "10",
@@ -2998,7 +3012,7 @@
             "name": "Luminous Delta Straps",
             "price": 5000,
             "rarity": 1,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "99",
@@ -3127,13 +3141,6 @@
             "skill": "3"
         },
         {
-            "brand": "16",
-            "name": "Online Squidkid V",
-            "price": null,
-            "rarity": 2,
-            "skill": "109"
-        },
-        {
             "brand": "11",
             "name": "Orange Arrows",
             "price": 1100,
@@ -3229,7 +3236,7 @@
             "name": "Power Boots Mk I",
             "price": null,
             "rarity": 1,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "9",
@@ -3243,14 +3250,14 @@
             "name": "Punk Blacks",
             "price": 8800,
             "rarity": 2,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "3",
             "name": "Punk Cherries",
             "price": 9000,
             "rarity": 2,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "3",
@@ -3369,7 +3376,7 @@
             "name": "Roasted Brogues",
             "price": 1200,
             "rarity": 0,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "99",
@@ -3439,14 +3446,14 @@
             "name": "Soccer Shoes",
             "price": 9600,
             "rarity": 2,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "2",
             "name": "Squid-Stitch Slip-Ons",
             "price": 1500,
             "rarity": 1,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "99",
@@ -3461,6 +3468,13 @@
             "price": 800,
             "rarity": 0,
             "skill": "8"
+        },
+        {
+            "brand": "99",
+            "name": "Steel Greaves",
+            "price": null,
+            "rarity": 1,
+            "skill": "110"
         },
         {
             "brand": "8",
@@ -3502,7 +3516,7 @@
             "name": "Sun & Shade Squidkid IV",
             "price": 13000,
             "rarity": 2,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "9",
@@ -3614,7 +3628,7 @@
             "name": "Yellow FishFry Sandals",
             "price": 2880,
             "rarity": 1,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "10",
@@ -3628,14 +3642,14 @@
             "name": "Yellow Seahorses",
             "price": 1500,
             "rarity": 1,
-            "skill": "12"
+            "skill": "200"
         },
         {
             "brand": "10",
             "name": "Yellow-Mesh Sneakers",
             "price": 1300,
             "rarity": 0,
-            "skill": "13"
+            "skill": "201"
         },
         {
             "brand": "1",

@@ -1,5 +1,6 @@
 const delay = require('delay');
-const splatnet = require('@/common/splatnet');
+const SplatNet = require('@/common/splatnet');
+const splatnet = new SplatNet();
 
 /**
  * We can't retrieve gear/brand/skill data directly.

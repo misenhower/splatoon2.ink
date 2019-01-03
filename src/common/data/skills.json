@@ -16,7 +16,7 @@
     },
     "100": {
         "id": "100",
-        "image": "/images/skill/492691ed2a7ce7ec694bf88d3ea1f692b7da1692.png",
+        "image": "/images/skill/073a44668f534002ed111b4d66ee840990eeb13e.png",
         "name": "Opening Gambit"
     },
     "101": {
@@ -81,7 +81,7 @@
     },
     "12": {
         "id": "12",
-        "image": "/images/skill/35f4ec4284fc5a19da58ffb1a7988eb26eb8bd7f.png",
+        "image": "/images/skill/95ee4ef2d545064c933e28f41791b4004afa3880.png",
         "name": "Bomb Defense Up"
     },
     "13": {
@@ -93,6 +93,21 @@
         "id": "2",
         "image": "/images/skill/c14f4471b26e0f918c736b5c17e03212290f4541.png",
         "name": "Ink Recovery Up"
+    },
+    "200": {
+        "id": "200",
+        "image": "/images/skill/0a29f0ce326a81a5ddb3a7abab1816a25fefdc7c.png",
+        "name": "Bomb Defense Up DX"
+    },
+    "201": {
+        "id": "201",
+        "image": "/images/skill/39f3e937b709d378c178ef2bf00d9a7295b8159d.png",
+        "name": "Main Power Up"
+    },
+    "255": {
+        "id": "255",
+        "image": "/images/skill/46f9b6fc3a2aafdc0c688dec8cadb54aa6f8ace6.png",
+        "name": "question mark"
     },
     "3": {
         "id": "3",
