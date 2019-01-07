@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const mkdirp = require('mkdirp').sync;
 const { postMediaTweet } = require('../client');
 const { getTopOfCurrentHour, readJson, writeJson } = require('@/common/utilities');
 
@@ -28,6 +29,9 @@ class TwitterPostBase {
             let text = await this.getText(data);
             let image = await this.getImage(data);
 
+            // Maybe save the image
+            this.maybeSavePublicImage(data, image);
+
             // Post to Twitter
             let tweet = await postMediaTweet(text, image);
 
@@ -39,6 +43,15 @@ class TwitterPostBase {
         catch (e) {
             this.error('Couldn\'t post Tweet');
             console.error(e);
+        }
+    }
+
+    maybeSavePublicImage(data, image) {
+        let filename = this.getPublicImageFilename(data);
+        if (filename) {
+            let outputFilename = path.resolve(`dist/twitter-images/${filename}`);
+            mkdirp(path.dirname(outputFilename));
+            fs.writeFileSync(outputFilename, image);
         }
     }
 
@@ -140,6 +153,9 @@ class TwitterPostBase {
 
     // The image data to be posted with the Tweet
     getImage(data) { }
+
+    // The filename to store the image as (optional)
+    getPublicImageFilename(data) { }
 
     // The text body of the Tweet
     getText(data) { }

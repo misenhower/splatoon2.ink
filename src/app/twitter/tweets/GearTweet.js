@@ -31,6 +31,10 @@ class GearTweet extends TwitterPostBase {
         return captureGearScreenshot(now);
     }
 
+    getPublicImageFilename(data) {
+        return 'gear.png';
+    }
+
     getText(data) {
         return `Up now on SplatNet: ${data.gear.name} with ${data.skill.name} #splatnet2`;
     }
