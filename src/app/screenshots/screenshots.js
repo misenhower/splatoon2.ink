@@ -79,10 +79,19 @@ function captureSalmonRunGearScreenshot(now) {
     return captureScreenshot({ hash });
 }
 
-function captureNewWeaponScreenshot(now) {
+function captureNewWeaponScreenshot(now, weaponCount) {
     let hash = `/newWeapon/${now}`;
 
-    return captureScreenshot({ hash, viewport: { height: 700 }  });
+    // There are a max of 4 weapons per row
+    const rows = Math.ceil(weaponCount / 4);
+    // Determine the image height based on the number of rows
+    let height = rows * 320;
+    // Add some extra height for the bottom banner
+    height += 60;
+    // Set a minimum overall image height
+    height = Math.max(height, 700);
+
+    return captureScreenshot({ hash, viewport: { height }  });
 }
 
 function captureSplatfestScreenshot(region, now, regions) {

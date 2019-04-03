@@ -165,6 +165,10 @@ class TwitterPostBase {
         let key = this.getKey();
         return `test-screenshot-${key}.png`;
     }
+
+    getMaxTweetLength() {
+        return 280;
+    }
 }
 
 module.exports = TwitterPostBase;

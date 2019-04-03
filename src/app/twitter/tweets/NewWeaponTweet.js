@@ -31,19 +31,28 @@ class NewWeaponTweet extends TwitterPostBase {
     }
 
     getImage(data) {
-        return captureNewWeaponScreenshot(data[0].release_time);
+        return captureNewWeaponScreenshot(data[0].release_time, data.length);
     }
 
     getText(data) {
         if (data.length == 1)
             return `NEW WEAPON: The ${data[0].weapon.name} is now available! #splatoon2`;
 
-        let text = `New weapons now available:`;
-        for (let availability of data)
-            text += `\n- ${availability.weapon.name}`;
-        text += '\n#splatoon2';
+        // Make sure we don't exceed the max tweet text length
+        const names = data.map(availability => `- ${availability.weapon.name}`);
+        for (let i = names.length; i > 0; i--) {
+            let text = `New weapons now available:\n`;
+            text += names.slice(0, i).join('\n');
+            text += '\n';
+            if (i < names.length) {
+                text += 'And more! ';
+            }
+            text += '#splatoon2';
 
-        return text;
+            if (text.length <= this.getMaxTweetLength()) {
+                return text;
+            }
+        }
     }
 }
 
