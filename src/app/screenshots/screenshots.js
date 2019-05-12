@@ -7,6 +7,7 @@ const puppeteer = require('puppeteer');
 const viewport = {
     width: 1012, // Twitter's in-stream image width is 506px, 506*2 = 1012
     height: 600,
+    deviceScaleFactor: 2,
 };
 
 function startHttpServer() {
