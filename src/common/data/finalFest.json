@@ -1,0 +1,200 @@
+[
+  {
+    "start_time": 1563451200,
+    "end_time": 1563458400,
+    "stages": [
+      "shifty_station_01",
+      "shifty_station_13"
+    ]
+  },
+  {
+    "start_time": 1563458400,
+    "end_time": 1563465600,
+    "stages": [
+      "shifty_station_03",
+      "shifty_station_15"
+    ]
+  },
+  {
+    "start_time": 1563465600,
+    "end_time": 1563472800,
+    "stages": [
+      "shifty_station_00",
+      "shifty_station_16"
+    ]
+  },
+  {
+    "start_time": 1563472800,
+    "end_time": 1563480000,
+    "stages": [
+      "shifty_station_02",
+      "shifty_station_17"
+    ]
+  },
+  {
+    "start_time": 1563480000,
+    "end_time": 1563487200,
+    "stages": [
+      "shifty_station_07",
+      "shifty_station_18"
+    ]
+  },
+  {
+    "start_time": 1563487200,
+    "end_time": 1563494400,
+    "stages": [
+      "shifty_station_06",
+      "shifty_station_19"
+    ]
+  },
+  {
+    "start_time": 1563494400,
+    "end_time": 1563501600,
+    "stages": [
+      "shifty_station_05",
+      "shifty_station_20"
+    ]
+  },
+  {
+    "start_time": 1563501600,
+    "end_time": 1563508800,
+    "stages": [
+      "shifty_station_10",
+      "shifty_station_21"
+    ]
+  },
+  {
+    "start_time": 1563508800,
+    "end_time": 1563516000,
+    "stages": [
+      "shifty_station_08",
+      "shifty_station_22"
+    ]
+  },
+  {
+    "start_time": 1563516000,
+    "end_time": 1563523200,
+    "stages": [
+      "shifty_station_09",
+      "shifty_station_23"
+    ]
+  },
+  {
+    "start_time": 1563523200,
+    "end_time": 1563530400,
+    "stages": [
+      "shifty_station_11",
+      "shifty_station_01"
+    ]
+  },
+  {
+    "start_time": 1563530400,
+    "end_time": 1563537600,
+    "stages": [
+      "shifty_station_13",
+      "shifty_station_03"
+    ]
+  },
+  {
+    "start_time": 1563537600,
+    "end_time": 1563544800,
+    "stages": [
+      "shifty_station_12",
+      "shifty_station_00"
+    ]
+  },
+  {
+    "start_time": 1563544800,
+    "end_time": 1563552000,
+    "stages": [
+      "shifty_station_14",
+      "shifty_station_02"
+    ]
+  },
+  {
+    "start_time": 1563552000,
+    "end_time": 1563559200,
+    "stages": [
+      "shifty_station_15",
+      "shifty_station_07"
+    ]
+  },
+  {
+    "start_time": 1563559200,
+    "end_time": 1563566400,
+    "stages": [
+      "shifty_station_16",
+      "shifty_station_06"
+    ]
+  },
+  {
+    "start_time": 1563566400,
+    "end_time": 1563573600,
+    "stages": [
+      "shifty_station_17",
+      "shifty_station_05"
+    ]
+  },
+  {
+    "start_time": 1563573600,
+    "end_time": 1563580800,
+    "stages": [
+      "shifty_station_18",
+      "shifty_station_10"
+    ]
+  },
+  {
+    "start_time": 1563580800,
+    "end_time": 1563588000,
+    "stages": [
+      "shifty_station_19",
+      "shifty_station_08"
+    ]
+  },
+  {
+    "start_time": 1563588000,
+    "end_time": 1563595200,
+    "stages": [
+      "shifty_station_20",
+      "shifty_station_09"
+    ]
+  },
+  {
+    "start_time": 1563595200,
+    "end_time": 1563602400,
+    "stages": [
+      "shifty_station_21",
+      "shifty_station_11"
+    ]
+  },
+  {
+    "start_time": 1563602400,
+    "end_time": 1563609600,
+    "stages": [
+      "shifty_station_22",
+      "shifty_station_14"
+    ]
+  },
+  {
+    "start_time": 1563609600,
+    "end_time": 1563616800,
+    "stages": [
+      "shifty_station_23",
+      "shifty_station_12"
+    ]
+  },
+  {
+    "start_time": 1563616800,
+    "end_time": 1563624000,
+    "stages": [
+      "shifty_station_13"
+    ]
+  },
+  {
+    "start_time": 1563624000,
+    "end_time": 1563710400,
+    "stages": [
+      "shifty_station_24"
+    ]
+  }
+]

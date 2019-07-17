@@ -121,6 +121,8 @@
                 &ndash;
                 <router-link to="/about">{{ $t('ui.about') }}</router-link>
                 &ndash;
+                <router-link to="/finalfest">FinalFest</router-link>
+                &ndash;
                 <router-link to="/calendars">Calendar Feeds</router-link>
                 &ndash;
                 <a href="https://twitter.com/Splatoon2inkbot" target="_blank">Twitter</a>

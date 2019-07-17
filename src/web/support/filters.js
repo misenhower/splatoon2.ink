@@ -4,6 +4,9 @@ const currentLocale = Vue.i18n.locale;
 
 // Local hosting of SplatNet images
 Vue.filter('localSplatNetImageUrl', function(value) {
+    if (value.indexOf('/assets/img') === 0)
+        return value;
+
     return '/assets/splatnet' + value;
 });
 

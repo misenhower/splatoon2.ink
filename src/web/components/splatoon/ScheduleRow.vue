@@ -2,12 +2,17 @@
     <div>
         <div class="level is-mobile is-marginless is-hidden-tablet">
             <div class="level-left">
-                <div class="level-item title-color is-size-5">{{ ruleName }}</div>
+                <template v-if="ruleName">
+                    <div class="level-item title-color is-size-5">{{ ruleName }}</div>
+                </template>
+                <template v-else>
+                    {{ timeFromNow }}
+                </template>
             </div>
             <div class="level-right">
                 <div class="level-item has-text-right">
                     <div>
-                        <template v-if="schedule.start_time > now">
+                        <template v-if="ruleName && schedule.start_time > now">
                             {{ timeFromNow }}<span class="is-hidden-mobile">,&nbsp;</span>
                         </template>
                         <div class="is-size-7">
@@ -37,8 +42,8 @@
             </div>
             <div class="column is-8">
                 <div class="columns is-mobile is-slim">
-                    <div class="column"><Stage :stage="schedule.stage_a" /></div>
-                    <div class="column"><Stage :stage="schedule.stage_b" /></div>
+                    <div class="column"><Stage :stage="schedule.stage_a" v-if="schedule.stage_a" /></div>
+                    <div class="column"><Stage :stage="schedule.stage_b" v-if="schedule.stage_b" /></div>
                 </div>
             </div>
         </div>
@@ -65,7 +70,8 @@ export default {
         },
         ruleName() {
             let rule = this.schedule.rule;
-            return this.$t(`splatnet.rules.${rule.key}.name`, rule.name);
+            if (rule)
+                return this.$t(`splatnet.rules.${rule.key}.name`, rule.name);
         },
         ruleNameClass() { return this.isSmall ? 'is-6' : 'is-5' },
         scheduleClass() { return this.isSmall ? 'is-7' : 'is-6' },

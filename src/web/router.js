@@ -42,6 +42,13 @@ const routes = [
                 props: true,
             },
 
+            // FinalFest
+            {
+                path: 'finalfest',
+                component: require('./components/splatoon/FinalFestDialog.vue').default,
+                props: true,
+            },
+
             // Other/misc
             {
                 path: 'about',

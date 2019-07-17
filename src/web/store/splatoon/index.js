@@ -7,6 +7,7 @@ import * as salmonRun from './salmonRun';
 import * as splatfests from './splatfests';
 import * as splatNetStore from './splatNetStore';
 import * as newWeapons from './newWeapons';
+import * as finalFest from './finalFest';
 
 let updateNowTimer;
 
@@ -68,5 +69,6 @@ export default {
         splatfests,
         splatNetStore,
         newWeapons,
+        finalFest,
     },
 };
