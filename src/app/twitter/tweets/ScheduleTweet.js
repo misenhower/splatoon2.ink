@@ -1,6 +1,8 @@
 const TwitterPostBase = require('./TwitterPostBase');
 const { captureScheduleScreenshot } = require('@/app/screenshots');
 const { readData, readJson } = require('@/common/utilities');
+const finalFest = require('@/common/data/finalFest.json');
+const shiftyStations = require('@/common/data/shiftyStations.json');
 const path = require('path');
 
 const stagesPath = path.resolve('storage/stages.json');
@@ -81,8 +83,22 @@ class ScheduleTweet extends TwitterPostBase {
 
         let festival = this.globalSplatfestOpenInAllRegions();
 
-        if (festival)
-            return `The global Splatfest is open in all regions! Join the Splatfest Battle on ${data.regular.stage_a.name}, ${data.regular.stage_b.name}, and ${festival.special_stage.name}. #splatfest #maprotation`;
+        if (festival) {
+            let shiftyText = '';
+            const finalFestSchedule = finalFest.find(s => s.start_time <= this.getDataTime() && s.end_time > this.getDataTime());
+            if (finalFestSchedule) {
+                const stages = finalFestSchedule.stages
+                    .map(id => shiftyStations.find(s => s.id === id))
+                    .map(s => s.names.en);
+
+                if (stages.length === 1)
+                    shiftyText = `Current Shifty Station is ${stages[0]}. `;
+                else
+                    shiftyText = `Current Shifty Stations are ${stages[0]} and ${stages[1]}. `;
+            }
+
+            return `Join the global Splatfest Battle on ${data.regular.stage_a.name}, ${data.regular.stage_b.name}, and ${festival.special_stage.name}. ${shiftyText} #splatfest #maprotation`;
+        }
 
         return `Splatoon 2 map rotation: Ranked game mode: ${data.gachi.rule.name}, League game mode: ${data.league.rule.name} #maprotation`;
     }
