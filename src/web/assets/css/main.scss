@@ -795,6 +795,21 @@ body.has-modal #main {
     }
 }
 
+.shifty-box {
+    @extend .product-box;
+    @extend .bg-wavy;
+    @extend .text-shadow;
+
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+
+    background-color: #999;
+
+    border-radius: 20px;
+    padding: 38px 10px 0 10px;
+}
+
 .hero-foot .dropdown-trigger .icon {
     margin-left: -5px;
     line-height: 0.45rem;

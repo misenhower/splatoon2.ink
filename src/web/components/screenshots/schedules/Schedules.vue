@@ -15,10 +15,28 @@
         </div>
         <div class="columns is-gapless font-splatoon2" v-else>
             <div class="column" style="display: flex">
-                <div class="splatfest tilt-left">
+                <div class="splatfest">
                     <div class="hook-box">
                         <SplatfestBox :festival="currentSplatfestNA" global-splatfest-mode />
                     </div>
+
+                    <template v-if="shiftySchedule">
+                        <br />
+
+                        <div class="shifty-box">
+                            <h3 class="title is-4 font-splatoon1 has-text-centered" style="margin-bottom: 0.5rem">
+                                Current Shifty Stations
+                            </h3>
+                            <div class="columns">
+                                <div class="column">
+                                    <Stage :stage="shiftySchedule.stages[0]" style="max-width: 215px; margin: auto" />
+                                </div>
+                                <div class="column" v-if="shiftySchedule.stages[1]">
+                                    <Stage :stage="shiftySchedule.stages[1]" />
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </div>
             <div class="column is-5">
@@ -33,15 +51,17 @@ import { mapGetters } from 'vuex';
 import Wrapper from '@/web/components/screenshots/Wrapper.vue';
 import ScheduleBox from './ScheduleBox.vue';
 import SplatfestBox from '@/web/components/splatoon/SplatfestBox.vue';
+import Stage from '@/web/components/splatoon/Stage.vue';
 
 export default {
-    components: { Wrapper, ScheduleBox, SplatfestBox },
+    components: { Wrapper, ScheduleBox, SplatfestBox, Stage },
     computed: {
         ...mapGetters('splatoon/splatfests', {
             'currentSplatfestNA': 'na/currentSplatfest',
             'currentSplatfestEU': 'eu/currentSplatfest',
             'currentSplatfestJP': 'jp/currentSplatfest',
         }),
+        ...mapGetters('splatoon/finalFest', { shiftySchedule: 'activeSchedule' }),
         globalSplatfestIsActiveInAllRegions() {
             // Do we have a Splatfest in each region?
             if (!this.currentSplatfestNA || !this.currentSplatfestEU || !this.currentSplatfestJP)

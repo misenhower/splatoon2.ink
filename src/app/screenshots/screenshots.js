@@ -57,7 +57,7 @@ async function captureScreenshot(options) {
 function captureScheduleScreenshot(now, splatfestBattle = false) {
     let hash = `/schedules/${now}`;
 
-    let viewport = (splatfestBattle) ? { height: 780 } : undefined;
+    let viewport = (splatfestBattle) ? { height: 800 } : undefined;
 
     return captureScreenshot({ hash, viewport });
 }

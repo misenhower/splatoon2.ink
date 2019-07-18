@@ -71,7 +71,7 @@ export default {
     props: ['region'],
     computed: {
         ...mapGetters('splatoon', ['now']),
-        ...mapGetters('splatoon/finalFest', ['schedules']),
+        ...mapGetters('splatoon/finalFest', { schedules: 'currentSchedules' }),
 
         allSchedules() {
             return this.schedules.map(schedule => ({
@@ -81,14 +81,9 @@ export default {
             }));
         },
 
-        currentSchedules() {
-            if (this.now && this.allSchedules)
-                return this.allSchedules.filter(s => s.end_time > this.now);
-        },
-
-        first() { return this.currentSchedules && this.currentSchedules[0]; },
-        second() { return this.currentSchedules && this.currentSchedules[1]; },
-        others() { return this.currentSchedules && this.currentSchedules.slice(2); },
+        first() { return this.allSchedules && this.allSchedules[0]; },
+        second() { return this.allSchedules && this.allSchedules[1]; },
+        others() { return this.allSchedules && this.allSchedules.slice(2); },
     },
 };
 </script>

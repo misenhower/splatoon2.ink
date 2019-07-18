@@ -94,6 +94,22 @@
                             </div>
                         </div>
 
+                        <div class="column" v-if="shiftySchedule">
+                            <div class="shifty-box font-splatoon2 tilt-right">
+                                <h3 class="title is-4 font-splatoon1 has-text-centered" style="margin-bottom: 0.5rem">
+                                    Current Shifty Stations
+                                </h3>
+                                <div class="columns">
+                                    <div class="column">
+                                        <Stage :stage="shiftySchedule.stages[0]" style="max-width: 215px; margin: auto" />
+                                    </div>
+                                    <div class="column" v-if="shiftySchedule.stages[1]">
+                                        <Stage :stage="shiftySchedule.stages[1]" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="column" v-if="hasSalmonRun">
                             <div class="salmon-run tilt-left">
                                 <div class="hook-box">
@@ -154,9 +170,10 @@ import ScheduleBox from './splatoon/ScheduleBox.vue';
 import SalmonRunBox from './splatoon/SalmonRunBox.vue';
 import SplatfestBox from './splatoon/SplatfestBox.vue';
 import NewWeaponsContainer from './splatoon/NewWeaponsContainer.vue';
+import Stage from '@/web/components/splatoon/Stage.vue';
 
 export default {
-    components: { Dropdown, ScheduleBox, SalmonRunBox, SplatfestBox, NewWeaponsContainer },
+    components: { Dropdown, ScheduleBox, SalmonRunBox, SplatfestBox, NewWeaponsContainer, Stage },
     computed: {
         ...mapGetters('splatoon/regions', ['selectedRegion']),
         ...mapGetters('splatoon/languages', ['selectedLanguage']),
@@ -166,6 +183,7 @@ export default {
             'selectedRegionHasActiveSplatfest',
         ]),
         ...mapGetters('splatoon/newWeapons', ['weapons']),
+        ...mapGetters('splatoon/finalFest', { shiftySchedule: 'activeSchedule' }),
 
         loading() { return !this.$store.state.splatoon.data.schedules },
 
