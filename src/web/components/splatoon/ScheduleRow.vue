@@ -16,7 +16,13 @@
                             {{ timeFromNow }}<span class="is-hidden-mobile">,&nbsp;</span>
                         </template>
                         <div class="is-size-7">
+                            <template v-if="showStartDate">
+                                {{ schedule.start_time | date }}
+                            </template>
                             {{ schedule.start_time | time }} &ndash;
+                            <template v-if="showEndDate">
+                                {{ schedule.end_time | date }}
+                            </template>
                             {{ schedule.end_time | time }}
                         </div>
                     </div>
@@ -32,11 +38,14 @@
                         {{ timeFromNow }}
                         <br />
                     </template>
-                    <template v-if="!isToday">
+                    <template v-if="showStartDate">
                         {{ schedule.start_time | date }}
                     </template>
                     <span class="nowrap">{{ schedule.start_time | time }}</span>
                     &ndash;
+                    <template v-if="showEndDate">
+                        {{ schedule.end_time | date }}
+                    </template>
                     <span class="nowrap">{{ schedule.end_time | time }}</span>
                 </div>
             </div>
@@ -55,6 +64,12 @@ import Vue from 'vue';
 import { mapGetters } from 'vuex';
 import Stage from './Stage.vue';
 
+function isSameDay(timestamp1, timestamp2) {
+    let date1 = new Date(timestamp1 * 1000);
+    let date2 = new Date(timestamp2 * 1000);
+    return (date1.getDate() == date2.getDate() && date1.getMonth() == date2.getMonth() && date1.getFullYear() == date2.getFullYear());
+}
+
 export default {
     components: { Stage },
     props: {
@@ -63,10 +78,11 @@ export default {
     },
     computed: {
         ...mapGetters('splatoon', ['now']),
-        isToday() {
-            let now = new Date(this.now * 1000);
-            let start = new Date(this.schedule.start_time * 1000);
-            return (now.getDate() == start.getDate() && now.getMonth() == start.getMonth() && now.getFullYear() == start.getFullYear());
+        showStartDate() {
+            return !isSameDay(this.now, this.schedule.start_time);
+        },
+        showEndDate() {
+            return !isSameDay(this.schedule.start_time, this.schedule.end_time);
         },
         ruleName() {
             let rule = this.schedule.rule;
