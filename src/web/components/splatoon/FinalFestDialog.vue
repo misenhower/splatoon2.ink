@@ -50,6 +50,14 @@
                             />
                     </div>
                 </div>
+
+                <div  class="font-splatoon2" v-if="currentSchedules.length === 0">
+                    <ScheduleRow
+                        v-for="schedule in allSchedules"
+                        :key="schedule.start_time"
+                        :schedule="schedule"
+                        />
+                </div>
             </div>
         </div>
     </Modal>
@@ -71,19 +79,30 @@ export default {
     props: ['region'],
     computed: {
         ...mapGetters('splatoon', ['now']),
-        ...mapGetters('splatoon/finalFest', { schedules: 'currentSchedules' }),
+        ...mapGetters('splatoon/finalFest', {
+            currentSchedulesSource: 'currentSchedules',
+            allSchedulesSource: 'schedules',
+        }),
 
-        allSchedules() {
-            return this.schedules.map(schedule => ({
+        currentSchedules() {
+            return this.currentSchedulesSource.map(schedule => ({
                 ...schedule,
                 stage_a: schedule.stages[0],
                 stage_b: schedule.stages[1],
             }));
         },
 
-        first() { return this.allSchedules && this.allSchedules[0]; },
-        second() { return this.allSchedules && this.allSchedules[1]; },
-        others() { return this.allSchedules && this.allSchedules.slice(2); },
+        allSchedules() {
+            return this.allSchedulesSource.map(schedule => ({
+                ...schedule,
+                stage_a: schedule.stages[0],
+                stage_b: schedule.stages[1],
+            }));
+        },
+
+        first() { return this.currentSchedules && this.currentSchedules[0]; },
+        second() { return this.currentSchedules && this.currentSchedules[1]; },
+        others() { return this.currentSchedules && this.currentSchedules.slice(2); },
     },
 };
 </script>
