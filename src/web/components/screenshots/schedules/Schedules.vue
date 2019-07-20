@@ -25,7 +25,12 @@
 
                         <div class="shifty-box">
                             <h3 class="title is-4 font-splatoon1 has-text-centered" style="margin-bottom: 0.5rem">
-                                Current Shifty Stations
+                                <template v-if="shiftySchedule.stages.length === 1">
+                                    Current Shifty Station
+                                </template>
+                                <template v-else>
+                                    Current Shifty Stations
+                                </template>
                             </h3>
                             <div class="columns">
                                 <div class="column">
