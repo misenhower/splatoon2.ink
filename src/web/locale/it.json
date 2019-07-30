@@ -3,7 +3,8 @@
         "random_weapon": "Casuale",
         "supplied_weapons": "Armi fornite",
         "this_months_gear": "Equipaggiamento del mese",
-        "title": "Salmon Run"
+        "title": "Salmon Run",
+        "current_gear": "Oggetto attuale"
     },
     "new_weapon": "Nuova Arma",
     "regions": {

@@ -3,7 +3,8 @@
         "random_weapon": "Случайное",
         "supplied_weapons": "Табельное оружие",
         "this_months_gear": "Снаряжение месяца",
-        "title": "Salmon Run"
+        "title": "Salmon Run",
+        "current_gear": "Призовое снаряжение"
     },
     "new_weapon": "Новое оружие",
     "regions": {

@@ -3,7 +3,8 @@
         "random_weapon": "Zufall",
         "supplied_weapons": "Verfügbare Waffen",
         "this_months_gear": "Ausrüstung des Monats",
-        "title": "Salmon Run"
+        "title": "Salmon Run",
+        "current_gear": "Verfügbare Ausrüstung"
     },
     "new_weapon": "Neue Waffe",
     "regions": {

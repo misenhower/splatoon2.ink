@@ -3,7 +3,8 @@
         "random_weapon": "ランダム",
         "supplied_weapons": "支給ブキ",
         "this_months_gear": "今月のギア",
-        "title": "SALMON RUN"
+        "title": "SALMON RUN",
+        "current_gear": "今回のギア"
     },
     "new_weapon": "新しいブキ",
     "regions": {

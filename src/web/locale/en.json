@@ -3,7 +3,8 @@
         "random_weapon": "Random",
         "supplied_weapons": "Supplied Weapons",
         "this_months_gear": "This month's gear",
-        "title": "Salmon Run"
+        "title": "Salmon Run",
+        "current_gear": "Current Gear"
     },
     "new_weapon": "New Weapon",
     "regions": {

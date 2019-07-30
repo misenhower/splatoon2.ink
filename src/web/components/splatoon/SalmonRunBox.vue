@@ -23,7 +23,7 @@
 
                 <template v-if="!screenshotMode && rewardGear">
                     <div class="salmon-run-gear-text">
-                        {{ $t('coop.this_months_gear') }}
+                        {{ $t('coop.current_gear') }}
                     </div>
                     <div class="salmon-run-gear-image hand" @click="gearDialogOpen = true" :title="rewardGearName">
                         <div class="image is-32x32">

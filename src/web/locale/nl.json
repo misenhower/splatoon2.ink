@@ -3,7 +3,8 @@
         "random_weapon": "Willekeurig",
         "supplied_weapons": "Beschikbare wapens",
         "this_months_gear": "Uitrusting van de maand",
-        "title": "Salmon Run"
+        "title": "Salmon Run",
+        "current_gear": "Verkrijgbare uitrusting"
     },
     "new_weapon": "Nieuw Wapen",
     "regions": {
