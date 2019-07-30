@@ -19,25 +19,42 @@ class SalmonRunTweet extends TwitterPostBase {
         return Object.values(results);
     }
 
+    getSalmonRunGear() {
+        let timeline = readData('timeline.json');
+
+        return timeline.coop && timeline.coop.reward_gear;
+    }
+
     getData() {
-        return this.getSalmonRunSchedules().find(s => s.start_time == this.getDataTime());
+        const schedule = this.getSalmonRunSchedules().find(s => s.start_time == this.getDataTime());
+        const gear = this.getSalmonRunGear();
+
+        return { schedule, gear };
     }
 
     getTestData() {
-        return this.getSalmonRunSchedules()[0];
+        const schedule = this.getSalmonRunSchedules()[0];
+        const gear = this.getSalmonRunGear();
+
+        return { schedule, gear };
     }
 
     getImage(data) {
-        return captureSalmonRunScreenshot(data.start_time);
+        return captureSalmonRunScreenshot(data.schedule.start_time);
     }
 
     getText(data) {
-        let hasMysteryWeapon = data.weapons.some(w => w === null || w.coop_special_weapon);
+        let gear = '';
+        if (data.gear) {
+            gear = `Current reward gear is the ${data.gear.gear.name}. `;
+        }
+
+        let hasMysteryWeapon = data.schedule.weapons.some(w => w === null || w.coop_special_weapon);
 
         if (hasMysteryWeapon)
-            return `Salmon Run is now open on ${data.stage.name} with MYSTERY WEAPONS! #salmonrun #splatoon2`;
+            return `Salmon Run is now open on ${data.schedule.stage.name} with MYSTERY WEAPONS! ${gear} #salmonrun #splatoon2`;
 
-        return `Salmon Run is now open on ${data.stage.name}! #salmonrun #splatoon2`;
+        return `Salmon Run is now open on ${data.schedule.stage.name}! ${gear} #salmonrun #splatoon2`;
     }
 }
 

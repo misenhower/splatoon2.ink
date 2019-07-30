@@ -21,7 +21,7 @@
             <div class="column is-4 salmon-run-ad-img">
                 <div class="image is-16by9 is-hidden-desktop"></div>
 
-                <template v-if="!screenshotMode && rewardGear">
+                <template v-if="rewardGear">
                     <div class="salmon-run-gear-text">
                         {{ $t('coop.current_gear') }}
                     </div>
