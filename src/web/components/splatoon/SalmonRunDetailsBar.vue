@@ -1,5 +1,5 @@
 <template>
-    <div class="columns is-mobile is-slimmer" style="padding: 0.5rem 0" v-if="schedule.stage || schedule.weapons">
+    <div class="columns is-mobile is-slimmer salmon-run-details" style="padding: 0.5rem 0" v-if="schedule.stage || schedule.weapons">
         <div class="column" :class="mini ? 'is-3' : 'is-5'" v-if="schedule.stage">
             <Stage :stage="schedule.stage" is-salmon-run :showTitle="!mini"></Stage>
         </div>

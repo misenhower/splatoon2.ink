@@ -50,6 +50,12 @@
         transform: scale(1.4);
     }
 
+    .salmon-run-future .event:last-child {
+        .salmon-run-details {
+            padding-bottom: 0 !important;
+        }
+    }
+
     .new-weapon-box {
         max-width: 200px;
 

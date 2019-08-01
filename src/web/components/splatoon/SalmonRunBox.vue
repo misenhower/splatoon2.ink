@@ -21,7 +21,7 @@
             <div class="column is-4 salmon-run-ad-img">
                 <div class="image is-16by9 is-hidden-desktop"></div>
 
-                <template v-if="rewardGear">
+                <template v-if="showRewardGear && rewardGear">
                     <div class="salmon-run-gear-text">
                         {{ $t('coop.current_gear') }}
                     </div>
@@ -34,11 +34,11 @@
             </div>
             <div class="column">
                 <div class="salmon-run-content">
-                    <div class="salmon-run-open" v-if="activeSchedule">
+                    <div class="salmon-run-open" v-if="showCurrent && activeSchedule">
                         <div class="is-size-5 title-squid font-splatoon1">
                             {{ $t('times.open') }}
                         </div>
-                        <template v-if="screenshotMode">
+                        <template v-if="useRelativeTime">
                             <div class="title-color is-size-5">
                                 {{ activeSchedule.end_time - now | durationHours | time.remaining }}
                             </div>
@@ -61,19 +61,28 @@
                         </div>
                     </div>
 
-                    <div v-if="!screenshotMode && upcomingSchedules.length > 0">
+                    <div v-if="showUpcoming && upcomingSchedulesForDisplay.length > 0">
                         <div class="salmon-run-future">
                             <div class="is-size-6 title-squid font-splatoon1">
                                 {{ $t('times.soon') }}
                             </div>
-                            <div v-for="event in upcomingSchedules" :key="event.key" class="event">
+                            <div v-for="event in upcomingSchedulesForDisplay" :key="event.key" class="event">
                                 <div class="columns is-marginless is-gapless is-mobile">
                                     <div class="column is-narrow" style="margin-right: 5px">
                                         <div class="image is-4by3" style="width: 23px">
                                             <img src="~@/web/assets/img/salmon-run-mini.png" />
                                         </div>
                                     </div>
-                                    <div class="column">
+                                    <div class="column" v-if="useRelativeTime">
+                                        <span class="title-color is-size-6">
+                                            Shift opens
+                                            {{ event.start_time - now | durationHours | time.in }}
+                                        </span>
+                                        <span class="is-size-7 is-pulled-right">
+                                            {{ event.end_time - event.start_time | durationHours }}
+                                        </span>
+                                    </div>
+                                    <div class="column" v-else>
                                         <span class="title-color is-size-6">
                                             <span class="nowrap">
                                                 {{ event.start_time | date({ weekday: 'short' }) }}
@@ -114,7 +123,11 @@ import SalmonRunGearDialog from './SalmonRunGearDialog.vue';
 export default {
     components: { SalmonRunDetailsBar, SalmonRunGearDialog },
     props: {
-        screenshotMode: Boolean,
+        useRelativeTime: { type: Boolean, default: false },
+        showCurrent: { type: Boolean, default: true },
+        showUpcoming: { type: Boolean, default: true },
+        showRewardGear: { type: Boolean, default: true },
+        hideUpcomingSchedulesWithoutDetails: { type: Boolean, default: false },
     },
     data() {
         return {
@@ -127,6 +140,12 @@ export default {
         rewardGearName() {
             if (this.rewardGear)
                 return this.$t(`splatnet.gear.${this.rewardGear.kind}.${this.rewardGear.id}.name`, this.rewardGear.name);
+        },
+        upcomingSchedulesForDisplay() {
+            // Sometimes (for Twitter screenshots) we only want to show upcoming schedules that have map/weapon details
+            return this.upcomingSchedules && this.upcomingSchedules.filter(s => {
+                return (s.stage && s.weapons) || !this.hideUpcomingSchedulesWithoutDetails;
+            });
         },
     },
 }

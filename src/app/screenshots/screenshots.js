@@ -68,8 +68,8 @@ function captureGearScreenshot(now) {
     return captureScreenshot({ hash, viewport: { height: 700 } });
 }
 
-function captureSalmonRunScreenshot(now) {
-    let hash = `/salmonRun/${now}`;
+function captureSalmonRunScreenshot(now, mode) {
+    let hash = `/salmonRun/${now}?mode=${mode}`;
 
     return captureScreenshot({ hash });
 }
