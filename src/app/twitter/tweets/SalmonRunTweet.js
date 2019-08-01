@@ -49,8 +49,8 @@ class SalmonRunTweet extends TwitterPostBase {
             return null;
         }
 
-        // Don't post a tweet if the current schedule didn't just start
-        if (current && this.getDataTime() - current.start_time !== 0) {
+        // Only post a tweet when the schedule just started, or periodically every 12 hours
+        if (current && (this.getDataTime() - current.start_time) % (12 * 60 * 60) !== 0) {
             return null;
         }
 
@@ -87,10 +87,15 @@ class SalmonRunTweet extends TwitterPostBase {
 
         let hasMysteryWeapon = data.current.weapons.some(w => w === null || w.coop_special_weapon);
 
-        if (hasMysteryWeapon)
-            return `Salmon Run is now open on ${data.current.stage.name} with MYSTERY WEAPONS! ${gear}#salmonrun #splatoon2`;
+        let justOpened = data.current.start_time === this.getDataTime();
 
-        return `Salmon Run is now open on ${data.current.stage.name}! ${gear}#salmonrun #splatoon2`;
+        let state = (justOpened) ? 'is now open' : 'is still open';
+        let hashtags = (justOpened) ? '#salmonrun #splatoon2' : '#salmonrun #ongoingshift #splatoon2';
+
+        if (hasMysteryWeapon)
+            return `Salmon Run ${state} on ${data.current.stage.name} with MYSTERY WEAPONS! ${gear}${hashtags}`;
+
+        return `Salmon Run ${state} on ${data.current.stage.name}! ${gear}${hashtags}`;
     }
 }
 
