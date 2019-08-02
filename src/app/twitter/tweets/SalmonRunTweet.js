@@ -1,6 +1,10 @@
 const TwitterPostBase = require('./TwitterPostBase');
 const { captureSalmonRunScreenshot } = require('@/app/screenshots');
-const { readData } = require('@/common/utilities');
+const { readData, readJson, writeJson } = require('@/common/utilities');
+const fs = require('fs');
+const path = require('path');
+
+const previousSchedulePath = path.resolve('storage/salmonrun-previousSchedule.json');
 
 class SalmonRunTweet extends TwitterPostBase {
     getKey() { return 'salmonrun'; }
@@ -23,10 +27,6 @@ class SalmonRunTweet extends TwitterPostBase {
         return this.getSalmonRunSchedules().find(s => s.start_time <= this.getDataTime() && s.end_time > this.getDataTime());
     }
 
-    getJustClosedSchedule() {
-        return this.getSalmonRunSchedules().find(s => s.end_time == this.getDataTime());
-    }
-
     getUpcomingSchedule() {
         return this.getSalmonRunSchedules().sort((a, b) => a.start_time - b.start_time)
             .find(s => s.start_time > this.getDataTime());
@@ -40,30 +40,47 @@ class SalmonRunTweet extends TwitterPostBase {
 
     getData() {
         const current = this.getCurrentSchedule();
-        const justClosed = this.getJustClosedSchedule();
+        const previous = this.getPreviousSchedule();
         const upcoming = this.getUpcomingSchedule();
         const gear = this.getSalmonRunGear();
 
-        // Don't post a tweet if a schedule is not currently active (and one didn't just close),
-        if (!current && !justClosed) {
-            return null;
+        const result = { current, previous, upcoming, gear };
+
+        // If a shift is currently open, cache it for later so we can know when it ends
+        if (current) {
+            this.updatePreviousSchedule(current);
         }
 
-        // Only post a tweet when the schedule just started, or periodically every 12 hours
-        if (current && (this.getDataTime() - current.start_time) % (12 * 60 * 60) !== 0) {
-            return null;
+        // Post a tweet if a schedule just started, or periodically every 12 hours
+        if (current && (this.getDataTime() - current.start_time) % (12 * 60 * 60) === 0) {
+            return result;
         }
 
-        return { current, justClosed, upcoming, gear };
+        // Post a tweet if the previous schedule just closed
+        if (previous && previous.end_time === this.getDataTime()) {
+            return result;
+        }
+
+        // Otherwise, don't post a tweet
+        return null;
     }
 
     getTestData() {
         return {
             current: this.getSalmonRunSchedules()[0],
-            justClosed: null,
             upcoming: null,
             gear: this.getSalmonRunGear(),
         };
+    }
+
+    getPreviousSchedule() {
+        if (fs.existsSync(previousSchedulePath)) {
+            return readJson(previousSchedulePath);
+        }
+    }
+
+    updatePreviousSchedule(schedule) {
+        writeJson(previousSchedulePath, schedule);
     }
 
     getImage(data) {
