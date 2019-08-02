@@ -103,11 +103,15 @@ class SalmonRunTweet extends TwitterPostBase {
         }
 
         let hasMysteryWeapon = data.current.weapons.some(w => w === null || w.coop_special_weapon);
+        let hasGrizzcoMysteryWeapon = data.current.weapons.some(w => w && w.coop_special_weapon && w.id === '-2');
 
         let justOpened = data.current.start_time === this.getDataTime();
 
         let state = (justOpened) ? 'is now open' : 'is still open';
         let hashtags = (justOpened) ? '#salmonrun #splatoon2' : '#salmonrun #ongoingshift #splatoon2';
+
+        if (hasGrizzcoMysteryWeapon)
+            return `Salmon Run ${state} on ${data.current.stage.name} with GRIZZCO MYSTERY WEAPONS! ${gear}${hashtags}`;
 
         if (hasMysteryWeapon)
             return `Salmon Run ${state} on ${data.current.stage.name} with MYSTERY WEAPONS! ${gear}${hashtags}`;
