@@ -55,10 +55,19 @@ class SplatfestTweet extends TwitterPostBase {
         if (festival)
             return { festival, type: 'end' };
 
-        // Festival 24-hour reminder
-        festival = this.getFestivals(region).find(f => f.times.start == this.getDataTime() + 24 * 60 * 60);
-        if (festival)
-            return { festival, type: 'reminder' };
+        // Festival reminders
+        let reminders = [
+            { time: 60 * 60 * 24, text: 'just 24 hours' },
+            { time: 60 * 60 * 24 * 2, text: '2 days' },
+            { time: 60 * 60 * 24 * 3, text: '3 days' },
+            { time: 60 * 60 * 24 * 7, text: '1 week' },
+        ];
+
+        for (let { time, text } of reminders) {
+            festival = this.getFestivals(region).find(f => f.times.start == this.getDataTime() + time);
+            if (festival)
+                return { festival, type: 'reminder', text };
+        }
     }
 
     // Which regions have this Splatfest?
@@ -112,8 +121,8 @@ class SplatfestTweet extends TwitterPostBase {
 
             case 'reminder':
                 if (isSimultaneous)
-                    return `Reminder: The ${isGlobal ? 'global' : regionDemonyms} Splatfest starts in just 24 hours! #splatfest #splatoon2`;
-                return `Reminder: The Splatfest starts in ${this.regionInfo.name} in just 24 hours! #splatfest #splatoon2`;
+                    return `Reminder: The ${isGlobal ? 'global' : regionDemonyms} Splatfest starts in ${data.text}! #splatfest #splatoon2`;
+                return `Reminder: The Splatfest starts in ${this.regionInfo.name} in ${data.text}! #splatfest #splatoon2`;
 
             case 'end':
                 let hours = (data.festival.times.result - this.getDataTime()) / 60 / 60;
