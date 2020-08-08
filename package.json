@@ -5,14 +5,14 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --modern --no-clean",
     "lint": "vue-cli-service lint",
+    "cron": "node src/app/cron",
+    "locale-man": "node node_modules/locale-man/ -l en,es,es-MX,fr,fr-CA,de,nl,it,ru,ja -o src/locale",
     "splatnet": "node src/app splatnet",
     "twitter": "node src/app twitter",
     "twitter:test": "node src/app twitterTest",
-    "cron": "node src/app/cron",
-    "utility:updateGear": "node src/utility updateGear",
-    "utility:getSplatNetLanguageFiles": "node src/utility getSplatNetLanguageFiles",
     "utility:copyTranslation": "node src/utility copyTranslation",
-    "locale-man": "node node_modules/locale-man/ -l en,es,es-MX,fr,fr-CA,de,nl,it,ru,ja -o src/locale"
+    "utility:getSplatNetLanguageFiles": "node src/utility getSplatNetLanguageFiles",
+    "utility:updateGear": "node src/utility updateGear"
   },
   "dependencies": {
     "axios": "^0.19.2",
@@ -46,19 +46,16 @@
     "vuex-i18n": "^1.13.1"
   },
   "devDependencies": {
+    "@fullhuman/postcss-purgecss": "^2.1.0",
+    "@fullhuman/vue-cli-plugin-purgecss": "~2.2.0",
     "@vue/cli-plugin-babel": "^4.4.6",
     "@vue/cli-plugin-eslint": "^4.4.6",
     "@vue/cli-service": "^4.4.6",
     "locale-man": "^0.0.5",
     "node-sass": "^4.9.2",
-    "purify-css": "^1.2.5",
-    "purifycss-webpack": "^0.7.0",
     "sass-loader": "^9.0.3",
     "shipit-cli": "^5.3.0",
     "vue-template-compiler": "^2.6.11"
-  },
-  "_moduleAliases": {
-    "@": "src"
   },
   "eslintConfig": {
     "root": true,
@@ -86,5 +83,8 @@
     "last 2 versions",
     "firefox esr",
     "not dead"
-  ]
+  ],
+  "_moduleAliases": {
+    "@": "src"
+  }
 }

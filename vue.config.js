@@ -1,8 +1,3 @@
-const path = require('path');
-const glob = require('glob');
-
-const PurifyCSSPlugin = require('purifycss-webpack');
-
 module.exports = {
   assetsDir: 'assets',
   productionSourceMap: false,
@@ -22,26 +17,7 @@ module.exports = {
         }
       }
     },
-    plugins: [
-      new PurifyCSSPlugin({
-        paths: [
-            ...glob.sync(path.join(__dirname, 'src/web/html/**/*.html')),
-            ...glob.sync(path.join(__dirname, 'src/web/components/**/*.vue')),
-        ],
-        purifyOptions: {
-          whitelist: [
-            '.title:not(.is-spaced)+.subtitle', // Fix subtitle spacing
-            // Dynamic merchandise types
-            '.merchandise-box.shoes',
-            '.merchandise-box.head',
-            '.merchandise-box.clothes',
-          ],
-          cleanCssOptions: {
-            rebase: false, // Leave relative paths alone when minifying CSS
-          },
-        },
-      }),
-    ]
+    plugins: [],
   },
   // Disabling this for now due to issues with the modern build
   // chainWebpack: config => {
