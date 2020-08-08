@@ -45,6 +45,7 @@ export default {
                 case 3: return 'is-one-third';
                 case 4: return 'is-one-quarter';
             }
+            return null;
         },
     },
 };

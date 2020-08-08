@@ -42,6 +42,7 @@ export default {
                 // Merge our known data with potentially new data from Splatnet
                 return Object.assign({}, SplatoonStages.find(stage => stage.id === this.stage.id), this.stage);
             }
+            return null;
         },
         name() {
             if (this.isSalmonRun)
@@ -52,10 +53,12 @@ export default {
         image() {
             if (this.stageDetails)
                 return Vue.filter('localSplatNetImageUrl')(this.stageDetails.image);
+            return null;
         },
         largeImage() {
             if (this.stageDetails)
                 return this.stageDetails.largeImage || Vue.filter('localSplatNetImageUrl')(this.stageDetails.image);
+            return null;
         },
         style() {
             return {

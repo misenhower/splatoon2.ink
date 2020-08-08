@@ -92,6 +92,7 @@ export default {
             let originalGear = this.merchandise.original_gear;
             if (originalGear)
                 return this.$t(`splatnet.skills.${originalGear.skill.id}.name`, originalGear.skill.name);
+            return null;
         },
         frequentSkillName() {
             let frequentSkill = this.merchandise.gear.brand.frequent_skill;

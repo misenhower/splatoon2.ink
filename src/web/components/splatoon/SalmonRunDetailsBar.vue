@@ -13,7 +13,7 @@
                 <div class="has-text-centered" v-if="!mini">{{ $t('coop.supplied_weapons') }}</div>
 
                 <div class="columns is-mobile is-slimmer">
-                    <div class="column" v-for="weapon in schedule.weapons">
+                    <div class="column" v-for="(weapon, i) in schedule.weapons" :key="i">
                         <div class="image is-square weapon">
                             <template v-if="weapon.weapon">
                                 <img

@@ -92,6 +92,7 @@ export default {
                     time: this.$store.state.splatoon.data.festivals[region].festivals[0].times.start,
                 }));
             }
+            return null;
         },
     },
 };

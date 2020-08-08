@@ -140,6 +140,7 @@ export default {
         rewardGearName() {
             if (this.rewardGear)
                 return this.$t(`splatnet.gear.${this.rewardGear.kind}.${this.rewardGear.id}.name`, this.rewardGear.name);
+            return null;
         },
         upcomingSchedulesForDisplay() {
             // Sometimes (for Twitter screenshots) we only want to show upcoming schedules that have map/weapon details

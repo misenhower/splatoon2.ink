@@ -88,6 +88,7 @@ export default {
             let rule = this.schedule.rule;
             if (rule)
                 return this.$t(`splatnet.rules.${rule.key}.name`, rule.name);
+            return null;
         },
         ruleNameClass() { return this.isSmall ? 'is-6' : 'is-5' },
         scheduleClass() { return this.isSmall ? 'is-7' : 'is-6' },

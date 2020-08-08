@@ -16,7 +16,7 @@
         </div>
         <div class="dropdown-menu" role="menu">
             <div class="dropdown-content font-splatoon2 has-text-left">
-                <a href="#" class="dropdown-item" v-for="option in options" :class="{ 'is-active': option.key == value }" @click.prevent="select(option)" @touchstart.stop @touchend.prevent="select(option)">
+                <a href="#" class="dropdown-item" v-for="option in options" :key="option.key" :class="{ 'is-active': option.key == value }" @click.prevent="select(option)" @touchstart.stop @touchend.prevent="select(option)">
                     {{ option.name }}
                 </a>
             </div>
@@ -40,6 +40,7 @@ export default {
         selectedOption() {
             if (this.options)
                 return this.options.find(option => option.key == this.value);
+            return null;
         },
     },
     methods: {

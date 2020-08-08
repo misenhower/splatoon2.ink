@@ -70,6 +70,7 @@ export default {
                 let rule = this.activeSchedule.rule;
                 return this.$t(`splatnet.rules.${rule.key}.name`, rule.name);
             }
+            return null;
         },
     },
 }

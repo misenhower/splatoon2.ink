@@ -40,6 +40,7 @@ export default {
                 return 'alpha';
             if (this.heroWins.bravo > this.heroWins.alpha)
                 return 'bravo';
+            return null;
         },
     },
 };

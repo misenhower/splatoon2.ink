@@ -35,8 +35,6 @@
 </template>
 
 <script>
-import Vue from 'vue';
-
 export default {
     props: ['festival', 'type'],
     computed: {
@@ -59,6 +57,7 @@ export default {
                     bravo: this.festival.results.contribution_bravo[this.type],
                 };
             }
+            return null;
         },
         showAverage() {
             return ['regular', 'challenge'].indexOf(this.type) !== -1;

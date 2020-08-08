@@ -135,6 +135,7 @@ export default {
         image() {
             if (this.festival)
                 return Vue.filter('localSplatNetImageUrl')(this.festival.images.panel);
+            return null;
         },
         teamNames() {
             return {

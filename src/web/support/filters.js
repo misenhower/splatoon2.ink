@@ -76,7 +76,7 @@ Vue.filter('shortDuration', function (value) {
 });
 
 Vue.filter('durationHours', function (value) {
-    let { negative, days, hours, minutes, seconds } = getDurationParts(value);
+    let { negative, days, hours } = getDurationParts(value);
 
     hours += 24 * days;
     return $t('time.hours', { hours: negative + hours }, hours);
