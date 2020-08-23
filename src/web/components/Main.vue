@@ -141,8 +141,8 @@
                 {{ $t('ui.disclaimer') }}
                 &ndash;
                 <router-link to="/about">{{ $t('ui.about') }}</router-link>
-                &ndash;
-                <router-link to="/finalfest">FinalFest</router-link>
+                <!-- &ndash; -->
+                <!-- <router-link to="/finalfest">FinalFest</router-link> -->
                 &ndash;
                 <router-link to="/calendars">Calendar Feeds</router-link>
                 &ndash;
