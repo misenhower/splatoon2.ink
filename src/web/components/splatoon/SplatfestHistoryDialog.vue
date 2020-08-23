@@ -58,7 +58,11 @@
                                     />
 
                                 <div v-else-if="festival.times.result > now" class="has-text-centered font-splatoon2 is-size-5">
-                                    {{ festival.times.result - now | duration | resultsIn }}
+                                    <div>{{ festival.times.result - now | duration | resultsIn }}</div>
+                                    <div>
+                                        {{ festival.times.result | date }}
+                                        {{ festival.times.result | time }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
