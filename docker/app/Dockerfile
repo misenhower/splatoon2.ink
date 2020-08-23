@@ -1,4 +1,4 @@
-FROM node:8
+FROM node:12
 
 # Headless Chrome config
 # From: https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#running-puppeteer-in-docker
