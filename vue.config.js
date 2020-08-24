@@ -27,6 +27,15 @@ module.exports = {
   //     return options;
   //   });
   // },
+
+  chainWebpack: config => {
+    config.module
+      .rule('vue')
+      .use('vue-loader')
+      .tap(args => {
+        args.compilerOptions.whitespace = 'preserve'
+      })
+  },
   devServer: {
     contentBase: [
       './public',
