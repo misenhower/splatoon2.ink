@@ -58,7 +58,7 @@ class SplatfestTweet extends TwitterPostBase {
         // Festival reminders
         let reminders = [
             { time: 60 * 60 * 24, text: 'just 24 hours' },
-            { time: 60 * 60 * 24 * 2, text: '2 days' },
+            // { time: 60 * 60 * 24 * 2, text: '2 days' },
             { time: 60 * 60 * 24 * 3, text: '3 days' },
             { time: 60 * 60 * 24 * 7, text: '1 week' },
         ];
