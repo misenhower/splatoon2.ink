@@ -64,7 +64,7 @@ module.exports = async () => {
     for (let url of inkipediaSources) {
         let response = await axios.get(url);
 
-        let regex = /\{\{GearList\/Item.*?\}\}/g;
+        let regex = /\{\{GearList\/Item.*?filter_brand/g;
         let row;
         while (row = regex.exec(response.data)) {
             // Format: name=value|brand=value|...
