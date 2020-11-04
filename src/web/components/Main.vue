@@ -3,7 +3,7 @@
 
         <!-- Site header -->
         <div class="hero-head">
-            <VoteBanner />
+            <!-- <VoteBanner /> -->
 
             <div class="container is-fluid">
                 <div class="level is-marginless">
@@ -178,10 +178,10 @@ import SalmonRunBox from './splatoon/SalmonRunBox.vue';
 import SplatfestBox from './splatoon/SplatfestBox.vue';
 import NewWeaponsContainer from './splatoon/NewWeaponsContainer.vue';
 import Stage from '@/web/components/splatoon/Stage.vue';
-import VoteBanner from '@/web/components/VoteBanner.vue';
+// import VoteBanner from '@/web/components/VoteBanner.vue';
 
 export default {
-    components: { Dropdown, ScheduleBox, SalmonRunBox, SplatfestBox, NewWeaponsContainer, Stage, VoteBanner },
+    components: { Dropdown, ScheduleBox, SalmonRunBox, SplatfestBox, NewWeaponsContainer, Stage, /*VoteBanner*/ },
     computed: {
         ...mapGetters('splatoon/regions', ['selectedRegion']),
         ...mapGetters('splatoon/languages', ['selectedLanguage']),
