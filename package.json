@@ -15,7 +15,7 @@
     "utility:updateGear": "node src/utility updateGear"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "babel-eslint": "^10.1.0",
     "bulma": "~0.6.1",
     "bulma-tooltip": "~2.0.1",
