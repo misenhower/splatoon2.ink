@@ -4,7 +4,7 @@
 #screenshots {
     .main-schedule-box {
         border-radius: 20px;
-        mask-size: 800px 1280px; // Original value: 500px 800px
+        mask-size: 900px 1440px; // Original value: 500px 800px
         padding-top: 50px;
 
         .stage-image:not(:last-child) {
@@ -12,7 +12,7 @@
         }
 
         .stage-title {
-            font-size: 1.35rem;
+            font-size: 1.65rem;
         }
     }
 
@@ -27,7 +27,7 @@
     }
 
     .featured-merchandise {
-        transform: scale(1.85) rotate(-1.4deg);
+        transform: scale(1.9) rotate(-1.4deg);
         min-width: 173px;
 
         .info-overlay {
@@ -41,8 +41,21 @@
         }
     }
 
+    .still-available-merchandise {
+        transform: scale(0.9);
+        margin: -60px 0;
+
+        .merchandise-box {
+            font-size: 1.25rem;
+        }
+
+        .remaining-time {
+            font-size: 1.25rem !important;
+        }
+    }
+
     .salmon-run {
-        transform: scale(1.5) rotate(-1.4deg);
+        transform: scale(1.85) rotate(-1.4deg);
     }
 
     .salmon-run-gear .merchandise-box {
@@ -74,7 +87,13 @@
 
     .splatfest-results {
         width: 275px;
-        transform: scale(1.35);
+        transform: scale(1.65);
+    }
+
+    .splatfest-screenshot {
+        .splatfest {
+            transform: scale(1.25) rotate(-1.4deg);
+        }
     }
 
     .twitter-logo {

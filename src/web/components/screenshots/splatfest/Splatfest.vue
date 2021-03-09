@@ -1,5 +1,5 @@
 <template>
-    <Wrapper :title="title" v-if="festival">
+    <Wrapper :title="title" class="splatfest-screenshot" v-if="festival" hide-local-times>
         <div class="level">
             <div class="level-item">
                 <div class="splatfest tilt-left">

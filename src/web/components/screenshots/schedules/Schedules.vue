@@ -13,7 +13,7 @@
                 <ScheduleBox class="main-schedule-box tilt-left" mode="league" />
             </div>
         </div>
-        <div class="columns is-gapless font-splatoon2" v-else>
+        <div class="columns font-splatoon2" v-else>
             <div class="column" style="display: flex">
                 <div class="splatfest">
                     <div class="hook-box">
@@ -44,8 +44,8 @@
                     </template>
                 </div>
             </div>
-            <div class="column is-5">
-                <ScheduleBox class="main-schedule-box tilt-right" mode="regular" splatfest-battle style="max-width: 335px; margin-right: 20px" />
+            <div class="column">
+                <ScheduleBox class="main-schedule-box tilt-right" mode="regular" splatfest-battle style="max-width: initial" />
             </div>
         </div>
     </Wrapper>

@@ -5,8 +5,10 @@ const ecstatic = require('ecstatic');
 const puppeteer = require('puppeteer');
 
 const viewport = {
-    width: 1012, // Twitter's in-stream image width is 506px, 506*2 = 1012
-    height: 600,
+    // Using a 16:9 ratio here by default to match Twitter's image card dimensions
+    // 1216 was chosen as the width because of Bulma's "widescreen" breakpoint
+    width: 1216,
+    height: 684,
     deviceScaleFactor: 2,
 };
 
@@ -57,15 +59,13 @@ async function captureScreenshot(options) {
 function captureScheduleScreenshot(now, splatfestBattle = false) {
     let hash = `/schedules/${now}`;
 
-    let viewport = (splatfestBattle) ? { height: 800 } : undefined;
-
-    return captureScreenshot({ hash, viewport });
+    return captureScreenshot({ hash });
 }
 
 function captureGearScreenshot(now) {
     let hash = `/splatNetGear/${now}`;
 
-    return captureScreenshot({ hash, viewport: { height: 700 } });
+    return captureScreenshot({ hash });
 }
 
 function captureSalmonRunScreenshot(now, mode) {
