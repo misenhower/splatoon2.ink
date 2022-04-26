@@ -27,6 +27,11 @@
                                 <span class="font-splatoon2">{{ $t('ui.get_updates_via_twitter') }}</span>
                             </a>
                         </div>
+                        <div class="level-item">
+                            <a href="https://splatoon3.ink" target="_blank" class="button is-translucent-dark is-rounded">
+                                <span class="font-splatoon2">Splatoon 3</span>
+                            </a>
+                        </div>
                     </div>
                     <div class="level-right">
                         <div class="level-item" v-if="showFestivalRegionDropdown">
@@ -143,6 +148,8 @@
                 {{ $t('ui.disclaimer') }}
                 &ndash;
                 <router-link to="/about">{{ $t('ui.about') }}</router-link>
+                &ndash;
+                <a href="https://splatoon3.ink" target="_blank">Splatoon 3</a>
                 <!-- &ndash; -->
                 <!-- <router-link to="/finalfest">FinalFest</router-link> -->
                 &ndash;
