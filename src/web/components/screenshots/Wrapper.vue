@@ -24,7 +24,7 @@
                                 <div class="image is-24x24 twitter-logo">
                                     <img src="~@/web/assets/img/twitter-white.png" />
                                 </div>
-                                @splatoon2inkbot
+                                @splatoon3ink
                             </div>
                         </div>
                         <div class="level-item">&nbsp;</div>
