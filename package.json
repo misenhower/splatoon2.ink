@@ -67,6 +67,7 @@
       "eslint:recommended"
     ],
     "rules": {
+      "no-unused-vars": "warn",
       "no-prototype-builtins": 0,
       "@vue/multi-word-component-names": 0
     },
