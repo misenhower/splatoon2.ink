@@ -12,6 +12,7 @@ const LocalizationProcessor = require('../LocalizationProcessor');
 
 const dataPath = path.resolve('dist/data');
 const splatnetAssetPath = path.resolve('dist/assets/splatnet');
+const cdnAltPath = path.resolve('src/common/cdn');
 
 class Updater {
     constructor(options = {}) {
@@ -183,6 +184,15 @@ class Updater {
         // Check whether the image has already been downloaded
         if (fs.existsSync(localPath))
             return;
+
+        // Certain images are not available on the CDN anymore
+        if (fs.existsSync(cdnAltPath + imagePath)) {
+            this.info(`Using CDN backup: ${imagePath}`);
+            let image = fs.readFileSync(cdnAltPath + imagePath);
+            this.writeFile(localPath, image);
+
+            return;
+        }
 
         // Otherwise, download the image
         this.info(`Downloading image: ${imagePath}`);
