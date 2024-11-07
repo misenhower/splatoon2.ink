@@ -154,7 +154,7 @@ class Updater {
             return false;
 
         // Remove timeline items with an importance of -1
-        if (value.hasOwnProperty('importance'))
+        if ('importance' in value)
             return value.importance > -1;
 
         return true;

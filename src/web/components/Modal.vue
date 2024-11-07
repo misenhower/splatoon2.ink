@@ -66,7 +66,7 @@ export default {
     mounted() {
         opened(this);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         closed(this);
     },
     methods: {

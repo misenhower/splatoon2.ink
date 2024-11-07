@@ -124,14 +124,15 @@ class SplatfestTweet extends TwitterPostBase {
                     return `Reminder: The ${isGlobal ? 'global' : regionDemonyms} Splatfest starts in ${data.text}! #splatfest #splatoon2`;
                 return `Reminder: The Splatfest starts in ${this.regionInfo.name} in ${data.text}! #splatfest #splatoon2`;
 
-            case 'end':
+            case 'end': {
                 let hours = (data.festival.times.result - this.getDataTime()) / 60 / 60;
                 let duration = (hours == 1) ? '1 hour' : `${hours} hours`;
                 if (isSimultaneous)
                     return `The ${isGlobal ? 'global' : regionDemonyms} Splatfest is now closed. Results will be posted in ${duration}! #splatfest #splatoon2`;
                 return `The Splatfest is now closed in ${this.regionInfo.name}. Results will be posted in ${duration}! #splatfest #splatoon2`;
+            }
 
-            case 'result':
+            case 'result': {
                 let winner = data.results.summary.total ? 'bravo' : 'alpha';
 
                 // Just hardcoding this in here for now to avoid dealing with loading the Vuex store separately
@@ -141,6 +142,7 @@ class SplatfestTweet extends TwitterPostBase {
                 let results = resultsFormat.replace('{team}', teamName);
 
                 return `${isGlobal ? 'Global' : regionDemonyms} Splatfest results: ${results} #splatfest #splatoon2`;
+            }
         }
     }
 }
