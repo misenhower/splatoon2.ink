@@ -4,6 +4,8 @@ const TimelineUpdater = require('./updaters/TimelineUpdater');
 const OriginalGearImageUpdater = require('./updaters/OriginalGearImageUpdater');
 const FestivalsUpdater = require('./updaters/FestivalsUpdater');
 const MerchandisesUpdater = require('./updaters/MerchandisesUpdater');
+const S3Syncer = require('../sync/S3Syncer');
+const { canSync } = require('../sync');
 
 const updaters = [
     new OriginalGearImageUpdater,
@@ -17,12 +19,18 @@ const updaters = [
 ];
 
 async function updateAll() {
+    const syncer = canSync() ? new S3Syncer() : null;
+
     for (let updater of updaters) {
         try {
             await updater.update();
         } catch (e) {
             console.error(e);
         }
+    }
+
+    if (syncer) {
+        await syncer.upload();
     }
 
     return 'Done';
