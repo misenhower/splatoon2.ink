@@ -6,6 +6,7 @@
     "build": "vue-cli-service build --modern --no-clean",
     "lint": "vue-cli-service lint",
     "cron": "node src/app/cron",
+    "start": "npm run sync && npm run cron",
     "locale-man": "node node_modules/locale-man/ -l en,es,es-MX,fr,fr-CA,de,nl,it,ru,ja -o src/locale",
     "splatnet": "node src/app splatnet",
     "twitter": "node src/app twitter",

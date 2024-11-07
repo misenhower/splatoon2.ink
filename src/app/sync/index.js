@@ -15,6 +15,8 @@ function sync() {
     return;
   }
 
+  console.info('Syncing files...');
+
   const syncer = new S3Syncer();
   return syncer.sync();
 }
