@@ -277,7 +277,7 @@ export default {
         this.startUpdatingNow();
         this.startUpdatingData();
     },
-    beforeUnmount() {
+    beforeDestroy() {
         this.stopUpdatingNow();
         this.stopUpdatingData();
         this.shutdown();

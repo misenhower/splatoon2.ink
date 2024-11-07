@@ -23,6 +23,7 @@ module.exports = {
     'vue/html-self-closing': ['warn', { html: { void: 'always' } }],
     'vue/no-deprecated-filter': 'off',
     'vue/require-toggle-inside-transition': 'off',
+    'vue/no-deprecated-destroyed-lifecycle': 'off',
   },
   'globals': {
     '__dirname': 'readonly',
