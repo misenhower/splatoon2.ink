@@ -62,24 +62,6 @@
     "shipit-cli": "^5.3.0",
     "vue-template-compiler": "^2.6.11"
   },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "rules": {
-      "no-unused-vars": "warn",
-      "no-prototype-builtins": 0,
-      "@vue/multi-word-component-names": 0
-    },
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
   "postcss": {
     "plugins": {
       "autoprefixer": {}
