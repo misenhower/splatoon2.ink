@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const mkdirp = require('mkdirp').sync;
-const { postMediaTweet } = require('../client');
+const { canTweet, postMediaTweet } = require('../client');
 const { getTopOfCurrentHour, readJson, writeJson } = require('@/common/utilities');
 
 const lastTweetTimesPath = path.resolve('storage/twitter-lastTweetTimes.json');
@@ -19,6 +19,12 @@ class TwitterPostBase {
             return false;
         }
 
+        // Make sure we can post or save to a file
+        if (!canTweet() && !this.getPublicImageFilename()) {
+            this.error('Twitter API parameters not specified');
+            return false;
+        }
+
         return this.postTweet();
     }
 
@@ -32,13 +38,15 @@ class TwitterPostBase {
             // Maybe save the image
             this.maybeSavePublicImage(data, image);
 
-            // Post to Twitter
-            let tweet = await postMediaTweet(text, image);
+            if (canTweet()) {
+                // Post to Twitter
+                let tweet = await postMediaTweet(text, image);
 
-            // Update the last post time
-            this.updateLastTweetTime();
+                // Update the last post time
+                this.updateLastTweetTime();
 
-            this.info('Posted Tweet');
+                this.info('Posted Tweet');
+            }
         }
         catch (e) {
             this.error('Couldn\'t post Tweet');
@@ -47,11 +55,12 @@ class TwitterPostBase {
     }
 
     maybeSavePublicImage(data, image) {
-        let filename = this.getPublicImageFilename(data);
+        let filename = this.getPublicImageFilename();
         if (filename) {
             let outputFilename = path.resolve(`dist/twitter-images/${filename}`);
             mkdirp(path.dirname(outputFilename));
             fs.writeFileSync(outputFilename, image);
+            this.info(`Saved public image as ${filename}`);
         }
     }
 
@@ -155,7 +164,7 @@ class TwitterPostBase {
     getImage(data) { }
 
     // The filename to store the image as (optional)
-    getPublicImageFilename(data) { }
+    getPublicImageFilename() { }
 
     // The text body of the Tweet
     getText(data) { }
