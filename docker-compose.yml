@@ -1,17 +1,13 @@
-version: '2'
-
 services:
-
   app:
-    build: docker/app
+    build:
+      dockerfile: docker/app/Dockerfile
+    init: true
     restart: unless-stopped
-    volumes:
-      - ./:/app
 
   nginx:
     image: nginx
     restart: unless-stopped
     volumes:
       - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./logs:/logs
       - ./dist:/usr/share/nginx/html:ro
