@@ -15,11 +15,7 @@ class S3Syncer
 
     return Promise.all([
       this.syncClient.sync(this.publicBucket, `${this.localPath}/dist`, {
-        filters: [
-          { exclude: () => true }, // Exclude everything by default
-          { include: (key) => key.startsWith('assets/splatnet/') },
-          { include: (key) => key.startsWith('data/') },
-        ],
+        filters: this.filters,
       }),
       this.syncClient.sync(this.privateBucket, `${this.localPath}/storage`),
     ]);
@@ -30,6 +26,7 @@ class S3Syncer
 
     return Promise.all([
       this.syncClient.sync(`${this.localPath}/dist`, this.publicBucket, {
+        filters: this.filters,
         commandInput: input => ({
           ACL: 'public-read',
           ContentType: mime.lookup(input.Key),
@@ -65,6 +62,15 @@ class S3Syncer
 
   get localPath() {
     return path.resolve('.');
+  }
+
+  get filters() {
+    return [
+      { exclude: () => true }, // Exclude everything by default
+      { include: (key) => key.startsWith('assets/splatnet/') },
+      { include: (key) => key.startsWith('data/') },
+      { include: (key) => key.startsWith('twitter-images/') },
+    ];
   }
 
   log(message) {
