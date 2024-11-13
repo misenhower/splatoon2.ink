@@ -50,7 +50,7 @@ jobs:
 
     env:
       REGISTRY: ghcr.io
-      IMAGE_NAME: splatoon2ink/app
+      IMAGE_NAME: ${{ github.repository }}
 
     steps:
     - name: Checkout
