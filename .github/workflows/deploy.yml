@@ -42,6 +42,17 @@ jobs:
   deploy-backend:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: splatoon2ink/app
+      TAG: ${{ github.ref == 'refs/heads/main' && 'latest' || 'staging' }}
+
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -49,7 +60,7 @@ jobs:
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
       with:
-        registry: ghcr.io
+        registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -57,12 +68,21 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5
       with:
-        images: splatoon2ink/app
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
 
     - name: Build and push Docker image
+      id: push
       uses: docker/build-push-action@v6
       with:
         context: .
         file: ./docker/app/Dockerfile
         push: true
-        tags: splatoon2ink/app:latest
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+
+    - name: Generate artifact attestation
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        subject-digest: ${{ steps.push.outputs.digest }}
+        push-to-registry: true
