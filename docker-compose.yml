@@ -4,6 +4,18 @@ services:
       dockerfile: docker/app/Dockerfile
     init: true
     restart: unless-stopped
+    environment:
+      USE_BROWSERLESS: true
+      BROWSERLESS_ENDPOINT: ws://browserless:3000
+      SCREENSHOT_HOST: app
+    depends_on:
+      - browserless
+
+  browserless:
+    image: ghcr.io/browserless/chromium
+    restart: unless-stopped
+    environment:
+      CONCURRENT: ${BROWSERLESS_CONCURRENT:-1}
 
   nginx:
     image: nginx
