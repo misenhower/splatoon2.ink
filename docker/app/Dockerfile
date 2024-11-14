@@ -2,7 +2,7 @@ FROM node:20
 
 # App setup
 WORKDIR /app
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_SKIP_DOWNLOAD=true
 
 # Install NPM dependencies
 COPY package*.json ./
