@@ -30,6 +30,9 @@ class S3Syncer
         commandInput: input => ({
           ACL: 'public-read',
           ContentType: mime.lookup(input.Key),
+          CacheControl: input.Key.startsWith('data/')
+            ? 'no-cache, stale-while-revalidate=5, stale-if-error=86400'
+            : undefined,
         }),
       }),
       this.syncClient.sync(`${this.localPath}/storage`, this.privateBucket),
