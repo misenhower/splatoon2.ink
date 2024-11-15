@@ -1,7 +1,6 @@
 services:
   app:
-    build:
-      dockerfile: docker/app/Dockerfile
+    image: ghcr.io/misenhower/splatoon2.ink
     init: true
     restart: unless-stopped
     environment:
@@ -10,16 +9,11 @@ services:
       SCREENSHOT_HOST: app
     depends_on:
       - browserless
+    env_file:
+      - .env
 
   browserless:
     image: ghcr.io/browserless/chromium
     restart: unless-stopped
     environment:
       CONCURRENT: ${BROWSERLESS_CONCURRENT:-1}
-
-  nginx:
-    image: nginx
-    restart: unless-stopped
-    volumes:
-      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./dist:/usr/share/nginx/html:ro
