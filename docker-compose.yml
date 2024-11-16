@@ -1,17 +1,19 @@
-version: '2'
-
 services:
-
   app:
-    build: docker/app
+    image: ghcr.io/misenhower/splatoon2.ink
+    init: true
     restart: unless-stopped
-    volumes:
-      - ./:/app
+    environment:
+      USE_BROWSERLESS: true
+      BROWSERLESS_ENDPOINT: ws://browserless:3000
+      SCREENSHOT_HOST: app
+    depends_on:
+      - browserless
+    env_file:
+      - .env
 
-  nginx:
-    image: nginx
+  browserless:
+    image: ghcr.io/browserless/chromium
     restart: unless-stopped
-    volumes:
-      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./logs:/logs
-      - ./dist:/usr/share/nginx/html:ro
+    environment:
+      CONCURRENT: ${BROWSERLESS_CONCURRENT:-1}

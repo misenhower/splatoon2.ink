@@ -12,8 +12,7 @@
                         </h3>
                         <div class="inner-content">
                             <p>
-                                Splatoon2.ink shows the current and upcoming map schedules for
-                                <a href="https://www.amazon.com/gp/product/B01N9QVIRV/ref=as_li_tl?ie=UTF8&amp;tag=matisesblo-20&amp;camp=1789&amp;creative=9325&amp;linkCode=as2&amp;creativeASIN=B01N9QVIRV&amp;linkId=01d5f076af5b6008436d9843c40a28db" target="_blank">Splatoon 2</a>.
+                                Splatoon2.ink shows the current and upcoming map schedules for Splatoon 2.
                             </p>
                             <p>
                                 This site was built with <a href="https://vuejs.org/" target="_blank">Vue.js</a>
@@ -35,14 +34,6 @@
                             <p>
                                 If you'd like to use this site's data in your own site/bot/app, please review the data access policy
                                 <a href="https://github.com/misenhower/splatoon2.ink/wiki/Data-access-policy" target="_blank">here</a>.
-                            </p>
-                            <h5 class="font-splatoon2 title is-5">
-                                Donations
-                            </h5>
-                            <p>
-                                If you'd like to support ongoing development and maintenance of this site, please consider
-                                <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7KETJ7PSE5PQC" target="_blank">making a donation</a>.
-                                Thanks :)
                             </p>
                             <p>
                                 <a href="https://twitter.com/mattisenhower" target="_blank">Follow me on Twitter</a>

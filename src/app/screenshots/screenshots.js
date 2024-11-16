@@ -21,18 +21,30 @@ function startHttpServer() {
     });
 }
 
+function getBrowser() {
+    // Use Browserless when configured
+    if (process.env.USE_BROWSERLESS) {
+        return puppeteer.connect({
+            browserWSEndpoint: process.env.BROWSERLESS_ENDPOINT,
+        });
+    }
+
+    // Otherwise just launch normally
+    return puppeteer.launch({
+        args: [
+            '--no-sandbox', // Allow running as root inside the Docker container
+        ],
+        // headless: false, // For testing
+    });
+}
+
 async function captureScreenshot(options) {
     // Create an HTTP server
     const server = await startHttpServer();
     const { port } = server.address();
 
     // Launch a new Chrome instance
-    const browser = await puppeteer.launch({
-        args: [
-            '--no-sandbox', // Allow running as root inside the Docker container
-        ],
-        // headless: false, // For testing
-    });
+    const browser = await getBrowser();
 
     // Create a new page and set the viewport
     const page = await browser.newPage();
@@ -40,7 +52,8 @@ async function captureScreenshot(options) {
     page.setViewport(thisViewport);
 
     // Navigate to the URL
-    let url = new URL(`http://localhost:${port}/screenshots.html`);
+    let host = process.env.SCREENSHOT_HOST || 'localhost';
+    let url = new URL(`http://${host}:${port}/screenshots.html`);
     url.hash = options.hash;
     await page.goto(url, {
         waitUntil: 'networkidle0', // Wait until the network is idle

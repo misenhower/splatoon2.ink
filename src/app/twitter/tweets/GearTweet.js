@@ -31,7 +31,7 @@ class GearTweet extends TwitterPostBase {
         return captureGearScreenshot(now);
     }
 
-    getPublicImageFilename(data) {
+    getPublicImageFilename() {
         return 'gear.png';
     }
 

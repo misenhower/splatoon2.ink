@@ -41,7 +41,7 @@ class ScheduleTweet extends TwitterPostBase {
         return captureScheduleScreenshot(data.regular.start_time, this.globalSplatfestOpenInAllRegions());
     }
 
-    getPublicImageFilename(data) {
+    getPublicImageFilename() {
         return 'schedule.png';
     }
 

@@ -22,7 +22,7 @@ module.exports = async function retrieveGearData() {
 
         // Find all gear and skills
         let players = [battleData.player_result].concat(battleData.my_team_members, battleData.other_team_members);
-        for (player of players) {
+        for (let player of players) {
             // Get the main and sub skills for each type of gear
             let gearSkills = [
                 player.player.head_skills.main,
@@ -30,13 +30,13 @@ module.exports = async function retrieveGearData() {
                 player.player.shoes_skills.main,
             ].concat(player.player.head_skills.subs, player.player.clothes_skills.subs, player.player.shoes_skills.subs);
 
-            for (skill of gearSkills) {
+            for (let skill of gearSkills) {
                 if (skill)
                     skills[skill.id] = skill;
             }
 
             // Get brands
-            for (brand of [player.player.head.brand, player.player.clothes.brand, player.player.shoes.brand])
+            for (let brand of [player.player.head.brand, player.player.clothes.brand, player.player.shoes.brand])
                 brands[brand.id] = brand;
 
             // Get gear

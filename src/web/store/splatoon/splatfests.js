@@ -72,7 +72,7 @@ function generateModule(region) {
             allSplatfests(state, getters, rootState, rootGetters) {
                 return rootGetters['splatoon/splatfests/allSplatfests']
                     && rootGetters['splatoon/splatfests/allSplatfests']
-                    .filter(s => s.regions.hasOwnProperty(region)) // Only show Splatfests for this region
+                    .filter(s => region in s.regions) // Only show Splatfests for this region
                     .map(s => ({ ...s, ...s.regions[region] })); // Apply this region's data
             },
             currentSplatfest(state, getters, { splatoon }) {

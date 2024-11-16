@@ -40,6 +40,7 @@ module.exports = async () => {
 
     // Update gear/brand/skill data from SplatNet
     // (This takes a while and doesn't need to be updated frequently, so just disabling this here for now)
+    // eslint-disable-next-line no-constant-condition
     if (false) {
         let gearData = await retrieveGearData();
 
@@ -66,6 +67,7 @@ module.exports = async () => {
 
         let regex = /\{\{GearList\/Item.*?filter_brand/g;
         let row;
+        // eslint-disable-next-line no-cond-assign
         while (row = regex.exec(response.data)) {
             // Format: name=value|brand=value|...
             let details = row[0].split('|')
