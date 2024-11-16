@@ -58,6 +58,11 @@ class TwitterPostBase {
                     continue;
                 }
 
+                if (!this.shouldPostForCurrentTime(client)) {
+                    this.info(`Already posted to ${client.name}`);
+                    continue;
+                }
+
                 try {
                     await client.send(status);
                     this.updateLastTweetTime(client);
