@@ -5,11 +5,6 @@ const mime = require('mime-types');
 
 class S3Syncer
 {
-  async sync() {
-    await this.download();
-    await this.upload();
-  }
-
   download() {
     this.log('Downloading files...');
 

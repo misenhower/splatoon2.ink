@@ -9,16 +9,35 @@ function canSync() {
   );
 }
 
-function sync() {
+async function doSync(download, upload) {
   if (!canSync()) {
     console.warn('Missing S3 connection parameters');
     return;
   }
 
-  console.info('Syncing files...');
-
   const syncer = new S3Syncer();
-  return syncer.sync();
+
+  if (download) {
+    console.info('Downloading files...');
+    await syncer.download();
+  }
+
+  if (upload) {
+    console.info('Uploading files...');
+    await syncer.upload();
+  }
 }
 
-module.exports = { canSync, sync };
+function sync() {
+  return doSync(true, true);
+}
+
+function syncUpload() {
+  return doSync(false, true);
+}
+
+function syncDownload() {
+  return doSync(true, false);
+}
+
+module.exports = { canSync, sync, syncUpload, syncDownload };
