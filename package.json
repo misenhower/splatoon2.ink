@@ -19,6 +19,7 @@
     "utility:updateGear": "node src/utility updateGear"
   },
   "dependencies": {
+    "@atproto/api": "^0.13.16",
     "@aws-sdk/client-s3": "^3.685.0",
     "axios": "^0.19.2",
     "babel-eslint": "^10.1.0",
@@ -44,6 +45,7 @@
     "puppeteer": "^23.7.1",
     "raven": "^2.1.1",
     "s3-sync-client": "^4.3.1",
+    "sharp": "^0.33.5",
     "twitter-api-v2": "^1.15.0",
     "v-click-outside": "^3.0.1",
     "vue": "^2.6.11",

@@ -1,31 +1,41 @@
 const path = require('path');
 const fs = require('fs');
 const mkdirp = require('mkdirp').sync;
-const { canTweet, postMediaTweet } = require('../client');
+const BlueskyClient = require('../clients/BlueskyClient');
+const TwitterClient = require('../clients/TwitterClient');
 const { getTopOfCurrentHour, readJson, writeJson } = require('@/common/utilities');
 
-const lastTweetTimesPath = path.resolve('storage/twitter-lastTweetTimes.json');
+const blueskyLastTimesPath = path.resolve('storage/bluesky-lastPostTimes.json');
+const twitterLastTimesPath = path.resolve('storage/twitter-lastTweetTimes.json');
+
+const blueskyClient = new BlueskyClient();
+const twitterClient = new TwitterClient();
 
 class TwitterPostBase {
-    maybePostTweet() {
+    async maybePostTweet() {
         // Make sure we have data to post
         if (!this.getData()) {
             this.info('No data to post');
             return false;
         }
 
-        if (!this.shouldPostForCurrentTime()) {
+        if (!this.shouldPostForCurrentTime(blueskyClient) && !this.shouldPostForCurrentTime(twitterClient)) {
             this.info('Already posted for this time');
             return false;
         }
 
         // Make sure we can post or save to a file
-        if (!canTweet() && !this.getPublicImageFilename()) {
+        if (!await this.canPost() && !this.getPublicImageFilename()) {
             this.error('Twitter API parameters not specified');
             return false;
         }
 
         return this.postTweet();
+    }
+
+    async canPost() {
+        return await blueskyClient.canSend()
+            || await twitterClient.canSend();
     }
 
     async postTweet() {
@@ -38,14 +48,24 @@ class TwitterPostBase {
             // Maybe save the image
             this.maybeSavePublicImage(data, image);
 
-            if (canTweet()) {
-                // Post to Twitter
-                let tweet = await postMediaTweet(text, image);
+            let status = {
+                status: text,
+                media: [{ file: image, type: 'image/png' }],
+            };
 
-                // Update the last post time
-                this.updateLastTweetTime();
+            for (let client of [blueskyClient, twitterClient]) {
+                if (!await client.canSend()) {
+                    continue;
+                }
 
-                this.info('Posted Tweet');
+                try {
+                    await client.send(status);
+                    this.updateLastTweetTime(client);
+                    this.info(`Posted to ${client.name}`);
+                } catch (e) {
+                    this.error(`Couldn't post to ${client.name}`);
+                    console.error(e);
+                }
             }
         }
         catch (e) {
@@ -88,31 +108,40 @@ class TwitterPostBase {
      * Post time helpers
      */
 
-    getLastTweetTimes() {
-        if (fs.existsSync(lastTweetTimesPath))
-            return readJson(lastTweetTimesPath);
+    getLastTweetTimesPath(client) {
+        switch (client.key) {
+            case 'bluesky': return blueskyLastTimesPath;
+            case 'twitter': return twitterLastTimesPath;
+        }
+    }
+
+    getLastTweetTimes(client) {
+        let lastTimesPath = this.getLastTweetTimesPath(client);
+
+        if (fs.existsSync(lastTimesPath))
+            return readJson(lastTimesPath);
         return {};
     }
 
-    getLastTweetTime() {
+    getLastTweetTime(client) {
         let key = this.getKey();
-        return this.getLastTweetTimes()[key] || 0;
+        return this.getLastTweetTimes(client)[key] || 0;
     }
 
-    updateLastTweetTime() {
+    updateLastTweetTime(client) {
         let key = this.getKey();
         let time = this.getDataTime();
-        let lastTweetTimes = this.getLastTweetTimes();
+        let lastTweetTimes = this.getLastTweetTimes(client);
 
         lastTweetTimes[key] = time;
 
-        writeJson(lastTweetTimesPath, lastTweetTimes);
+        writeJson(this.getLastTweetTimesPath(client), lastTweetTimes);
     }
 
-    shouldPostForCurrentTime() {
+    shouldPostForCurrentTime(client) {
         // Check whether the current data time has already been posted
         let time = this.getDataTime();
-        let lastTweetTime = this.getLastTweetTime();
+        let lastTweetTime = this.getLastTweetTime(client);
         return lastTweetTime < time;
     }
 
