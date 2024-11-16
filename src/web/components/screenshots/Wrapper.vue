@@ -21,18 +21,18 @@
                         <div class="level-item">&nbsp;</div>
                         <div class="level-item">
                             <div class="font-splatoon2 is-size-7 has-text-grey-light">
-                                <div class="image is-24x24 twitter-logo">
-                                    <img src="~@/web/assets/img/twitter-white.png" />
+                                <div class="image is-16x16 bluesky-logo">
+                                    <img src="~@/web/assets/img/bluesky-white.svg" />
                                 </div>
-                                @splatoon2inkbot
+                                @splatoon2.ink
                             </div>
                         </div>
-                        <div class="level-item">&nbsp;</div>
+                        <!-- <div class="level-item">&nbsp;</div>
                         <div class="level-item">
                             <div class="font-splatoon2 is-size-7 has-text-grey-light">
                                 splatoon2.ink
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="level-right">

@@ -23,8 +23,8 @@
                 <div class="level">
                     <div class="level-left">
                         <div class="level-item">
-                            <a href="https://twitter.com/Splatoon2inkbot" target="_blank" class="button is-translucent-dark is-rounded">
-                                <span class="font-splatoon2">{{ $t('ui.get_updates_via_twitter') }}</span>
+                            <a href="https://bsky.app/profile/splatoon2.ink" target="_blank" class="button is-translucent-dark is-rounded">
+                                <span class="font-splatoon2">{{ $t('ui.get_updates_via_bluesky') }}</span>
                             </a>
                         </div>
                         <div class="level-item">
@@ -155,7 +155,7 @@
                 &ndash;
                 <router-link to="/calendars">Calendar Feeds</router-link>
                 &ndash;
-                <a href="https://twitter.com/Splatoon2inkbot" target="_blank">Twitter</a>
+                <a href="https://bsky.app/profile/splatoon2.ink" target="_blank">Bluesky</a>
                 <template v-if="hasSplatfests">
                     &ndash;
                     <router-link to="/splatfests">{{ $t('splatfest.previous') }}</router-link>
