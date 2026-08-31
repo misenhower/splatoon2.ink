@@ -27,19 +27,19 @@ class CoopSchedulesUpdater extends Updater {
                 },
                 {
                     name: 'weapons',
-                    entities: '$..weapons[?(@.id)].weapon',
+                    entities: '$..weapons[*].weapon',
                     id: 'id',
                     values: 'name',
                 },
                 {
                     name: 'weapon_subs',
-                    entities: '$..weapons[?(@.id)].weapon.sub',
+                    entities: '$..weapons[*].weapon.sub',
                     id: 'id',
                     values: 'name',
                 },
                 {
                     name: 'weapon_specials',
-                    entities: '$..weapons[?(@.id)].weapon.special',
+                    entities: '$..weapons[*].weapon.special',
                     id: 'id',
                     values: 'name',
                 },
