@@ -4,7 +4,7 @@
 module.exports = {
   'root': true,
   'extends': [
-    'plugin:vue/vue3-recommended',
+    'plugin:vue/vue2-recommended',
     'eslint:recommended',
   ],
   'rules': {
@@ -33,7 +33,9 @@ module.exports = {
     'Buffer': 'readonly',
   },
   'env': {
-    'vue/setup-compiler-macros': true,
+    'browser': true,
+    'es2022': true,
+    'node': true,
   },
   'ignorePatterns': [
     'src/assets/i18n/index.mjs', // "assert" syntax is currently unrecognized

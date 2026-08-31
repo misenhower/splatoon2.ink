@@ -2,11 +2,10 @@ const path = require('path');
 const fs = require('fs');
 const mkdirp = require('mkdirp').sync;
 const _ = require('lodash');
-const jsonpath = require('jsonpath');
+const jsonpath = require('@/common/jsonpath');
 const SplatNet = require('@/common/splatnet');
-const iCal = require('cozy-ical');
-const moment = require('moment-timezone');
-const raven = require('raven');
+const { createEvents } = require('ics');
+const Sentry = require('@sentry/node');
 const { languages } = require('@/common/regions');
 const LocalizationProcessor = require('../LocalizationProcessor');
 
@@ -80,7 +79,7 @@ class Updater {
         }
         catch (e) {
             // Send the error to Sentry
-            raven.captureException(e);
+            Sentry.captureException(e);
 
             // Log the message to the console
             this.error(`Couldn't handle request: ${e.toString()}`);
@@ -234,30 +233,27 @@ class Updater {
         //     end_time: <timestamp>,
         // }
 
-        // Create a calendar object
-        const calendar = new iCal.VCalendar({
-            title: this.getCalendarTitle(),
-            organization: 'https://splatoon2.ink'
-        });
-
-        // Set the calendar's native time zone to UTC
-        calendar.add(new iCal.VTimezone({ timezone: 'Etc/UTC' }));
-
-        // Add event entries
-        for (let event of events) {
-            calendar.add(new iCal.VEvent({
-                uid: event.id,
-                summary: event.title,
-                description: event.description,
-                location: event.location,
-                startDate: moment.unix(event.start_time).utc(),
-                endDate: moment.unix(event.end_time).utc(),
-                stampDate: new Date(),
-            }));
-        }
+        const calendarEvents = events.map(event => ({
+            uid: String(event.id),
+            title: event.title,
+            description: event.description,
+            location: event.location,
+            start: event.start_time * 1000,
+            end: event.end_time * 1000,
+            startInputType: 'utc',
+            endInputType: 'utc',
+        }));
 
         // Convert the calendar to an ICS string
-        return calendar.toString();
+        const { error, value } = createEvents(calendarEvents, {
+            calName: this.getCalendarTitle(),
+            productId: 'splatoon2.ink',
+        });
+
+        if (error)
+            throw error;
+
+        return value;
     }
 
     /**

@@ -1,3 +1,5 @@
+const path = require('path')
+
 module.exports = {
   assetsDir: 'assets',
   productionSourceMap: false,
@@ -37,9 +39,9 @@ module.exports = {
       })
   },
   devServer: {
-    contentBase: [
-      './public',
-      './dist'
+    static: [
+      { directory: path.join(__dirname, 'public') },
+      { directory: path.join(__dirname, 'dist') },
     ]
   },
   pages: {

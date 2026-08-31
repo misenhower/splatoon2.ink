@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const mkdirp = require('mkdirp').sync;
-const jsonpath = require('jsonpath');
+const jsonpath = require('@/common/jsonpath');
 const _ = require('lodash');
 const { readJson, writeJson } = require('@/common/utilities');
 

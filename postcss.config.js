@@ -11,14 +11,19 @@ module.exports = {
         const contentWithoutStyleBlocks = content.replace(/<style[^]+?<\/style>/gi, '')
         return contentWithoutStyleBlocks.match(/[A-Za-z0-9-_/:]*[A-Za-z0-9-_/]+/g) || []
       },
-      whitelist: [
-        '.title:not(.is-spaced)+.subtitle', // Fix subtitle spacing
-        // Dynamic merchandise types
-        '.merchandise-box.shoes',
-        '.merchandise-box.head',
-        '.merchandise-box.clothes',
-      ],
-      whitelistPatterns: [ /-(leave|enter|appear)(|-(to|from|active))$/, /^(?!(|.*?:)cursor-move).+-move$/, /^router-link(|-exact)-active$/, /data-v-.*/ ],
+      safelist: {
+        standard: [
+          '.title:not(.is-spaced)+.subtitle', // Fix subtitle spacing
+          // Dynamic merchandise types
+          '.merchandise-box.shoes',
+          '.merchandise-box.head',
+          '.merchandise-box.clothes',
+          /-(leave|enter|appear)(|-(to|from|active))$/,
+          /^(?!(|.*?:)cursor-move).+-move$/,
+          /^router-link(|-exact)-active$/,
+          /data-v-.*/,
+        ],
+      },
     })
   ],
 }
