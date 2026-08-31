@@ -1,4 +1,8 @@
-require('dotenv').config();
+const fs = require('node:fs');
+
+if (fs.existsSync('.env'))
+    process.loadEnvFile();
+
 require('console-stamp')(console);
 require('module-alias/register');
 
