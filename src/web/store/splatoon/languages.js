@@ -38,6 +38,6 @@ export const actions = {
         // import(/* webpackChunkName: "lang-[request]" */ `@/web/locale/${locale}`)
         //     .then(translations => dispatch('i18n/addLocale', { locale, translations: translations.default }, { root: true }));
 
-        dispatch('i18n/addLocale', { locale, translations: require(`@/web/locale/${locale}`) }, { root: true });
+        dispatch('i18n/addLocale', { locale, translations: { ...require(`@/web/locale/${locale}`) } }, { root: true });
     },
 };
