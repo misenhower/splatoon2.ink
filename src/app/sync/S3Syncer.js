@@ -5,14 +5,48 @@ const mime = require('mime-types');
 
 class S3Syncer
 {
+  constructor({
+    publicConfig = S3Syncer.publicConfigFromEnvironment(),
+    privateConfig = S3Syncer.privateConfigFromEnvironment(),
+    localPath = path.resolve('.'),
+    publicSyncClient,
+    privateSyncClient,
+  } = {}) {
+    this.publicConfig = publicConfig;
+    this.privateConfig = privateConfig;
+    this._localPath = localPath;
+    this._publicSyncClient = publicSyncClient;
+    this._privateSyncClient = privateSyncClient;
+  }
+
+  static publicConfigFromEnvironment() {
+    return {
+      endpoint: process.env.AWS_S3_ENDPOINT,
+      region: process.env.AWS_REGION,
+      bucket: process.env.AWS_S3_BUCKET,
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    };
+  }
+
+  static privateConfigFromEnvironment() {
+    return {
+      endpoint: process.env.PRIVATE_AWS_S3_ENDPOINT,
+      region: process.env.PRIVATE_AWS_REGION,
+      bucket: process.env.PRIVATE_AWS_S3_BUCKET,
+      accessKeyId: process.env.PRIVATE_AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.PRIVATE_AWS_SECRET_ACCESS_KEY,
+    };
+  }
+
   download() {
     this.log('Downloading files...');
 
     return Promise.all([
-      this.syncClient.sync(this.publicBucket, `${this.localPath}/dist`, {
+      this.publicSyncClient.sync(this.publicBucket, `${this.localPath}/dist`, {
         filters: this.filters,
       }),
-      this.syncClient.sync(this.privateBucket, `${this.localPath}/storage`),
+      this.privateSyncClient.sync(this.privateBucket, `${this.localPath}/storage`),
     ]);
   }
 
@@ -20,46 +54,60 @@ class S3Syncer
     this.log('Uploading files...');
 
     return Promise.all([
-      this.syncClient.sync(`${this.localPath}/dist`, this.publicBucket, {
+      this.publicSyncClient.sync(`${this.localPath}/dist`, this.publicBucket, {
         filters: this.filters,
         commandInput: input => ({
-          ACL: 'public-read',
-          ContentType: mime.lookup(input.Key),
+          ContentType: mime.lookup(input.Key) || undefined,
           CacheControl: input.Key.startsWith('data/')
             ? 'no-cache, stale-while-revalidate=5, stale-if-error=86400'
             : undefined,
         }),
       }),
-      this.syncClient.sync(`${this.localPath}/storage`, this.privateBucket),
+      this.privateSyncClient.sync(`${this.localPath}/storage`, this.privateBucket),
     ]);
   }
 
-  get s3Client() {
-    return this._s3Client ??= new S3Client({
-      endpoint: process.env.AWS_S3_ENDPOINT,
-      region: process.env.AWS_REGION,
+  createS3Client(config) {
+    return new S3Client({
+      endpoint: config.endpoint,
+      region: config.region,
+      requestChecksumCalculation: 'WHEN_REQUIRED',
+      responseChecksumValidation: 'WHEN_REQUIRED',
       credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        accessKeyId: config.accessKeyId,
+        secretAccessKey: config.secretAccessKey,
       },
     });
   }
 
+  get publicS3Client() {
+    return this._publicS3Client ??= this.createS3Client(this.publicConfig);
+  }
+
+  get privateS3Client() {
+    return this._privateS3Client ??= this.createS3Client(this.privateConfig);
+  }
+
   /** @returns {S3SyncClient} */
-  get syncClient() {
-    return this._syncClient ??= new S3SyncClient({ client: this.s3Client });
+  get publicSyncClient() {
+    return this._publicSyncClient ??= new S3SyncClient({ client: this.publicS3Client });
+  }
+
+  /** @returns {S3SyncClient} */
+  get privateSyncClient() {
+    return this._privateSyncClient ??= new S3SyncClient({ client: this.privateS3Client });
   }
 
   get publicBucket() {
-    return `s3://${process.env.AWS_S3_BUCKET}`;
+    return `s3://${this.publicConfig.bucket}`;
   }
 
   get privateBucket() {
-    return `s3://${process.env.AWS_S3_PRIVATE_BUCKET}`;
+    return `s3://${this.privateConfig.bucket}`;
   }
 
   get localPath() {
-    return path.resolve('.');
+    return this._localPath;
   }
 
   get filters() {

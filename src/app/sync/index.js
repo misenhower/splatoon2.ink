@@ -1,12 +1,12 @@
 const S3Syncer = require('./S3Syncer');
 
 function canSync() {
-  return !!(
-    process.env.AWS_ACCESS_KEY_ID &&
-    process.env.AWS_SECRET_ACCESS_KEY &&
-    process.env.AWS_S3_BUCKET &&
-    process.env.AWS_S3_PRIVATE_BUCKET
-  );
+  const configurations = [
+    S3Syncer.publicConfigFromEnvironment(),
+    S3Syncer.privateConfigFromEnvironment(),
+  ];
+
+  return configurations.every(config => Object.values(config).every(Boolean));
 }
 
 async function doSync(download, upload) {

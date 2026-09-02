@@ -7,6 +7,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --modern --no-clean",
+    "test": "node --test",
     "lint": "vue-cli-service lint",
     "cron": "node src/app/cron",
     "start": "npm run sync:download && npm run splatnet && npm run twitter && npm run cron",
