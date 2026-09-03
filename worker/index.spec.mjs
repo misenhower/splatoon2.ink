@@ -37,6 +37,10 @@ describe('R2 directory index', () => {
     expect(response.status).toBe(200);
     expect(response.headers.get('content-type')).toBe('text/html; charset=utf-8');
     expect(response.headers.get('cache-control')).toBe('no-store');
+    expect(html).toContain('<main class="shell">');
+    expect(html).toContain('class="entry-icon entry-icon--folder"');
+    expect(html).toContain('class="entry-icon entry-icon--file"');
+    expect(html).toContain('class="listing-header"');
     expect(html).toContain('href="/data/locale/"');
     expect(html).toContain('href="/data/schedules.json"');
     expect(html).not.toContain('__directory');
