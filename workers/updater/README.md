@@ -75,4 +75,5 @@ curl -X POST -H "Authorization: Bearer $UPDATER_RUN_TOKEN" "$BASE/run?only=Sched
 curl -X POST -H "Authorization: Bearer $UPDATER_RUN_TOKEN" "$BASE/wake?job=updaters"          # ask the Scheduler to run now
 curl -X POST -H "Authorization: Bearer $UPDATER_RUN_TOKEN" "$BASE/arm"                       # schedule the hourly job if it is not scheduled
 curl        -H "Authorization: Bearer $UPDATER_RUN_TOKEN" "$BASE/status"                    # alarm time, hourly/retry state, last run per job
+curl        -H "Authorization: Bearer $UPDATER_RUN_TOKEN" "$BASE/list?prefix=data/"         # keys in the public bucket under a prefix (wrangler cannot list objects)
 ```

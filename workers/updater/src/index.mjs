@@ -61,10 +61,11 @@ export default withSentry(sentryOptions, {
   //   POST /wake?job=NAME         ask the Scheduler to run a job as soon as possible
   //   POST /arm                   schedule the hourly job if it is not scheduled
   //   GET  /status                alarm state and the last run of each job
+  //   GET  /list?prefix=data/     keys in the public bucket under a prefix (first 1000)
   async fetch(request, env, ctx) {
     let url = new URL(request.url);
     let route = `${request.method} ${url.pathname}`;
-    if (!['POST /run', 'POST /wake', 'POST /arm', 'GET /status'].includes(route))
+    if (!['POST /run', 'POST /wake', 'POST /arm', 'GET /status', 'GET /list'].includes(route))
       return new Response('Not found', { status: 404 });
     if (!isAuthorized(request, env))
       return new Response('Unauthorized', { status: 401 });
@@ -83,6 +84,10 @@ export default withSentry(sentryOptions, {
           return Response.json({ ok: true, ...await scheduler(env).ensureArmed() });
         case 'GET /status':
           return Response.json({ ok: true, ...await scheduler(env).status() });
+        case 'GET /list': {
+          let listing = await env.ASSETS.list({ prefix: url.searchParams.get('prefix') ?? '', limit: 1000 });
+          return Response.json({ ok: true, truncated: listing.truncated, keys: listing.objects.map(object => ({ key: object.key, size: object.size, uploaded: object.uploaded })) });
+        }
       }
     } catch (error) {
       createLogger('http').error(`${route} failed`, describeError(error));
