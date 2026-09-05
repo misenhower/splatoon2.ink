@@ -1,4 +1,4 @@
-import { splatoonRegions, detectSplatoonRegion } from '@/common/regions.esm';
+import { splatoonRegions, detectSplatoonRegion } from '@/common/regions';
 
 export const namespaced = true;
 

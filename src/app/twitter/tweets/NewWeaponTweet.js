@@ -1,8 +1,8 @@
-const TwitterPostBase = require('./TwitterPostBase');
-const { captureNewWeaponScreenshot } = require('@/app/screenshots');
-const { readData } = require('@/common/utilities');
+import TwitterPostBase from './TwitterPostBase.js';
+import { captureNewWeaponScreenshot } from '../../screenshots/index.js';
+import { readData } from '../../../common/utilities.js';
 
-class NewWeaponTweet extends TwitterPostBase {
+export default class NewWeaponTweet extends TwitterPostBase {
     getKey() { return 'weapon'; }
     getName() { return 'New Weapon'; }
 
@@ -55,5 +55,3 @@ class NewWeaponTweet extends TwitterPostBase {
         }
     }
 }
-
-module.exports = NewWeaponTweet;

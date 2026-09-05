@@ -1,12 +1,12 @@
-const TwitterPostBase = require('./TwitterPostBase');
-const { captureSalmonRunScreenshot } = require('@/app/screenshots');
-const { readData, readJson, writeJson } = require('@/common/utilities');
-const fs = require('fs');
-const path = require('path');
+import TwitterPostBase from './TwitterPostBase.js';
+import { captureSalmonRunScreenshot } from '../../screenshots/index.js';
+import { readData, readJson, writeJson } from '../../../common/utilities.js';
+import fs from 'node:fs';
+import path from 'node:path';
 
 const previousSchedulePath = path.resolve('storage/salmonrun-previousSchedule.json');
 
-class SalmonRunTweet extends TwitterPostBase {
+export default class SalmonRunTweet extends TwitterPostBase {
     getKey() { return 'salmonrun'; }
     getName() { return 'Salmon Run'; }
 
@@ -119,5 +119,3 @@ class SalmonRunTweet extends TwitterPostBase {
         return `Salmon Run ${state} on ${data.current.stage.name}! ${gear}${hashtags}`;
     }
 }
-
-module.exports = SalmonRunTweet;

@@ -1,6 +1,6 @@
-const S3Syncer = require('./S3Syncer');
+import S3Syncer from './S3Syncer.js';
 
-function canSync() {
+export function canSync() {
   const configurations = [
     S3Syncer.publicConfigFromEnvironment(),
     S3Syncer.privateConfigFromEnvironment(),
@@ -28,16 +28,14 @@ async function doSync(download, upload) {
   }
 }
 
-function sync() {
+export function sync() {
   return doSync(true, true);
 }
 
-function syncUpload() {
+export function syncUpload() {
   return doSync(false, true);
 }
 
-function syncDownload() {
+export function syncDownload() {
   return doSync(true, false);
 }
-
-module.exports = { canSync, sync, syncUpload, syncDownload };

@@ -1,36 +1,36 @@
-const fs = require('fs');
-const path = require('path');
-const mkdirp = require('mkdirp').sync;
-const stringify = require('json-stable-stringify');
+import fs from 'node:fs';
+import path from 'node:path';
+import { mkdirpSync as mkdirp } from 'mkdirp';
+import stringify from 'json-stable-stringify';
 
 const dataPath = path.resolve('dist/data');
 
-function getTopOfCurrentHour() {
+export function getTopOfCurrentHour() {
     let date = new Date;
     date.setUTCMinutes(0);
     date.setUTCSeconds(0);
     return Math.floor(date.getTime() / 1000);
 }
-module.exports.getTopOfCurrentHour = getTopOfCurrentHour;
 
-function readJson(filename) {
+export function readJson(filename) {
     return JSON.parse(fs.readFileSync(filename));
 }
-module.exports.readJson = readJson;
 
-function writeJson(filename, data) {
+/** Read a JSON file relative to a module, e.g. readJsonFile(new URL('./data/x.json', import.meta.url)) */
+export function readJsonFile(url) {
+    return JSON.parse(fs.readFileSync(url));
+}
+
+export function writeJson(filename, data) {
     mkdirp(path.dirname(filename));
     fs.writeFileSync(filename, JSON.stringify(data));
 }
-module.exports.writeJson = writeJson;
 
-function writeFormattedJson(filename, data) {
+export function writeFormattedJson(filename, data) {
     mkdirp(path.dirname(filename));
     fs.writeFileSync(filename, stringify(data, { space: 4 }));
 }
-module.exports.writeFormattedJson = writeFormattedJson;
 
-function readData(filename) {
+export function readData(filename) {
     return readJson(`${dataPath}/${filename}`);
 }
-module.exports.readData = readData;

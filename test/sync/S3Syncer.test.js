@@ -1,7 +1,7 @@
-const assert = require('node:assert/strict');
-const test = require('node:test');
+import assert from 'node:assert/strict';
+import test from 'node:test';
 
-const S3Syncer = require('../../src/app/sync/S3Syncer');
+import S3Syncer from '../../src/app/sync/S3Syncer.js';
 
 const publicConfig = {
   endpoint: 'https://public.example.com',

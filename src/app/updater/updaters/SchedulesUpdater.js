@@ -1,12 +1,12 @@
-const Updater = require('./Updater');
-const SplatNet = require('@/common/splatnet');
-const path = require('path');
-const fs = require('fs');
-const { getTopOfCurrentHour, readJson } = require('@/common/utilities');
+import Updater from './Updater.js';
+import SplatNet from '../../../common/splatnet.js';
+import path from 'node:path';
+import fs from 'node:fs';
+import { getTopOfCurrentHour, readJson } from '../../../common/utilities.js';
 
 const stagesPath = path.resolve('storage/stages.json');
 
-class SchedulesUpdater extends Updater {
+export default class SchedulesUpdater extends Updater {
     constructor() {
         super({
             name: 'Schedules',
@@ -80,5 +80,3 @@ class SchedulesUpdater extends Updater {
         return data;
     }
 }
-
-module.exports = SchedulesUpdater;

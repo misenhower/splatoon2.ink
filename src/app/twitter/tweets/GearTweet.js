@@ -1,8 +1,8 @@
-const TwitterPostBase = require('./TwitterPostBase');
-const { captureGearScreenshot } = require('@/app/screenshots');
-const { readData, getTopOfCurrentHour } = require('@/common/utilities');
+import TwitterPostBase from './TwitterPostBase.js';
+import { captureGearScreenshot } from '../../screenshots/index.js';
+import { readData, getTopOfCurrentHour } from '../../../common/utilities.js';
 
-class GearTweet extends TwitterPostBase {
+export default class GearTweet extends TwitterPostBase {
     getKey() { return 'gear'; }
     getName() { return 'Gear'; }
 
@@ -39,5 +39,3 @@ class GearTweet extends TwitterPostBase {
         return `Up now on SplatNet: ${data.gear.name} with ${data.skill.name} #splatnet2`;
     }
 }
-
-module.exports = GearTweet;

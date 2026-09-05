@@ -1,6 +1,6 @@
-const { TwitterApi } = require('twitter-api-v2');
+import { TwitterApi } from 'twitter-api-v2';
 
-class TwitterClient
+export default class TwitterClient
 {
   key = 'twitter';
   name = 'Twitter';
@@ -46,5 +46,3 @@ class TwitterClient
     await this.api().v2.tweet(status.status, { media: { media_ids: mediaIds } });
   }
 }
-
-module.exports = TwitterClient;

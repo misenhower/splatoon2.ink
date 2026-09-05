@@ -1,15 +1,15 @@
 // This file copies translations from SplatNet language files to our own language files
 
-const path = require('path');
-const fs = require('fs');
-const _ = require('lodash');
-const { readJson } = require('@/common/utilities');
-const { languages } = require('@/common/regions');
+import path from 'node:path';
+import fs from 'node:fs';
+import _ from 'lodash';
+import { readJson } from '../common/utilities.js';
+import { languages } from '../common/regions.js';
 
 const sourcePath = path.resolve('storage/lang');
 const destinationPath = path.resolve('src/web/locale');
 
-module.exports = function (source, destination) {
+export default function copyTranslation(source, destination) {
     for (let { region, language } of languages) {
         let sourceLang = readJson(`${sourcePath}/${region}-${language}.json`);
         let outputFile = `${destinationPath}/${language}.json`;

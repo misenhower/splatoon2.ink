@@ -1,6 +1,6 @@
-const Updater = require('./Updater');
+import Updater from './Updater.js';
 
-class TimelineUpdater extends Updater {
+export default class TimelineUpdater extends Updater {
     constructor() {
         super({
             name: 'Timeline',
@@ -49,5 +49,3 @@ class TimelineUpdater extends Updater {
         });
     }
 }
-
-module.exports = TimelineUpdater;

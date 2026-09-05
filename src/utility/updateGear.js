@@ -1,13 +1,13 @@
 // Note: this script is intended to be run during development (not in production).
 // It updates the gear/brand/skill data located at /src/js/data/.
 
-const path = require('path');
-const fs = require('fs');
-const mkdirp = require('mkdirp').sync;
-const axios = require('axios');
-const retrieveGearData = require('./retrieveGearData');
-const { writeFormattedJson } = require('@/common/utilities');
-const he = require('he');
+import path from 'node:path';
+import fs from 'node:fs';
+import { mkdirpSync as mkdirp } from 'mkdirp';
+import axios from 'axios';
+import retrieveGearData from './retrieveGearData.js';
+import { writeFormattedJson } from '../common/utilities.js';
+import he from 'he';
 
 const dataPath = path.resolve('src/common/data');
 const brandsFilename = `${dataPath}/brands.json`;
@@ -26,7 +26,7 @@ function applyData(oldData, newData) {
     }
 }
 
-module.exports = async () => {
+export default async function updateGear() {
     mkdirp(dataPath);
 
     let brands = {};
@@ -112,4 +112,4 @@ module.exports = async () => {
     writeFormattedJson(brandsFilename, brands);
     writeFormattedJson(skillsFilename, skills);
     writeFormattedJson(inkipediaGearFilename, inkipediaGear);
-};
+}

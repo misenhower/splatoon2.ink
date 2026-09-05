@@ -1,13 +1,11 @@
-require('./bootstrap');
-const fs = require('fs');
-const path = require('path');
-const axios = require('axios');
+import './bootstrap.js';
+import axios from 'axios';
 
 // SplatNet2 API
 const userAgent = process.env.SPLATNET_USER_AGENT;
 const splatnetBaseUrl = 'https://app.splatoon2.nintendo.net';
 
-class SplatNet {
+export default class SplatNet {
     constructor(region = 'NA', language = 'en-US') {
         this.region = region;
         this.language = language;
@@ -106,5 +104,3 @@ class SplatNet {
         return response.data;
     }
 }
-
-module.exports = SplatNet;

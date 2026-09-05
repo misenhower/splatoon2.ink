@@ -1,15 +1,15 @@
 // This is a helper used to retrieve language files from SplatNet.
 // These files aren't used directly, but are just downloaded for help with updating manual translation files.
 
-const path = require('path');
-const mkdirp = require('mkdirp').sync;
-const { writeFormattedJson } = require('@/common/utilities');
-const { languages } = require('@/common/regions');
-const SplatNet = require('@/common/splatnet');
+import path from 'node:path';
+import { mkdirpSync as mkdirp } from 'mkdirp';
+import { writeFormattedJson } from '../common/utilities.js';
+import { languages } from '../common/regions.js';
+import SplatNet from '../common/splatnet.js';
 
 const outputPath = path.resolve('storage/lang');
 
-module.exports = async () => {
+export default async function getSplatNetLanguageFiles() {
     mkdirp(outputPath);
 
     for (let { region, language } of languages) {
@@ -30,4 +30,4 @@ module.exports = async () => {
         // Store the data to a JSON file
         writeFormattedJson(`${outputPath}/${region}-${language}.json`, window.LocalizedMessage);
     }
-};
+}

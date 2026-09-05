@@ -1,6 +1,6 @@
-const { JSONPath } = require('jsonpath-plus');
+import { JSONPath } from 'jsonpath-plus';
 
-function query(data, expression) {
+export function query(data, expression) {
     return JSONPath({
         json: data,
         path: expression,
@@ -8,7 +8,7 @@ function query(data, expression) {
     });
 }
 
-function apply(data, expression, transform) {
+export function apply(data, expression, transform) {
     const matches = JSONPath({
         json: data,
         path: expression,
@@ -23,4 +23,4 @@ function apply(data, expression, transform) {
     return data;
 }
 
-module.exports = { apply, query };
+export default { apply, query };

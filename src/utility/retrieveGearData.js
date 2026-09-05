@@ -1,5 +1,5 @@
-const delay = require('delay');
-const SplatNet = require('@/common/splatnet');
+import delay from 'delay';
+import SplatNet from '../common/splatnet.js';
 const splatnet = new SplatNet();
 
 /**
@@ -7,7 +7,7 @@ const splatnet = new SplatNet();
  * This pulls data from the 50 most recent battles instead.
  */
 
-module.exports = async function retrieveGearData() {
+export default async function retrieveGearData() {
     let skills = {};
     let brands = {};
     let gear = { head: {}, clothes: {}, shoes: {} };

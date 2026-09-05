@@ -1,4 +1,4 @@
-import { languages, detectSplatoonLanguage } from '@/common/regions.esm';
+import { languages, detectSplatoonLanguage } from '@/common/regions';
 
 export const namespaced = true;
 

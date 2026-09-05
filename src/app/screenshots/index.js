@@ -1,3 +1,1 @@
-const screenshots = require('./screenshots');
-
-module.exports = screenshots;
+export * from './screenshots.js';

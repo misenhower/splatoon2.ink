@@ -1,8 +1,10 @@
-const brands = require('./data/brands');
-const skills = require('./data/skills');
-const inkipediaGear = require('./data/gear');
+import { readJsonFile } from './utilities.js';
 
-function getOriginalGear(gear) {
+const brands = readJsonFile(new URL('./data/brands.json', import.meta.url));
+const skills = readJsonFile(new URL('./data/skills.json', import.meta.url));
+const inkipediaGear = readJsonFile(new URL('./data/gear.json', import.meta.url));
+
+export function getOriginalGear(gear) {
     if (!gear || !gear.name)
         return;
 
@@ -20,8 +22,4 @@ function getOriginalGear(gear) {
         brand,
         skill: skills[originalGear.skill],
     });
-}
-
-module.exports = {
-    getOriginalGear,
 }

@@ -1,8 +1,6 @@
-const path = require('path');
-const { URL } = require('url');
-const http = require('http');
-const ecstatic = require('ecstatic');
-const puppeteer = require('puppeteer');
+import http from 'node:http';
+import ecstatic from 'ecstatic';
+import puppeteer from 'puppeteer';
 
 const viewport = {
     // Using a 16:9 ratio here by default to match Twitter's image card dimensions
@@ -69,31 +67,31 @@ async function captureScreenshot(options) {
     return result;
 }
 
-function captureScheduleScreenshot(now, splatfestBattle = false) {
+export function captureScheduleScreenshot(now, splatfestBattle = false) {
     let hash = `/schedules/${now}`;
 
     return captureScreenshot({ hash });
 }
 
-function captureGearScreenshot(now) {
+export function captureGearScreenshot(now) {
     let hash = `/splatNetGear/${now}`;
 
     return captureScreenshot({ hash });
 }
 
-function captureSalmonRunScreenshot(now, mode) {
+export function captureSalmonRunScreenshot(now, mode) {
     let hash = `/salmonRun/${now}?mode=${mode}`;
 
     return captureScreenshot({ hash });
 }
 
-function captureSalmonRunGearScreenshot(now) {
+export function captureSalmonRunGearScreenshot(now) {
     let hash = `/salmonRunGear/${now}`;
 
     return captureScreenshot({ hash });
 }
 
-function captureNewWeaponScreenshot(now, weaponCount) {
+export function captureNewWeaponScreenshot(now, weaponCount) {
     let hash = `/newWeapon/${now}`;
 
     // There are a max of 4 weapons per row
@@ -108,18 +106,9 @@ function captureNewWeaponScreenshot(now, weaponCount) {
     return captureScreenshot({ hash, viewport: { height }  });
 }
 
-function captureSplatfestScreenshot(region, now, regions) {
+export function captureSplatfestScreenshot(region, now, regions) {
     regions = regions.join(',');
     let hash = `/splatfest/${region}/${now}?regions=${regions}`;
 
     return captureScreenshot({ hash });
-}
-
-module.exports = {
-    captureScheduleScreenshot,
-    captureGearScreenshot,
-    captureSalmonRunScreenshot,
-    captureSalmonRunGearScreenshot,
-    captureNewWeaponScreenshot,
-    captureSplatfestScreenshot,
 }

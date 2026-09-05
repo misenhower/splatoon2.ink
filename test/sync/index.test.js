@@ -1,7 +1,7 @@
-const assert = require('node:assert/strict');
-const test = require('node:test');
+import assert from 'node:assert/strict';
+import test from 'node:test';
 
-const { canSync } = require('../../src/app/sync');
+import { canSync } from '../../src/app/sync/index.js';
 
 const storageEnvironment = {
   AWS_S3_ENDPOINT: 'https://public.example.com',

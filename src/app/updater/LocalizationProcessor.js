@@ -1,13 +1,13 @@
-const path = require('path');
-const fs = require('fs');
-const mkdirp = require('mkdirp').sync;
-const jsonpath = require('@/common/jsonpath');
-const _ = require('lodash');
-const { readJson, writeJson } = require('@/common/utilities');
+import path from 'node:path';
+import fs from 'node:fs';
+import { mkdirpSync as mkdirp } from 'mkdirp';
+import jsonpath from '../../common/jsonpath.js';
+import _ from 'lodash';
+import { readJson, writeJson } from '../../common/utilities.js';
 
 const localizationsPath = path.resolve('dist/data/locale');
 
-class LocalizationProcessor {
+export default class LocalizationProcessor {
     constructor(ruleset, languageInfo) {
         this.ruleset = ruleset;
         this.languageInfo = languageInfo;
@@ -103,5 +103,3 @@ class LocalizationProcessor {
         return true;
     }
 }
-
-module.exports = LocalizationProcessor;

@@ -1,9 +1,9 @@
-const Updater = require('./Updater');
-const path = require('path');
-const fs = require('fs');
+import Updater from './Updater.js';
+import path from 'node:path';
+import fs from 'node:fs';
 const dataPath = path.resolve('src/common/data');
 
-class OriginalGearImageUpdater extends Updater {
+export default class OriginalGearImageUpdater extends Updater {
     constructor() {
         super({
             name: 'Original Gear',
@@ -19,5 +19,3 @@ class OriginalGearImageUpdater extends Updater {
         await this.downloadImages(data);
     }
 }
-
-module.exports = OriginalGearImageUpdater;

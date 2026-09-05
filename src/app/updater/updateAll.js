@@ -1,11 +1,11 @@
-const SchedulesUpdater = require('./updaters/SchedulesUpdater');
-const CoopSchedulesUpdater = require('./updaters/CoopSchedulesUpdater');
-const TimelineUpdater = require('./updaters/TimelineUpdater');
-const OriginalGearImageUpdater = require('./updaters/OriginalGearImageUpdater');
-const FestivalsUpdater = require('./updaters/FestivalsUpdater');
-const MerchandisesUpdater = require('./updaters/MerchandisesUpdater');
-const S3Syncer = require('../sync/S3Syncer');
-const { canSync } = require('../sync');
+import SchedulesUpdater from './updaters/SchedulesUpdater.js';
+import CoopSchedulesUpdater from './updaters/CoopSchedulesUpdater.js';
+import TimelineUpdater from './updaters/TimelineUpdater.js';
+import OriginalGearImageUpdater from './updaters/OriginalGearImageUpdater.js';
+import FestivalsUpdater from './updaters/FestivalsUpdater.js';
+import MerchandisesUpdater from './updaters/MerchandisesUpdater.js';
+import S3Syncer from '../sync/S3Syncer.js';
+import { canSync } from '../sync/index.js';
 
 const updaters = [
     new OriginalGearImageUpdater,
@@ -18,7 +18,7 @@ const updaters = [
     new MerchandisesUpdater,
 ];
 
-async function updateAll() {
+export default async function updateAll() {
     const syncer = canSync() ? new S3Syncer() : null;
 
     for (let updater of updaters) {
@@ -35,5 +35,3 @@ async function updateAll() {
 
     return 'Done';
 }
-
-module.exports = updateAll;

@@ -1,9 +1,9 @@
-const path = require('path');
-const fs = require('fs');
-const mkdirp = require('mkdirp').sync;
-const BlueskyClient = require('../clients/BlueskyClient');
-const TwitterClient = require('../clients/TwitterClient');
-const { getTopOfCurrentHour, readJson, writeJson } = require('@/common/utilities');
+import path from 'node:path';
+import fs from 'node:fs';
+import { mkdirpSync as mkdirp } from 'mkdirp';
+import BlueskyClient from '../clients/BlueskyClient.js';
+import TwitterClient from '../clients/TwitterClient.js';
+import { getTopOfCurrentHour, readJson, writeJson } from '../../../common/utilities.js';
 
 const blueskyLastTimesPath = path.resolve('storage/bluesky-lastPostTimes.json');
 const twitterLastTimesPath = path.resolve('storage/twitter-lastTweetTimes.json');
@@ -11,7 +11,7 @@ const twitterLastTimesPath = path.resolve('storage/twitter-lastTweetTimes.json')
 const blueskyClient = new BlueskyClient();
 const twitterClient = new TwitterClient();
 
-class TwitterPostBase {
+export default class TwitterPostBase {
     async maybePostTweet() {
         // Make sure we have data to post
         if (!this.getData()) {
@@ -213,5 +213,3 @@ class TwitterPostBase {
         return 280;
     }
 }
-
-module.exports = TwitterPostBase;

@@ -1,12 +1,12 @@
-require('../common/bootstrap');
-const CronJob = require('cron').CronJob;
-const updater = require('./updater');
-const twitter = require('./twitter');
+import '../common/bootstrap.js';
+import { CronJob } from 'cron';
+import { updateAll } from './updater/index.js';
+import { maybePostTweets } from './twitter/index.js';
 
 console.info('Starting periodic tasks...');
 
 // Run every hour at 10sec after the hour
 new CronJob('10 0 * * * *', async () => {
-    await updater.updateAll();
-    await twitter.maybePostTweets();
+    await updateAll();
+    await maybePostTweets();
 }, null, true);

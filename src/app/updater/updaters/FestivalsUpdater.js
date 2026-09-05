@@ -1,14 +1,12 @@
-const Updater = require('./Updater');
-const mkdirp = require('mkdirp').sync;
-const fs = require('fs');
-const path = require('path');
-const _ = require('lodash');
-const jsonpath = require('@/common/jsonpath');
-const { readJson, writeJson } = require('@/common/utilities');
-const { languages } = require('@/common/regions');
-const SplatNet = require('@/common/splatnet');
+import Updater from './Updater.js';
+import fs from 'node:fs';
+import _ from 'lodash';
+import jsonpath from '../../../common/jsonpath.js';
+import { readJson, writeJson } from '../../../common/utilities.js';
+import { languages } from '../../../common/regions.js';
+import SplatNet from '../../../common/splatnet.js';
 
-class FestivalsUpdater extends Updater {
+export default class FestivalsUpdater extends Updater {
     constructor(region) {
         super({
             name: `Festivals ${region}`,
@@ -104,5 +102,3 @@ class FestivalsUpdater extends Updater {
         }));
     }
 }
-
-module.exports = FestivalsUpdater;

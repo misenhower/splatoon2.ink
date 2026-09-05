@@ -1,13 +1,14 @@
-const TwitterPostBase = require('./TwitterPostBase');
-const { captureScheduleScreenshot } = require('@/app/screenshots');
-const { readData, readJson } = require('@/common/utilities');
-const finalFest = require('@/common/data/finalFest.json');
-const shiftyStations = require('@/common/data/shiftyStations.json');
-const path = require('path');
+import TwitterPostBase from './TwitterPostBase.js';
+import { captureScheduleScreenshot } from '../../screenshots/index.js';
+import { readData, readJson, readJsonFile } from '../../../common/utilities.js';
+import path from 'node:path';
+
+const finalFest = readJsonFile(new URL('../../../common/data/finalFest.json', import.meta.url));
+const shiftyStations = readJsonFile(new URL('../../../common/data/shiftyStations.json', import.meta.url));
 
 const stagesPath = path.resolve('storage/stages.json');
 
-class ScheduleTweet extends TwitterPostBase {
+export default class ScheduleTweet extends TwitterPostBase {
     getKey() { return 'schedule'; }
     getName() { return 'Schedule'; }
 
@@ -103,5 +104,3 @@ class ScheduleTweet extends TwitterPostBase {
         return `Splatoon 2 map rotation: Ranked game mode: ${data.gachi.rule.name}, League game mode: ${data.league.rule.name} #maprotation`;
     }
 }
-
-module.exports = ScheduleTweet;

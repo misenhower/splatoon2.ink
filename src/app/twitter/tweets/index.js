@@ -1,12 +1,12 @@
-const ScheduleTweet = require('./ScheduleTweet');
-const GearTweet = require('./GearTweet');
-const SalmonRunTweet = require('./SalmonRunTweet');
-// const SalmonRunGearTweet = require('./SalmonRunGearTweet');
-const NewWeaponTweet = require('./NewWeaponTweet');
-const NewStageTweet = require('./NewStageTweet');
-const SplatfestTweet = require('./SplatfestTweet');
+import ScheduleTweet from './ScheduleTweet.js';
+import GearTweet from './GearTweet.js';
+import SalmonRunTweet from './SalmonRunTweet.js';
+// import SalmonRunGearTweet from './SalmonRunGearTweet.js';
+import NewWeaponTweet from './NewWeaponTweet.js';
+import NewStageTweet from './NewStageTweet.js';
+import SplatfestTweet from './SplatfestTweet.js';
 
-module.exports = [
+export default [
     new ScheduleTweet,
     new GearTweet,
     new SalmonRunTweet,

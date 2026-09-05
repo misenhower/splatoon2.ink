@@ -1,9 +1,7 @@
-const atprotoApi = require('@atproto/api');
-const sharp = require('sharp');
+import { BskyAgent, RichText } from '@atproto/api';
+import sharp from 'sharp';
 
-const { BskyAgent, RichText } = atprotoApi;
-
-class BlueskyClient
+export default class BlueskyClient
 {
   key = 'bluesky';
   name = 'Bluesky';
@@ -67,5 +65,3 @@ class BlueskyClient
     });
   }
 }
-
-module.exports = BlueskyClient;

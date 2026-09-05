@@ -1,8 +1,8 @@
-const S3Syncer = require('../sync/S3Syncer');
-const { canSync } = require('../sync');
-const tweets = require('./tweets');
+import S3Syncer from '../sync/S3Syncer.js';
+import { canSync } from '../sync/index.js';
+import tweets from './tweets/index.js';
 
-async function maybePostTweets() {
+export async function maybePostTweets() {
     const syncer = canSync() ? new S3Syncer() : null;
 
     for (let tweet of tweets)
@@ -13,12 +13,7 @@ async function maybePostTweets() {
     }
 }
 
-async function testScreenshots() {
+export async function testScreenshots() {
     for (let tweet of tweets)
         await tweet.saveTestScreenshot();
-}
-
-module.exports = {
-    maybePostTweets,
-    testScreenshots,
 }

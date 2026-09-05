@@ -1,12 +1,12 @@
-const TwitterPostBase = require('./TwitterPostBase');
-const { readJson } = require('@/common/utilities');
-const path = require('path');
-const fs = require('fs');
+import TwitterPostBase from './TwitterPostBase.js';
+import { readJson } from '../../../common/utilities.js';
+import path from 'node:path';
+import fs from 'node:fs';
 
 const stagesPath = path.resolve('storage/stages.json');
 const splatnetAssetPath = path.resolve('dist/assets/splatnet');
 
-class NewStageTweet extends TwitterPostBase {
+export default class NewStageTweet extends TwitterPostBase {
     getKey() { return 'newstage'; }
     getName() { return 'New Stage'; }
 
@@ -28,5 +28,3 @@ class NewStageTweet extends TwitterPostBase {
         return `NEW STAGE: The first schedules for ${data.name} have been posted! Start playing the new stage when this tweet is ${duration} old. #splatoon2`;
     }
 }
-
-module.exports = NewStageTweet;

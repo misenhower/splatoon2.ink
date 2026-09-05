@@ -1,6 +1,6 @@
-const Updater = require('./Updater');
+import Updater from './Updater.js';
 
-class CoopSchedulesUpdater extends Updater {
+export default class CoopSchedulesUpdater extends Updater {
     constructor() {
         super({
             name: 'Co-op Schedules',
@@ -77,5 +77,3 @@ class CoopSchedulesUpdater extends Updater {
         return events;
     }
 }
-
-module.exports = CoopSchedulesUpdater;

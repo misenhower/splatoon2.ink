@@ -1,9 +1,9 @@
-const path = require('path');
-const { S3Client } = require('@aws-sdk/client-s3');
-const { S3SyncClient } = require('s3-sync-client');
-const mime = require('mime-types');
+import path from 'node:path';
+import { S3Client } from '@aws-sdk/client-s3';
+import { S3SyncClient } from 's3-sync-client';
+import mime from 'mime-types';
 
-class S3Syncer
+export default class S3Syncer
 {
   constructor({
     publicConfig = S3Syncer.publicConfigFromEnvironment(),
@@ -123,5 +123,3 @@ class S3Syncer
     console.log(`[S3] ${message}`);
   }
 }
-
-module.exports = S3Syncer;

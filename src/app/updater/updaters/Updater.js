@@ -1,19 +1,19 @@
-const path = require('path');
-const fs = require('fs');
-const mkdirp = require('mkdirp').sync;
-const _ = require('lodash');
-const jsonpath = require('@/common/jsonpath');
-const SplatNet = require('@/common/splatnet');
-const { createEvents } = require('ics');
-const Sentry = require('@sentry/node');
-const { languages } = require('@/common/regions');
-const LocalizationProcessor = require('../LocalizationProcessor');
+import path from 'node:path';
+import fs from 'node:fs';
+import { mkdirpSync as mkdirp } from 'mkdirp';
+import _ from 'lodash';
+import jsonpath from '../../../common/jsonpath.js';
+import SplatNet from '../../../common/splatnet.js';
+import { createEvents } from 'ics';
+import * as Sentry from '@sentry/node';
+import { languages } from '../../../common/regions.js';
+import LocalizationProcessor from '../LocalizationProcessor.js';
 
 const dataPath = path.resolve('dist/data');
 const splatnetAssetPath = path.resolve('dist/assets/splatnet');
 const cdnAltPath = path.resolve('src/common/cdn');
 
-class Updater {
+export default class Updater {
     constructor(options = {}) {
         this.options = options;
     }
@@ -276,5 +276,3 @@ class Updater {
         console.error(this.formatLogMessage(message));
     }
 }
-
-module.exports = Updater;

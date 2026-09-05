@@ -1,3 +1,1 @@
-const twitter = require('./twitter');
-
-module.exports = twitter;
+export * from './twitter.js';

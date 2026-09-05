@@ -1,3 +1,1 @@
-module.exports = {
-    updateAll: require('./updateAll'),
-};
+export { default as updateAll } from './updateAll.js';

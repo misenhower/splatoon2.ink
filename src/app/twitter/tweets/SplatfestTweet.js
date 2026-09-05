@@ -1,9 +1,9 @@
-const TwitterPostBase = require('./TwitterPostBase');
-const { captureSplatfestScreenshot } = require('@/app/screenshots');
-const { readData } = require('@/common/utilities');
-const { splatoonRegions } = require('@/common/regions');
+import TwitterPostBase from './TwitterPostBase.js';
+import { captureSplatfestScreenshot } from '../../screenshots/index.js';
+import { readData } from '../../../common/utilities.js';
+import { splatoonRegions } from '../../../common/regions.js';
 
-class SplatfestTweet extends TwitterPostBase {
+export default class SplatfestTweet extends TwitterPostBase {
     constructor(region) {
         super();
 
@@ -146,5 +146,3 @@ class SplatfestTweet extends TwitterPostBase {
         }
     }
 }
-
-module.exports = SplatfestTweet;

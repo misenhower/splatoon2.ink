@@ -1,8 +1,7 @@
-const Updater = require('./Updater');
-const SplatNet = require('@/common/splatnet');
-const { getOriginalGear } = require('@/common/splatoon');
+import Updater from './Updater.js';
+import { getOriginalGear } from '../../../common/splatoon.js';
 
-class MerchandisesUpdater extends Updater {
+export default class MerchandisesUpdater extends Updater {
     constructor() {
         super({
             name: 'Merchandises',
@@ -58,5 +57,3 @@ class MerchandisesUpdater extends Updater {
         return data;
     }
 }
-
-module.exports = MerchandisesUpdater;
