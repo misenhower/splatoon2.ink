@@ -1,8 +1,6 @@
-import { readJsonFile } from './utilities.js';
-
-const brands = readJsonFile(new URL('./data/brands.json', import.meta.url));
-const skills = readJsonFile(new URL('./data/skills.json', import.meta.url));
-const inkipediaGear = readJsonFile(new URL('./data/gear.json', import.meta.url));
+import brands from './data/brands.json' with { type: 'json' };
+import skills from './data/skills.json' with { type: 'json' };
+import inkipediaGear from './data/gear.json' with { type: 'json' };
 
 export function getOriginalGear(gear) {
     if (!gear || !gear.name)

@@ -1,10 +1,9 @@
 import TwitterPostBase from './TwitterPostBase.js';
 import { captureScheduleScreenshot } from '../../screenshots/index.js';
-import { readData, readJson, readJsonFile } from '../../../common/utilities.js';
+import { readData, readJson } from '../../../common/utilities.js';
+import finalFest from '../../../common/data/finalFest.json' with { type: 'json' };
+import shiftyStations from '../../../common/data/shiftyStations.json' with { type: 'json' };
 import path from 'node:path';
-
-const finalFest = readJsonFile(new URL('../../../common/data/finalFest.json', import.meta.url));
-const shiftyStations = readJsonFile(new URL('../../../common/data/shiftyStations.json', import.meta.url));
 
 const stagesPath = path.resolve('storage/stages.json');
 

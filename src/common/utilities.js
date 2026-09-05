@@ -16,11 +16,6 @@ export function readJson(filename) {
     return JSON.parse(fs.readFileSync(filename));
 }
 
-/** Read a JSON file relative to a module, e.g. readJsonFile(new URL('./data/x.json', import.meta.url)) */
-export function readJsonFile(url) {
-    return JSON.parse(fs.readFileSync(url));
-}
-
 export function writeJson(filename, data) {
     mkdirp(path.dirname(filename));
     fs.writeFileSync(filename, JSON.stringify(data));

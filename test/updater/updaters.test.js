@@ -7,7 +7,9 @@ import MerchandisesUpdater from '../../src/app/updater/updaters/MerchandisesUpda
 import FestivalsUpdater from '../../src/app/updater/updaters/FestivalsUpdater.js';
 import OriginalGearImageUpdater from '../../src/app/updater/updaters/OriginalGearImageUpdater.js';
 import { createUpdaters } from '../../src/app/updater/updateAll.js';
-import { getTopOfCurrentHour, readJsonFile } from '../../src/common/utilities.js';
+import { getTopOfCurrentHour } from '../../src/common/utilities.js';
+import gearData from '../../src/common/data/gear.json' with { type: 'json' };
+import skills from '../../src/common/data/skills.json' with { type: 'json' };
 import { fakeSplatNet, buckets, json, keys, setSessionEnvironment } from './support.js';
 
 setSessionEnvironment();
@@ -79,7 +81,6 @@ test('timeline: keeps only coop and weapon availability, dropping hidden items',
 });
 
 test('merchandises: attaches original gear from the bundled data without its brand', async () => {
-  const gearData = readJsonFile(new URL('../../src/common/data/gear.json', import.meta.url));
   const original = gearData.head[0];
   const brand = { id: '0', name: 'Brand', image: '/images/brand/0.png', frequent_skill: { id: '0', name: 'Skill', image: '/images/skill/0.png' } };
   const skill = { id: '0', name: 'Skill', image: '/images/skill/0.png' };
@@ -128,7 +129,6 @@ test('festivals: merges one region into the shared file, fetches missing ranking
 });
 
 test('original gear: mirrors skill images from the bundled skills data', async () => {
-  const skills = readJsonFile(new URL('../../src/common/data/skills.json', import.meta.url));
   const images = Object.values(skills).map(s => s.image).filter(Boolean);
   await b.publicBucket.put(`assets/splatnet${images[0]}`, 'existing');
   const splatnet = fakeSplatNet();
