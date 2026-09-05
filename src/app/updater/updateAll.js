@@ -4,8 +4,6 @@ import TimelineUpdater from './updaters/TimelineUpdater.js';
 import OriginalGearImageUpdater from './updaters/OriginalGearImageUpdater.js';
 import FestivalsUpdater from './updaters/FestivalsUpdater.js';
 import MerchandisesUpdater from './updaters/MerchandisesUpdater.js';
-import S3Syncer from '../sync/S3Syncer.js';
-import { canSync } from '../sync/index.js';
 
 /** @param {{ publicStorage: object, privateStorage: object }} storage */
 export function createUpdaters(storage) {
@@ -26,8 +24,6 @@ export function createUpdaters(storage) {
  * a Worker passes BucketStorage over its R2 bindings, a local run passes FilesystemStorage.
  */
 export default async function updateAll(storage) {
-    const syncer = canSync() ? new S3Syncer() : null;
-
     for (let updater of createUpdaters(storage)) {
         try {
             await updater.update();
@@ -36,9 +32,4 @@ export default async function updateAll(storage) {
         }
     }
 
-    if (syncer) {
-        await syncer.upload();
-    }
-
-    return 'Done';
 }

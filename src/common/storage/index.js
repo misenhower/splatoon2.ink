@@ -1,6 +1,7 @@
+// Note: FilesystemStorage is deliberately not re-exported here; it imports node:fs, and this
+// module is part of the updaters' import graph, which also has to bundle into a Worker.
 export { default as MemoryBucket } from './MemoryBucket.js';
 export { default as BucketStorage } from './BucketStorage.js';
-export { default as FilesystemStorage } from './FilesystemStorage.js';
 
 // What the S3 sync applied to data/ objects; the R2 objects carry it directly.
 export const DATA_CACHE_CONTROL = 'no-cache, stale-while-revalidate=5, stale-if-error=86400';

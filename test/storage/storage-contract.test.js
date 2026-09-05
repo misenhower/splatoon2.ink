@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { MemoryBucket, BucketStorage, FilesystemStorage } from '../../src/common/storage/index.js';
+import { MemoryBucket, BucketStorage } from '../../src/common/storage/index.js';
+import FilesystemStorage from '../../src/common/storage/FilesystemStorage.js';
 
 // One contract for the storage interface the updaters use, run against every implementation.
 const implementations = {
