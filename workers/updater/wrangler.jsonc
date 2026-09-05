@@ -1,0 +1,43 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "splatoon2-ink-updater",
+  "main": "src/index.mjs",
+  "compatibility_date": "2026-09-03",
+  "compatibility_flags": ["nodejs_compat"],
+  // The workers.dev URL only exposes the authenticated manual trigger (see README).
+  "workers_dev": true,
+  "preview_urls": false,
+  "triggers": {
+    // Cron Triggers only wake the Scheduler Durable Object (see src/index.mjs CRON_ACTIONS).
+    // The hourly update runs from the object's own alarm at :00:10; this cron is the watchdog
+    // that re-arms that alarm if it is ever lost. Minute 30 keeps it clear of the hourly run.
+    "crons": ["30 * * * *"]
+  },
+  "durable_objects": {
+    "bindings": [
+      { "name": "SCHEDULER", "class_name": "Scheduler" }
+    ]
+  },
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["Scheduler"] }
+  ],
+  "r2_buckets": [
+    {
+      // Shadow mode: writes go to the dev bucket while the container still owns production.
+      // Cutover = point this at "splatoon2-ink-assets".
+      "binding": "ASSETS",
+      "bucket_name": "splatoon2-ink-dev-assets"
+    },
+    {
+      // Mutable updater state that is not public (the old storage/ directory).
+      "binding": "PRIVATE",
+      "bucket_name": "splatoon2-ink-private"
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "head_sampling_rate": 1
+    }
+  }
+}

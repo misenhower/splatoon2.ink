@@ -1,6 +1,8 @@
 // SplatNet2 API
-const userAgent = process.env.SPLATNET_USER_AGENT;
 const splatnetBaseUrl = 'https://app.splatoon2.nintendo.net';
+
+// Read lazily: in a Worker, process.env is populated from the bindings rather than at startup.
+const userAgent = () => process.env.SPLATNET_USER_AGENT;
 
 export default class SplatNet {
     constructor(region = 'NA', language = 'en-US') {
@@ -18,7 +20,7 @@ export default class SplatNet {
 
     getHeaders() {
         return {
-            ...(userAgent ? { 'User-Agent': userAgent } : {}),
+            ...(userAgent() ? { 'User-Agent': userAgent() } : {}),
             'Cookie': `iksm_session=${this.getSessionId()}`,
             'Accept-Language': this.language,
         };
@@ -110,7 +112,7 @@ export default class SplatNet {
     /** Download an image (no session cookie needed). Returns the bytes. */
     async getImage(imagePath) {
         let response = await this.request(imagePath, {
-            headers: userAgent ? { 'User-Agent': userAgent } : {},
+            headers: userAgent() ? { 'User-Agent': userAgent() } : {},
         });
         return new Uint8Array(await response.arrayBuffer());
     }

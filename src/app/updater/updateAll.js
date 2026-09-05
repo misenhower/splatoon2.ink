@@ -20,16 +20,31 @@ export function createUpdaters(storage) {
 }
 
 /**
- * Run every updater. `storage` is shared by all of them for the run (see createUpdaters);
- * a Worker passes BucketStorage over its R2 bindings, a local run passes FilesystemStorage.
+ * Run every updater (or the named ones). `storage` is shared by all of them for the run; a
+ * Worker passes BucketStorage over its R2 bindings, a local run passes FilesystemStorage.
+ * A failing updater is logged and does not stop the others.
+ *
+ * @param {object} storage
+ * @param {{ only?: string[] }} [options]  restrict the run to updaters with these names
+ * @returns {Promise<Array<{ name: string, ok: boolean, ms: number, error?: string }>>}
  */
-export default async function updateAll(storage) {
+export default async function updateAll(storage, { only } = {}) {
+    let results = [];
+
     for (let updater of createUpdaters(storage)) {
+        let name = updater.options.name;
+        if (only && !only.includes(name))
+            continue;
+
+        let started = Date.now();
         try {
             await updater.update();
+            results.push({ name, ok: true, ms: Date.now() - started });
         } catch (e) {
             console.error(e);
+            results.push({ name, ok: false, ms: Date.now() - started, error: e instanceof Error ? e.message : String(e) });
         }
     }
 
+    return results;
 }

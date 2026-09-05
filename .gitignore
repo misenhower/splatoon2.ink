@@ -5,3 +5,4 @@ logs
 test-screenshot-*
 /storage
 .wrangler
+.dev.vars

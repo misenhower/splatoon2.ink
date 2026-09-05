@@ -8,7 +8,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --modern --no-clean",
-    "test": "node --test && npm run worker:test",
+    "test": "node --test && npm run worker:test && npm run updater:test",
     "lint": "eslint .",
     "cron": "node src/app/cron.js",
     "start": "npm run splatnet && npm run twitter && npm run cron",
@@ -23,10 +23,16 @@
     "worker:test": "vitest run --config vitest.worker.config.mjs",
     "worker:deploy:dry-run": "wrangler deploy --dry-run",
     "worker:deploy": "wrangler deploy",
-    "lint-fix": "npm run lint -- --fix"
+    "lint-fix": "npm run lint -- --fix",
+    "updater:dev": "wrangler dev --config workers/updater/wrangler.jsonc --test-scheduled",
+    "updater:test": "vitest run --config workers/updater/vitest.config.mjs",
+    "updater:deploy:dry-run": "wrangler deploy --config workers/updater/wrangler.jsonc --dry-run",
+    "updater:deploy": "wrangler deploy --config workers/updater/wrangler.jsonc",
+    "updater:tail": "wrangler tail --config workers/updater/wrangler.jsonc"
   },
   "dependencies": {
     "@atproto/api": "^0.20.42",
+    "@sentry/cloudflare": "^10.73.0",
     "@sentry/core": "^10.73.0",
     "@sentry/node": "^10.73.0",
     "bulma": "^0.9.4",
