@@ -35,6 +35,11 @@ npm run serve    # Start the webpack dev server
 
 Data retrieved from Splatnet is stored in the `dist/data` directory.
 
+One image, `src/common/cdn/images/skill/53c62995f9d2dc4a60f3850c5dbdd2323f1eef87.png`,
+is no longer served by SplatNet's CDN. It is already in production storage; if you ever
+start from an empty `dist/`, copy it to `dist/assets/splatnet/images/skill/` by hand
+(or run `npm run sync:download`).
+
 By default, the dev server will run on port 8080.
 When running `npm run serve` you can access the site by going to http://localhost:8080.
 

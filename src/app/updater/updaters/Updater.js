@@ -1,6 +1,3 @@
-import path from 'node:path';
-import fs from 'node:fs';
-import { mkdirpSync as mkdirp } from 'mkdirp';
 import _ from 'lodash';
 import jsonpath from '../../../common/jsonpath.js';
 import SplatNet from '../../../common/splatnet.js';
@@ -8,14 +5,18 @@ import { createEvents } from 'ics';
 import * as Sentry from '@sentry/node';
 import { languages } from '../../../common/regions.js';
 import LocalizationProcessor from '../LocalizationProcessor.js';
-
-const dataPath = path.resolve('dist/data');
-const splatnetAssetPath = path.resolve('dist/assets/splatnet');
-const cdnAltPath = path.resolve('src/common/cdn');
+import { DATA_CACHE_CONTROL } from '../../../common/storage/index.js';
 
 export default class Updater {
-    constructor(options = {}) {
+    /**
+     * @param {object} options
+     * @param {{ publicStorage: object, privateStorage: object }} storage
+     *   publicStorage holds what the site serves (data/, assets/); privateStorage holds updater state.
+     */
+    constructor(options = {}, storage = {}) {
         this.options = options;
+        this.publicStorage = storage.publicStorage;
+        this.privateStorage = storage.privateStorage;
     }
 
     async update() {
@@ -36,14 +37,11 @@ export default class Updater {
         // Apply any other processing
         data = await this.processData(data);
 
-        // Convert the data to a JSON string
-        let dataString = JSON.stringify(data);
-
-        // Write the data to disk
-        this.writeFile(this.getFilename(), dataString);
+        // Write the data
+        await this.publicStorage.writeJson(this.getKey(), data, { cacheControl: DATA_CACHE_CONTROL });
 
         // Update calendar events
-        this.updateCalendarEvents(data);
+        await this.updateCalendarEvents(data);
 
         // Download images if necessary
         await this.downloadImages(data);
@@ -51,17 +49,14 @@ export default class Updater {
         this.info('Done.');
     }
 
-    getOutputPath() {
-        return dataPath;
+    /** Key of this updater's output in the public storage */
+    getKey() {
+        return `data/${this.options.filename}`;
     }
 
-    getFilename() {
-        return `${this.getOutputPath()}/${this.options.filename}`;
-    }
-
-    getCalendarFilename() {
+    getCalendarKey() {
         if (this.options.calendarFilename)
-            return `${this.getOutputPath()}/${this.options.calendarFilename}`;
+            return `data/${this.options.calendarFilename}`;
     }
 
     getData({ region, language }) {
@@ -110,38 +105,34 @@ export default class Updater {
         return _.uniqBy(languages, 'language');
     }
 
-    forEachLanguage(callback) {
-        for (let languageInfo of this.getLanguages())
-            this.forEachRuleset(languageInfo, callback);
-    }
-
-    forEachRuleset(languageInfo, callback) {
-        for (let ruleset of (this.options.localization)) {
-            let processor = new LocalizationProcessor(ruleset, languageInfo);
-            callback(processor, languageInfo);
-        }
+    getProcessors(languageInfo) {
+        return this.options.localization.map(ruleset => new LocalizationProcessor(ruleset, languageInfo, this.publicStorage));
     }
 
     async updateLocalizations(data, initialLanguageInfo) {
         if (this.options.localization) {
             // Update localization data for the initial language
-            this.forEachRuleset(initialLanguageInfo, processor => processor.updateLocalizations(data));
+            for (let processor of this.getProcessors(initialLanguageInfo))
+                await processor.updateLocalizations(data);
 
             // Do we need to retrieve data for any other languages?
             let missingLanguages = [];
-            this.forEachLanguage((processor, languageInfo) => {
-                if (missingLanguages.indexOf(languageInfo) === -1) {
-                    if (!processor.hasLocalizations(data))
+            for (let languageInfo of this.getLanguages()) {
+                for (let processor of this.getProcessors(languageInfo)) {
+                    if (!await processor.hasLocalizations(data)) {
                         missingLanguages.push(languageInfo);
+                        break;
+                    }
                 }
-            });
+            }
 
             // Retrieve data for missing languages
             for (let missingLanguageInfo of missingLanguages) {
                 this.info(`Retrieving localized data for region: ${missingLanguageInfo.region}, language: ${missingLanguageInfo.language}`);
                 let localData = await this.handleRequest(this.getData(missingLanguageInfo));
                 localData = this.filterRootKeys(localData);
-                this.forEachRuleset(missingLanguageInfo, processor => processor.updateLocalizations(localData));
+                for (let processor of this.getProcessors(missingLanguageInfo))
+                    await processor.updateLocalizations(localData);
             }
         }
 
@@ -159,11 +150,6 @@ export default class Updater {
         return true;
     }
 
-    writeFile(filename, data) {
-        mkdirp(path.dirname(filename));
-        fs.writeFileSync(filename, data);
-    }
-
     async downloadImages(data) {
         if (this.options.imagePaths) {
             for (let expression of this.options.imagePaths) {
@@ -178,40 +164,31 @@ export default class Updater {
         if (!imagePath)
             return;
 
-        let localPath = splatnetAssetPath + imagePath;
+        let key = `assets/splatnet${imagePath}`;
 
         // Check whether the image has already been downloaded
-        if (fs.existsSync(localPath))
+        if (await this.publicStorage.exists(key))
             return;
 
-        // Certain images are not available on the CDN anymore
-        if (fs.existsSync(cdnAltPath + imagePath)) {
-            this.info(`Using CDN backup: ${imagePath}`);
-            let image = fs.readFileSync(cdnAltPath + imagePath);
-            this.writeFile(localPath, image);
-
-            return;
-        }
-
-        // Otherwise, download the image
+        // Download the image
         this.info(`Downloading image: ${imagePath}`);
         let splatnet = new SplatNet;
         let image = await this.handleRequest(splatnet.getImage(imagePath));
-        this.writeFile(localPath, image);
+        await this.publicStorage.writeBytes(key, image);
     }
 
     /**
      * Calendar output
      */
 
-    updateCalendarEvents(data) {
-        let filename = this.getCalendarFilename();
-        if (!filename)
+    async updateCalendarEvents(data) {
+        let key = this.getCalendarKey();
+        if (!key)
             return;
 
         let events = this.getCalendarEntries(data);
         let ical = this.getiCalData(events);
-        this.writeFile(filename, ical);
+        await this.publicStorage.writeText(key, ical, { cacheControl: DATA_CACHE_CONTROL });
     }
 
     getCalendarTitle() {

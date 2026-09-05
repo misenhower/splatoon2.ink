@@ -1,5 +1,3 @@
-import './bootstrap.js';
-
 // SplatNet2 API
 const userAgent = process.env.SPLATNET_USER_AGENT;
 const splatnetBaseUrl = 'https://app.splatoon2.nintendo.net';

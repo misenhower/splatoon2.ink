@@ -1,52 +1,39 @@
-import path from 'node:path';
-import fs from 'node:fs';
-import { mkdirpSync as mkdirp } from 'mkdirp';
 import jsonpath from '../../common/jsonpath.js';
 import _ from 'lodash';
-import { readJson, writeJson } from '../../common/utilities.js';
-
-const localizationsPath = path.resolve('dist/data/locale');
+import { DATA_CACHE_CONTROL } from '../../common/storage/index.js';
 
 export default class LocalizationProcessor {
-    constructor(ruleset, languageInfo) {
+    /**
+     * @param {object} ruleset  { name, entities, id, values }
+     * @param {{ region: string, language: string }} languageInfo
+     * @param {object} storage  the public storage (BucketStorage or FilesystemStorage)
+     */
+    constructor(ruleset, languageInfo, storage) {
         this.ruleset = ruleset;
         this.languageInfo = languageInfo;
+        this.storage = storage;
 
         let entities = this.ruleset.entities;
         this.entityExpressions = (Array.isArray(entities)) ? entities : [entities];
 
         let values = this.ruleset.values;
         this.valueExpressions = (Array.isArray(values)) ? values : [values];
-
-        this.readData();
     }
 
-    getFilename() {
-        return `${localizationsPath}/${this.languageInfo.language}.json`;
+    getKey() {
+        return `data/locale/${this.languageInfo.language}.json`;
     }
 
-    readData() {
-        if (fs.existsSync(this.getFilename()))
-            this.data = readJson(this.getFilename());
-        else
-            this.data = {};
+    async readData() {
+        return await this.storage.readJson(this.getKey()) ?? {};
     }
 
-    writeData() {
-        mkdirp(path.dirname(this.getFilename()));
-        writeJson(this.getFilename(), this.data);
+    writeData(data) {
+        return this.storage.writeJson(this.getKey(), data, { cacheControl: DATA_CACHE_CONTROL });
     }
 
     getExpression(ids, valueKey) {
         return [this.ruleset.name, ...ids, valueKey];
-    }
-
-    readValue(ids, valueKey) {
-        return _.get(this.data, this.getExpression(ids, valueKey));
-    }
-
-    writeValue(ids, valueKey, newValue) {
-        return _.setWith(this.data, this.getExpression(ids, valueKey), newValue, Object);
     }
 
     getIdValues(entity) {
@@ -60,44 +47,31 @@ export default class LocalizationProcessor {
         return idParts.map(id => _.get(entity, id));
     }
 
-    eachEntity(data, callback) {
-        for (let expression of this.entityExpressions) {
-            let entities = jsonpath.query(data, expression);
+    *entities(data) {
+        for (let expression of this.entityExpressions)
+            yield* jsonpath.query(data, expression);
+    }
 
-            for (let entity of entities) {
-                let result = callback(entity);
-                if (result === false)
+    async updateLocalizations(data) {
+        let localizations = await this.readData();
+
+        for (let entity of this.entities(data)) {
+            let ids = this.getIdValues(entity);
+            for (let valueKey of this.valueExpressions)
+                _.setWith(localizations, this.getExpression(ids, valueKey), _.get(entity, valueKey), Object);
+        }
+
+        await this.writeData(localizations);
+    }
+
+    async hasLocalizations(data) {
+        let localizations = await this.readData();
+
+        for (let entity of this.entities(data)) {
+            let ids = this.getIdValues(entity);
+            for (let valueKey of this.valueExpressions)
+                if (_.get(localizations, this.getExpression(ids, valueKey)) === undefined)
                     return false;
-            }
-        }
-    }
-
-    updateLocalizations(data) {
-        this.eachEntity(data, entity => this.updateLocalizationsForEntity(entity));
-    }
-
-    updateLocalizationsForEntity(entity) {
-        for (let valueKey of this.valueExpressions) {
-            let ids = this.getIdValues(entity);
-            let value = _.get(entity, valueKey);
-
-            this.writeValue(ids, valueKey, value);
-        }
-
-        this.writeData();
-    }
-
-    hasLocalizations(data) {
-        let result = this.eachEntity(data, entity => this.hasLocalizationsForEntity(entity));
-        return (result !== false);
-    }
-
-    hasLocalizationsForEntity(entity) {
-        for (let valueKey of this.valueExpressions) {
-            let ids = this.getIdValues(entity);
-
-            if (this.readValue(ids, valueKey) === undefined)
-                return false;
         }
 
         return true;

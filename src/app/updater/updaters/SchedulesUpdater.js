@@ -1,13 +1,11 @@
 import Updater from './Updater.js';
 import SplatNet from '../../../common/splatnet.js';
-import path from 'node:path';
-import fs from 'node:fs';
-import { getTopOfCurrentHour, readJson } from '../../../common/utilities.js';
+import { getTopOfCurrentHour } from '../../../common/utilities.js';
 
-const stagesPath = path.resolve('storage/stages.json');
+const STAGES_KEY = 'stages.json'; // private storage
 
 export default class SchedulesUpdater extends Updater {
-    constructor() {
+    constructor(storage) {
         super({
             name: 'Schedules',
             filename: 'schedules.json',
@@ -39,28 +37,25 @@ export default class SchedulesUpdater extends Updater {
                     values: ['name', 'multiline_name'],
                 },
             ],
-        });
+        }, storage);
     }
 
     async processData(data) {
         // We need to track whether there are any new stages included with this schedule update
 
-        // If we don't have a "known stages" file, create it from the current list of stages
-        if (!fs.existsSync(stagesPath)) {
+        // Load known stages, or create the list from the current list of stages
+        let stages = await this.privateStorage.readJson(STAGES_KEY);
+        if (!stages) {
             let splatnet = new SplatNet;
             let stageData = await splatnet.getStages();
-            let stages = stageData.stages.map(s => Object.assign(s, { first_seen: -1, first_available: -1 }));
-            this.writeFile(stagesPath, JSON.stringify(stages));
+            stages = stageData.stages.map(s => Object.assign(s, { first_seen: -1, first_available: -1 }));
         }
 
-        // Load known stages
-        let stages = readJson(stagesPath);
-
         // Look for new stages (in Regular Battle)
-        let sortedSchedules = data.regular.sort((a, b) => a.start_time - b.start_time);
+        let sortedSchedules = [...data.regular].sort((a, b) => a.start_time - b.start_time);
         for (let schedule of sortedSchedules) {
             for (let stage of [schedule.stage_a, schedule.stage_b]) {
-                // Have wee seen this stage before?
+                // Have we seen this stage before?
                 let knownStage = stages.find(s => s.id == stage.id);
 
                 if (!knownStage) {
@@ -75,7 +70,7 @@ export default class SchedulesUpdater extends Updater {
         }
 
         // Update the stages file
-        this.writeFile(stagesPath, JSON.stringify(stages));
+        await this.privateStorage.writeJson(STAGES_KEY, stages);
 
         return data;
     }

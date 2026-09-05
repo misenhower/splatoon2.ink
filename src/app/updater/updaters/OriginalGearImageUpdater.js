@@ -1,19 +1,17 @@
 import Updater from './Updater.js';
-import path from 'node:path';
-import fs from 'node:fs';
-const dataPath = path.resolve('src/common/data');
+import { readJsonFile } from '../../../common/utilities.js';
 
 export default class OriginalGearImageUpdater extends Updater {
-    constructor() {
+    constructor(storage) {
         super({
             name: 'Original Gear',
             imagePaths: ['$..image'],
-        });
+        }, storage);
     }
 
     async update() {
         // Get the list of skills
-        let data = JSON.parse(fs.readFileSync(`${dataPath}/skills.json`));
+        let data = readJsonFile(new URL('../../../common/data/skills.json', import.meta.url));
 
         // Retrieve skill images
         await this.downloadImages(data);

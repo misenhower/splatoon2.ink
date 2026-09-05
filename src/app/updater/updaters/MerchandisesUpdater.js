@@ -2,7 +2,7 @@ import Updater from './Updater.js';
 import { getOriginalGear } from '../../../common/splatoon.js';
 
 export default class MerchandisesUpdater extends Updater {
-    constructor() {
+    constructor(storage) {
         super({
             name: 'Merchandises',
             filename: 'merchandises.json',
@@ -40,7 +40,7 @@ export default class MerchandisesUpdater extends Updater {
                     values: 'name',
                 },
             ],
-        });
+        }, storage);
     }
 
     processData(data) {

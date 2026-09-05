@@ -1,7 +1,7 @@
 import Updater from './Updater.js';
 
 export default class TimelineUpdater extends Updater {
-    constructor() {
+    constructor(storage) {
         super({
             name: 'Timeline',
             filename: 'timeline.json',
@@ -46,6 +46,6 @@ export default class TimelineUpdater extends Updater {
                     values: 'name',
                 },
             ],
-        });
+        }, storage);
     }
 }

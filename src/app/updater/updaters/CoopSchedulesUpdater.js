@@ -1,7 +1,7 @@
 import Updater from './Updater.js';
 
 export default class CoopSchedulesUpdater extends Updater {
-    constructor() {
+    constructor(storage) {
         super({
             name: 'Co-op Schedules',
             filename: 'coop-schedules.json',
@@ -44,7 +44,7 @@ export default class CoopSchedulesUpdater extends Updater {
                     values: 'name',
                 },
             ],
-        });
+        }, storage);
     }
 
     getCalendarEntries({ details, schedules }) {

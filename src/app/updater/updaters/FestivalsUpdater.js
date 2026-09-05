@@ -1,13 +1,12 @@
 import Updater from './Updater.js';
-import fs from 'node:fs';
 import _ from 'lodash';
 import jsonpath from '../../../common/jsonpath.js';
-import { readJson, writeJson } from '../../../common/utilities.js';
+import { DATA_CACHE_CONTROL } from '../../../common/storage/index.js';
 import { languages } from '../../../common/regions.js';
 import SplatNet from '../../../common/splatnet.js';
 
 export default class FestivalsUpdater extends Updater {
-    constructor(region) {
+    constructor(region, storage) {
         super({
             name: `Festivals ${region}`,
             filename: 'festivals.json',
@@ -33,7 +32,7 @@ export default class FestivalsUpdater extends Updater {
                     values: 'name',
                 },
             ],
-        });
+        }, storage);
 
         this.region = region;
     }
@@ -54,15 +53,15 @@ export default class FestivalsUpdater extends Updater {
         // Download result ranking data
         let festivalIds = jsonpath.query(regionData, '$.results..festival_id');
         for (let id of festivalIds) {
-            let filename = `${this.getOutputPath()}/festivals/${this.region.toLowerCase()}-${id}-rankings.json`;
+            let key = `data/festivals/${this.region.toLowerCase()}-${id}-rankings.json`;
 
             // Have we already downloaded these rankings?
-            if (!fs.existsSync(filename)) {
+            if (!await this.publicStorage.exists(key)) {
                 let splatnet = new SplatNet(this.region);
                 this.info(`Retrieving rankings for festival ID ${id}`);
                 try {
                     let rankings  = await this.handleRequest(splatnet.getFestivalRankings(id));
-                    writeJson(filename, rankings);
+                    await this.publicStorage.writeJson(key, rankings, { cacheControl: DATA_CACHE_CONTROL });
                 }
                 catch (e) {
                     // Do nothing
@@ -71,10 +70,7 @@ export default class FestivalsUpdater extends Updater {
         }
 
         // Load existing data since we only need to modify this region's data
-        let data = {};
-        let filename = this.getFilename();
-        if (fs.existsSync(filename))
-            data = readJson(filename);
+        let data = await this.publicStorage.readJson(this.getKey()) ?? {};
 
         let region = this.region.toLowerCase();
         data[region] = regionData;
