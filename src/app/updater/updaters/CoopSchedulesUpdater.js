@@ -10,7 +10,7 @@ export default class CoopSchedulesUpdater extends Updater {
             imagePaths: [
                 '$..stage.image',
                 '$..weapons[*].weapon.image',
-                '$..coop_special_weapon.image'
+                '$..coop_special_weapon.image',
             ],
             localization: [
                 {

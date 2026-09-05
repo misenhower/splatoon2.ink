@@ -1,6 +1,7 @@
 import TwitterPostBase from './TwitterPostBase.js';
 import { captureGearScreenshot } from '../../screenshots/index.js';
-import { readData, getTopOfCurrentHour } from '../../../common/utilities.js';
+import { readData } from '../../../common/utilities.js';
+import { getTopOfCurrentHour } from '../../../common/time.js';
 
 export default class GearTweet extends TwitterPostBase {
     getKey() { return 'gear'; }

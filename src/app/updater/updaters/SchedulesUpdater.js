@@ -1,6 +1,6 @@
 import Updater from './Updater.js';
 import SplatNet from '../../../common/splatnet.js';
-import { getTopOfCurrentHour } from '../../../common/utilities.js';
+import { getTopOfCurrentHour } from '../../../common/time.js';
 
 const STAGES_KEY = 'stages.json'; // private storage
 

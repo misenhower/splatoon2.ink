@@ -7,7 +7,7 @@ import MerchandisesUpdater from '../../src/app/updater/updaters/MerchandisesUpda
 import FestivalsUpdater from '../../src/app/updater/updaters/FestivalsUpdater.js';
 import OriginalGearImageUpdater from '../../src/app/updater/updaters/OriginalGearImageUpdater.js';
 import { createUpdaters } from '../../src/app/updater/updateAll.js';
-import { getTopOfCurrentHour } from '../../src/common/utilities.js';
+import { getTopOfCurrentHour } from '../../src/common/time.js';
 import gearData from '../../src/common/data/gear.json' with { type: 'json' };
 import skills from '../../src/common/data/skills.json' with { type: 'json' };
 import { fakeSplatNet, buckets, json, keys, setSessionEnvironment } from './support.js';

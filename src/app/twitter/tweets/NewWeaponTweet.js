@@ -25,7 +25,7 @@ export default class NewWeaponTweet extends TwitterPostBase {
     }
 
     getTestData() {
-        let availabilities = this.getNewWeaponAvailabilities()
+        let availabilities = this.getNewWeaponAvailabilities();
         if (availabilities.length)
             return availabilities;
     }
@@ -41,7 +41,7 @@ export default class NewWeaponTweet extends TwitterPostBase {
         // Make sure we don't exceed the max tweet text length
         const names = data.map(availability => `- ${availability.weapon.name}`);
         for (let i = names.length; i > 0; i--) {
-            let text = `New weapons now available:\n`;
+            let text = 'New weapons now available:\n';
             text += names.slice(0, i).join('\n');
             text += '\n';
             if (i < names.length) {

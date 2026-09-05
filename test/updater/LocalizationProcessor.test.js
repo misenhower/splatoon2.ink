@@ -5,7 +5,6 @@ import { MemoryBucket, BucketStorage } from '../../src/common/storage/index.js';
 import LocalizationProcessor from '../../src/app/updater/LocalizationProcessor.js';
 
 const en = { region: 'NA', language: 'en' };
-const ja = { region: 'JP', language: 'ja' };
 const stages = { name: 'stages', entities: ['$..stage_a', '$..stage_b'], id: 'id', values: 'name' };
 const rules = { name: 'rules', entities: '$..rule', id: 'key', values: ['name', 'multiline_name'] };
 const gear = { name: 'gear', entities: '$..gear', id: ['kind', 'id'], values: 'name' };

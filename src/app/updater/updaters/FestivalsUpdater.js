@@ -42,12 +42,12 @@ export default class FestivalsUpdater extends Updater {
         // For some reason these got swapped out with images that have an opaque background
         // even though they started out with transparent images.
         jsonpath.apply(regionData, '$..images.alpha', value => value.replace(
-            "/images/festival/a070cc6b405b4fb335992d824097acd8.png",
-            "/images/festival/06b3b0b7773d9e6c4ac0a5cc5371fc32.png"
+            '/images/festival/a070cc6b405b4fb335992d824097acd8.png',
+            '/images/festival/06b3b0b7773d9e6c4ac0a5cc5371fc32.png',
         ));
         jsonpath.apply(regionData, '$..images.bravo', value => value.replace(
-            "/images/festival/00e4c5fdccd3720d07127084fc1f4152.png",
-            "/images/festival/d93df77468714c6211e9377f39a559f4.png"
+            '/images/festival/00e4c5fdccd3720d07127084fc1f4152.png',
+            '/images/festival/d93df77468714c6211e9377f39a559f4.png',
         ));
 
         // Download result ranking data
@@ -63,7 +63,7 @@ export default class FestivalsUpdater extends Updater {
                     let rankings  = await this.handleRequest(splatnet.getFestivalRankings(id));
                     await this.publicStorage.writeJson(key, rankings, { cacheControl: DATA_CACHE_CONTROL });
                 }
-                catch (e) {
+                catch {
                     // Do nothing
                 }
             }

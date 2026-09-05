@@ -5,13 +5,6 @@ import stringify from 'json-stable-stringify';
 
 const dataPath = path.resolve('dist/data');
 
-export function getTopOfCurrentHour() {
-    let date = new Date;
-    date.setUTCMinutes(0);
-    date.setUTCSeconds(0);
-    return Math.floor(date.getTime() / 1000);
-}
-
 export function readJson(filename) {
     return JSON.parse(fs.readFileSync(filename));
 }

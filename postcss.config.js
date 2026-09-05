@@ -1,15 +1,15 @@
-const IN_PRODUCTION = process.env.NODE_ENV === 'production'
+const IN_PRODUCTION = process.env.NODE_ENV === 'production';
 
 module.exports = {
   plugins: [
     IN_PRODUCTION && require('@fullhuman/postcss-purgecss')({
       content: [
-        `./src/web/html/**/*.html`,
-        `./src/web/components/**/*.vue`
+        './src/web/html/**/*.html',
+        './src/web/components/**/*.vue',
       ],
       defaultExtractor (content) {
-        const contentWithoutStyleBlocks = content.replace(/<style[^]+?<\/style>/gi, '')
-        return contentWithoutStyleBlocks.match(/[A-Za-z0-9-_/:]*[A-Za-z0-9-_/]+/g) || []
+        const contentWithoutStyleBlocks = content.replace(/<style[^]+?<\/style>/gi, '');
+        return contentWithoutStyleBlocks.match(/[A-Za-z0-9-_/:]*[A-Za-z0-9-_/]+/g) || [];
       },
       safelist: {
         standard: [
@@ -24,6 +24,6 @@ module.exports = {
           /data-v-.*/,
         ],
       },
-    })
+    }),
   ],
-}
+};

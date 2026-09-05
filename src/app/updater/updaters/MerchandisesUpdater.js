@@ -49,7 +49,7 @@ export default class MerchandisesUpdater extends Updater {
 
             // We don't need the brand data since it should match the SplatNet gear's brand
             if (originalGear)
-                delete originalGear.brand
+                delete originalGear.brand;
 
             merchandise.original_gear = originalGear;
         }

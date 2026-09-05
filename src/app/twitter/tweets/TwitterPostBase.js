@@ -3,7 +3,8 @@ import fs from 'node:fs';
 import { mkdirpSync as mkdirp } from 'mkdirp';
 import BlueskyClient from '../clients/BlueskyClient.js';
 import TwitterClient from '../clients/TwitterClient.js';
-import { getTopOfCurrentHour, readJson, writeJson } from '../../../common/utilities.js';
+import { readJson, writeJson } from '../../../common/utilities.js';
+import { getTopOfCurrentHour } from '../../../common/time.js';
 
 const blueskyLastTimesPath = path.resolve('storage/bluesky-lastPostTimes.json');
 const twitterLastTimesPath = path.resolve('storage/twitter-lastTweetTimes.json');
@@ -101,7 +102,7 @@ export default class TwitterPostBase {
             let image = await this.getImage(data);
 
             fs.writeFileSync(filename, image);
-            this.info('Saved screenshot')
+            this.info('Saved screenshot');
         }
         catch (e) {
             this.error('Couldn\'t save screenshot');

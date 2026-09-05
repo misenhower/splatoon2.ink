@@ -83,7 +83,7 @@ export default class SplatfestTweet extends TwitterPostBase {
 
     // Is the current event (e.g., announcement, results, etc.) occurring simultaneously across all regions?
     isSimultaneous() {
-        return this.regions().every(region => this.getData(region))
+        return this.regions().every(region => this.getData(region));
     }
 
     shouldPostForCurrentTime() {
