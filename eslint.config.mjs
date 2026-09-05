@@ -37,10 +37,4 @@ export default [
       'vue/no-deprecated-destroyed-lifecycle': 'off',
     },
   },
-
-  // Root config files are CommonJS (the package has no "type": "module")
-  {
-    files: ['*.config.js'],
-    languageOptions: { sourceType: 'commonjs' },
-  },
 ];

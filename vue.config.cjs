@@ -37,6 +37,14 @@ module.exports = {
       .tap(args => {
         args.compilerOptions.whitespace = 'preserve';
       });
+
+    // The package is "type": "module" for Node's sake. Webpack would then treat src/web as
+    // strict ESM, which forbids the require() calls used for locale files and image assets
+    // and demands file extensions on every import. Keep the web code in webpack's mixed mode.
+    config.module
+      .rule('js')
+      .set('type', 'javascript/auto')
+      .set('resolve', { fullySpecified: false });
   },
   devServer: {
     static: {

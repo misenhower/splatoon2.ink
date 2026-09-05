@@ -1,6 +1,7 @@
 {
   "name": "splatoon2.ink",
   "private": true,
+  "type": "module",
   "engines": {
     "node": ">=22.12.0"
   },
