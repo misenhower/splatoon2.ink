@@ -2,7 +2,7 @@ import _ from 'lodash';
 import jsonpath from '../../../common/jsonpath.js';
 import SplatNet from '../../../common/splatnet.js';
 import { createEvents } from 'ics';
-import * as Sentry from '@sentry/node';
+import * as Sentry from '@sentry/core'; // not @sentry/node: this file also runs in a Worker (see test/sentry.test.js)
 import { languages } from '../../../common/regions.js';
 import LocalizationProcessor from '../LocalizationProcessor.js';
 import { DATA_CACHE_CONTROL } from '../../../common/storage/index.js';
