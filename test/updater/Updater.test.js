@@ -89,6 +89,19 @@ test('mirrors only images that are missing, using one list per directory', async
   assert.equal((await b.publicBucket.get('assets/splatnet/images/things/two.png')).httpMetadata.contentType, 'image/png');
 });
 
+test('uses the embedded backup for the image SplatNet no longer serves', async () => {
+  const { cdnBackup } = await import('#cdn-images');
+  const missing = '/images/skill/53c62995f9d2dc4a60f3850c5dbdd2323f1eef87.png';
+  const splatnet = fakeSplatNet({ '/api/things': () => ({ things: [{ id: '1', name: 'Widget', image: missing }] }) });
+  await new ThingsUpdater(b).update();
+
+  assert.deepEqual(splatnet.images, []);
+  const written = new Uint8Array(await (await b.publicBucket.get(`assets/splatnet${missing}`)).arrayBuffer());
+  assert.deepEqual(written, await cdnBackup(missing));
+  assert.deepEqual(written.slice(0, 4), new Uint8Array([0x89, 0x50, 0x4e, 0x47])); // a real PNG
+  assert.equal(written.byteLength, 8440);
+});
+
 test('filters root keys, dropping hidden timeline items', async () => {
   fakeSplatNet({ '/api/things': () => ({ keep: { importance: 1, x: 1 }, hidden: { importance: -1 }, extra: 'dropped' }) });
   await new ThingsUpdater(b, { rootKeys: ['keep', 'hidden', 'absent'], localization: undefined, imagePaths: undefined, calendarFilename: undefined }).update();

@@ -2,6 +2,12 @@
   "name": "splatoon2.ink",
   "private": true,
   "type": "module",
+  "imports": {
+    "#cdn-images": {
+      "workerd": "./src/common/cdn.worker.js",
+      "default": "./src/common/cdn.node.js"
+    }
+  },
   "engines": {
     "node": ">=22.12.0"
   },

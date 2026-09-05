@@ -6,6 +6,7 @@ import * as Sentry from '@sentry/core'; // not @sentry/node: this file also runs
 import { languages } from '../../../common/regions.js';
 import LocalizationProcessor from '../LocalizationProcessor.js';
 import { DATA_CACHE_CONTROL } from '../../../common/storage/index.js';
+import { cdnBackup } from '#cdn-images';
 
 export default class Updater {
     /**
@@ -169,6 +170,15 @@ export default class Updater {
         // Check whether the image has already been downloaded
         if (await this.publicStorage.exists(key))
             return;
+
+        // Certain images are not available on the CDN anymore
+        let backup = await cdnBackup(imagePath);
+        if (backup) {
+            this.info(`Using CDN backup: ${imagePath}`);
+            await this.publicStorage.writeBytes(key, backup);
+
+            return;
+        }
 
         // Download the image
         this.info(`Downloading image: ${imagePath}`);

@@ -134,7 +134,7 @@ test('original gear: mirrors skill images from the bundled skills data', async (
   const splatnet = fakeSplatNet();
   await new OriginalGearImageUpdater(b).update();
 
-  assert.equal(splatnet.images.length, images.length - 1);
+  assert.equal(splatnet.images.length, images.length - 2); // one already present, one from the embedded backup
   assert.equal(keys(b.publicBucket).length, images.length);
   assert.ok(keys(b.publicBucket).every(k => k.startsWith('assets/splatnet/images/skill/')));
 });

@@ -4,6 +4,10 @@
   "main": "src/index.mjs",
   "compatibility_date": "2026-09-03",
   "compatibility_flags": ["nodejs_compat"],
+  // Lets src/common/cdn.worker.js import PNGs as their bytes (images SplatNet no longer serves).
+  "rules": [
+    { "type": "Data", "globs": ["**/*.png"], "fallthrough": true }
+  ],
   // The workers.dev URL only exposes the authenticated manual trigger (see README).
   "workers_dev": true,
   "preview_urls": false,
