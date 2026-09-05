@@ -24,7 +24,8 @@
     "worker:dev": "wrangler dev --local --var LOCAL_DEVELOPMENT:true --persist-to .wrangler/state",
     "worker:test": "vitest run --config vitest.worker.config.mjs",
     "worker:deploy:dry-run": "wrangler deploy --dry-run",
-    "worker:deploy": "wrangler deploy"
+    "worker:deploy": "wrangler deploy",
+    "lint-fix": "npm run lint -- --fix"
   },
   "dependencies": {
     "@atproto/api": "^0.20.42",
