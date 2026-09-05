@@ -32,9 +32,9 @@ import SplatoonStages from '@/web/support/stages';
 export default {
     components: { Modal },
     props: {
-        stage: {},
-        showTitle: { default: true },
-        clickable: { default: true },
+        stage: Object,
+        showTitle: { type: Boolean, default: true },
+        clickable: { type: Boolean, default: true },
         isSalmonRun: Boolean,
     },
     data() {

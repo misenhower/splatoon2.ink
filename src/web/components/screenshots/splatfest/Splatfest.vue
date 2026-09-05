@@ -24,7 +24,9 @@ import { splatoonRegions } from '@/common/regions';
 
 export default {
     components: { Wrapper, SplatfestBox, SplatfestResultsBox },
-    props: ['region'],
+    props: {
+        region: String,
+    },
     computed: {
         festival() {
             return this.$store.getters[`splatoon/splatfests/${this.region}/currentSplatfest`];

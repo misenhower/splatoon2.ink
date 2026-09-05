@@ -44,7 +44,10 @@ export default {
             return value.toString().slice(-2);
         },
     },
-    props: ['festival', 'type'],
+    props: {
+        festival: Object,
+        type: String,
+    },
     computed: {
         winner() {
             return this.festival.results.summary[this.type] ? 'bravo' : 'alpha';

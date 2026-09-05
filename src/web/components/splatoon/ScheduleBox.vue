@@ -59,7 +59,9 @@ import ScheduleRow from './ScheduleRow.vue';
 
 export default {
     components: { GameModeHeader, Stage, ScheduleRow },
-    props: ['mode'],
+    props: {
+        mode: String,
+    },
     computed: {
         ...mapGetters('splatoon', ['now']),
         ...mapGetters('splatoon/splatfests', [

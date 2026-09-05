@@ -36,9 +36,9 @@
 <script>
 export default {
     props: {
-        options: {},
-        value: {},
-        tag: { default: 'button' },
+        options: Array,
+        value: { type: [String, Number], default: null },
+        tag: { type: String, default: 'button' },
     },
     data() {
         return {

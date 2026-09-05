@@ -10,7 +10,7 @@
       </div>
       <div class="level-item">
         <h2 class="title is-3 is-size-2-fullhd is-size-4-mobile font-splatoon1">
-          <template>{{ name }}</template>
+          {{ name }}
         </h2>
       </div>
     </div>
@@ -21,7 +21,9 @@
 import { mapGetters } from 'vuex';
 
 export default {
-    props: ['mode'],
+    props: {
+        mode: String,
+    },
     computed: {
         ...mapGetters('splatoon/splatfests', ['selectedRegionHasActiveSplatfest']),
         name() {

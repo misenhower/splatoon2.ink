@@ -81,7 +81,9 @@
 import { mapGetters } from 'vuex';
 
 export default {
-    props: ['merchandise'],
+    props: {
+        merchandise: Object,
+    },
     computed: {
         ...mapGetters('splatoon', ['now']),
         brandName() {

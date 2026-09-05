@@ -54,7 +54,11 @@
 
 <script>
 export default {
-    props: ['title', 'link', 'googleId'],
+    props: {
+        title: String,
+        link: String,
+        googleId: String,
+    },
     data() {
         return {
             isOpen: false,

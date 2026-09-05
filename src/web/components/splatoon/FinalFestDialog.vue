@@ -78,7 +78,9 @@ export default {
             return Vue.i18n.translate('splatfest.results_in', { time });
         },
     },
-    props: ['region'],
+    props: {
+        region: String,
+    },
     computed: {
         ...mapGetters('splatoon', ['now']),
         ...mapGetters('splatoon/finalFest', {

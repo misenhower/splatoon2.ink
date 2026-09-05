@@ -8,27 +8,25 @@
 
       <ScheduleRow :schedule="first" />
     </div>
-    <template>
-      <div v-if="second">
-        <div class="is-size-5 title-squid font-splatoon1" style="margin-top: 10px">
-          {{ $t('times.next') }}
-        </div>
-
-        <ScheduleRow :schedule="second" />
+    <div v-if="second">
+      <div class="is-size-5 title-squid font-splatoon1" style="margin-top: 10px">
+        {{ $t('times.next') }}
       </div>
 
-      <div v-if="others && others.length">
-        <div class="is-size-5 title-squid font-splatoon1" style="margin-top: 10px">
-          {{ $t('times.future') }}
-        </div>
+      <ScheduleRow :schedule="second" />
+    </div>
 
-        <ScheduleRow
-          v-for="schedule in others"
-          :key="schedule.start_time"
-          :schedule="schedule"
-        />
+    <div v-if="others && others.length">
+      <div class="is-size-5 title-squid font-splatoon1" style="margin-top: 10px">
+        {{ $t('times.future') }}
       </div>
-    </template>
+
+      <ScheduleRow
+        v-for="schedule in others"
+        :key="schedule.start_time"
+        :schedule="schedule"
+      />
+    </div>
   </div>
 </template>
 
@@ -38,7 +36,9 @@ import ScheduleRow from './ScheduleRow.vue';
 
 export default {
     components: { ScheduleRow },
-    props: ['mode'],
+    props: {
+        mode: String,
+    },
     computed: {
         ...mapGetters('splatoon', ['now']),
         schedules() {

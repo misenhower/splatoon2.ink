@@ -1,10 +1,14 @@
 <template>
-  <div class="festival-period" style="background-color: #333" v-html="teamWins" />
+  <div class="festival-period" style="background-color: #333">
+    <span v-if="winner">{{ winnerText.before }}<span :style="{ color: winnerColor }">{{ teamNames[winner] }}</span>{{ winnerText.after }}</span>
+  </div>
 </template>
 
 <script>
 export default {
-    props: ['festival'],
+    props: {
+        festival: Object,
+    },
     computed: {
         teamNames() {
             return {
@@ -12,14 +16,20 @@ export default {
                 bravo: this.$t(`splatnet.festivals.${this.festival.festival_id}.names.bravo_short`, this.festival.names.bravo_short),
             };
         },
-        teamWins() {
+        winner() {
             if (!this.festival || !this.festival.results)
-                return;
+                return null;
 
-            let winner = this.festival.results.summary.total ? 'bravo' : 'alpha';
-
-            let team = `<span style="color: ${this.festival.colors[winner].css_rgb}">${this.teamNames[winner]}</span>`;
-            return this.$t('splatfest.team_name_wins', { team });
+            return this.festival.results.summary.total ? 'bravo' : 'alpha';
+        },
+        winnerColor() {
+            return this.festival.colors[this.winner].css_rgb;
+        },
+        // The translated sentence split around the team name, e.g. "Team " / " wins!"
+        winnerText() {
+            const placeholder = '\u0000';
+            const [before, after] = this.$t('splatfest.team_name_wins', { team: placeholder }).split(placeholder);
+            return { before, after };
         },
     },
 };

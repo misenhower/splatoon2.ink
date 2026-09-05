@@ -33,8 +33,8 @@
 <script>
 export default {
     props: {
-        weapon: {},
-        title: {},
+        weapon: Object,
+        title: String,
     },
     computed: {
         displayTitle() {

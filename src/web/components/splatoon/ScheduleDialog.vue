@@ -18,6 +18,8 @@ import ScheduleList from './ScheduleList.vue';
 
 export default {
     components: { Modal, GameModeHeader, ScheduleList },
-    props: ['mode'],
+    props: {
+        mode: String,
+    },
 };
 </script>

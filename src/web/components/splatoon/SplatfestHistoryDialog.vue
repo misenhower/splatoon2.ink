@@ -17,13 +17,13 @@
               trigger-class="button is-clear font-splatoon2"
             >
               <router-link
-                v-for="region in regions"
-                :key="region.key"
+                v-for="regionOption in regions"
+                :key="regionOption.key"
                 class="dropdown-item"
-                :to="region.route"
+                :to="regionOption.route"
                 exact
               >
-                {{ region.name }}
+                {{ regionOption.name }}
               </router-link>
             </DropdownBase>
           </div>
@@ -97,7 +97,9 @@ export default {
             return Vue.i18n.translate('splatfest.results_in', { time });
         },
     },
-    props: ['region'],
+    props: {
+        region: String,
+    },
     computed: {
         ...mapGetters('splatoon', ['now']),
         regions() {

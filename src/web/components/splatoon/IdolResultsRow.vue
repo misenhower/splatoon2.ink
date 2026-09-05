@@ -30,7 +30,9 @@
 
 <script>
 export default {
-    props: ['region'],
+    props: {
+        region: String,
+    },
     computed: {
         heroWins() {
             return this.$store.getters[`splatoon/splatfests/${this.region}/heroWins`];
