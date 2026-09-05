@@ -1,5 +1,4 @@
 import './bootstrap.js';
-import axios from 'axios';
 
 // SplatNet2 API
 const userAgent = process.env.SPLATNET_USER_AGENT;
@@ -19,20 +18,31 @@ export default class SplatNet {
         }
     }
 
-    getClient() {
-        return axios.create({
-            baseURL: `${splatnetBaseUrl}/api/`,
-            headers: {
-                'User-Agent': userAgent,
-                'Cookie': `iksm_session=${this.getSessionId()}`,
-                'Accept-Language': this.language,
-            },
-        });
+    getHeaders() {
+        return {
+            ...(userAgent ? { 'User-Agent': userAgent } : {}),
+            'Cookie': `iksm_session=${this.getSessionId()}`,
+            'Accept-Language': this.language,
+        };
+    }
+
+    /** Fetch a path (or absolute URL) on the SplatNet site with the session cookie. */
+    async request(path, { headers = this.getHeaders() } = {}) {
+        let url = new URL(path, splatnetBaseUrl);
+        let response = await fetch(url, { headers });
+        if (!response.ok)
+            throw new Error(`SplatNet request failed with status ${response.status}: ${url.pathname}`);
+        return response;
     }
 
     async getResponse(path) {
-        let response = await this.getClient().get(path);
-        return response.data;
+        let response = await this.request(`/api/${path}`);
+        return response.json();
+    }
+
+    async getText(path) {
+        let response = await this.request(path);
+        return response.text();
     }
 
     getSchedules() {
@@ -99,8 +109,11 @@ export default class SplatNet {
         return this.getResponse(url);
     }
 
+    /** Download an image (no session cookie needed). Returns the bytes. */
     async getImage(imagePath) {
-        let response = await axios.get(`${splatnetBaseUrl}${imagePath}`, { responseType: 'arraybuffer', headers: { 'User-Agent': userAgent } });
-        return response.data;
+        let response = await this.request(imagePath, {
+            headers: userAgent ? { 'User-Agent': userAgent } : {},
+        });
+        return new Uint8Array(await response.arrayBuffer());
     }
 }

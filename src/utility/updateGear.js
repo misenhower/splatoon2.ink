@@ -4,7 +4,6 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import { mkdirpSync as mkdirp } from 'mkdirp';
-import axios from 'axios';
 import retrieveGearData from './retrieveGearData.js';
 import { writeFormattedJson } from '../common/utilities.js';
 import he from 'he';
@@ -63,12 +62,15 @@ export default async function updateGear() {
     ];
 
     for (let url of inkipediaSources) {
-        let response = await axios.get(url);
+        let response = await fetch(url);
+        if (!response.ok)
+            throw new Error(`Inkipedia request failed with status ${response.status}: ${url}`);
+        let page = await response.text();
 
         let regex = /\{\{GearList\/Item.*?filter_brand/g;
         let row;
         // eslint-disable-next-line no-cond-assign
-        while (row = regex.exec(response.data)) {
+        while (row = regex.exec(page)) {
             // Format: name=value|brand=value|...
             let details = row[0].split('|')
                 .reduce((map, kvp) => { kvp = kvp.split('='); map[kvp[0]] = kvp[1]; return map; }, {});
