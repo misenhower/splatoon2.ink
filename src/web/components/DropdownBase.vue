@@ -1,21 +1,21 @@
 <template>
-    <div class="dropdown" :class="{ 'is-active': isActive }">
-        <div class="dropdown-trigger">
-            <a :class="triggerClass" @click="isActive = !isActive" v-click-outside="hide">
-                <slot name="trigger">
-                    <span>{{ label }}</span>
-                    <span class="icon is-small">
-                        <span class="chevron bottom"></span>
-                    </span>
-                </slot>
-            </a>
-        </div>
-        <div class="dropdown-menu" role="menu">
-            <div class="dropdown-content">
-                <slot />
-            </div>
-        </div>
+  <div class="dropdown" :class="{ 'is-active': isActive }">
+    <div class="dropdown-trigger">
+      <a v-click-outside="hide" :class="triggerClass" @click="isActive = !isActive">
+        <slot name="trigger">
+          <span>{{ label }}</span>
+          <span class="icon is-small">
+            <span class="chevron bottom" />
+          </span>
+        </slot>
+      </a>
     </div>
+    <div class="dropdown-menu" role="menu">
+      <div class="dropdown-content">
+        <slot />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -35,5 +35,5 @@ export default {
             this.isActive = false;
         },
     },
-}
+};
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <div class="festival-period" style="background-color: #333" v-html="teamWins"></div>
+  <div class="festival-period" style="background-color: #333" v-html="teamWins" />
 </template>
 
 <script>
@@ -22,5 +22,5 @@ export default {
             return this.$t('splatfest.team_name_wins', { team });
         },
     },
-}
+};
 </script>

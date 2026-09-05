@@ -1,25 +1,25 @@
 <template>
-    <Wrapper title="SplatNet Gear" v-if="merchandises">
-        <div class="columns">
-            <div class="column is-5" style="min-height: 560px; display: flex; align-items: center; justify-content: center;">
-                <MerchandiseBox
-                    :merchandise="featuredMerchandise"
-                    class="featured-merchandise"
-                    />
-            </div>
+  <Wrapper v-if="merchandises" title="SplatNet Gear">
+    <div class="columns">
+      <div class="column is-5" style="min-height: 560px; display: flex; align-items: center; justify-content: center;">
+        <MerchandiseBox
+          :merchandise="featuredMerchandise"
+          class="featured-merchandise"
+        />
+      </div>
 
-            <div class="column" style="display: flex; align-items: center; justify-content: center;">
-                <div class="still-available-merchandise columns is-multiline is-centered">
-                    <div class="column is-one-third" v-for="(merchandise, index) in otherMerchandises" :key="index">
-                        <MerchandiseBox
-                            :merchandise="merchandise"
-                            :class="(index % 2 == 0) ? 'tilt-right' : 'tilt-left'"
-                            />
-                    </div>
-                </div>
-            </div>
+      <div class="column" style="display: flex; align-items: center; justify-content: center;">
+        <div class="still-available-merchandise columns is-multiline is-centered">
+          <div v-for="(merchandise, index) in otherMerchandises" :key="index" class="column is-one-third">
+            <MerchandiseBox
+              :merchandise="merchandise"
+              :class="(index % 2 == 0) ? 'tilt-right' : 'tilt-left'"
+            />
+          </div>
         </div>
-    </Wrapper>
+      </div>
+    </div>
+  </Wrapper>
 </template>
 
 <script>

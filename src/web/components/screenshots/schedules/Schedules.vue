@@ -1,54 +1,54 @@
 <template>
-    <Wrapper title="Map Schedules">
-        <div class="columns font-splatoon2" v-if="!globalSplatfestIsActiveInAllRegions">
-            <div class="column">
-                <ScheduleBox class="main-schedule-box tilt-left" mode="regular" />
-            </div>
+  <Wrapper title="Map Schedules">
+    <div v-if="!globalSplatfestIsActiveInAllRegions" class="columns font-splatoon2">
+      <div class="column">
+        <ScheduleBox class="main-schedule-box tilt-left" mode="regular" />
+      </div>
 
-            <div class="column">
-                <ScheduleBox class="main-schedule-box tilt-right" mode="ranked" />
-            </div>
+      <div class="column">
+        <ScheduleBox class="main-schedule-box tilt-right" mode="ranked" />
+      </div>
 
-            <div class="column">
-                <ScheduleBox class="main-schedule-box tilt-left" mode="league" />
-            </div>
-        </div>
-        <div class="columns font-splatoon2" v-else>
-            <div class="column" style="display: flex">
-                <div class="splatfest">
-                    <div class="hook-box">
-                        <SplatfestBox :festival="currentSplatfestNA" global-splatfest-mode />
-                    </div>
+      <div class="column">
+        <ScheduleBox class="main-schedule-box tilt-left" mode="league" />
+      </div>
+    </div>
+    <div v-else class="columns font-splatoon2">
+      <div class="column" style="display: flex">
+        <div class="splatfest">
+          <div class="hook-box">
+            <SplatfestBox :festival="currentSplatfestNA" global-splatfest-mode />
+          </div>
 
-                    <template v-if="shiftySchedule">
-                        <br />
+          <template v-if="shiftySchedule">
+            <br />
 
-                        <div class="shifty-box">
-                            <h3 class="title is-4 font-splatoon1 has-text-centered" style="margin-bottom: 0.5rem">
-                                <template v-if="shiftySchedule.stages.length === 1">
-                                    Current Shifty Station
-                                </template>
-                                <template v-else>
-                                    Current Shifty Stations
-                                </template>
-                            </h3>
-                            <div class="columns">
-                                <div class="column">
-                                    <Stage :stage="shiftySchedule.stages[0]" style="max-width: 215px; margin: auto" />
-                                </div>
-                                <div class="column" v-if="shiftySchedule.stages[1]">
-                                    <Stage :stage="shiftySchedule.stages[1]" />
-                                </div>
-                            </div>
-                        </div>
-                    </template>
+            <div class="shifty-box">
+              <h3 class="title is-4 font-splatoon1 has-text-centered" style="margin-bottom: 0.5rem">
+                <template v-if="shiftySchedule.stages.length === 1">
+                  Current Shifty Station
+                </template>
+                <template v-else>
+                  Current Shifty Stations
+                </template>
+              </h3>
+              <div class="columns">
+                <div class="column">
+                  <Stage :stage="shiftySchedule.stages[0]" style="max-width: 215px; margin: auto" />
                 </div>
+                <div v-if="shiftySchedule.stages[1]" class="column">
+                  <Stage :stage="shiftySchedule.stages[1]" />
+                </div>
+              </div>
             </div>
-            <div class="column">
-                <ScheduleBox class="main-schedule-box tilt-right" mode="regular" splatfest-battle style="max-width: initial" />
-            </div>
+          </template>
         </div>
-    </Wrapper>
+      </div>
+      <div class="column">
+        <ScheduleBox class="main-schedule-box tilt-right" mode="regular" splatfest-battle style="max-width: initial" />
+      </div>
+    </div>
+  </Wrapper>
 </template>
 
 <script>

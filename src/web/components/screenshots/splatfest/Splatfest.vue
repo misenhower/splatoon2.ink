@@ -1,19 +1,19 @@
 <template>
-    <Wrapper :title="title" class="splatfest-screenshot" v-if="festival" hide-local-times>
-        <div class="level">
-            <div class="level-item">
-                <div class="splatfest tilt-left">
-                    <div class="hook-box">
-                        <SplatfestBox :festival="festival" screenshot-mode />
-                    </div>
-                </div>
-            </div>
-
-            <div class="level-item" v-if="festival.results">
-                <SplatfestResultsBox :festival="festival" />
-            </div>
+  <Wrapper v-if="festival" :title="title" class="splatfest-screenshot" hide-local-times>
+    <div class="level">
+      <div class="level-item">
+        <div class="splatfest tilt-left">
+          <div class="hook-box">
+            <SplatfestBox :festival="festival" screenshot-mode />
+          </div>
         </div>
-    </Wrapper>
+      </div>
+
+      <div v-if="festival.results" class="level-item">
+        <SplatfestResultsBox :festival="festival" />
+      </div>
+    </div>
+  </Wrapper>
 </template>
 
 <script>
@@ -53,5 +53,5 @@ export default {
             this.$i18n.set('ja');
         }
     },
-}
+};
 </script>

@@ -55,7 +55,7 @@ export const getters = {
             || rootGetters['splatoon/splatfests/jp/currentSplatfest'];
     },
     selectedRegionCurrentSplatfest(state, getters, rootState, rootGetters) {
-        let region = rootGetters[`splatoon/regions/selectedRegion`];
+        let region = rootGetters['splatoon/regions/selectedRegion'];
         if (region)
             return rootGetters[`splatoon/splatfests/${region.key}/currentSplatfest`];
     },
@@ -90,7 +90,7 @@ function generateModule(region) {
                     return {
                         alpha: getters.allSplatfests.reduce((sum, festival) => sum + ((festival.results && festival.results.summary.total === 0) ? 1 : 0), 0),
                         bravo: getters.allSplatfests.reduce((sum, festival) => sum + ((festival.results && festival.results.summary.total === 1) ? 1 : 0), 0),
-                    }
+                    };
                 }
             },
         },
@@ -101,4 +101,4 @@ export const modules = {
     na: generateModule('na'),
     eu: generateModule('eu'),
     jp: generateModule('jp'),
-}
+};

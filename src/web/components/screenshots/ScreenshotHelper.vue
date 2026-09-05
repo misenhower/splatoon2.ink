@@ -1,61 +1,62 @@
 <template>
-    <div class="hero is-fullheight">
-        <div class="hero-body">
-            <div class="container has-text-centered">
-                <div v-if="latestSchedule">
-                    <strong>
-                        <router-link :to="`/schedules/${latestSchedule.start_time}`">
-                            Map Schedules
-                        </router-link>
-                    </strong>
-                </div>
-
-                <div v-if="latestGear">
-                    <strong>
-                        <router-link :to="`/splatNetGear/${latestGearTime}`">
-                            SplatNet Gear
-                        </router-link>
-                    </strong>
-                </div>
-
-                <div v-if="latestSalmonRun">
-                    <strong>
-                        <router-link :to="`/salmonRun/${latestSalmonRun.start_time}`">
-                            Salmon Run
-                        </router-link>
-                    </strong>
-                </div>
-
-                <div v-if="salmonRunGear">
-                    <strong>
-                        <router-link :to="`/salmonRunGear/${salmonRunGear.available_time}`">
-                            Salmon Run Gear
-                        </router-link>
-                    </strong>
-                </div>
-
-                <div v-if="newWeaponAvailability">
-                    <strong>
-                        <router-link :to="`/newWeapon/${newWeaponAvailability.release_time}`">
-                            New Weapon
-                        </router-link>
-                    </strong>
-                </div>
-
-                <div v-if="splatfests">
-                    Splatfest:
-                    <strong>
-                        <router-link
-                            v-for="splatfest in splatfests"
-                            :key="splatfest.region"
-                            :to="`/splatfest/${splatfest.region}/${splatfest.time}`">
-                            {{ splatfest.region }}
-                        </router-link>
-                    </strong>
-                </div>
-            </div>
+  <div class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <div v-if="latestSchedule">
+          <strong>
+            <router-link :to="`/schedules/${latestSchedule.start_time}`">
+              Map Schedules
+            </router-link>
+          </strong>
         </div>
+
+        <div v-if="latestGear">
+          <strong>
+            <router-link :to="`/splatNetGear/${latestGearTime}`">
+              SplatNet Gear
+            </router-link>
+          </strong>
+        </div>
+
+        <div v-if="latestSalmonRun">
+          <strong>
+            <router-link :to="`/salmonRun/${latestSalmonRun.start_time}`">
+              Salmon Run
+            </router-link>
+          </strong>
+        </div>
+
+        <div v-if="salmonRunGear">
+          <strong>
+            <router-link :to="`/salmonRunGear/${salmonRunGear.available_time}`">
+              Salmon Run Gear
+            </router-link>
+          </strong>
+        </div>
+
+        <div v-if="newWeaponAvailability">
+          <strong>
+            <router-link :to="`/newWeapon/${newWeaponAvailability.release_time}`">
+              New Weapon
+            </router-link>
+          </strong>
+        </div>
+
+        <div v-if="splatfests">
+          Splatfest:
+          <strong>
+            <router-link
+              v-for="splatfest in splatfests"
+              :key="splatfest.region"
+              :to="`/splatfest/${splatfest.region}/${splatfest.time}`"
+            >
+              {{ splatfest.region }}
+            </router-link>
+          </strong>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>

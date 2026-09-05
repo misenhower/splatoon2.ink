@@ -12,5 +12,5 @@ Vue.use(VueClipboard);
 Vue.directive('portal', {
     inserted(el) {
         document.body.appendChild(el);
-    }
+    },
 });

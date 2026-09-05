@@ -47,4 +47,4 @@ export default [
         image: '/images/stage/96fd8c0492331a30e60a217c94fd1d4c73a966cc.png',
         largeImage: require('@/web/assets/img/stages/turf-wars-stage-8_2x.jpg'),
     },
-]
+];

@@ -1,21 +1,27 @@
 <template>
-    <div class="stage-image" :class="{ hand: clickable }" :style="style" @click="click" v-if="stageDetails">
-        <figure class="image is-16by9"></figure>
-        <span class="stage-title" v-if="showTitle">{{ name }}</span>
+  <div
+    v-if="stageDetails"
+    class="stage-image"
+    :class="{ hand: clickable }"
+    :style="style"
+    @click="click"
+  >
+    <figure class="image is-16by9" />
+    <span v-if="showTitle" class="stage-title">{{ name }}</span>
 
-        <Modal v-if="isOpen" @close="isOpen = false" class="is-xwide">
-            <div class="modal-content tilt-right-slight">
-                <p class="image is-16by9" @click="isOpen = false">
-                    <img :src="largeImage" />
-                </p>
-                <p class="has-text-centered">
-                    <span class="font-splatoon2">
-                        {{ name }}
-                    </span>
-                </p>
-            </div>
-        </Modal>
-    </div>
+    <Modal v-if="isOpen" class="is-xwide" @close="isOpen = false">
+      <div class="modal-content tilt-right-slight">
+        <p class="image is-16by9" @click="isOpen = false">
+          <img :src="largeImage" />
+        </p>
+        <p class="has-text-centered">
+          <span class="font-splatoon2">
+            {{ name }}
+          </span>
+        </p>
+      </div>
+    </Modal>
+  </div>
 </template>
 
 <script>
@@ -72,5 +78,5 @@ export default {
                 this.isOpen = true;
         },
     },
-}
+};
 </script>

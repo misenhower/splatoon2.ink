@@ -6,7 +6,7 @@ function generateModule(name, source) {
         getters: {
             // All current schedules (active & future)
             currentSchedules(state, getters, { splatoon }) {
-                let now = splatoon.now
+                let now = splatoon.now;
                 let schedules = splatoon.data.schedules;
 
                 if (now && schedules)

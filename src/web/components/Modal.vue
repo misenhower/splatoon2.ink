@@ -1,34 +1,12 @@
 <template>
-    <transition name="modal">
-        <div class="modal is-active" v-portal>
-            <div class="modal-background" @click="close"></div>
-            <slot></slot>
-            <button class="modal-close is-large" @click="close"></button>
-        </div>
-    </transition>
+  <transition name="modal">
+    <div v-portal class="modal is-active">
+      <div class="modal-background" @click="close" />
+      <slot />
+      <button class="modal-close is-large" @click="close" />
+    </div>
+  </transition>
 </template>
-
-<style lang="scss">
-.modal-enter-active, .modal-leave-active {
-    &, &>.modal-content, &>.modal-card {
-        transition: all 0.15s ease;
-    }
-}
-
-.modal-enter, .modal-leave-active {
-    opacity: 0;
-
-    &>.modal-content, &>.modal-card {
-        &.tilt-left-slight {
-            transform: rotate(-1.0deg) scale(0.98);
-        }
-        &.tilt-right-slight {
-            transform: rotate(1.0deg) scale(0.98);
-        }
-        transform: scale(0.98);
-    }
-}
-</style>
 
 <script>
 // This tracks open modals in order to add/remove the "has-modal" class to the body
@@ -74,5 +52,27 @@ export default {
             this.$emit('close');
         },
     },
-}
+};
 </script>
+
+<style lang="scss">
+.modal-enter-active, .modal-leave-active {
+    &, &>.modal-content, &>.modal-card {
+        transition: all 0.15s ease;
+    }
+}
+
+.modal-enter, .modal-leave-active {
+    opacity: 0;
+
+    &>.modal-content, &>.modal-card {
+        &.tilt-left-slight {
+            transform: rotate(-1.0deg) scale(0.98);
+        }
+        &.tilt-right-slight {
+            transform: rotate(1.0deg) scale(0.98);
+        }
+        transform: scale(0.98);
+    }
+}
+</style>

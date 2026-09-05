@@ -25,14 +25,14 @@ for (const schedule of finalFest) {
 
 export const state = {
   schedules,
-}
+};
 
 export const getters = {
   schedules(state) {
     return state.schedules;
   },
   currentSchedules(state, getters, { splatoon }) {
-    let now = splatoon.now
+    let now = splatoon.now;
     let schedules = state.schedules;
 
     if (now && schedules)
@@ -44,4 +44,4 @@ export const getters = {
     if (now && getters.currentSchedules)
       return getters.currentSchedules.find(s => s.start_time <= now);
   },
-}
+};
