@@ -20,8 +20,15 @@ export default class Updater {
         this.privateStorage = storage.privateStorage;
     }
 
+    /**
+     * Run the update.
+     * @returns {Promise<object>} a summary of what happened: per-phase timings in ms, which
+     *   languages had to be fetched, which locale documents changed, how many images were
+     *   downloaded, plus anything a subclass adds to this.summary.
+     */
     async update() {
         this.info('Updating data...');
+        this.startSummary();
 
         // Use the first language as the default
         let languageInfo = this.getLanguages()[0];
@@ -31,23 +38,54 @@ export default class Updater {
 
         // Filter the root keys if necessary
         data = this.filterRootKeys(data);
+        this.lap('fetch');
 
         // Update localizations
         data = await this.updateLocalizations(data, languageInfo);
+        this.lap('localize');
 
         // Apply any other processing
         data = await this.processData(data);
+        this.lap('process');
 
         // Write the data
         await this.publicStorage.writeJson(this.getKey(), data, { cacheControl: DATA_CACHE_CONTROL });
 
         // Update calendar events
         await this.updateCalendarEvents(data);
+        this.lap('publish');
 
         // Download images if necessary
         await this.downloadImages(data);
+        this.lap('images');
 
         this.info('Done.');
+        return this.finishSummary();
+    }
+
+    /**
+     * Summary of the current run
+     */
+
+    startSummary() {
+        this.summary = {
+            timings: {},
+            localizedFetches: [],
+            localesWritten: [],
+            imagesDownloaded: 0,
+        };
+        this.summaryStarted = this.lapStarted = Date.now();
+    }
+
+    lap(name) {
+        let now = Date.now();
+        this.summary.timings[name] = now - this.lapStarted;
+        this.lapStarted = now;
+    }
+
+    finishSummary() {
+        this.summary.totalMs = Date.now() - this.summaryStarted;
+        return this.summary;
     }
 
     /** Key of this updater's output in the public storage */
@@ -107,7 +145,7 @@ export default class Updater {
     }
 
     getProcessors(languageInfo) {
-        return this.options.localization.map(ruleset => new LocalizationProcessor(ruleset, languageInfo, this.publicStorage));
+        return this.options.localization.map(ruleset => new LocalizationProcessor(ruleset, languageInfo, this.publicStorage, this.summary));
     }
 
     async updateLocalizations(data, initialLanguageInfo) {
@@ -130,6 +168,7 @@ export default class Updater {
             // Retrieve data for missing languages
             for (let missingLanguageInfo of missingLanguages) {
                 this.info(`Retrieving localized data for region: ${missingLanguageInfo.region}, language: ${missingLanguageInfo.language}`);
+                this.summary.localizedFetches.push(missingLanguageInfo.language);
                 let localData = await this.handleRequest(this.getData(missingLanguageInfo));
                 localData = this.filterRootKeys(localData);
                 for (let processor of this.getProcessors(missingLanguageInfo))
@@ -176,6 +215,7 @@ export default class Updater {
         if (backup) {
             this.info(`Using CDN backup: ${imagePath}`);
             await this.publicStorage.writeBytes(key, backup);
+            this.summary.imagesDownloaded++;
 
             return;
         }
@@ -185,6 +225,7 @@ export default class Updater {
         let splatnet = new SplatNet;
         let image = await this.handleRequest(splatnet.getImage(imagePath));
         await this.publicStorage.writeBytes(key, image);
+        this.summary.imagesDownloaded++;
     }
 
     /**

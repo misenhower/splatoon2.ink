@@ -10,10 +10,15 @@ export default class OriginalGearImageUpdater extends Updater {
     }
 
     async update() {
+        this.startSummary();
+
         // Get the list of skills
         let data = skills;
 
         // Retrieve skill images
         await this.downloadImages(data);
+        this.lap('images');
+
+        return this.finishSummary();
     }
 }

@@ -7,11 +7,13 @@ export default class LocalizationProcessor {
      * @param {object} ruleset  { name, entities, id, values }
      * @param {{ region: string, language: string }} languageInfo
      * @param {object} storage  the public storage (BucketStorage or FilesystemStorage)
+     * @param {object} [summary]  the updater's run summary; written languages are recorded in it
      */
-    constructor(ruleset, languageInfo, storage) {
+    constructor(ruleset, languageInfo, storage, summary = null) {
         this.ruleset = ruleset;
         this.languageInfo = languageInfo;
         this.storage = storage;
+        this.summary = summary;
 
         let entities = this.ruleset.entities;
         this.entityExpressions = (Array.isArray(entities)) ? entities : [entities];
@@ -28,8 +30,11 @@ export default class LocalizationProcessor {
         return await this.storage.readJson(this.getKey()) ?? {};
     }
 
-    writeData(data) {
-        return this.storage.writeJson(this.getKey(), data, { cacheControl: DATA_CACHE_CONTROL });
+    async writeData(data) {
+        let written = await this.storage.writeJson(this.getKey(), data, { cacheControl: DATA_CACHE_CONTROL });
+        if (written && this.summary && !this.summary.localesWritten.includes(this.languageInfo.language))
+            this.summary.localesWritten.push(this.languageInfo.language);
+        return written;
     }
 
     getExpression(ids, valueKey) {

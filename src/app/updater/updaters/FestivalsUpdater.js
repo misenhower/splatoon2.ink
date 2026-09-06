@@ -52,6 +52,7 @@ export default class FestivalsUpdater extends Updater {
 
         // Download result ranking data
         let festivalIds = jsonpath.query(regionData, '$.results..festival_id');
+        this.summary.rankingsFetched = 0;
         for (let id of festivalIds) {
             let key = `data/festivals/${this.region.toLowerCase()}-${id}-rankings.json`;
 
@@ -62,6 +63,7 @@ export default class FestivalsUpdater extends Updater {
                 try {
                     let rankings  = await this.handleRequest(splatnet.getFestivalRankings(id));
                     await this.publicStorage.writeJson(key, rankings, { cacheControl: DATA_CACHE_CONTROL });
+                    this.summary.rankingsFetched++;
                 }
                 catch {
                     // Do nothing

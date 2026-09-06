@@ -31,11 +31,12 @@ for (const [name, { create, destroy }] of Object.entries(implementations)) {
     });
 
     test('json round-trips and becomes visible to exists', async () => {
-      await storage.writeJson('data/nested/a.json', { hello: 'world' });
+      assert.equal(await storage.writeJson('data/nested/a.json', { hello: 'world' }), true);
       assert.equal(await storage.exists('data/nested/a.json'), true);
       assert.deepEqual(await storage.readJson('data/nested/a.json'), { hello: 'world' });
 
-      await storage.writeJson('data/nested/a.json', { hello: 'again' });
+      assert.equal(await storage.writeJson('data/nested/a.json', { hello: 'world' }), false); // unchanged
+      assert.equal(await storage.writeJson('data/nested/a.json', { hello: 'again' }), true);
       assert.deepEqual(await storage.readJson('data/nested/a.json'), { hello: 'again' });
     });
 

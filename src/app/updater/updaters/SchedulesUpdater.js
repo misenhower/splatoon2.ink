@@ -45,6 +45,8 @@ export default class SchedulesUpdater extends Updater {
 
         // Load known stages, or create the list from the current list of stages
         let stages = await this.privateStorage.readJson(STAGES_KEY);
+        this.summary.stagesSeeded = !stages;
+        this.summary.newStages = [];
         if (!stages) {
             let splatnet = new SplatNet;
             let stageData = await splatnet.getStages();
@@ -65,6 +67,7 @@ export default class SchedulesUpdater extends Updater {
                         first_seen: getTopOfCurrentHour(),
                         first_available: schedule.start_time,
                     }));
+                    this.summary.newStages.push(stage.name);
                 }
             }
         }
