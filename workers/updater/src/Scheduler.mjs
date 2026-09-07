@@ -1,163 +1,149 @@
-// Durable Object that owns *when* and *where* updater jobs run.
-//
-// Why a Durable Object: Cron Triggers fire anywhere inside their minute and execute in
-// whichever colo Cloudflare picks (placement hints only apply to fetch handlers). An
-// object's alarm fires within milliseconds, and the object stays in the colo it was
-// created in, next to the R2 buckets. So the cron trigger only wakes the object; the
-// object does the work.
-//
-// Two ways work gets scheduled:
-//   - the hourly job re-arms itself for the next :00:10 after every run;
-//   - wake(job) asks for a job to run as soon as possible (used by cron-driven jobs).
-// Both share one alarm: it is always set to the earliest thing that is due.
-
+// One owner for the hourly update → social pipeline and authenticated manual runs.
+// The alarm targets :00:10; the cron watchdog repairs a missing alarm. Alarms can be late.
 import { DurableObject } from 'cloudflare:workers';
 import { runUpdaters } from './updaters.mjs';
 import { runPosters } from './posters.mjs';
 import { nextRunAt } from './schedule.mjs';
 import { createLogger, describeError } from './log.mjs';
-import { currentColo } from './colo.mjs';
 
 const RETRY_DELAY_MS = 60 * 1000;
 const MAX_RETRIES = 3;
 
-// What runs every hour, in this order: publish the data, then post about it.
-export const HOURLY_JOBS = ['updaters', 'posters'];
-
-// Jobs the object can run.
-const JOBS = {
-  updaters: env => runUpdaters(env),
-  posters: env => runPosters(env),
-};
-
-const EMPTY_STATE = {
-  hourlyAt: null,  // next scheduled run of the hourly job
-  retryAt: null,   // when set, a failed hourly run is retried at this time instead
-  retries: 0,
-  pending: [],     // jobs requested through wake(), run at the next alarm
-  lastRuns: {},    // per job: timing and outcome of the most recent run
-};
-
 export class Scheduler extends DurableObject {
-  /** Schedule the hourly job if it is not scheduled yet. Safe to call repeatedly (the cron watchdog does). */
-  async ensureArmed() {
-    let state = await this.#state();
-    let armed = state.hourlyAt === null;
-    if (armed) {
-      state.hourlyAt = nextRunAt(Date.now());
-      await this.#save(state);
-    }
-    return { armed, hourlyAt: state.hourlyAt, alarmAt: await this.#rearm(state) };
+  // Set synchronously before any await. RPCs may interleave with an alarm during external
+  // I/O. This is a lock, not durable job state: interrupted RPC callers receive an error,
+  // and interrupted alarms are retried by Cloudflare using the persisted schedule.
+  #running = false;
+
+  async #state() {
+    let saved = await this.ctx.storage.get('state') ?? {};
+    // Retain the existing hourly/retry schedule across deployment. Any old pending wake
+    // becomes one immediate full run, then the generic queue is retired.
+    return {
+      paused: saved.paused ?? false,
+      hourlyAt: saved.hourlyAt ?? null,
+      retryAt: saved.retryAt ?? (saved.pending?.length ? Date.now() : null),
+      retries: saved.retries ?? 0,
+      lastRun: saved.lastRun ?? null,
+    };
   }
 
-  /** Run a job as soon as possible. Duplicate requests before the run collapse into one. */
-  async wake(job) {
-    if (!Object.hasOwn(JOBS, job))
-      return { job, accepted: false, error: `Unknown job: ${job}` };
+  async ensureArmed() {
+    if (this.#running)
+      return { armed: false, busy: true };
     let state = await this.#state();
-    if (!state.pending.includes(job))
-      state.pending.push(job);
-    await this.#save(state);
-    return { job, accepted: true, alarmAt: await this.#rearm(state) };
+    if (state.paused)
+      return { armed: false, paused: true };
+    let armed = await this.ctx.storage.getAlarm() === null;
+    state.hourlyAt ??= nextRunAt();
+    await this.ctx.storage.put('state', state);
+    let alarmAt = state.retryAt ?? state.hourlyAt;
+    await this.ctx.storage.setAlarm(alarmAt);
+    return { armed, hourlyAt: state.hourlyAt, alarmAt };
+  }
+
+  async pause() {
+    if (this.#running)
+      return { ok: false, busy: true, error: 'Wait for the current run to finish before pausing.' };
+    let state = await this.#state();
+    state.paused = true;
+    await this.ctx.storage.put('state', state);
+    await this.ctx.storage.deleteAlarm();
+    return { ok: true, paused: true };
+  }
+
+  async resume() {
+    if (this.#running)
+      return { ok: false, busy: true };
+    let state = await this.#state();
+    state.paused = false;
+    await this.ctx.storage.put('state', state);
+    return { ok: true, ...await this.ensureArmed() };
   }
 
   async status() {
-    return { alarmAt: await this.ctx.storage.getAlarm(), ...await this.#state() };
+    return {
+      ...await this.#state(),
+      alarmAt: await this.ctx.storage.getAlarm(),
+      lastManualRun: await this.ctx.storage.get('lastManualRun') ?? null,
+      busy: this.#running,
+    };
   }
 
-  async #state() {
-    return { ...EMPTY_STATE, ...await this.ctx.storage.get('state') ?? {} };
+  // No detached work or persisted generic queue. A busy caller gets an explicit response
+  // and can retry; a successful response means the requested work finished.
+  async run({ only } = {}) {
+    if (this.#running)
+      return { ok: false, busy: true, error: 'An update is already running; retry later.' };
+    this.#running = true;
+    try {
+      if ((await this.#state()).paused)
+        return { ok: false, paused: true, error: 'Scheduler is paused; use /arm to resume.' };
+      let result = await this.#execute(only);
+      await this.ctx.storage.put('lastManualRun', result);
+      return result;
+    } finally {
+      this.#running = false;
+      await this.ensureArmed();
+    }
   }
 
-  async #save(state) {
-    await this.ctx.storage.put('state', state);
-  }
-
-  /** Point the single alarm at the earliest due time. */
-  async #rearm(state) {
-    let candidates = [state.retryAt ?? state.hourlyAt, state.pending.length ? Date.now() : null]
-      .filter(time => time !== null);
-    if (!candidates.length)
-      return null;
-    let alarmAt = Math.min(...candidates);
-    await this.ctx.storage.setAlarm(alarmAt);
-    return alarmAt;
+  async #execute(only) {
+    let startedAt = Date.now();
+    let result;
+    try {
+      let updaters = await runUpdaters(this.env, { only });
+      // A targeted repair does not publish social posts from a partially refreshed dataset.
+      let social = !updaters.ok || only
+        ? { ok: true, skipped: true, reason: only ? 'targeted-update' : 'updater-failed' }
+        : await runPosters(this.env);
+      result = { ok: updaters.ok && social.ok, updaters, social };
+    } catch (error) {
+      result = { ok: false, ...describeError(error) };
+    }
+    result = { ...result, startedAt, runMs: Date.now() - startedAt };
+    createLogger('pipeline')[result.ok ? 'info' : 'error']('Run finished', result);
+    return result;
   }
 
   async alarm(alarmInfo) {
-    let firedAt = Date.now();
-    let log = createLogger('alarm');
-    let colo = await currentColo();
-    let state = await this.#state();
-
-    // Work out what is due. The hourly jobs are due when their time (or the retry time) has
-    // come; pending jobs are due now. A pending request for an hourly job merges into it.
-    let due = [];
-    let hourlyScheduledFor = state.retryAt ?? state.hourlyAt;
-    let hourlyDue = hourlyScheduledFor !== null && firedAt >= hourlyScheduledFor;
-    if (hourlyDue)
-      for (let job of HOURLY_JOBS)
-        due.push({ job, reason: state.retryAt ? 'retry' : 'hourly', scheduledFor: hourlyScheduledFor });
-    for (let job of state.pending)
-      if (Object.hasOwn(JOBS, job) && !due.some(entry => entry.job === job))
-        due.push({ job, reason: 'wake', scheduledFor: null });
-    state.pending = [];
-
-    let hourlyOk = true;
-    for (let { job, reason, scheduledFor } of due) {
-      let startedAt = Date.now();
-      let run = {
-        job,
-        reason,
-        scheduledFor,
-        firedAt,
-        driftMs: scheduledFor === null ? null : firedAt - scheduledFor,
-        retryCount: alarmInfo?.retryCount ?? 0,
-        retries: state.retries,
-        colo,
-      };
-
-      // Errors are caught so the alarm is always re-armed; the platform's own alarm retries are
-      // capped and only cover the latest setAlarm(), so hourly retries are managed here.
-      try {
-        let result = await JOBS[job](this.env);
-        // A job reports partial failure by returning { ok: false } rather than throwing
-        run = { ...run, ok: result?.ok !== false, runMs: Date.now() - startedAt, result };
-        if (!run.ok)
-          run.error = `${job} failed: ${result.updaters?.filter(u => !u.ok).map(u => u.name).join(', ')}`;
-      } catch (error) {
-        run = { ...run, ok: false, runMs: Date.now() - startedAt, ...describeError(error) };
+    if (this.#running) {
+      // A manual run must not make us skip this hour. Leave the original due time intact.
+      await this.ctx.storage.setAlarm(Date.now() + RETRY_DELAY_MS);
+      return;
+    }
+    this.#running = true;
+    try {
+      let state = await this.#state();
+      if (state.paused) {
+        await this.ctx.storage.deleteAlarm();
+        return;
       }
-
-      if (reason !== 'wake')
-        hourlyOk &&= run.ok;
-
-      state.lastRuns[job] = run;
-      log[run.ok ? 'info' : 'error']('Alarm run finished', run);
-    }
-
-    // Schedule the next hourly run, or a retry if any hourly job failed
-    if (hourlyDue) {
-      if (hourlyOk || state.retries >= MAX_RETRIES) {
-        state.hourlyAt = nextRunAt(Date.now());
-        state.retryAt = null;
-        state.retries = 0;
-      } else {
-        state.retryAt = Date.now() + RETRY_DELAY_MS;
-        state.retries += 1;
+      state.hourlyAt ??= nextRunAt();
+      let scheduledFor = state.retryAt ?? state.hourlyAt;
+      if (Date.now() >= scheduledFor) {
+        let result = await this.#execute();
+        state.lastRun = {
+          ...result, scheduledFor,
+          driftMs: result.startedAt - scheduledFor,
+          retries: state.retries,
+          retryCount: alarmInfo?.retryCount ?? 0,
+        };
+        if (result.ok || state.retries >= MAX_RETRIES) {
+          state.hourlyAt = nextRunAt();
+          state.retryAt = null;
+          state.retries = 0;
+        } else {
+          state.retryAt = Date.now() + RETRY_DELAY_MS;
+          state.retries++;
+        }
       }
+      // Storage failures escape so the platform retries. Schedule and state are saved
+      // together without external I/O in between.
+      await this.ctx.storage.put('state', state);
+      await this.ctx.storage.setAlarm(state.retryAt ?? state.hourlyAt);
+    } finally {
+      this.#running = false;
     }
-
-    // This instance always owns the hourly job. If it has somehow been lost (for example the
-    // alarm was consumed by a wake before ensureArmed() ever ran), restore it here rather than
-    // waiting for the cron watchdog.
-    if (state.hourlyAt === null) {
-      state.hourlyAt = nextRunAt(Date.now());
-      log.warn('Hourly schedule was missing; restored', { hourlyAt: state.hourlyAt });
-    }
-
-    await this.#save(state);
-    let alarmAt = await this.#rearm(state);
-    log.info('Alarm re-armed', { alarmAt, hourlyAt: state.hourlyAt, retryAt: state.retryAt, ran: due.map(entry => entry.job) });
   }
 }

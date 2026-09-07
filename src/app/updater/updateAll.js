@@ -31,7 +31,13 @@ export function createUpdaters(storage) {
 export default async function updateAll(storage, { only } = {}) {
     let results = [];
 
-    for (let updater of createUpdaters(storage)) {
+    let updaters = createUpdaters(storage);
+    if (only) {
+        let unknown = only.filter(name => !updaters.some(updater => updater.options.name === name));
+        if (!only.length || unknown.length)
+            throw new Error(`Unknown or empty updater selection: ${unknown.join(', ')}`);
+    }
+    for (let updater of updaters) {
         let name = updater.options.name;
         if (only && !only.includes(name))
             continue;

@@ -12,7 +12,7 @@
   "workers_dev": true,
   "preview_urls": false,
   "triggers": {
-    // Cron Triggers only wake the Scheduler Durable Object (see src/index.mjs CRON_ACTIONS).
+    // Cron only checks the Scheduler alarm; it does not execute updater work.
     // The hourly update runs from the object's own alarm at :00:10; this cron is the watchdog
     // that re-arms that alarm if it is ever lost. Minute 30 keeps it clear of the hourly run.
     "crons": ["30 * * * *"]
@@ -33,7 +33,7 @@
   "r2_buckets": [
     {
       // Shadow mode: writes go to the dev bucket while the container still owns production.
-      // Cutover = point this at "splatoon2-ink-assets".
+      // See README for the full cutover procedure before switching to "splatoon2-ink-assets".
       "binding": "ASSETS",
       "bucket_name": "splatoon2-ink-dev-assets"
     },

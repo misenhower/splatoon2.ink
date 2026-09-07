@@ -29,8 +29,6 @@ export function fakeSplatNet(routes = ROUTES) {
     const url = new URL(input);
     const headers = new Headers(init.headers);
     requests.push({ path: url.pathname, language: headers.get('Accept-Language'), cookie: headers.get('Cookie') });
-    if (url.hostname === 'www.cloudflare.com')
-      return new Response('colo=TEST\n');
     if (url.pathname.startsWith('/images/'))
       return new Response(new Uint8Array([0x89, 0x50, 0x4e, 0x47]), { headers: { 'content-type': 'image/png' } });
     const route = routes[url.pathname];
