@@ -1,8 +1,9 @@
+import { logMessage } from '../../../src/app/log.js';
 // Structured logging for Workers Logs. Objects (not JSON strings) are logged so the
 // dashboard extracts and indexes each field, e.g. filter on driftMs or updater.
 export function createLogger(updater) {
   function emit(level, message, fields) {
-    console[level]({ updater, message, ...fields });
+    logMessage(level, message, { updater, ...fields });
   }
 
   return {

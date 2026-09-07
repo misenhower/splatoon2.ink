@@ -127,6 +127,14 @@ normal checkpoints and the published-data check. An interrupted manual run is
 reported as failed rather than automatically replaying an uncertain social send.
 The hourly schedule is preserved. Paused scheduling also blocks manual runs.
 
+The panel polls live application log lines every two seconds during a run and
+stores up to the latest 200 lines (500 characters each, 32 KB total) with its
+final summary.
+Known secret values are redacted from captured lines. This includes updater,
+social, and screenshot-retry messages, not platform or third-party library logs.
+Live lines are held in memory until completion; an isolate interruption can lose
+those lines. Full operational logs remain available through Workers logging.
+
 Preview the actual panel with simulated results using `npm run admin:preview`,
 then open `http://127.0.0.1:8788/admin/`. This standalone preview server listens
 only on loopback and has no production credentials or bindings. The production

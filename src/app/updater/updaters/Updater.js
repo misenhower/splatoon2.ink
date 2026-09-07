@@ -1,3 +1,4 @@
+import { logMessage } from '../../log.js';
 import _ from 'lodash';
 import jsonpath from '../../../common/jsonpath.js';
 import SplatNet from '../../../common/splatnet.js';
@@ -252,14 +253,14 @@ export default class Updater {
     }
 
     log(message) {
-        console.log(this.formatLogMessage(message));
+        logMessage('log', this.formatLogMessage(message));
     }
 
     info(message) {
-        console.info(this.formatLogMessage(message));
+        logMessage('info', this.formatLogMessage(message));
     }
 
     error(message) {
-        console.error(this.formatLogMessage(message));
+        logMessage('error', this.formatLogMessage(message));
     }
 }

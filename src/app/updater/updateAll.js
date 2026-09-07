@@ -1,3 +1,4 @@
+import { logMessage } from '../log.js';
 import SchedulesUpdater from './updaters/SchedulesUpdater.js';
 import CoopSchedulesUpdater from './updaters/CoopSchedulesUpdater.js';
 import TimelineUpdater from './updaters/TimelineUpdater.js';
@@ -47,7 +48,7 @@ export default async function updateAll(storage, { only } = {}) {
             await updater.update();
             results.push({ name, ok: true, ms: Date.now() - started });
         } catch (e) {
-            console.error(e);
+            logMessage('error', e);
             results.push({ name, ok: false, ms: Date.now() - started, error: e instanceof Error ? e.message : String(e) });
         }
     }

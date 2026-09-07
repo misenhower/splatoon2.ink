@@ -1,3 +1,4 @@
+import { createRunLog, logMessage } from '../../../src/app/log.js';
 // One owner for the hourly update → social pipeline and authenticated manual runs.
 // The alarm targets :00:10; the cron watchdog repairs a missing alarm. Alarms can be late.
 import { DurableObject } from 'cloudflare:workers';
@@ -15,6 +16,7 @@ export class Scheduler extends DurableObject {
   // I/O. This is a lock, not durable job state: interrupted RPC callers receive an error,
   // and interrupted alarms are retried by Cloudflare using the persisted schedule.
   #running = false;
+  #activeRun = null;
 
   async #state() {
     let saved = await this.ctx.storage.get('state') ?? {};
@@ -72,6 +74,7 @@ export class Scheduler extends DurableObject {
       alarmAt: await this.ctx.storage.getAlarm(),
       lastManualRun: await this.ctx.storage.get('lastManualRun') ?? null,
       pendingManual: await this.#pendingManual(),
+      activeRun: this.#activeRun,
       busy: this.#running || !!await this.#pendingManual(),
     };
   }
@@ -120,6 +123,23 @@ export class Scheduler extends DurableObject {
   }
 
   async #execute(only, mode = 'both') {
+    const secrets = Object.entries({ ...process.env, ...this.env })
+      .filter(([key]) => /TOKEN|PASSWORD|SESSION|ACCOUNT_ID|SECRET/.test(key))
+      .map(([, value]) => value);
+    const capture = createRunLog(secrets);
+    this.#activeRun = { mode, startedAt: Date.now(), logs: capture.snapshot };
+    try {
+      return await capture.run(async () => {
+        logMessage('info', `Starting ${mode === 'both' ? 'full cycle' : mode === 'data' ? 'data update' : 'social cycle'}`);
+        const result = await this.#executeWithLogs(only, mode);
+        return { ...result, logs: capture.snapshot };
+      });
+    } finally {
+      this.#activeRun = null;
+    }
+  }
+
+  async #executeWithLogs(only, mode) {
     let startedAt = Date.now();
     let result;
     try {

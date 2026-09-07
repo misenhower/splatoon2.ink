@@ -1,3 +1,4 @@
+import { logMessage } from '../../log.js';
 import { convertToJpeg } from '#image-converter';
 import { getTopOfCurrentHour } from '../../../common/time.js';
 import { pngSize } from '../../../common/png.js';
@@ -160,15 +161,15 @@ export default class SocialPostBase {
     }
 
     log(message) {
-        console.log(this.formatLogMessage(message));
+        logMessage('log', this.formatLogMessage(message));
     }
 
     info(message) {
-        console.info(this.formatLogMessage(message));
+        logMessage('info', this.formatLogMessage(message));
     }
 
     error(message) {
-        console.error(this.formatLogMessage(message));
+        logMessage('error', this.formatLogMessage(message));
     }
 
     /**

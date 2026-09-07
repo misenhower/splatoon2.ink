@@ -1,3 +1,4 @@
+import { logMessage } from '../log.js';
 import { fetchWithTimeout } from '../../common/fetch.js';
 import { screenshotReadySelector } from '../../common/screenshot.js';
 
@@ -95,7 +96,7 @@ export async function captureScreenshot({ hash, viewport: viewportOverrides, for
             if (!retryable || attempt === 3)
                 throw error;
             let delayMs = 500 * 2 ** attempt;
-            console.warn('Retrying Browser Run screenshot', { attempt: attempt + 1, delayMs, error: error.message });
+            logMessage('warn', 'Retrying Browser Run screenshot', { attempt: attempt + 1, delayMs, error: error.message });
             await new Promise(resolve => setTimeout(resolve, delayMs));
         }
     }

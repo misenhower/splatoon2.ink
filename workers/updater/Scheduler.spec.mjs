@@ -161,6 +161,7 @@ describe('Scheduler', () => {
     let first = scheduler.run({ only: ['Schedules'] });
     try {
       await vi.waitFor(() => expect(entered).toBe(true));
+      expect((await scheduler.status()).activeRun.logs.lines.some(line => line.text.includes('Updating data'))).toBe(true);
       expect(await scheduler.run()).toMatchObject({ ok: false, busy: true });
       expect(await scheduler.ensureArmed()).toMatchObject({ busy: true });
       expect(await scheduler.pause()).toMatchObject({ ok: false, busy: true });
@@ -198,6 +199,8 @@ describe('Background manual runs', () => {
     const status = await runAlarmUntil(scheduler, s => !!s.lastManualRun);
     expect(status.lastManualRun).toMatchObject({ id: result.run.id, ok: true, status: 'succeeded', social: { skipped: true } });
     expect(status.pendingManual).toBeNull();
+    expect(status.activeRun).toBeNull();
+    expect(status.lastManualRun.logs.lines.some(line => line.text.includes('Done.'))).toBe(true);
     expect(status.hourlyAt).toBe(hourlyAt);
     expect(renders).toHaveLength(0);
   });
