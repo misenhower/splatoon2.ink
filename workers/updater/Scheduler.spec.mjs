@@ -132,6 +132,7 @@ describe('Scheduler', () => {
     vi.setSystemTime(hourlyAt + 1);
     let status = await runAlarmUntil(scheduler, s => s.hourlyAt !== hourlyAt);
     expect(status.lastRuns.updaters).toMatchObject({ reason: 'hourly', ok: true, colo: 'TEST' });
+    expect(status.lastRuns.posters).toMatchObject({ reason: 'hourly', ok: true });
     expect(status.lastRuns.updaters.driftMs).toBeGreaterThanOrEqual(1);
     expect(status.lastRuns.updaters.driftMs).toBeLessThan(1000);
     expect(status.hourlyAt).toBe(hourlyAt + HOUR_MS);

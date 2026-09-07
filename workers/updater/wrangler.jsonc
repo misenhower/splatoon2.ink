@@ -25,6 +25,11 @@
   "migrations": [
     { "tag": "v1", "new_sqlite_classes": ["Scheduler"] }
   ],
+  "vars": {
+    // Screenshots for social posts are rendered from the deployed site by Browser Rendering.
+    // The API token is a secret (CLOUDFLARE_BROWSER_RUN_API_TOKEN).
+    "SITE_URL": "https://splatoon2.ink"
+  },
   "r2_buckets": [
     {
       // Shadow mode: writes go to the dev bucket while the container still owns production.

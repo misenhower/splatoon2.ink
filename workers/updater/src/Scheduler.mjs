@@ -13,6 +13,7 @@
 
 import { DurableObject } from 'cloudflare:workers';
 import { runUpdaters } from './updaters.mjs';
+import { runPosters } from './posters.mjs';
 import { nextRunAt } from './schedule.mjs';
 import { createLogger, describeError } from './log.mjs';
 import { currentColo } from './colo.mjs';
@@ -20,11 +21,13 @@ import { currentColo } from './colo.mjs';
 const RETRY_DELAY_MS = 60 * 1000;
 const MAX_RETRIES = 3;
 
-export const HOURLY_JOB = 'updaters';
+// What runs every hour, in this order: publish the data, then post about it.
+export const HOURLY_JOBS = ['updaters', 'posters'];
 
-// Jobs the object can run. The hourly job is the full updater run; more can be added here.
+// Jobs the object can run.
 const JOBS = {
   updaters: env => runUpdaters(env),
+  posters: env => runPosters(env),
 };
 
 const EMPTY_STATE = {
@@ -87,17 +90,20 @@ export class Scheduler extends DurableObject {
     let colo = await currentColo();
     let state = await this.#state();
 
-    // Work out what is due. The hourly job is due when its time (or its retry time) has come;
-    // pending jobs are due now. A pending request for the hourly job merges into the hourly run.
+    // Work out what is due. The hourly jobs are due when their time (or the retry time) has
+    // come; pending jobs are due now. A pending request for an hourly job merges into it.
     let due = [];
     let hourlyScheduledFor = state.retryAt ?? state.hourlyAt;
-    if (hourlyScheduledFor !== null && firedAt >= hourlyScheduledFor)
-      due.push({ job: HOURLY_JOB, reason: state.retryAt ? 'retry' : 'hourly', scheduledFor: hourlyScheduledFor });
+    let hourlyDue = hourlyScheduledFor !== null && firedAt >= hourlyScheduledFor;
+    if (hourlyDue)
+      for (let job of HOURLY_JOBS)
+        due.push({ job, reason: state.retryAt ? 'retry' : 'hourly', scheduledFor: hourlyScheduledFor });
     for (let job of state.pending)
       if (Object.hasOwn(JOBS, job) && !due.some(entry => entry.job === job))
         due.push({ job, reason: 'wake', scheduledFor: null });
     state.pending = [];
 
+    let hourlyOk = true;
     for (let { job, reason, scheduledFor } of due) {
       let startedAt = Date.now();
       let run = {
@@ -123,19 +129,23 @@ export class Scheduler extends DurableObject {
         run = { ...run, ok: false, runMs: Date.now() - startedAt, ...describeError(error) };
       }
 
-      if (job === HOURLY_JOB && reason !== 'wake') {
-        if (run.ok || state.retries >= MAX_RETRIES) {
-          state.hourlyAt = nextRunAt(Date.now());
-          state.retryAt = null;
-          state.retries = 0;
-        } else {
-          state.retryAt = Date.now() + RETRY_DELAY_MS;
-          state.retries += 1;
-        }
-      }
+      if (reason !== 'wake')
+        hourlyOk &&= run.ok;
 
       state.lastRuns[job] = run;
       log[run.ok ? 'info' : 'error']('Alarm run finished', run);
+    }
+
+    // Schedule the next hourly run, or a retry if any hourly job failed
+    if (hourlyDue) {
+      if (hourlyOk || state.retries >= MAX_RETRIES) {
+        state.hourlyAt = nextRunAt(Date.now());
+        state.retryAt = null;
+        state.retries = 0;
+      } else {
+        state.retryAt = Date.now() + RETRY_DELAY_MS;
+        state.retries += 1;
+      }
     }
 
     // This instance always owns the hourly job. If it has somehow been lost (for example the

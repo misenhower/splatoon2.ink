@@ -1,5 +1,6 @@
 import { withSentry, instrumentDurableObjectWithSentry } from '@sentry/cloudflare';
 import { runUpdaters } from './updaters.mjs';
+import { runPosters } from './posters.mjs';
 import { Scheduler as SchedulerClass } from './Scheduler.mjs';
 import { createLogger, describeError } from './log.mjs';
 
@@ -58,6 +59,7 @@ export default withSentry(sentryOptions, {
 
   // Authenticated operator endpoints, "Authorization: Bearer <RUN_TOKEN>":
   //   POST /run[?only=Name,Name]  run the updaters in this invocation and return the summary
+  //   POST /post                  run the social posters in this invocation
   //   POST /wake?job=NAME         ask the Scheduler to run a job as soon as possible
   //   POST /arm                   schedule the hourly job if it is not scheduled
   //   GET  /status                alarm state and the last run of each job
@@ -65,7 +67,7 @@ export default withSentry(sentryOptions, {
   async fetch(request, env, ctx) {
     let url = new URL(request.url);
     let route = `${request.method} ${url.pathname}`;
-    if (!['POST /run', 'POST /wake', 'POST /arm', 'GET /status', 'GET /list'].includes(route))
+    if (!['POST /run', 'POST /post', 'POST /wake', 'POST /arm', 'GET /status', 'GET /list'].includes(route))
       return new Response('Not found', { status: 404 });
     if (!isAuthorized(request, env))
       return new Response('Unauthorized', { status: 401 });
@@ -76,6 +78,8 @@ export default withSentry(sentryOptions, {
           let only = url.searchParams.get('only')?.split(',').map(name => name.trim()).filter(Boolean);
           return Response.json(await runUpdaters(env, { only }));
         }
+        case 'POST /post':
+          return Response.json(await runPosters(env));
         case 'POST /wake': {
           let woke = await scheduler(env).wake(url.searchParams.get('job') ?? '');
           return Response.json({ ok: woke.accepted, ...woke }, { status: woke.accepted ? 200 : 400 });
