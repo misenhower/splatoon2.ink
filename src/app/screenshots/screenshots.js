@@ -59,7 +59,7 @@ export async function captureScreenshot({ hash, viewport: viewportOverrides, for
     let endpoint = new URL(`/client/v4/accounts/${accountId}/browser-rendering/screenshot`, 'https://api.cloudflare.com');
     endpoint.searchParams.set('cacheTTL', '0');
 
-    let response = await fetchWithTimeout(endpoint, {
+    let request = {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${apiToken}`,
@@ -74,13 +74,34 @@ export async function captureScreenshot({ hash, viewport: viewportOverrides, for
             setExtraHTTPHeaders: { 'Cache-Control': 'no-cache' },
             screenshotOptions: format === 'jpeg' ? { type: 'jpeg', quality: 90 } : { type: 'png' },
         }),
-    }, 90_000);
-
-    if (!response.ok)
-        throw new Error(`Browser Rendering screenshot failed (${response.status}): ${await errorMessage(response)}`);
+    };
+    let image;
+    for (let attempt = 0; attempt <= 3; attempt++) {
+        try {
+            // Three 10s browser phases plus transport overhead; covers response body too.
+            let response = await fetchWithTimeout(endpoint, request, 40_000);
+            if (!response.ok) {
+                let message = await errorMessage(response);
+                let error = new Error(`Browser Rendering screenshot failed (${response.status}): ${message}`);
+                // Browser Run reports navigation/selector/action timeouts as 422 errors.
+                error.retryable = response.status === 408 || response.status >= 500
+                    || (response.status === 422 && /timeout|timed out/i.test(message));
+                throw error;
+            }
+            image = new Uint8Array(await response.arrayBuffer());
+            break;
+        } catch (error) {
+            let retryable = error.retryable ?? ['TimeoutError', 'TypeError'].includes(error.name);
+            if (!retryable || attempt === 3)
+                throw error;
+            let delayMs = 500 * 2 ** attempt;
+            console.warn('Retrying Browser Run screenshot', { attempt: attempt + 1, delayMs, error: error.message });
+            await new Promise(resolve => setTimeout(resolve, delayMs));
+        }
+    }
 
     return {
-        image: new Uint8Array(await response.arrayBuffer()),
+        image,
         type: format === 'jpeg' ? 'image/jpeg' : 'image/png',
         width: thisViewport.width * thisViewport.deviceScaleFactor,
         height: thisViewport.height * thisViewport.deviceScaleFactor,

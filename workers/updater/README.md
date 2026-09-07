@@ -59,8 +59,17 @@ preflight validates JSON, not pixel output or an atomic snapshot across a CDN.
 Visually check generated images before cutover.
 
 Nintendo, Bluesky, and rendering-site checks have 30-second network deadlines,
-including body consumption. Browser Rendering has a 90-second request deadline
-and 30-second navigation/action limits. Errors are reported rather than logged
+including body consumption. Browser Rendering uses 10-second navigation, page-ready, and capture limits,
+with a 40-second overall request deadline per attempt. It waits for
+`data-screenshot-ready="true"` after data, Vue rendering, fonts, images and layout
+settle, instead of waiting for network idle. Deploy the updated screenshot page
+before the Worker that requires this marker.
+
+Transient screenshot errors (timeouts, network failures, and HTTP 5xx) get up to
+three retries after the first attempt, with 0.5/1/2-second backoff. Authentication,
+rate-limit and non-timeout validation errors fail immediately. These retries only
+repeat rendering, never the social send; exhausted failures still reach the hourly
+pipeline's bounded retry mechanism. Errors are reported rather than logged
 as successful social runs.
 
 ## Shadow testing and cutover

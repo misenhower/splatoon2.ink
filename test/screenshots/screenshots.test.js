@@ -67,3 +67,59 @@ test('fails clearly when configuration is missing', async () => {
   delete process.env.CLOUDFLARE_BROWSER_RUN_API_TOKEN;
   await assert.rejects(captureScreenshot({ hash: '/x' }), /Missing screenshot configuration: CLOUDFLARE_BROWSER_RUN_API_TOKEN/);
 });
+
+function immediateBackoff() {
+  const delays = [];
+  mock.method(globalThis, 'setTimeout', (callback, delay) => {
+    delays.push(delay);
+    queueMicrotask(callback);
+  });
+  return delays;
+}
+
+test('retries timeout responses and succeeds with the same screenshot request', async () => {
+  const delays = immediateBackoff();
+  let attempt = 0;
+  const requests = fakeBrowserRendering(() => ++attempt < 3
+    ? Response.json({ errors: [{ message: 'Navigation timeout of 10000 ms exceeded' }] }, { status: 422 })
+    : new Response(PNG));
+  const result = await captureScreenshot({ hash: '/schedules/3600', format: 'jpeg' });
+  assert.deepEqual(result.image, PNG);
+  assert.equal(requests.length, 3);
+  assert.deepEqual(requests[0].body, requests[2].body);
+  assert.deepEqual(delays, [500, 1000]);
+});
+
+test('stops after three retries and preserves the final error', async () => {
+  const delays = immediateBackoff();
+  const requests = fakeBrowserRendering(() => new Response('upstream unavailable', { status: 503 }));
+  await assert.rejects(captureScreenshot({ hash: '/x' }), /503.*upstream unavailable/);
+  assert.equal(requests.length, 4);
+  assert.deepEqual(delays, [500, 1000, 2000]);
+});
+
+test('does not retry authentication, rate limits or non-timeout validation errors', async () => {
+  const delays = immediateBackoff();
+  for (const status of [401, 403, 429, 422]) {
+    let count = 0;
+    const requests = fakeBrowserRendering(() => { count++; return new Response('invalid request', { status }); });
+    await assert.rejects(captureScreenshot({ hash: '/x' }), new RegExp(String(status)));
+    assert.equal(count, 1);
+    assert.equal(requests.length, 1);
+  }
+  assert.deepEqual(delays, []);
+});
+
+test('retries network and client deadline failures, including while reading the image', async () => {
+  immediateBackoff();
+  let attempt = 0;
+  const requests = fakeBrowserRendering(() => {
+    attempt++;
+    if (attempt === 1) throw new TypeError('fetch failed');
+    if (attempt === 2) throw new DOMException('request timed out', 'TimeoutError');
+    if (attempt === 3) return new Response(new ReadableStream({ start(controller) { controller.error(new TypeError('connection reset')); } }));
+    return new Response(PNG);
+  });
+  assert.deepEqual((await captureScreenshot({ hash: '/x' })).image, PNG);
+  assert.equal(requests.length, 4);
+});
