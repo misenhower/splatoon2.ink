@@ -22,10 +22,6 @@ export default class BucketStorage {
         this.#bucket = bucket;
     }
 
-    get bucket() {
-        return this.#bucket;
-    }
-
     async #listing(directory) {
         if (!this.#listings.has(directory)) {
             let keys = new Set;

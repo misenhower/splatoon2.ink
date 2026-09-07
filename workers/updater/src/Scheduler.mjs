@@ -13,8 +13,8 @@ export const MANUAL_MODES = ['data', 'social', 'both'];
 
 export class Scheduler extends DurableObject {
   // Set synchronously before any await. RPCs may interleave with an alarm during external
-  // I/O. This is a lock, not durable job state: interrupted RPC callers receive an error,
-  // and interrupted alarms are retried by Cloudflare using the persisted schedule.
+  // I/O. Direct /run callers wait for completion; admin requests are stored separately
+  // and run from an alarm. Both use this same lock.
   #running = false;
   #activeRun = null;
 
@@ -69,13 +69,14 @@ export class Scheduler extends DurableObject {
   }
 
   async status() {
+    let pendingManual = await this.#pendingManual();
     return {
       ...await this.#state(),
       alarmAt: await this.ctx.storage.getAlarm(),
       lastManualRun: await this.ctx.storage.get('lastManualRun') ?? null,
-      pendingManual: await this.#pendingManual(),
+      pendingManual,
       activeRun: this.#activeRun,
-      busy: this.#running || !!await this.#pendingManual(),
+      busy: this.#running || !!pendingManual,
     };
   }
 
@@ -147,9 +148,16 @@ export class Scheduler extends DurableObject {
         ? { ok: true, skipped: true }
         : await runUpdaters(this.env, { only });
       // A targeted repair does not publish social posts from a partially refreshed dataset.
-      let social = !updaters.ok || only || mode === 'data'
-        ? { ok: true, skipped: true, reason: mode === 'data' ? 'data-only' : only ? 'targeted-update' : 'updater-failed' }
-        : await runPosters(this.env);
+      let social;
+      if (mode === 'data') {
+        social = { ok: true, skipped: true, reason: 'data-only' };
+      } else if (only) {
+        social = { ok: true, skipped: true, reason: 'targeted-update' };
+      } else if (!updaters.ok) {
+        social = { ok: true, skipped: true, reason: 'updater-failed' };
+      } else {
+        social = await runPosters(this.env);
+      }
       result = { ok: updaters.ok && social.ok, updaters, social };
     } catch (error) {
       result = { ok: false, ...describeError(error) };

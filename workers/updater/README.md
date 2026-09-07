@@ -19,8 +19,9 @@ not depend on where the object runs. There is no per-run colo probe.
 - The minute-30 cron checks/re-arms the alarm. The object may sleep between
   alarms; the watchdog repairs scheduling, rather than keeping a process alive.
 - Manual runs use the same object. A request during an active run returns HTTP
-  409; retry it later. There is no background operator queue and no `/wake` or
-  `/post` endpoint. An hourly alarm that encounters a manual run remains due.
+  409; retry it later. The admin panel can persist one background manual request.
+  There is no `/wake` or `/post` endpoint. An hourly alarm that encounters a
+  manual run remains due.
 - `POST /run` runs the complete pipeline and waits for its result. With `only`,
   it repairs the named updaters and skips social posting. Unknown names fail.
 - The existing object name and hourly/retry state survive deployment. Pending

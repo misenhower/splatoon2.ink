@@ -1,8 +1,14 @@
 import { MemoryBucket, BucketStorage } from '../../src/common/storage/index.js';
 
 export function storage() {
-  const publicBucket = new MemoryBucket, privateBucket = new MemoryBucket;
-  return { publicBucket, privateBucket, publicStorage: new BucketStorage(publicBucket), privateStorage: new BucketStorage(privateBucket) };
+  const publicBucket = new MemoryBucket;
+  const privateBucket = new MemoryBucket;
+  return {
+    publicBucket,
+    privateBucket,
+    publicStorage: new BucketStorage(publicBucket),
+    privateStorage: new BucketStorage(privateBucket),
+  };
 }
 
 /** A fresh per-run view over the same buckets, as each real run gets (the cache is per run). */
@@ -18,9 +24,16 @@ export function fakeClient(key, { canSend = true, fail = false } = {}) {
     name: key[0].toUpperCase() + key.slice(1),
     sent,
     canSend: async () => canSend,
-    send: async status => { if (fail) throw new Error(`${key} is down`); sent.push(status); },
+    send: async status => {
+      if (fail)
+        throw new Error(`${key} is down`);
+      sent.push(status);
+    },
   };
 }
 
-export const json = async (bucket, key) => { const object = await bucket.get(key); return object ? object.json() : null; };
+export async function json(bucket, key) {
+  const object = await bucket.get(key);
+  return object ? object.json() : null;
+}
 export const seed = (bucket, key, value) => bucket.put(key, JSON.stringify(value));

@@ -8,6 +8,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import stringify from 'json-stable-stringify';
 
 const [base, current] = process.argv.slice(2);
 if (!base || !current) {
@@ -15,32 +16,28 @@ if (!base || !current) {
     process.exit(2);
 }
 
-const canon = value => Array.isArray(value)
-    ? value.map(canon)
-    : (value && typeof value === 'object')
-        ? Object.fromEntries(Object.keys(value).sort().map(key => [key, canon(value[key])]))
-        : value;
-
 function firstDifference(a, b, at = '$') {
     if (Array.isArray(a) && Array.isArray(b)) {
         if (a.length !== b.length)
             return `${at}.length ${a.length} vs ${b.length}`;
         // Festival result lists come back in random order
         if (a.length && a[0] && typeof a[0] === 'object' && 'festival_id' in a[0]) {
-            let key = item => JSON.stringify(canon(item));
-            let sa = a.map(key).sort(), sb = b.map(key).sort();
-            return sa.every((v, i) => v === sb[i]) ? null : `${at}: set of items differs`;
+            let leftItems = a.map(item => stringify(item)).sort();
+            let rightItems = b.map(item => stringify(item)).sort();
+            return leftItems.every((item, index) => item === rightItems[index]) ? null : `${at}: set of items differs`;
         }
         for (let i = 0; i < a.length; i++) {
-            let d = firstDifference(a[i], b[i], `${at}[${i}]`);
-            if (d) return d;
+            let difference = firstDifference(a[i], b[i], `${at}[${i}]`);
+            if (difference)
+                return difference;
         }
         return null;
     }
     if (a && b && typeof a === 'object' && typeof b === 'object') {
         for (let key of new Set([...Object.keys(a), ...Object.keys(b)])) {
-            let d = firstDifference(a[key], b[key], `${at}.${key}`);
-            if (d) return d;
+            let difference = firstDifference(a[key], b[key], `${at}.${key}`);
+            if (difference)
+                return difference;
         }
         return null;
     }
@@ -59,15 +56,22 @@ for (let file of walk(base)) {
         problems++;
         continue;
     }
-    let a = fs.readFileSync(file), b = fs.readFileSync(other);
+    let a = fs.readFileSync(file);
+    let b = fs.readFileSync(other);
     if (a.equals(b))
         continue;
     if (relative.endsWith('.json')) {
-        let d = firstDifference(JSON.parse(a), JSON.parse(b));
-        if (d) { console.log(`${relative}: ${d}`); problems++; }
+        let difference = firstDifference(JSON.parse(a), JSON.parse(b));
+        if (difference) {
+            console.log(`${relative}: ${difference}`);
+            problems++;
+        }
     } else if (relative.endsWith('.ics')) {
         let strip = s => s.toString().split(/\r?\n/).filter(line => !line.startsWith('DTSTAMP')).join('\n');
-        if (strip(a) !== strip(b)) { console.log(`${relative}: calendar content differs`); problems++; }
+        if (strip(a) !== strip(b)) {
+            console.log(`${relative}: calendar content differs`);
+            problems++;
+        }
     } else {
         console.log(`${relative}: binary content differs`);
         problems++;
