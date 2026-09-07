@@ -1,4 +1,8 @@
+import { nextDataRefreshAt } from '../../../common/dataRefresh.js';
+
 let updateDataTimer;
+let updatingData = false;
+let refreshGeneration = 0;
 
 export const namespaced = true;
 
@@ -43,8 +47,7 @@ export const actions = {
     updateLanguage({ dispatch, rootGetters }) {
         let language = rootGetters['splatoon/languages/selectedLanguage'];
         if (language) {
-            fetch(`/data/locale/${language.language}.json`)
-                .then(response => response.json())
+            return fetchJson(`/data/locale/${language.language}.json`)
                 .then(data => dispatch('i18n/addLocale', {
                     locale: language.language,
                     translations: { splatnet: data },
@@ -52,37 +55,32 @@ export const actions = {
         }
     },
     updateAll({ dispatch }) {
-        return Promise.all([
+        return Promise.allSettled([
             dispatch('updateLanguage'),
             ...dataSources.map(source => dispatch(source.actionName)),
         ]);
     },
     startUpdatingData({ dispatch }) {
-        if (updateDataTimer)
+        if (updatingData)
             return;
+        updatingData = true;
+        let generation = ++refreshGeneration;
 
-        dispatch('updateAll');
-
-        let date = new Date;
-
-            // If we're more than 20 seconds past the current hour, schedule the update for the next hour
-            if (date.getMinutes() !== 0 || date.getSeconds() >= 20)
-                date.setHours(date.getHours() + 1);
-            date.setMinutes(0);
-
-            // Random number of seconds past the hour (so all open browsers don't hit the server at the same time)
-            let minSec = 25;
-            let maxSec = 60;
-            date.setSeconds(Math.floor(Math.random() * (maxSec - minSec + 1)) + minSec);
-
-            // Set the timeout
-            updateDataTimer = setTimeout(() => {
-                updateDataTimer = null;
-                dispatch('startUpdatingData');
-            }, (date - new Date));
+        async function refresh() {
+            try {
+                await dispatch('updateAll');
+            } catch (error) {
+                console.error('Could not refresh site data', error);
+            } finally {
+                if (updatingData && generation === refreshGeneration)
+                    updateDataTimer = setTimeout(refresh, nextDataRefreshAt() - Date.now());
+            }
+        }
+        return refresh();
     },
     stopUpdatingData() {
-        clearInterval(updateDataTimer);
+        updatingData = false;
+        clearTimeout(updateDataTimer);
         updateDataTimer = null;
     },
 };
@@ -95,8 +93,7 @@ for (let source of dataSources) {
 
     // Actions
     actions[source.actionName] = async ({ commit }) => {
-        fetch(source.url)
-            .then(response => response.json())
+        return fetchJson(source.url)
             .then(data => commit(source.mutationName, { data }));
     };
 
@@ -104,4 +101,19 @@ for (let source of dataSources) {
     mutations[source.mutationName] = (state, { data }) => {
         state[source.name] = data;
     };
+}
+
+async function fetchJson(url) {
+    // Use AbortController rather than newer AbortSignal helpers in the older frontend.
+    // Keep the deadline active through body parsing so a stalled response cannot stop polling.
+    let controller = new AbortController;
+    let timeout = setTimeout(() => controller.abort(), 30_000);
+    try {
+        let response = await fetch(url, { signal: controller.signal });
+        if (!response.ok)
+            throw new Error(`Data request failed: ${response.status}`);
+        return await response.json();
+    } finally {
+        clearTimeout(timeout);
+    }
 }
