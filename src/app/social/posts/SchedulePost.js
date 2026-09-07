@@ -36,8 +36,8 @@ export default class SchedulePost extends SocialPostBase {
         return { regular, gachi, league };
     }
 
-    async getImage(data, format) {
-        return captureScheduleScreenshot(data.regular.start_time, await this.globalSplatfestOpenInAllRegions(), format);
+    getImage(data) {
+        return captureScheduleScreenshot(data.regular.start_time);
     }
 
     getPublicImageFilename() {

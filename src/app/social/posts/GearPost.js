@@ -27,9 +27,9 @@ export default class GearPost extends SocialPostBase {
         return merchandises[merchandises.length - 1];
     }
 
-    getImage(data, format) {
+    getImage(data) {
         let now = getTopOfCurrentHour();
-        return captureGearScreenshot(now, format);
+        return captureGearScreenshot(now);
     }
 
     getPublicImageFilename() {

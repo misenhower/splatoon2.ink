@@ -108,8 +108,8 @@ export default class SplatfestPost extends SocialPostBase {
         return { festival: (await this.getFestivals())[0], type: 'start' };
     }
 
-    async getImage(data, format) {
-        return captureSplatfestScreenshot(this.region, await this.getDataTime(), await this.regions(data), format);
+    async getImage(data) {
+        return captureSplatfestScreenshot(this.region, await this.getDataTime(), await this.regions(data));
     }
 
     async getText(data) {

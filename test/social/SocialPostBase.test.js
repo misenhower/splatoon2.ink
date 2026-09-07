@@ -68,8 +68,7 @@ test('a failing client does not record a post time and does not block the other 
 test('captures one PNG and converts it once for JPEG clients, preserving dimensions', async () => {
   const png = await sharp({ create: { width: 2, height: 1, channels: 3, background: '#ff0000' } }).png().toBuffer();
   class ScreenshotPost extends HourlyPost {
-    async getImage(data, format) {
-      assert.equal(format, 'png');
+    async getImage() {
       this.images++;
       return { image: png, type: 'image/png', width: 2, height: 1 };
     }

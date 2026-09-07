@@ -38,13 +38,6 @@ test('asks Browser Rendering for the deployed screenshot page at the default vie
   assert.deepEqual(result, { image: PNG, type: 'image/png', width: 2432, height: 1368 });
 });
 
-test('renders JPEG on request', async () => {
-  const requests = fakeBrowserRendering();
-  const result = await captureScreenshot({ hash: '/schedules/3600', format: 'jpeg' });
-  assert.deepEqual(requests[0].body.screenshotOptions, { type: 'jpeg', quality: 90 });
-  assert.equal(result.type, 'image/jpeg');
-});
-
 test('the new-weapon screenshot grows with the number of weapons, and splatfest passes its regions', async () => {
   const requests = fakeBrowserRendering();
   const tall = await captureNewWeaponScreenshot(3600, 9);
@@ -83,7 +76,7 @@ test('retries timeout responses and succeeds with the same screenshot request', 
   const requests = fakeBrowserRendering(() => ++attempt < 3
     ? Response.json({ errors: [{ message: 'Navigation timeout of 10000 ms exceeded' }] }, { status: 422 })
     : new Response(PNG));
-  const result = await captureScreenshot({ hash: '/schedules/3600', format: 'jpeg' });
+  const result = await captureScreenshot({ hash: '/schedules/3600' });
   assert.deepEqual(result.image, PNG);
   assert.equal(requests.length, 3);
   assert.deepEqual(requests[0].body, requests[2].body);

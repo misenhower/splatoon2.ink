@@ -47,10 +47,10 @@ async function errorMessage(response) {
 }
 
 /**
- * @param {{ hash: string, viewport?: object, format?: 'png' | 'jpeg' }} options
+ * @param {{ hash: string, viewport?: object }} options
  * @returns {Promise<{ image: Uint8Array, type: string, width: number, height: number }>}
  */
-export async function captureScreenshot({ hash, viewport: viewportOverrides, format = 'png' }) {
+export async function captureScreenshot({ hash, viewport: viewportOverrides }) {
     let { siteUrl, accountId, apiToken } = config();
     let thisViewport = Object.assign({}, viewport, viewportOverrides);
 
@@ -73,7 +73,7 @@ export async function captureScreenshot({ hash, viewport: viewportOverrides, for
             waitForSelector: { selector: screenshotReadySelector, timeout: 10_000 },
             actionTimeout: 10_000,
             setExtraHTTPHeaders: { 'Cache-Control': 'no-cache' },
-            screenshotOptions: format === 'jpeg' ? { type: 'jpeg', quality: 90 } : { type: 'png' },
+            screenshotOptions: { type: 'png' },
         }),
     };
     let image;
@@ -103,37 +103,37 @@ export async function captureScreenshot({ hash, viewport: viewportOverrides, for
 
     return {
         image,
-        type: format === 'jpeg' ? 'image/jpeg' : 'image/png',
+        type: 'image/png',
         width: thisViewport.width * thisViewport.deviceScaleFactor,
         height: thisViewport.height * thisViewport.deviceScaleFactor,
     };
 }
 
-export function captureScheduleScreenshot(now, splatfestBattle = false, format) {
+export function captureScheduleScreenshot(now) {
     let hash = `/schedules/${now}`;
 
-    return captureScreenshot({ hash, format });
+    return captureScreenshot({ hash });
 }
 
-export function captureGearScreenshot(now, format) {
+export function captureGearScreenshot(now) {
     let hash = `/splatNetGear/${now}`;
 
-    return captureScreenshot({ hash, format });
+    return captureScreenshot({ hash });
 }
 
-export function captureSalmonRunScreenshot(now, mode, format) {
+export function captureSalmonRunScreenshot(now, mode) {
     let hash = `/salmonRun/${now}?mode=${mode}`;
 
-    return captureScreenshot({ hash, format });
+    return captureScreenshot({ hash });
 }
 
-export function captureSalmonRunGearScreenshot(now, format) {
+export function captureSalmonRunGearScreenshot(now) {
     let hash = `/salmonRunGear/${now}`;
 
-    return captureScreenshot({ hash, format });
+    return captureScreenshot({ hash });
 }
 
-export function captureNewWeaponScreenshot(now, weaponCount, format) {
+export function captureNewWeaponScreenshot(now, weaponCount) {
     let hash = `/newWeapon/${now}`;
 
     // There are a max of 4 weapons per row
@@ -145,12 +145,12 @@ export function captureNewWeaponScreenshot(now, weaponCount, format) {
     // Set a minimum overall image height
     height = Math.max(height, 700);
 
-    return captureScreenshot({ hash, viewport: { height }, format });
+    return captureScreenshot({ hash, viewport: { height } });
 }
 
-export function captureSplatfestScreenshot(region, now, regions, format) {
+export function captureSplatfestScreenshot(region, now, regions) {
     regions = regions.join(',');
     let hash = `/splatfest/${region}/${now}?regions=${regions}`;
 
-    return captureScreenshot({ hash, format });
+    return captureScreenshot({ hash });
 }

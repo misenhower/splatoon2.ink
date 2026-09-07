@@ -30,8 +30,8 @@ export default class NewWeaponPost extends SocialPostBase {
             return availabilities;
     }
 
-    getImage(data, format) {
-        return captureNewWeaponScreenshot(data[0].release_time, data.length, format);
+    getImage(data) {
+        return captureNewWeaponScreenshot(data[0].release_time, data.length);
     }
 
     getText(data) {

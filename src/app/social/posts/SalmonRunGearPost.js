@@ -21,8 +21,8 @@ export default class SalmonRunGearPost extends SocialPostBase {
         return this.getRewardGear();
     }
 
-    getImage(data, format) {
-        return captureSalmonRunGearScreenshot(data.available_time, format);
+    getImage(data) {
+        return captureSalmonRunGearScreenshot(data.available_time);
     }
 
     getText(data) {

@@ -196,12 +196,12 @@ export default class SocialPostBase {
     }
 
     // The image to post with the Post, as a screenshot result ({ image, type, width, height })
-    // or raw PNG bytes. `format` is 'png' or 'jpeg'.
-    async getImage(data, format) { }
+    // or raw PNG bytes.
+    async getImage(data) { }
 
     // The image as a media attachment: { file, type, width?, height? }
     async getMedia(data) {
-        let result = await this.getImage(data, 'png');
+        let result = await this.getImage(data);
 
         if (result instanceof Uint8Array) {
             let size = pngSize(result) ?? {};

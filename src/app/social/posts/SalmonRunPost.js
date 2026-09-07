@@ -81,9 +81,9 @@ export default class SalmonRunPost extends SocialPostBase {
         return this.writeState(PREVIOUS_SCHEDULE_KEY, schedule);
     }
 
-    async getImage(data, format) {
+    async getImage(data) {
         let mode = (data.current) ? 'current' : 'upcoming';
-        return captureSalmonRunScreenshot(await this.getDataTime(), mode, format);
+        return captureSalmonRunScreenshot(await this.getDataTime(), mode);
     }
 
     async getText(data) {
