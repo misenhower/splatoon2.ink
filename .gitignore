@@ -1,8 +1,11 @@
 node_modules
 .env
+.env.*
+!.env.example
 /dist
 logs
 test-screenshot-*
 /storage
 .wrangler
 .dev.vars
+.dev.vars.*

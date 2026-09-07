@@ -121,11 +121,14 @@ in the middle of a run: a busy pause request returns 409 so the caller can retry
 
 Secrets: `NINTENDO_SESSION_ID_NA`, `NINTENDO_SESSION_ID_EU`,
 `NINTENDO_SESSION_ID_JP`, optional `SPLATNET_USER_AGENT`, `RUN_TOKEN`,
-`CLOUDFLARE_BROWSER_RUN_API_TOKEN`, optional `SENTRY_DSN`, and at cutover
+`CLOUDFLARE_BROWSER_RUN_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, optional `SENTRY_DSN`, and at cutover
 `BLUESKY_SERVICE`, `BLUESKY_IDENTIFIER`, `BLUESKY_PASSWORD`.
 
 Use `wrangler secret put NAME --config workers/updater/wrangler.jsonc` for a
-secret. `SITE_URL` and `CLOUDFLARE_ACCOUNT_ID` are non-secret vars in the config.
+secret. `SITE_URL` is a non-secret var in the config. The account ID is stored
+as a secret to keep this account identifier out of the public repository; it
+is not an authentication credential. Before deploying this change, configure
+`CLOUDFLARE_ACCOUNT_ID` with the secret command above.
 For local development, use gitignored `workers/updater/.dev.vars`. The existing
 shared code reads these values through Workers' populated `process.env`.
 Sentry wrappers route shared updater errors to Sentry when `SENTRY_DSN` is set.
