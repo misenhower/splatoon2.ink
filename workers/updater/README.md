@@ -1,93 +1,135 @@
 # Splatoon 2 updater Worker
 
-Runs the site's updaters (`src/app/updater`, the same code `npm run splatnet` runs
-locally) on Cloudflare, writing to R2 through `BucketStorage` instead of to `dist/`
-and `storage/` through `FilesystemStorage`.
+Runs the existing updaters and Bluesky posts on Cloudflare. `BucketStorage` uses
+R2 instead of the local runner's `dist/` and `storage/` directories. Private
+state stays in R2; no database migration is needed.
 
-## Scheduling: cron wakes, the object works
+## Scheduling and manual runs
 
-Cron Triggers fire anywhere inside their minute (observed about 55 seconds late)
-and execute in whichever colo Cloudflare chooses; placement hints only apply to
-fetch handlers. So Cron Triggers never do work here. They call the `Scheduler`
-Durable Object, which runs jobs from its own alarm, in place, next to the R2
-buckets (the stub is created with a `wnam` location hint).
+One `Scheduler` Durable Object owns the update → social pipeline. Its alarm
+targets ten seconds past each hour, matching the old Node cron. Alarms normally
+have low drift, but maintenance/failover can delay them; this is not a hard
+real-time deadline. The `wnam` location hint is best effort and correctness does
+not depend on where the object runs. There is no per-run colo probe.
 
-- **Hourly jobs** (`updaters`, then `posters`): the full updater run followed by
-  the social posters, from an alarm at :00:10, re-armed for the next hour after
-  each run. A run with a failed job is retried after a minute, up to three
-  times, before falling back to the next hour. Alarms have measured about 1 ms
-  of drift.
-- **Woken jobs**: `wake(job)` asks the object to run a job as soon as possible.
-  The scheduled handler maps each cron expression in `CRON_ACTIONS` to a call on
-  the object; this is how a cron-driven job is expressed.
-- **Watchdog**: the only cron trigger, at minute 30, calls `ensureArmed()` so a
-  lost hourly alarm heals within the hour. The alarm handler also restores the
-  hourly schedule itself if it finds it missing.
+- The pipeline runs all updaters and posts only if all succeed.
+- A failed hourly pipeline retries after one minute, up to three retries, then
+  returns to the next hour. Successful posts keep their existing per-post
+  Bluesky timestamps so a retry skips them.
+- The minute-30 cron checks/re-arms the alarm. The object may sleep between
+  alarms; the watchdog repairs scheduling, rather than keeping a process alive.
+- Manual runs use the same object. A request during an active run returns HTTP
+  409; retry it later. There is no background operator queue and no `/wake` or
+  `/post` endpoint. An hourly alarm that encounters a manual run remains due.
+- `POST /run` runs the complete pipeline and waits for its result. With `only`,
+  it repairs the named updaters and skips social posting. Unknown names fail.
+- The existing object name and hourly/retry state survive deployment. Pending
+  requests from the old scheduler become one full run before normal scheduling
+  resumes.
 
-Every run logs a structured summary (`driftMs`, `runMs`, per-updater results,
-the colo) under `updater: "alarm"`, visible in the Worker's Observability tab.
-`GET /status` returns the last run of each job.
+`GET /status` reports the due time, retries, last hourly run, last manual run,
+and whether the object is busy. Run summaries include actual start/completion
+information, updater results and per-post/client social outcomes. HTTP runs
+return 200 for success, 409 when busy, or 502 for a failed pipeline. Storage/RPC
+errors return 500. Inspect the response body and Worker logs for details.
 
-## Social posters
+Only one backend may write production at a time. Coordination in this Worker
+does not serialize it with the old server or a locally started runner. A social
+API accepting a post followed by a failed timestamp write still leaves an
+ambiguous outcome; storage cannot make those two external operations atomic.
 
-The posters (`src/app/twitter`) read the published data from the public bucket,
-keep their state (last post times per platform, the previous Salmon Run shift)
-in the private bucket, render screenshots of the deployed site through
-Cloudflare Browser Rendering, and post to Bluesky and Twitter. With no social
-credentials set they only render and save the public images
-(`twitter-images/`), which is the shadow mode used before cutover.
+## Social posts and screenshots
 
-## Errors
+`src/app/social` posts to Bluesky. Twitter/X support and its dependency have
+been removed. Local commands are `npm run social` and `npm run social:test`.
 
-The shared updater code reports through `@sentry/core`; this Worker wraps its
-handlers and the Durable Object with `@sentry/cloudflare`, so those reports go
-to Sentry when the `SENTRY_DSN` secret is set and nowhere otherwise.
+The existing `bluesky-lastPostTimes.json`, `salmonrun-previousSchedule.json`,
+and `stages.json` keys are preserved. Public images remain at `twitter-images/`
+to preserve existing URLs; that legacy directory name does not enable X posting.
+With no Bluesky credentials the runner generates public images only. Shadow
+runs still update some private state, including the remembered Salmon Run shift.
 
-## Shadow mode
+Browser Rendering opens `SITE_URL/screenshots.html`. Before rendering or
+posting, the Worker compares that site's five data JSON files and English
+localization against its own public bucket. A mismatch fails the run so the
+scheduler can retry. Point `SITE_URL` at a preview site serving the dev bucket
+to validate shadow output; production is suitable only when its data matches.
+The screenshot request asks the browser to revalidate cached resources. The
+preflight validates JSON, not pixel output or an atomic snapshot across a CDN.
+Visually check generated images before cutover.
 
-`wrangler.jsonc` points the `ASSETS` binding at `splatoon2-ink-dev-assets` while
-the container still owns `splatoon2-ink-assets`. Cutover is changing that
-`bucket_name`. Compare the two buckets' `data/` with `scripts/compare-data.mjs`
-after downloading, e.g. with `wrangler r2 object get --remote`.
+Nintendo, Bluesky, and rendering-site checks have 30-second network deadlines,
+including body consumption. Browser Rendering has a 90-second request deadline
+and 30-second navigation/action limits. Errors are reported rather than logged
+as successful social runs.
 
-## Secrets
+## Shadow testing and cutover
+
+The checked-in `ASSETS` binding points at `splatoon2-ink-dev-assets`. This keeps
+the existing public site on `splatoon2-ink-assets` until an intentional rollout.
+The `PRIVATE` binding points at `splatoon2-ink-private`: verify that this is
+isolated from the old writer during shadow testing, or provision a separate
+shadow private bucket and change that binding before running both backends.
+
+1. Run the tests, build, and deployment dry run below. Compare old/new public
+   data using `scripts/compare-data.mjs` on downloaded bucket directories.
+2. Serve the built frontend with `/data/` and `/assets/` backed by the dev
+   bucket, then set `SITE_URL` to that preview site's origin. Keep Bluesky
+   credentials unset. Run the full pipeline and visually inspect its images.
+3. At cutover, stop the old scheduler and let its current run finish. Pause the
+   shadow Worker before copying state: clearing the cron alone does **not**
+   stop the object's existing alarms. Do not leave two writers active.
+4. Copy the latest production private state (especially the Bluesky last-post
+   times and previous Salmon Run shift) to the intended Worker private bucket.
+   Preserve an old-state backup and the old deployment for rollback.
+5. Set `ASSETS` to the production bucket, confirm `PRIVATE`, and set `SITE_URL`
+   to the production site that serves that bucket. Add the Bluesky credentials.
+   Deploy and arm the Worker; check its full run, data freshness, images, and
+   next alarm. Deploy the frontend refresh changes as part of this rollout.
+6. For rollback, stop the Worker/alarms before restarting the old backend.
+   Transfer the latest Bluesky checkpoints back so already-sent posts remain
+   recorded. Restore the prior site/data configuration as needed.
+
+These are rollout steps, not actions performed by tests or a dry run. To stop
+this Worker safely for cutover/rollback, use authenticated `POST /pause`; this
+persists the pause and deletes the alarm. `/arm` resumes scheduling; a saved
+overdue run executes immediately. Do not pause
+in the middle of a run: a busy pause request returns 409 so the caller can retry.
+
+## Configuration and local commands
+
+Secrets: `NINTENDO_SESSION_ID_NA`, `NINTENDO_SESSION_ID_EU`,
+`NINTENDO_SESSION_ID_JP`, optional `SPLATNET_USER_AGENT`, `RUN_TOKEN`,
+`CLOUDFLARE_BROWSER_RUN_API_TOKEN`, optional `SENTRY_DSN`, and at cutover
+`BLUESKY_SERVICE`, `BLUESKY_IDENTIFIER`, `BLUESKY_PASSWORD`.
+
+Use `wrangler secret put NAME --config workers/updater/wrangler.jsonc` for a
+secret. `SITE_URL` and `CLOUDFLARE_ACCOUNT_ID` are non-secret vars in the config.
+For local development, use gitignored `workers/updater/.dev.vars`. The existing
+shared code reads these values through Workers' populated `process.env`.
+Sentry wrappers route shared updater errors to Sentry when `SENTRY_DSN` is set.
 
 ```sh
-npx wrangler secret put NINTENDO_SESSION_ID_NA --config workers/updater/wrangler.jsonc
-npx wrangler secret put NINTENDO_SESSION_ID_EU --config workers/updater/wrangler.jsonc
-npx wrangler secret put NINTENDO_SESSION_ID_JP --config workers/updater/wrangler.jsonc
-npx wrangler secret put SPLATNET_USER_AGENT   --config workers/updater/wrangler.jsonc
-npx wrangler secret put RUN_TOKEN             --config workers/updater/wrangler.jsonc
-npx wrangler secret put CLOUDFLARE_BROWSER_RUN_API_TOKEN --config workers/updater/wrangler.jsonc  # screenshots
-npx wrangler secret put SENTRY_DSN            --config workers/updater/wrangler.jsonc   # optional
-# At cutover, the social credentials: BLUESKY_SERVICE, BLUESKY_IDENTIFIER, BLUESKY_PASSWORD,
-# TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, TWITTER_ACCESS_TOKEN_KEY, TWITTER_ACCESS_TOKEN_SECRET
-```
-
-The updaters read the SplatNet secrets through `process.env`, which Workers
-populate from the bindings. For local development put the same names in
-`workers/updater/.dev.vars` (gitignored).
-
-## Running
-
-```sh
-npm run updater:test            # vitest in workerd: the updaters against local R2, the Scheduler
-npm run updater:dev             # local dev; GET http://localhost:8787/cdn-cgi/handler/scheduled fires the cron
+npm test
+npm run lint
+npm run build
 npm run updater:deploy:dry-run
-npm run updater:deploy
-npm run updater:tail            # live logs
+npm run updater:dev
+npm run updater:tail
 ```
 
-Authenticated operator endpoints, all requiring `Authorization: Bearer $UPDATER_RUN_TOKEN`
-(the token is in `.env` locally); without `RUN_TOKEN` set they are off:
+Operator requests require `Authorization: Bearer $UPDATER_RUN_TOKEN`, matching
+the deployed `RUN_TOKEN` secret. Without `RUN_TOKEN` the endpoints are disabled.
 
 ```sh
 BASE=https://splatoon2-ink-updater.<subdomain>.workers.dev
-curl -X POST -H "Authorization: Bearer $UPDATER_RUN_TOKEN" "$BASE/run"                       # run every updater now
-curl -X POST -H "Authorization: Bearer $UPDATER_RUN_TOKEN" "$BASE/run?only=Schedules,Timeline"  # or some of them
-curl -X POST -H "Authorization: Bearer $UPDATER_RUN_TOKEN" "$BASE/post"                      # run the social posters now
-curl -X POST -H "Authorization: Bearer $UPDATER_RUN_TOKEN" "$BASE/wake?job=updaters"          # ask the Scheduler to run a job now (or job=posters)
-curl -X POST -H "Authorization: Bearer $UPDATER_RUN_TOKEN" "$BASE/arm"                       # schedule the hourly job if it is not scheduled
-curl        -H "Authorization: Bearer $UPDATER_RUN_TOKEN" "$BASE/status"                    # alarm time, hourly/retry state, last run per job
-curl        -H "Authorization: Bearer $UPDATER_RUN_TOKEN" "$BASE/list?prefix=data/"         # keys in the public bucket under a prefix (wrangler cannot list objects)
+curl -X POST -H "Authorization: Bearer $UPDATER_RUN_TOKEN" "$BASE/run"
+curl -X POST -H "Authorization: Bearer $UPDATER_RUN_TOKEN" "$BASE/run?only=Schedules,Timeline"
+curl -X POST -H "Authorization: Bearer $UPDATER_RUN_TOKEN" "$BASE/arm"
+curl -X POST -H "Authorization: Bearer $UPDATER_RUN_TOKEN" "$BASE/pause"
+curl -H "Authorization: Bearer $UPDATER_RUN_TOKEN" "$BASE/status"
+curl -H "Authorization: Bearer $UPDATER_RUN_TOKEN" "$BASE/list?prefix=data/"
 ```
+
+`/list` returns at most 1000 public-bucket keys and reports truncation. It is a
+small diagnostic endpoint, not a full bucket export tool.
