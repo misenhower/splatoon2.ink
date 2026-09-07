@@ -45,7 +45,8 @@ export default withSentry(sentryOptions, {
   // Manual runs use the same owner as alarms. Targeted runs refresh data only.
   async fetch(request, env, ctx) {
     let url = new URL(request.url);
-    if (url.pathname === '/admin' || url.pathname.startsWith('/admin/')) {
+    if ((url.hostname === env.ADMIN_HOSTNAME && url.pathname === '/') ||
+        url.pathname === '/admin' || url.pathname.startsWith('/admin/')) {
       try {
         return await adminRequest(request, env, () => scheduler(env));
       } catch (error) {

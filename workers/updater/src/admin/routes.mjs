@@ -9,7 +9,7 @@ export async function adminRequest(request, env, getScheduler) {
   let user = await verifyAccess(request, env);
   if (!user) return json({ error: 'Sign in through Cloudflare Access to continue.' }, 401);
   let url = new URL(request.url);
-  if (request.method === 'GET' && ['/admin', '/admin/'].includes(url.pathname)) {
+  if (request.method === 'GET' && ['/', '/admin', '/admin/'].includes(url.pathname)) {
     let nonce = crypto.randomUUID();
     return new Response(page.replaceAll('__NONCE__', nonce), {
       headers: {

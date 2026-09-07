@@ -15,6 +15,7 @@ it('requires Access before exposing the panel, status or actions', async () => {
   verifyAccess.mockResolvedValue(null);
   const get = vi.fn();
   for (const request of [
+    new Request(url + '/'),
     new Request(url + '/admin/'),
     new Request(url + '/admin/api/status'),
     post(),
@@ -40,9 +41,9 @@ it('returns an accepted run immediately and reports overlap without starting ano
   startManual.mockResolvedValue({ ok: false, busy: true });
   expect((await adminRequest(post(), {}, () => ({ startManual }))).status).toBe(409);
 });
-it('serves the mobile panel with no-store and a nonce-based content policy', async () => {
+it.each(['/', '/admin/'])('serves the mobile panel at %s with no-store and a nonce-based content policy', async (path) => {
   verifyAccess.mockResolvedValue({ email: 'admin@example.test' });
-  const response = await adminRequest(new Request(url + '/admin/'), {}, vi.fn());
+  const response = await adminRequest(new Request(url + path), {}, vi.fn());
   expect(response.headers.get('cache-control')).toBe('no-store');
   expect(response.headers.get('content-security-policy')).toContain('frame-ancestors \'none\'');
   expect(await response.text()).not.toContain('__NONCE__');

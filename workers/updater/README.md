@@ -120,7 +120,7 @@ in the middle of a run: a busy pause request returns 409 so the caller can retry
 
 ## Admin panel
 
-`/admin/` provides a mobile-friendly panel for data-only, social-only, and full
+`https://admin.dev.splatoon2.ink/` provides a mobile-friendly panel for data-only, social-only, and full
 manual runs. The authenticated browser starts a persisted request and polls its
 status; closing the tab does not cancel the job. One manual request can be
 pending at a time, and it shares the hourly scheduler's lock. Social runs keep
@@ -141,16 +141,21 @@ then open `http://127.0.0.1:8788/admin/`. This standalone preview server listens
 only on loopback and has no production credentials or bindings. The production
 Worker has no local-authentication bypass.
 
-Before exposing the panel in production:
+The dev admin hostname is attached as a Worker Custom Domain and protected by
+the "Splatoon2 dev admin" Access application using the existing owner-only policy.
+`ACCESS_TEAM_DOMAIN` and `ACCESS_AUD` are stored as Worker secrets to keep
+account-specific configuration out of the public repository. `/admin/` remains
+an alias; the panel API stays under `/admin/api/`.
+
+For another deployment:
 
 1. Create a Cloudflare Access self-hosted application protecting the entire
-   chosen admin hostname (for example `admin.splatoon2.ink`). Allow only the
+   chosen admin hostname. Allow only the
    owner's identity, with email one-time codes or their preferred provider.
 2. Configure the updater with `ADMIN_HOSTNAME`, `ACCESS_TEAM_DOMAIN` (the bare
    `<team>.cloudflareaccess.com` hostname), and `ACCESS_AUD` (the application's
-   audience tag). These settings are deliberately absent until Access is ready;
-   all admin routes fail closed without them.
-3. Attach the admin hostname to this Worker and deploy. Open `/admin/` and verify
+   audience tag). All admin routes fail closed without these settings.
+3. Attach the admin hostname to this Worker and deploy. Open `/` and verify
    login, status, and a deliberate test run. No Access application or production
    admin domain is created by the local preview.
 
