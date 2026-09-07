@@ -49,6 +49,18 @@ to preserve existing URLs; that legacy directory name does not enable X posting.
 With no Bluesky credentials the runner generates public images only. Shadow
 runs still update some private state, including the remembered Salmon Run shift.
 
+Each post captures one PNG. The public copy stays in R2; when Bluesky needs
+JPEG, the Worker's `IMAGES` binding converts those same PNG bytes at quality 90.
+The local Node runner uses `sharp` through a conditional package import, keeping
+native dependencies out of the Worker bundle. Conversion failures fail that
+client's post without advancing its timestamp; no second browser capture is used.
+Public-image-only shadow runs do not request conversions.
+
+The Images Free plan includes 5,000 unique transformations per month; on that
+plan, new transformations beyond the quota fail instead of incurring charges.
+This uses transformations only, not paid Images storage. See
+[Images pricing](https://developers.cloudflare.com/images/pricing/).
+
 Browser Rendering opens `SITE_URL/screenshots.html`. Before rendering or
 posting, the Worker compares that site's five data JSON files and English
 localization against its own public bucket. A mismatch fails the run so the

@@ -6,6 +6,10 @@
     "#cdn-images": {
       "workerd": "./src/common/cdn.worker.js",
       "default": "./src/common/cdn.node.js"
+    },
+    "#image-converter": {
+      "workerd": "./src/app/screenshots/convert.worker.js",
+      "default": "./src/app/screenshots/convert.node.js"
     }
   },
   "engines": {
@@ -53,6 +57,7 @@
     "lodash": "^4.18.1",
     "mkdirp": "^3.0.1",
     "moment-timezone": "^0.6.3",
+    "sharp": "^0.35.4",
     "v-click-outside": "^3.0.1",
     "vue": "^2.7.16",
     "vue-clipboard2": "^0.3.1",

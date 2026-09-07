@@ -30,6 +30,7 @@
     // The API token is a secret (CLOUDFLARE_BROWSER_RUN_API_TOKEN).
     "SITE_URL": "https://splatoon2.ink"
   },
+  "images": { "binding": "IMAGES" },
   "r2_buckets": [
     {
       // Shadow mode: writes go to the dev bucket while the container still owns production.

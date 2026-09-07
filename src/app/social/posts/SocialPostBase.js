@@ -1,3 +1,4 @@
+import { convertToJpeg } from '#image-converter';
 import { getTopOfCurrentHour } from '../../../common/time.js';
 import { pngSize } from '../../../common/png.js';
 
@@ -49,14 +50,14 @@ export default class SocialPostBase {
         let results = [];
         let text = await this.getText(data);
         let time = await this.getDataTime();
-        let image = await this.getMedia(data, 'image/png');
+        let image = await this.getMedia(data);
         await this.maybeSavePublicImage(data, image.file);
         let media = { 'image/png': image };
 
         for (let client of clients) {
             try {
                 let mediaType = client.mediaType ?? 'image/png';
-                media[mediaType] ??= await this.getMedia(data, mediaType);
+                media[mediaType] ??= await this.convertMedia(image, mediaType);
                 await client.send({ status: text, media: [media[mediaType]] });
                 await this.updateLastPostTime(client, time);
                 results.push({ client: client.key, ok: true });
@@ -87,7 +88,7 @@ export default class SocialPostBase {
             }
 
             let key = this.getTestScreenshotKey();
-            let { file } = await this.getMedia(data, 'image/png');
+            let { file } = await this.getMedia(data);
 
             await this.publicStorage.writeBytes(key, file);
             this.info(`Saved screenshot as ${key}`);
@@ -198,9 +199,8 @@ export default class SocialPostBase {
     async getImage(data, format) { }
 
     // The image as a media attachment: { file, type, width?, height? }
-    async getMedia(data, mediaType) {
-        let format = mediaType === 'image/jpeg' ? 'jpeg' : 'png';
-        let result = await this.getImage(data, format);
+    async getMedia(data) {
+        let result = await this.getImage(data, 'png');
 
         if (result instanceof Uint8Array) {
             let size = pngSize(result) ?? {};
@@ -208,6 +208,12 @@ export default class SocialPostBase {
         }
 
         return { file: result.image, type: result.type, width: result.width, height: result.height };
+    }
+
+    async convertMedia(image, mediaType) {
+        if (mediaType !== 'image/jpeg')
+            throw new Error(`Unsupported social image type: ${mediaType}`);
+        return { ...image, file: await convertToJpeg(image.file), type: mediaType };
     }
 
     // The filename to store the image as (optional)

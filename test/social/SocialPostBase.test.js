@@ -1,5 +1,6 @@
 import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
+import sharp from 'sharp';
 import SocialPostBase from '../../src/app/social/posts/SocialPostBase.js';
 import { storage, fakeClient, json, seed } from './support.js';
 
@@ -64,18 +65,45 @@ test('a failing client does not record a post time and does not block the other 
   assert.deepEqual(await json(s.privateBucket, 'other-lastPostTimes.json'), { hourly: 3600 });
 });
 
-test('renders once per media type a client needs, with size from the screenshot', async () => {
+test('captures one PNG and converts it once for JPEG clients, preserving dimensions', async () => {
+  const png = await sharp({ create: { width: 2, height: 1, channels: 3, background: '#ff0000' } }).png().toBuffer();
   class ScreenshotPost extends HourlyPost {
-    async getImage(data, format) { this.images++; return { image: new Uint8Array([format === 'jpeg' ? 2 : 1]), type: format === 'jpeg' ? 'image/jpeg' : 'image/png', width: 2432, height: 1368 }; }
+    async getImage(data, format) {
+      assert.equal(format, 'png');
+      this.images++;
+      return { image: png, type: 'image/png', width: 2, height: 1 };
+    }
   }
-  const jpegClient = fakeClient('bluesky'); jpegClient.mediaType = 'image/jpeg';
-  const post = new ScreenshotPost(s, [jpegClient, other]);
-  await post.maybePost();
+  bluesky.mediaType = 'image/jpeg';
+  const secondJpeg = fakeClient('second'); secondJpeg.mediaType = 'image/jpeg';
+  const post = new ScreenshotPost(s, [bluesky, other, secondJpeg]);
+  assert.equal((await post.maybePost()).ok, true);
+  assert.equal(post.images, 1);
+  const jpeg = bluesky.sent[0].media[0];
+  assert.equal(jpeg.type, 'image/jpeg');
+  assert.equal(jpeg.width, 2);
+  assert.equal(jpeg.height, 1);
+  const decoded = await sharp(jpeg.file).metadata();
+  assert.equal(decoded.format, 'jpeg');
+  assert.equal(decoded.width, 2);
+  assert.equal(decoded.height, 1);
+  assert.equal(secondJpeg.sent[0].media[0], jpeg);
+  assert.deepEqual(other.sent[0].media[0].file, png);
+  assert.deepEqual(new Uint8Array(await (await s.publicBucket.get('twitter-images/hourly.png')).arrayBuffer()), new Uint8Array(png));
+});
 
-  assert.equal(post.images, 2); // one PNG public copy, one JPEG for Bluesky
-  assert.deepEqual(jpegClient.sent[0].media, [{ file: new Uint8Array([2]), type: 'image/jpeg', width: 2432, height: 1368 }]);
-  assert.deepEqual(other.sent[0].media, [{ file: new Uint8Array([1]), type: 'image/png', width: 2432, height: 1368 }]);
-  assert.deepEqual(new Uint8Array(await (await s.publicBucket.get('twitter-images/hourly.png')).arrayBuffer()), new Uint8Array([1]));
+test('conversion failure preserves the PNG and does not checkpoint or send the JPEG post', async () => {
+  bluesky.mediaType = 'image/jpeg';
+  const post = new HourlyPost(s, [bluesky, other]);
+  post.convertMedia = async () => { throw new Error('Images quota exceeded'); };
+  const result = await post.maybePost();
+  assert.equal(result.ok, false);
+  assert.match(result.clients[0].error, /Images quota exceeded/);
+  assert.equal(bluesky.sent.length, 0);
+  assert.equal(other.sent.length, 1);
+  assert.equal(post.images, 1);
+  assert.ok(await s.publicBucket.get('twitter-images/hourly.png'));
+  assert.equal(await json(s.privateBucket, 'bluesky-lastPostTimes.json'), null);
 });
 
 test('with no data there is nothing to post', async () => {
