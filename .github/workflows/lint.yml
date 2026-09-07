@@ -1,4 +1,4 @@
-name: Lint
+name: Checks
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ "main", "develop" ]
 
 jobs:
-  lint:
+  checks:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,3 +18,5 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm run lint -- --max-warnings 0
+    - run: npm test
+    - run: npm run build
