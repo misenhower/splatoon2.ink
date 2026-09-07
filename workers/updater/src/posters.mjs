@@ -23,9 +23,9 @@ export async function runPosters(env) {
     if (await client.canSend())
       enabled.push(client.key);
 
-  await sendStatuses(bucketStorage(env), clients);
+  let result = await sendStatuses(bucketStorage(env), clients);
 
-  let summary = { ok: true, ms: Date.now() - started, clients: enabled };
-  log.info('Posters finished', summary);
+  let summary = { ...result, ms: Date.now() - started, clients: enabled };
+  log[summary.ok ? 'info' : 'error']('Posters finished', summary);
   return summary;
 }

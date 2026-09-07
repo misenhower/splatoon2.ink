@@ -13,13 +13,17 @@ export function filesystemStorage() {
 }
 
 export async function updateAllLocally() {
-    await updateAll(filesystemStorage());
-
+    let updaters = await updateAll(filesystemStorage());
+    if (updaters.some(updater => !updater.ok))
+        throw new Error('One or more updaters failed; social posting skipped.');
     return 'Done';
 }
 
-export function postLocally() {
-    return sendStatuses(filesystemStorage());
+export async function postLocally() {
+    let result = await sendStatuses(filesystemStorage());
+    if (!result.ok)
+        throw new Error('One or more social posts failed.');
+    return result;
 }
 
 export function testScreenshotsLocally() {

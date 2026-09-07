@@ -15,29 +15,27 @@ export default class SocialPostBase {
     }
 
     async maybePost() {
-        // Make sure we have data to post
-        if (!await this.getData()) {
-            this.info('No data to post');
-            return false;
+        try {
+            // Read once: Salmon Run's getData also remembers the current shift.
+            let data = await this.getData();
+            if (!data)
+                return false;
+
+            let due = [];
+            for (let client of this.clients)
+                if (await client.canSend() && await this.shouldPostForCurrentTime(client))
+                    due.push(client);
+
+            // Without credentials, retain the public-image-only shadow mode.
+            let enabled = await this.canPost();
+            if (!due.length && (enabled || !this.getPublicImageFilename()))
+                return false;
+
+            return await this.post(data, due);
+        } catch (error) {
+            this.error(`Could not prepare post: ${error.message}`);
+            return { ok: false, error: error.message, clients: [] };
         }
-
-        let due = [];
-        for (let client of this.clients)
-            if (await this.shouldPostForCurrentTime(client))
-                due.push(client);
-
-        if (!due.length && this.clients.length) {
-            this.info('Already posted for this time');
-            return false;
-        }
-
-        // Make sure we can post or save to a file
-        if (!await this.canPost() && !this.getPublicImageFilename()) {
-            this.error('Social API parameters not specified');
-            return false;
-        }
-
-        return this.post();
     }
 
     async canPost() {
@@ -47,55 +45,34 @@ export default class SocialPostBase {
         return false;
     }
 
-    async post() {
-        try {
-            // Get the Post's text and image
-            let data = await this.getData();
-            let text = await this.getText(data);
-            let image = await this.getMedia(data, 'image/png');
+    async post(data, clients) {
+        let results = [];
+        let text = await this.getText(data);
+        let time = await this.getDataTime();
+        let image = await this.getMedia(data, 'image/png');
+        await this.maybeSavePublicImage(data, image.file);
+        let media = { 'image/png': image };
 
-            // Maybe save the image
-            await this.maybeSavePublicImage(data, image.file);
-
-            // Some clients want a different format (Bluesky limits image size, so it gets JPEG)
-            let media = { 'image/png': image };
-
-            for (let client of this.clients) {
-                if (!await client.canSend()) {
-                    continue;
-                }
-
-                if (!await this.shouldPostForCurrentTime(client)) {
-                    this.info(`Already posted to ${client.name}`);
-                    continue;
-                }
-
-                try {
-                    let mediaType = client.mediaType ?? 'image/png';
-                    media[mediaType] ??= await this.getMedia(data, mediaType);
-                    let status = {
-                        status: text,
-                        media: [media[mediaType]],
-                    };
-
-                    await client.send(status);
-                    await this.updateLastPostTime(client);
-                    this.info(`Posted to ${client.name}`);
-                } catch (e) {
-                    this.error(`Couldn't post to ${client.name}`);
-                    console.error(e);
-                }
+        for (let client of clients) {
+            try {
+                let mediaType = client.mediaType ?? 'image/png';
+                media[mediaType] ??= await this.getMedia(data, mediaType);
+                await client.send({ status: text, media: [media[mediaType]] });
+                await this.updateLastPostTime(client, time);
+                results.push({ client: client.key, ok: true });
+                this.info(`Posted to ${client.name}`);
+            } catch (error) {
+                results.push({ client: client.key, ok: false, error: error.message });
+                this.error(`Could not post to ${client.name}: ${error.message}`);
             }
         }
-        catch (e) {
-            this.error('Couldn\'t post Post');
-            console.error(e);
-        }
+        return { ok: results.every(result => result.ok), clients: results };
     }
 
     async maybeSavePublicImage(data, image) {
         let filename = this.getPublicImageFilename();
         if (filename) {
+            // Keep the established public URLs; removing X does not require breaking image links.
             await this.publicStorage.writeBytes(`twitter-images/${filename}`, image);
             this.info(`Saved public image as ${filename}`);
         }
@@ -117,7 +94,7 @@ export default class SocialPostBase {
         }
         catch (e) {
             this.error('Couldn\'t save screenshot');
-            console.error(e);
+            throw e;
         }
     }
 
@@ -156,9 +133,8 @@ export default class SocialPostBase {
         return (await this.getLastPostTimes(client))[key] || 0;
     }
 
-    async updateLastPostTime(client) {
+    async updateLastPostTime(client, time) {
         let key = this.getKey();
-        let time = await this.getDataTime();
         let lastPostTimes = await this.getLastPostTimes(client);
 
         lastPostTimes[key] = time;

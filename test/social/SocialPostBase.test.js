@@ -24,7 +24,7 @@ beforeEach(() => { s = storage(); bluesky = fakeClient('bluesky'); other = fakeC
 
 test('posts to every client, saves the public image, and records the time per client', async () => {
   const post = new HourlyPost(s, [bluesky, other]);
-  assert.equal(await post.maybePost(), undefined); // post ran
+  assert.equal((await post.maybePost()).ok, true);
 
   assert.deepEqual(bluesky.sent, [{ status: 'Post 1', media: [{ file: IMAGE, type: 'image/png' }] }]);
   assert.deepEqual(other.sent, bluesky.sent);
@@ -56,7 +56,9 @@ test('a client that already posted is skipped while another still posts', async 
 
 test('a failing client does not record a post time and does not block the other client', async () => {
   const broken = fakeClient('bluesky', { fail: true });
-  await new HourlyPost(s, [broken, other]).maybePost();
+  const result = await new HourlyPost(s, [broken, other]).maybePost();
+  assert.equal(result.ok, false);
+  assert.deepEqual(result.clients.map(c => c.ok), [false, true]);
   assert.equal(other.sent.length, 1);
   assert.equal(await json(s.privateBucket, 'bluesky-lastPostTimes.json'), null);
   assert.deepEqual(await json(s.privateBucket, 'other-lastPostTimes.json'), { hourly: 3600 });
@@ -70,7 +72,7 @@ test('renders once per media type a client needs, with size from the screenshot'
   const post = new ScreenshotPost(s, [jpegClient, other]);
   await post.maybePost();
 
-  assert.equal(post.images, 2); // one PNG (public copy + Other), one JPEG (Bluesky)
+  assert.equal(post.images, 2); // one PNG public copy, one JPEG for Bluesky
   assert.deepEqual(jpegClient.sent[0].media, [{ file: new Uint8Array([2]), type: 'image/jpeg', width: 2432, height: 1368 }]);
   assert.deepEqual(other.sent[0].media, [{ file: new Uint8Array([1]), type: 'image/png', width: 2432, height: 1368 }]);
   assert.deepEqual(new Uint8Array(await (await s.publicBucket.get('twitter-images/hourly.png')).arrayBuffer()), new Uint8Array([1]));
@@ -99,4 +101,25 @@ test('with no client able to send and no public image, it gives up', async () =>
 test('test screenshots go to public storage', async () => {
   await new HourlyPost(s, []).saveTestScreenshot();
   assert.deepEqual(new Uint8Array(await (await s.publicBucket.get('test-screenshots/hourly.png')).arrayBuffer()), IMAGE);
+});
+
+test('screenshot failure is reported and does not advance post state', async () => {
+  const post = new HourlyPost(s, [bluesky]);
+  post.getImage = async () => { throw new Error('render failed'); };
+  const result = await post.maybePost();
+  assert.equal(result.ok, false);
+  assert.match(result.error, /render failed/);
+  assert.equal(await json(s.privateBucket, 'bluesky-lastPostTimes.json'), null);
+});
+
+test('retry only sends the previously failed client, using a fresh storage view', async () => {
+  const broken = fakeClient('other', { fail: true });
+  const first = await new HourlyPost(s, [bluesky, broken]).maybePost();
+  assert.equal(first.ok, false);
+  const recovered = fakeClient('other');
+  const fresh = { ...s, privateStorage: new s.privateStorage.constructor(s.privateBucket) };
+  const second = await new HourlyPost(fresh, [bluesky, recovered]).maybePost();
+  assert.equal(second.ok, true);
+  assert.equal(bluesky.sent.length, 1);
+  assert.equal(recovered.sent.length, 1);
 });

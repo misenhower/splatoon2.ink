@@ -11,8 +11,12 @@ export function createClients() {
  * @param {object[]} [clients]
  */
 export async function sendStatuses(storage, clients = createClients()) {
-    for (let post of createPosts(storage, clients))
-        await post.maybePost();
+    let posts = [];
+    for (let post of createPosts(storage, clients)) {
+        let result = await post.maybePost();
+        posts.push({ key: post.getKey(), ...(result || { ok: true, skipped: true }) });
+    }
+    return { ok: posts.every(post => post.ok), posts };
 }
 
 export async function testScreenshots(storage, clients = createClients()) {

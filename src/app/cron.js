@@ -6,6 +6,10 @@ console.info('Starting periodic tasks...');
 
 // Run every hour at 10sec after the hour
 new CronJob('10 0 * * * *', async () => {
-    await updateAllLocally();
-    await postLocally();
+    try {
+        await updateAllLocally();
+        await postLocally();
+    } catch (error) {
+        console.error(error);
+    }
 }, null, true);
