@@ -14,7 +14,7 @@ describe('runPosters', () => {
     process.env.SITE_URL = 'https://example.test';
     process.env.CLOUDFLARE_ACCOUNT_ID = 'acct';
     process.env.CLOUDFLARE_BROWSER_RUN_API_TOKEN = 'token';
-    for (let name of ['BLUESKY_SERVICE', 'BLUESKY_IDENTIFIER', 'BLUESKY_PASSWORD', 'TWITTER_CONSUMER_KEY'])
+    for (let name of ['BLUESKY_SERVICE', 'BLUESKY_IDENTIFIER', 'BLUESKY_PASSWORD'])
       delete process.env[name];
 
     let now = getTopOfCurrentHour();

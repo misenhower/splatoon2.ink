@@ -1,8 +1,8 @@
-import TwitterPostBase from './TwitterPostBase.js';
+import SocialPostBase from './SocialPostBase.js';
 import { captureSplatfestScreenshot } from '../../screenshots/index.js';
 import { splatoonRegions } from '../../../common/regions.js';
 
-export default class SplatfestTweet extends TwitterPostBase {
+export default class SplatfestPost extends SocialPostBase {
     constructor(region, storage, clients) {
         super(storage, clients);
 
@@ -46,7 +46,7 @@ export default class SplatfestTweet extends TwitterPostBase {
         // Festival results
         festival = festivals.find(f => f.times.result == time);
         if (festival) {
-            // We only want to post the results tweet if we actually have results
+            // We only want to post the results post if we actually have results
             let results = (await this.getResults()).find(r => r.festival_id == festival.festival_id);
             if (results)
                 return { festival, results, type: 'result' };
@@ -97,7 +97,7 @@ export default class SplatfestTweet extends TwitterPostBase {
 
     async shouldPostForCurrentTime(client) {
         if (await super.shouldPostForCurrentTime(client)) {
-            // Prevent duplicate tweets for Splatfests occurring in multiple regions
+            // Prevent duplicate posts for Splatfests occurring in multiple regions
             return (this.region == (await this.regions())[0] || !await this.isSimultaneous());
         }
 

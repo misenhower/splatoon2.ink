@@ -1,7 +1,7 @@
 import { getTopOfCurrentHour } from '../../../common/time.js';
 import { pngSize } from '../../../common/png.js';
 
-export default class TwitterPostBase {
+export default class SocialPostBase {
     /**
      * @param {{ publicStorage: object, privateStorage: object }} storage
      *   publicStorage holds the site data this post reads and the public copy of its image;
@@ -14,7 +14,7 @@ export default class TwitterPostBase {
         this.clients = clients;
     }
 
-    async maybePostTweet() {
+    async maybePost() {
         // Make sure we have data to post
         if (!await this.getData()) {
             this.info('No data to post');
@@ -33,11 +33,11 @@ export default class TwitterPostBase {
 
         // Make sure we can post or save to a file
         if (!await this.canPost() && !this.getPublicImageFilename()) {
-            this.error('Twitter API parameters not specified');
+            this.error('Social API parameters not specified');
             return false;
         }
 
-        return this.postTweet();
+        return this.post();
     }
 
     async canPost() {
@@ -47,9 +47,9 @@ export default class TwitterPostBase {
         return false;
     }
 
-    async postTweet() {
+    async post() {
         try {
-            // Get the Tweet's text and image
+            // Get the Post's text and image
             let data = await this.getData();
             let text = await this.getText(data);
             let image = await this.getMedia(data, 'image/png');
@@ -79,7 +79,7 @@ export default class TwitterPostBase {
                     };
 
                     await client.send(status);
-                    await this.updateLastTweetTime(client);
+                    await this.updateLastPostTime(client);
                     this.info(`Posted to ${client.name}`);
                 } catch (e) {
                     this.error(`Couldn't post to ${client.name}`);
@@ -88,7 +88,7 @@ export default class TwitterPostBase {
             }
         }
         catch (e) {
-            this.error('Couldn\'t post Tweet');
+            this.error('Couldn\'t post Post');
             console.error(e);
         }
     }
@@ -143,37 +143,34 @@ export default class TwitterPostBase {
      * Post time helpers
      */
 
-    getLastTweetTimesKey(client) {
-        switch (client.key) {
-            case 'bluesky': return 'bluesky-lastPostTimes.json';
-            case 'twitter': return 'twitter-lastTweetTimes.json';
-        }
+    getLastPostTimesKey(client) {
+        return `${client.key}-lastPostTimes.json`;
     }
 
-    async getLastTweetTimes(client) {
-        return await this.readState(this.getLastTweetTimesKey(client)) ?? {};
+    async getLastPostTimes(client) {
+        return await this.readState(this.getLastPostTimesKey(client)) ?? {};
     }
 
-    async getLastTweetTime(client) {
+    async getLastPostTime(client) {
         let key = this.getKey();
-        return (await this.getLastTweetTimes(client))[key] || 0;
+        return (await this.getLastPostTimes(client))[key] || 0;
     }
 
-    async updateLastTweetTime(client) {
+    async updateLastPostTime(client) {
         let key = this.getKey();
         let time = await this.getDataTime();
-        let lastTweetTimes = await this.getLastTweetTimes(client);
+        let lastPostTimes = await this.getLastPostTimes(client);
 
-        lastTweetTimes[key] = time;
+        lastPostTimes[key] = time;
 
-        await this.writeState(this.getLastTweetTimesKey(client), lastTweetTimes);
+        await this.writeState(this.getLastPostTimesKey(client), lastPostTimes);
     }
 
     async shouldPostForCurrentTime(client) {
         // Check whether the current data time has already been posted
         let time = await this.getDataTime();
-        let lastTweetTime = await this.getLastTweetTime(client);
-        return lastTweetTime < time;
+        let lastPostTime = await this.getLastPostTime(client);
+        return lastPostTime < time;
     }
 
     /**
@@ -182,7 +179,7 @@ export default class TwitterPostBase {
 
     formatLogMessage(message) {
         let name = this.getName();
-        return `[Twitter] [${name}] ${message}`;
+        return `[Social] [${name}] ${message}`;
     }
 
     log(message) {
@@ -201,18 +198,18 @@ export default class TwitterPostBase {
      * Overridable methods
      */
 
-    // The unique key for this Tweet (used for storing the last time this Tweet was posted)
+    // The unique key for this Post (used for storing the last time this Post was posted)
     getKey() { }
 
-    // The friendly name for this Tweet (used for console log messages)
+    // The friendly name for this Post (used for console log messages)
     getName() { }
 
-    // The time which the current Tweet is based off of (usually the top of the current hour)
+    // The time which the current Post is based off of (usually the top of the current hour)
     async getDataTime() {
         return getTopOfCurrentHour();
     }
 
-    // The current data item the Tweet is based on (used by getImage and getText)
+    // The current data item the Post is based on (used by getImage and getText)
     async getData() { }
 
     // Data for test screenshots
@@ -220,7 +217,7 @@ export default class TwitterPostBase {
         return this.getData();
     }
 
-    // The image to post with the Tweet, as a screenshot result ({ image, type, width, height })
+    // The image to post with the Post, as a screenshot result ({ image, type, width, height })
     // or raw PNG bytes. `format` is 'png' or 'jpeg'.
     async getImage(data, format) { }
 
@@ -240,7 +237,7 @@ export default class TwitterPostBase {
     // The filename to store the image as (optional)
     getPublicImageFilename() { }
 
-    // The text body of the Tweet
+    // The text body of the Post
     async getText(data) { }
 
     // The key for test screenshots in public storage
@@ -249,7 +246,7 @@ export default class TwitterPostBase {
         return `test-screenshots/${key}.png`;
     }
 
-    getMaxTweetLength() {
+    getMaxPostLength() {
         return 280;
     }
 }

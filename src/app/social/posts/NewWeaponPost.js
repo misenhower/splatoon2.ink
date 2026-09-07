@@ -1,7 +1,7 @@
-import TwitterPostBase from './TwitterPostBase.js';
+import SocialPostBase from './SocialPostBase.js';
 import { captureNewWeaponScreenshot } from '../../screenshots/index.js';
 
-export default class NewWeaponTweet extends TwitterPostBase {
+export default class NewWeaponPost extends SocialPostBase {
     getKey() { return 'weapon'; }
     getName() { return 'New Weapon'; }
 
@@ -17,7 +17,7 @@ export default class NewWeaponTweet extends TwitterPostBase {
         let availabilities = (await this.getNewWeaponAvailabilities()).filter(a => a.release_time == time);
 
         // Only return the array if it contains availabilities.
-        // Otherwise return false (i.e., there's no data, so don't post a Tweet).
+        // Otherwise return false (i.e., there's no data, so don't post a Post).
         if (!availabilities.length)
             return false;
 
@@ -38,7 +38,7 @@ export default class NewWeaponTweet extends TwitterPostBase {
         if (data.length == 1)
             return `NEW WEAPON: The ${data[0].weapon.name} is now available! #splatoon2`;
 
-        // Make sure we don't exceed the max tweet text length
+        // Make sure we don't exceed the max post text length
         const names = data.map(availability => `- ${availability.weapon.name}`);
         for (let i = names.length; i > 0; i--) {
             let text = 'New weapons now available:\n';
@@ -49,7 +49,7 @@ export default class NewWeaponTweet extends TwitterPostBase {
             }
             text += '#splatoon2';
 
-            if (text.length <= this.getMaxTweetLength()) {
+            if (text.length <= this.getMaxPostLength()) {
                 return text;
             }
         }

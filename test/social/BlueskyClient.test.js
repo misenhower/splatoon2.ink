@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import BlueskyClient from '../../src/app/twitter/clients/BlueskyClient.js';
+import BlueskyClient from '../../src/app/social/clients/BlueskyClient.js';
 
 function fakeAgent() {
   const calls = { uploads: [], posts: [] };

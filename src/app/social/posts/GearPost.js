@@ -1,8 +1,8 @@
-import TwitterPostBase from './TwitterPostBase.js';
+import SocialPostBase from './SocialPostBase.js';
 import { captureGearScreenshot } from '../../screenshots/index.js';
 import { getTopOfCurrentHour } from '../../../common/time.js';
 
-export default class GearTweet extends TwitterPostBase {
+export default class GearPost extends SocialPostBase {
     getKey() { return 'gear'; }
     getName() { return 'Gear'; }
 

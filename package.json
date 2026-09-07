@@ -17,11 +17,9 @@
     "test": "node --test && npm run worker:test && npm run updater:test",
     "lint": "eslint .",
     "cron": "node src/app/cron.js",
-    "start": "npm run splatnet && npm run twitter && npm run cron",
+    "start": "npm run splatnet && npm run social && npm run cron",
     "locale-man": "node node_modules/locale-man/ -l en,es,es-MX,fr,fr-CA,de,nl,it,ru,ja -o src/locale",
     "splatnet": "node src/app/index.js splatnet",
-    "twitter": "node src/app/index.js twitter",
-    "twitter:test": "node src/app/index.js twitterTest",
     "utility:copyTranslation": "node src/utility/index.js copyTranslation",
     "utility:getSplatNetLanguageFiles": "node src/utility/index.js getSplatNetLanguageFiles",
     "utility:updateGear": "node src/utility/index.js updateGear",
@@ -34,7 +32,9 @@
     "updater:test": "vitest run --config workers/updater/vitest.config.mjs",
     "updater:deploy:dry-run": "wrangler deploy --config workers/updater/wrangler.jsonc --dry-run",
     "updater:deploy": "wrangler deploy --config workers/updater/wrangler.jsonc",
-    "updater:tail": "wrangler tail --config workers/updater/wrangler.jsonc"
+    "updater:tail": "wrangler tail --config workers/updater/wrangler.jsonc",
+    "social": "node src/app/index.js social",
+    "social:test": "node src/app/index.js socialTest"
   },
   "dependencies": {
     "@atproto/api": "^0.20.42",
@@ -53,7 +53,6 @@
     "lodash": "^4.18.1",
     "mkdirp": "^3.0.1",
     "moment-timezone": "^0.6.3",
-    "twitter-api-v2": "^1.29.1",
     "v-click-outside": "^3.0.1",
     "vue": "^2.7.16",
     "vue-clipboard2": "^0.3.1",

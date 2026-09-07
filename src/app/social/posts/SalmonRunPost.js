@@ -1,9 +1,9 @@
-import TwitterPostBase from './TwitterPostBase.js';
+import SocialPostBase from './SocialPostBase.js';
 import { captureSalmonRunScreenshot } from '../../screenshots/index.js';
 
 const PREVIOUS_SCHEDULE_KEY = 'salmonrun-previousSchedule.json';
 
-export default class SalmonRunTweet extends TwitterPostBase {
+export default class SalmonRunPost extends SocialPostBase {
     getKey() { return 'salmonrun'; }
     getName() { return 'Salmon Run'; }
 
@@ -51,17 +51,17 @@ export default class SalmonRunTweet extends TwitterPostBase {
             await this.updatePreviousSchedule(current);
         }
 
-        // Post a tweet if a schedule just started, or periodically every 12 hours
+        // Post a post if a schedule just started, or periodically every 12 hours
         if (current && (time - current.start_time) % (12 * 60 * 60) === 0) {
             return result;
         }
 
-        // Post a tweet if the previous schedule just closed
+        // Post a post if the previous schedule just closed
         if (previous && previous.end_time === time) {
             return result;
         }
 
-        // Otherwise, don't post a tweet
+        // Otherwise, don't post a post
         return null;
     }
 

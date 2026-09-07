@@ -1,8 +1,8 @@
-import TwitterPostBase from './TwitterPostBase.js';
+import SocialPostBase from './SocialPostBase.js';
 import { captureSalmonRunGearScreenshot } from '../../screenshots/index.js';
 import moment from 'moment-timezone';
 
-export default class SalmonRunGearTweet extends TwitterPostBase {
+export default class SalmonRunGearPost extends SocialPostBase {
     getKey() { return 'salmonrungear'; }
     getName() { return 'Salmon Run Gear'; }
 

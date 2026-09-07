@@ -1,6 +1,6 @@
-import TwitterPostBase from './TwitterPostBase.js';
+import SocialPostBase from './SocialPostBase.js';
 
-export default class NewStageTweet extends TwitterPostBase {
+export default class NewStagePost extends SocialPostBase {
     getKey() { return 'newstage'; }
     getName() { return 'New Stage'; }
 
@@ -20,6 +20,6 @@ export default class NewStageTweet extends TwitterPostBase {
     async getText(data) {
         let hours = (data.first_available - await this.getDataTime()) / 60 / 60;
         let duration = (hours == 1) ? '1 hour' : `${hours} hours`;
-        return `NEW STAGE: The first schedules for ${data.name} have been posted! Start playing the new stage when this tweet is ${duration} old. #splatoon2`;
+        return `NEW STAGE: The first schedules for ${data.name} have been posted! Start playing the new stage when this post is ${duration} old. #splatoon2`;
     }
 }

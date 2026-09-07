@@ -4,6 +4,6 @@ import { updateAllLocally, postLocally, testScreenshotsLocally } from './local.j
 
 await runAction({
     splatnet: updateAllLocally,
-    twitter: postLocally,
-    twitterTest: testScreenshotsLocally,
+    social: postLocally,
+    socialTest: testScreenshotsLocally,
 }, process.argv.slice(2));

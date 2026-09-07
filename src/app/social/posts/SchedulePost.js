@@ -1,9 +1,9 @@
-import TwitterPostBase from './TwitterPostBase.js';
+import SocialPostBase from './SocialPostBase.js';
 import { captureScheduleScreenshot } from '../../screenshots/index.js';
 import finalFest from '../../../common/data/finalFest.json' with { type: 'json' };
 import shiftyStations from '../../../common/data/shiftyStations.json' with { type: 'json' };
 
-export default class ScheduleTweet extends TwitterPostBase {
+export default class SchedulePost extends SocialPostBase {
     getKey() { return 'schedule'; }
     getName() { return 'Schedule'; }
 
