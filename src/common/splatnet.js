@@ -1,3 +1,5 @@
+import { fetchWithTimeout } from './fetch.js';
+
 // SplatNet2 API
 const splatnetBaseUrl = 'https://app.splatoon2.nintendo.net';
 
@@ -29,7 +31,7 @@ export default class SplatNet {
     /** Fetch a path (or absolute URL) on the SplatNet site with the session cookie. */
     async request(path, { headers = this.getHeaders() } = {}) {
         let url = new URL(path, splatnetBaseUrl);
-        let response = await fetch(url, { headers });
+        let response = await fetchWithTimeout(url, { headers });
         if (!response.ok)
             throw new Error(`SplatNet request failed with status ${response.status}: ${url.pathname}`);
         return response;

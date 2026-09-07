@@ -30,8 +30,10 @@ test('asks Browser Rendering for the deployed screenshot page at the default vie
   assert.equal(headers.get('authorization'), 'Bearer token');
   assert.equal(body.url, 'https://example.test/screenshots.html#/schedules/3600');
   assert.deepEqual(body.viewport, { width: 1216, height: 684, deviceScaleFactor: 2 });
-  assert.deepEqual(body.gotoOptions, { waitUntil: 'networkidle0' });
+  assert.deepEqual(body.gotoOptions, { waitUntil: 'networkidle0', timeout: 30_000 });
   assert.deepEqual(body.screenshotOptions, { type: 'png' });
+  assert.equal(body.actionTimeout, 30_000);
+  assert.deepEqual(body.setExtraHTTPHeaders, { 'Cache-Control': 'no-cache' });
   assert.deepEqual(result, { image: PNG, type: 'image/png', width: 2432, height: 1368 });
 });
 

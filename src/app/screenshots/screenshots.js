@@ -1,3 +1,5 @@
+import { fetchWithTimeout } from '../../common/fetch.js';
+
 // Screenshots of the site's screenshot page, rendered by Cloudflare Browser Rendering's REST
 // API. It is plain fetch, so the same code runs under Node and in a Worker. The page is the
 // deployed one (SITE_URL), which reads the published data.
@@ -8,7 +10,7 @@
 //   CLOUDFLARE_BROWSER_RUN_API_TOKEN  an API token with Browser Rendering permission
 
 const viewport = {
-    // Using a 16:9 ratio here by default to match Twitter's image card dimensions
+    // Use a 16:9 ratio for the public social image.
     // 1216 was chosen as the width because of Bulma's "widescreen" breakpoint
     width: 1216,
     height: 684,
@@ -56,7 +58,7 @@ export async function captureScreenshot({ hash, viewport: viewportOverrides, for
     let endpoint = new URL(`/client/v4/accounts/${accountId}/browser-rendering/screenshot`, 'https://api.cloudflare.com');
     endpoint.searchParams.set('cacheTTL', '0');
 
-    let response = await fetch(endpoint, {
+    let response = await fetchWithTimeout(endpoint, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${apiToken}`,
@@ -65,10 +67,12 @@ export async function captureScreenshot({ hash, viewport: viewportOverrides, for
         body: JSON.stringify({
             url: url.toString(),
             viewport: thisViewport,
-            gotoOptions: { waitUntil: 'networkidle0' }, // Wait until the network is idle
+            gotoOptions: { waitUntil: 'networkidle0', timeout: 30_000 },
+            actionTimeout: 30_000,
+            setExtraHTTPHeaders: { 'Cache-Control': 'no-cache' },
             screenshotOptions: format === 'jpeg' ? { type: 'jpeg', quality: 90 } : { type: 'png' },
         }),
-    });
+    }, 90_000);
 
     if (!response.ok)
         throw new Error(`Browser Rendering screenshot failed (${response.status}): ${await errorMessage(response)}`);

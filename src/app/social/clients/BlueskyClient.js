@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from '../../../common/fetch.js';
 import { BskyAgent, RichText } from '@atproto/api';
 
 export default class BlueskyClient
@@ -22,14 +23,16 @@ export default class BlueskyClient
 
   async login() {
     if (!this.#agent) {
-      this.#agent = new BskyAgent({
+      let agent = new BskyAgent({
         service: process.env.BLUESKY_SERVICE,
+        fetch: fetchWithTimeout,
       });
 
-      await this.#agent.login({
+      await agent.login({
         identifier: process.env.BLUESKY_IDENTIFIER,
         password: process.env.BLUESKY_PASSWORD,
       });
+      this.#agent = agent;
     }
   }
 
