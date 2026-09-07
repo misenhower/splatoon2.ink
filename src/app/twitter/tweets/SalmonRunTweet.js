@@ -1,18 +1,15 @@
 import TwitterPostBase from './TwitterPostBase.js';
 import { captureSalmonRunScreenshot } from '../../screenshots/index.js';
-import { readData, readJson, writeJson } from '../../../common/utilities.js';
-import fs from 'node:fs';
-import path from 'node:path';
 
-const previousSchedulePath = path.resolve('storage/salmonrun-previousSchedule.json');
+const PREVIOUS_SCHEDULE_KEY = 'salmonrun-previousSchedule.json';
 
 export default class SalmonRunTweet extends TwitterPostBase {
     getKey() { return 'salmonrun'; }
     getName() { return 'Salmon Run'; }
 
-    getSalmonRunSchedules() {
+    async getSalmonRunSchedules() {
         let results = {};
-        let coopSchedules = readData('coop-schedules.json');
+        let coopSchedules = await this.readData('coop-schedules.json');
 
         for (let schedule of coopSchedules.schedules)
             results[schedule.start_time] = schedule;
@@ -23,41 +20,44 @@ export default class SalmonRunTweet extends TwitterPostBase {
         return Object.values(results);
     }
 
-    getCurrentSchedule() {
-        return this.getSalmonRunSchedules().find(s => s.start_time <= this.getDataTime() && s.end_time > this.getDataTime());
+    async getCurrentSchedule() {
+        let time = await this.getDataTime();
+        return (await this.getSalmonRunSchedules()).find(s => s.start_time <= time && s.end_time > time);
     }
 
-    getUpcomingSchedule() {
-        return this.getSalmonRunSchedules().sort((a, b) => a.start_time - b.start_time)
-            .find(s => s.start_time > this.getDataTime());
+    async getUpcomingSchedule() {
+        let time = await this.getDataTime();
+        return (await this.getSalmonRunSchedules()).sort((a, b) => a.start_time - b.start_time)
+            .find(s => s.start_time > time);
     }
 
-    getSalmonRunGear() {
-        let timeline = readData('timeline.json');
+    async getSalmonRunGear() {
+        let timeline = await this.readData('timeline.json');
 
         return timeline.coop && timeline.coop.reward_gear;
     }
 
-    getData() {
-        const current = this.getCurrentSchedule();
-        const previous = this.getPreviousSchedule();
-        const upcoming = this.getUpcomingSchedule();
-        const gear = this.getSalmonRunGear();
+    async getData() {
+        const time = await this.getDataTime();
+        const current = await this.getCurrentSchedule();
+        const previous = await this.getPreviousSchedule();
+        const upcoming = await this.getUpcomingSchedule();
+        const gear = await this.getSalmonRunGear();
 
         const result = { current, previous, upcoming, gear };
 
         // If a shift is currently open, cache it for later so we can know when it ends
         if (current) {
-            this.updatePreviousSchedule(current);
+            await this.updatePreviousSchedule(current);
         }
 
         // Post a tweet if a schedule just started, or periodically every 12 hours
-        if (current && (this.getDataTime() - current.start_time) % (12 * 60 * 60) === 0) {
+        if (current && (time - current.start_time) % (12 * 60 * 60) === 0) {
             return result;
         }
 
         // Post a tweet if the previous schedule just closed
-        if (previous && previous.end_time === this.getDataTime()) {
+        if (previous && previous.end_time === time) {
             return result;
         }
 
@@ -65,33 +65,33 @@ export default class SalmonRunTweet extends TwitterPostBase {
         return null;
     }
 
-    getTestData() {
+    async getTestData() {
         return {
-            current: this.getSalmonRunSchedules()[0],
+            current: (await this.getSalmonRunSchedules())[0],
             upcoming: null,
-            gear: this.getSalmonRunGear(),
+            gear: await this.getSalmonRunGear(),
         };
     }
 
-    getPreviousSchedule() {
-        if (fs.existsSync(previousSchedulePath)) {
-            return readJson(previousSchedulePath);
-        }
+    async getPreviousSchedule() {
+        return await this.readState(PREVIOUS_SCHEDULE_KEY) ?? undefined;
     }
 
     updatePreviousSchedule(schedule) {
-        writeJson(previousSchedulePath, schedule);
+        return this.writeState(PREVIOUS_SCHEDULE_KEY, schedule);
     }
 
-    getImage(data) {
+    async getImage(data) {
         let mode = (data.current) ? 'current' : 'upcoming';
-        return captureSalmonRunScreenshot(this.getDataTime(), mode);
+        return captureSalmonRunScreenshot(await this.getDataTime(), mode);
     }
 
-    getText(data) {
+    async getText(data) {
+        let time = await this.getDataTime();
+
         // A shift just closed and we have an upcoming shift
         if (!data.current && data.upcoming) {
-            let hours = (data.upcoming.start_time - this.getDataTime()) / 60 / 60;
+            let hours = (data.upcoming.start_time - time) / 60 / 60;
             let duration = (hours == 1) ? '1 hour' : `${hours} hours`;
 
             return `Salmon Run is now closed. The next shift starts in ${duration}! #salmonrun #splatoon2`;
@@ -105,7 +105,7 @@ export default class SalmonRunTweet extends TwitterPostBase {
         let hasMysteryWeapon = data.current.weapons.some(w => w === null || w.coop_special_weapon);
         let hasGrizzcoMysteryWeapon = data.current.weapons.some(w => w && w.coop_special_weapon && w.id === '-2');
 
-        let justOpened = data.current.start_time === this.getDataTime();
+        let justOpened = data.current.start_time === time;
 
         let state = (justOpened) ? 'is now open' : 'is still open';
         let hashtags = (justOpened) ? '#salmonrun #splatoon2' : '#salmonrun #ongoingshift #splatoon2';

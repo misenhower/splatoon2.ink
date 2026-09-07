@@ -1,11 +1,10 @@
 import TwitterPostBase from './TwitterPostBase.js';
 import { captureSplatfestScreenshot } from '../../screenshots/index.js';
-import { readData } from '../../../common/utilities.js';
 import { splatoonRegions } from '../../../common/regions.js';
 
 export default class SplatfestTweet extends TwitterPostBase {
-    constructor(region) {
-        super();
+    constructor(region, storage, clients) {
+        super(storage, clients);
 
         this.region = region;
         this.regionInfo = this.getRegionInfo();
@@ -18,40 +17,43 @@ export default class SplatfestTweet extends TwitterPostBase {
     getKey() { return `splatfest-${this.region}`; }
     getName() { return `Splatfest: ${this.regionInfo.name}`; }
 
-    getFestivals(region = null) {
+    async getFestivals(region = null) {
         region = region || this.region;
 
-        let festivals = readData('festivals.json');
+        let festivals = await this.readData('festivals.json');
         return festivals[region].festivals;
     }
 
-    getResults() {
-        let festivals = readData('festivals.json');
+    async getResults() {
+        let festivals = await this.readData('festivals.json');
         return festivals[this.region].results;
     }
 
-    getData(region = null) {
+    async getData(region = null) {
+        let time = await this.getDataTime();
+        let festivals = await this.getFestivals(region);
+
         // Festival announced
-        let festival = this.getFestivals(region).find(f => f.times.announce == this.getDataTime());
+        let festival = festivals.find(f => f.times.announce == time);
         if (festival)
             return { festival, type: 'announce' };
 
         // Festival started
-        festival = this.getFestivals(region).find(f => f.times.start == this.getDataTime());
+        festival = festivals.find(f => f.times.start == time);
         if (festival)
             return { festival, type: 'start' };
 
         // Festival results
-        festival = this.getFestivals(region).find(f => f.times.result == this.getDataTime());
+        festival = festivals.find(f => f.times.result == time);
         if (festival) {
             // We only want to post the results tweet if we actually have results
-            let results = this.getResults().find(r => r.festival_id == festival.festival_id);
+            let results = (await this.getResults()).find(r => r.festival_id == festival.festival_id);
             if (results)
                 return { festival, results, type: 'result' };
         }
 
         // Festival ended
-        festival = this.getFestivals(region).find(f => f.times.end == this.getDataTime());
+        festival = festivals.find(f => f.times.end == time);
         if (festival)
             return { festival, type: 'end' };
 
@@ -63,49 +65,56 @@ export default class SplatfestTweet extends TwitterPostBase {
             { time: 60 * 60 * 24 * 7, text: '1 week' },
         ];
 
-        for (let { time, text } of reminders) {
-            festival = this.getFestivals(region).find(f => f.times.start == this.getDataTime() + time);
+        for (let { time: offset, text } of reminders) {
+            festival = festivals.find(f => f.times.start == time + offset);
             if (festival)
                 return { festival, type: 'reminder', text };
         }
     }
 
     // Which regions have this Splatfest?
-    regions(festival = null) {
+    async regions(festival = null) {
         if (!festival)
-            festival = this.getData();
+            festival = await this.getData();
 
         if (!festival)
             return false;
 
-        return ['na', 'eu', 'jp'].filter(region => this.getFestivals(region).find(f => f.festival_id == festival.festival.festival_id));
+        let regions = [];
+        for (let region of ['na', 'eu', 'jp'])
+            if ((await this.getFestivals(region)).find(f => f.festival_id == festival.festival.festival_id))
+                regions.push(region);
+        return regions;
     }
 
     // Is the current event (e.g., announcement, results, etc.) occurring simultaneously across all regions?
-    isSimultaneous() {
-        return this.regions().every(region => this.getData(region));
+    async isSimultaneous() {
+        for (let region of await this.regions())
+            if (!await this.getData(region))
+                return false;
+        return true;
     }
 
-    shouldPostForCurrentTime() {
-        if (super.shouldPostForCurrentTime()) {
+    async shouldPostForCurrentTime(client) {
+        if (await super.shouldPostForCurrentTime(client)) {
             // Prevent duplicate tweets for Splatfests occurring in multiple regions
-            return (this.region == this.regions()[0] || !this.isSimultaneous());
+            return (this.region == (await this.regions())[0] || !await this.isSimultaneous());
         }
 
         return false;
     }
 
-    getTestData() {
-        return { festival: this.getFestivals()[0], type: 'start' };
+    async getTestData() {
+        return { festival: (await this.getFestivals())[0], type: 'start' };
     }
 
-    getImage(data) {
-        return captureSplatfestScreenshot(this.region, this.getDataTime(), this.regions(data));
+    async getImage(data) {
+        return captureSplatfestScreenshot(this.region, await this.getDataTime(), await this.regions(data));
     }
 
-    getText(data) {
-        let regions = this.regions();
-        let isSimultaneous = this.isSimultaneous();
+    async getText(data) {
+        let regions = await this.regions();
+        let isSimultaneous = await this.isSimultaneous();
         let isGlobal = regions.length === 3;
 
         let regionDemonyms = regions.map(region => splatoonRegions.find(r => r.key == region).demonym).join('/');
@@ -125,7 +134,7 @@ export default class SplatfestTweet extends TwitterPostBase {
                 return `Reminder: The Splatfest starts in ${this.regionInfo.name} in ${data.text}! #splatfest #splatoon2`;
 
             case 'end': {
-                let hours = (data.festival.times.result - this.getDataTime()) / 60 / 60;
+                let hours = (data.festival.times.result - await this.getDataTime()) / 60 / 60;
                 let duration = (hours == 1) ? '1 hour' : `${hours} hours`;
                 if (isSimultaneous)
                     return `The ${isGlobal ? 'global' : regionDemonyms} Splatfest is now closed. Results will be posted in ${duration}! #splatfest #splatoon2`;

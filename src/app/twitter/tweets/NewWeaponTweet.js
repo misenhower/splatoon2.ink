@@ -1,20 +1,20 @@
 import TwitterPostBase from './TwitterPostBase.js';
 import { captureNewWeaponScreenshot } from '../../screenshots/index.js';
-import { readData } from '../../../common/utilities.js';
 
 export default class NewWeaponTweet extends TwitterPostBase {
     getKey() { return 'weapon'; }
     getName() { return 'New Weapon'; }
 
-    getNewWeaponAvailabilities() {
-        let weaponAvailability = readData('timeline.json').weapon_availability;
+    async getNewWeaponAvailabilities() {
+        let weaponAvailability = (await this.readData('timeline.json')).weapon_availability;
         if (weaponAvailability)
             return weaponAvailability.availabilities;
         return [];
     }
 
-    getData() {
-        let availabilities = this.getNewWeaponAvailabilities().filter(a => a.release_time == this.getDataTime());
+    async getData() {
+        let time = await this.getDataTime();
+        let availabilities = (await this.getNewWeaponAvailabilities()).filter(a => a.release_time == time);
 
         // Only return the array if it contains availabilities.
         // Otherwise return false (i.e., there's no data, so don't post a Tweet).
@@ -24,8 +24,8 @@ export default class NewWeaponTweet extends TwitterPostBase {
         return availabilities;
     }
 
-    getTestData() {
-        let availabilities = this.getNewWeaponAvailabilities();
+    async getTestData() {
+        let availabilities = await this.getNewWeaponAvailabilities();
         if (availabilities.length)
             return availabilities;
     }

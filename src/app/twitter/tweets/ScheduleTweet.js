@@ -1,28 +1,26 @@
 import TwitterPostBase from './TwitterPostBase.js';
 import { captureScheduleScreenshot } from '../../screenshots/index.js';
-import { readData, readJson } from '../../../common/utilities.js';
 import finalFest from '../../../common/data/finalFest.json' with { type: 'json' };
 import shiftyStations from '../../../common/data/shiftyStations.json' with { type: 'json' };
-import path from 'node:path';
-
-const stagesPath = path.resolve('storage/stages.json');
 
 export default class ScheduleTweet extends TwitterPostBase {
     getKey() { return 'schedule'; }
     getName() { return 'Schedule'; }
 
     getSchedules() {
-        return readData('schedules.json');
+        return this.readData('schedules.json');
     }
 
     getStages() {
-        return readJson(stagesPath);
+        return this.readState('stages.json');
     }
 
-    getData() {
-        let regular = this.getSchedules().regular.find(s => s.start_time == this.getDataTime());
-        let gachi = this.getSchedules().gachi.find(s => s.start_time == this.getDataTime());
-        let league = this.getSchedules().league.find(s => s.start_time == this.getDataTime());
+    async getData() {
+        let schedules = await this.getSchedules();
+        let time = await this.getDataTime();
+        let regular = schedules.regular.find(s => s.start_time == time);
+        let gachi = schedules.gachi.find(s => s.start_time == time);
+        let league = schedules.league.find(s => s.start_time == time);
 
         if (!regular)
             return null;
@@ -30,24 +28,25 @@ export default class ScheduleTweet extends TwitterPostBase {
         return { regular, gachi, league };
     }
 
-    getTestData() {
-        let regular = this.getSchedules().regular[0];
-        let gachi = this.getSchedules().gachi[0];
-        let league = this.getSchedules().league[0];
+    async getTestData() {
+        let schedules = await this.getSchedules();
+        let regular = schedules.regular[0];
+        let gachi = schedules.gachi[0];
+        let league = schedules.league[0];
         return { regular, gachi, league };
     }
 
-    getImage(data) {
-        return captureScheduleScreenshot(data.regular.start_time, this.globalSplatfestOpenInAllRegions());
+    async getImage(data) {
+        return captureScheduleScreenshot(data.regular.start_time, await this.globalSplatfestOpenInAllRegions());
     }
 
     getPublicImageFilename() {
         return 'schedule.png';
     }
 
-    globalSplatfestOpenInAllRegions() {
-        let festivals = readData('festivals.json');
-        let time = this.getDataTime();
+    async globalSplatfestOpenInAllRegions() {
+        let festivals = await this.readData('festivals.json');
+        let time = await this.getDataTime();
 
         let festival;
         let ids = [];
@@ -61,17 +60,15 @@ export default class ScheduleTweet extends TwitterPostBase {
             ids.push(festival.festival_id);
         }
 
-        console.log(ids);
-
         // Only return the Splatfest if the festival IDs match across all regions
         if (ids[0] === ids[1] && ids[0] === ids[2])
             return festival;
         return false;
     }
 
-    getText(data) {
+    async getText(data) {
         // Load known stages
-        let stages = this.getStages();
+        let stages = await this.getStages() ?? [];
 
         for (let stage of [data.regular.stage_a, data.regular.stage_b]) {
             let stageInfo = stages.find(s => s.id == stage.id);
@@ -81,11 +78,12 @@ export default class ScheduleTweet extends TwitterPostBase {
                 return `NEW STAGE: ${stage.name} is now open! #maprotation #splatoon2`;
         }
 
-        let festival = this.globalSplatfestOpenInAllRegions();
+        let festival = await this.globalSplatfestOpenInAllRegions();
 
         if (festival) {
             let shiftyText = '';
-            const finalFestSchedule = finalFest.find(s => s.start_time <= this.getDataTime() && s.end_time > this.getDataTime());
+            let time = await this.getDataTime();
+            const finalFestSchedule = finalFest.find(s => s.start_time <= time && s.end_time > time);
             if (finalFestSchedule) {
                 const stages = finalFestSchedule.stages
                     .map(id => shiftyStations.find(s => s.id === id))

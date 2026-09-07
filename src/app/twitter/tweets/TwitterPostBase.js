@@ -1,26 +1,31 @@
-import path from 'node:path';
-import fs from 'node:fs';
-import { mkdirpSync as mkdirp } from 'mkdirp';
-import BlueskyClient from '../clients/BlueskyClient.js';
-import TwitterClient from '../clients/TwitterClient.js';
-import { readJson, writeJson } from '../../../common/utilities.js';
 import { getTopOfCurrentHour } from '../../../common/time.js';
 
-const blueskyLastTimesPath = path.resolve('storage/bluesky-lastPostTimes.json');
-const twitterLastTimesPath = path.resolve('storage/twitter-lastTweetTimes.json');
-
-const blueskyClient = new BlueskyClient();
-const twitterClient = new TwitterClient();
-
 export default class TwitterPostBase {
+    /**
+     * @param {{ publicStorage: object, privateStorage: object }} storage
+     *   publicStorage holds the site data this post reads and the public copy of its image;
+     *   privateStorage holds the last-posted times and other state.
+     * @param {object[]} clients  the social clients to post through (see ../clients/)
+     */
+    constructor(storage = {}, clients = []) {
+        this.publicStorage = storage.publicStorage;
+        this.privateStorage = storage.privateStorage;
+        this.clients = clients;
+    }
+
     async maybePostTweet() {
         // Make sure we have data to post
-        if (!this.getData()) {
+        if (!await this.getData()) {
             this.info('No data to post');
             return false;
         }
 
-        if (!this.shouldPostForCurrentTime(blueskyClient) && !this.shouldPostForCurrentTime(twitterClient)) {
+        let due = [];
+        for (let client of this.clients)
+            if (await this.shouldPostForCurrentTime(client))
+                due.push(client);
+
+        if (!due.length && this.clients.length) {
             this.info('Already posted for this time');
             return false;
         }
@@ -35,38 +40,40 @@ export default class TwitterPostBase {
     }
 
     async canPost() {
-        return await blueskyClient.canSend()
-            || await twitterClient.canSend();
+        for (let client of this.clients)
+            if (await client.canSend())
+                return true;
+        return false;
     }
 
     async postTweet() {
         try {
             // Get the Tweet's text and image
-            let data = this.getData();
+            let data = await this.getData();
             let text = await this.getText(data);
             let image = await this.getImage(data);
 
             // Maybe save the image
-            this.maybeSavePublicImage(data, image);
+            await this.maybeSavePublicImage(data, image);
 
             let status = {
                 status: text,
                 media: [{ file: image, type: 'image/png' }],
             };
 
-            for (let client of [blueskyClient, twitterClient]) {
+            for (let client of this.clients) {
                 if (!await client.canSend()) {
                     continue;
                 }
 
-                if (!this.shouldPostForCurrentTime(client)) {
+                if (!await this.shouldPostForCurrentTime(client)) {
                     this.info(`Already posted to ${client.name}`);
                     continue;
                 }
 
                 try {
                     await client.send(status);
-                    this.updateLastTweetTime(client);
+                    await this.updateLastTweetTime(client);
                     this.info(`Posted to ${client.name}`);
                 } catch (e) {
                     this.error(`Couldn't post to ${client.name}`);
@@ -80,29 +87,27 @@ export default class TwitterPostBase {
         }
     }
 
-    maybeSavePublicImage(data, image) {
+    async maybeSavePublicImage(data, image) {
         let filename = this.getPublicImageFilename();
         if (filename) {
-            let outputFilename = path.resolve(`dist/twitter-images/${filename}`);
-            mkdirp(path.dirname(outputFilename));
-            fs.writeFileSync(outputFilename, image);
+            await this.publicStorage.writeBytes(`twitter-images/${filename}`, image);
             this.info(`Saved public image as ${filename}`);
         }
     }
 
     async saveTestScreenshot() {
         try {
-            let data = this.getTestData();
+            let data = await this.getTestData();
             if (!data) {
                 this.info('No data available');
                 return;
             }
 
-            let filename = this.getTestScreenshotFilename();
+            let key = this.getTestScreenshotKey();
             let image = await this.getImage(data);
 
-            fs.writeFileSync(filename, image);
-            this.info('Saved screenshot');
+            await this.publicStorage.writeBytes(key, image);
+            this.info(`Saved screenshot as ${key}`);
         }
         catch (e) {
             this.error('Couldn\'t save screenshot');
@@ -111,43 +116,57 @@ export default class TwitterPostBase {
     }
 
     /**
+     * Data helpers
+     */
+
+    // A public data file, e.g. readData('schedules.json')
+    readData(filename) {
+        return this.publicStorage.readJson(`data/${filename}`);
+    }
+
+    // Private state, e.g. readState('stages.json')
+    readState(filename) {
+        return this.privateStorage.readJson(filename);
+    }
+
+    writeState(filename, data) {
+        return this.privateStorage.writeJson(filename, data);
+    }
+
+    /**
      * Post time helpers
      */
 
-    getLastTweetTimesPath(client) {
+    getLastTweetTimesKey(client) {
         switch (client.key) {
-            case 'bluesky': return blueskyLastTimesPath;
-            case 'twitter': return twitterLastTimesPath;
+            case 'bluesky': return 'bluesky-lastPostTimes.json';
+            case 'twitter': return 'twitter-lastTweetTimes.json';
         }
     }
 
-    getLastTweetTimes(client) {
-        let lastTimesPath = this.getLastTweetTimesPath(client);
-
-        if (fs.existsSync(lastTimesPath))
-            return readJson(lastTimesPath);
-        return {};
+    async getLastTweetTimes(client) {
+        return await this.readState(this.getLastTweetTimesKey(client)) ?? {};
     }
 
-    getLastTweetTime(client) {
+    async getLastTweetTime(client) {
         let key = this.getKey();
-        return this.getLastTweetTimes(client)[key] || 0;
+        return (await this.getLastTweetTimes(client))[key] || 0;
     }
 
-    updateLastTweetTime(client) {
+    async updateLastTweetTime(client) {
         let key = this.getKey();
-        let time = this.getDataTime();
-        let lastTweetTimes = this.getLastTweetTimes(client);
+        let time = await this.getDataTime();
+        let lastTweetTimes = await this.getLastTweetTimes(client);
 
         lastTweetTimes[key] = time;
 
-        writeJson(this.getLastTweetTimesPath(client), lastTweetTimes);
+        await this.writeState(this.getLastTweetTimesKey(client), lastTweetTimes);
     }
 
-    shouldPostForCurrentTime(client) {
+    async shouldPostForCurrentTime(client) {
         // Check whether the current data time has already been posted
-        let time = this.getDataTime();
-        let lastTweetTime = this.getLastTweetTime(client);
+        let time = await this.getDataTime();
+        let lastTweetTime = await this.getLastTweetTime(client);
         return lastTweetTime < time;
     }
 
@@ -183,31 +202,31 @@ export default class TwitterPostBase {
     getName() { }
 
     // The time which the current Tweet is based off of (usually the top of the current hour)
-    getDataTime() {
+    async getDataTime() {
         return getTopOfCurrentHour();
     }
 
     // The current data item the Tweet is based on (used by getImage and getText)
-    getData() { }
+    async getData() { }
 
     // Data for test screenshots
-    getTestData() {
+    async getTestData() {
         return this.getData();
     }
 
     // The image data to be posted with the Tweet
-    getImage(data) { }
+    async getImage(data) { }
 
     // The filename to store the image as (optional)
     getPublicImageFilename() { }
 
     // The text body of the Tweet
-    getText(data) { }
+    async getText(data) { }
 
-    // The filename for test screenshots
-    getTestScreenshotFilename() {
+    // The key for test screenshots in public storage
+    getTestScreenshotKey() {
         let key = this.getKey();
-        return `test-screenshot-${key}.png`;
+        return `test-screenshots/${key}.png`;
     }
 
     getMaxTweetLength() {

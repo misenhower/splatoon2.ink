@@ -3,6 +3,7 @@
 
 import FilesystemStorage from '../common/storage/FilesystemStorage.js';
 import { updateAll } from './updater/index.js';
+import { maybePostTweets, testScreenshots } from './twitter/index.js';
 
 export function filesystemStorage() {
     return {
@@ -15,4 +16,12 @@ export async function updateAllLocally() {
     await updateAll(filesystemStorage());
 
     return 'Done';
+}
+
+export function postLocally() {
+    return maybePostTweets(filesystemStorage());
+}
+
+export function testScreenshotsLocally() {
+    return testScreenshots(filesystemStorage());
 }

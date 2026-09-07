@@ -1,20 +1,19 @@
 import TwitterPostBase from './TwitterPostBase.js';
 import { captureSalmonRunGearScreenshot } from '../../screenshots/index.js';
-import { readData } from '../../../common/utilities.js';
 import moment from 'moment-timezone';
 
 export default class SalmonRunGearTweet extends TwitterPostBase {
     getKey() { return 'salmonrungear'; }
     getName() { return 'Salmon Run Gear'; }
 
-    getRewardGear() {
-        let timeline = readData('timeline.json');
+    async getRewardGear() {
+        let timeline = await this.readData('timeline.json');
         return timeline.coop && timeline.coop.reward_gear;
     }
 
-    getData() {
-        let rewardGear = this.getRewardGear();
-        if (rewardGear.available_time == this.getDataTime())
+    async getData() {
+        let rewardGear = await this.getRewardGear();
+        if (rewardGear && rewardGear.available_time == await this.getDataTime())
             return rewardGear;
     }
 

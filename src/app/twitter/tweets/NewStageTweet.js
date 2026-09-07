@@ -1,29 +1,24 @@
 import TwitterPostBase from './TwitterPostBase.js';
-import { readJson } from '../../../common/utilities.js';
-import path from 'node:path';
-import fs from 'node:fs';
-
-const stagesPath = path.resolve('storage/stages.json');
-const splatnetAssetPath = path.resolve('dist/assets/splatnet');
 
 export default class NewStageTweet extends TwitterPostBase {
     getKey() { return 'newstage'; }
     getName() { return 'New Stage'; }
 
-    getStages() {
-        return readJson(stagesPath);
+    async getStages() {
+        return await this.readState('stages.json') ?? [];
     }
 
-    getData() {
-        return this.getStages().find(s => s.first_seen == this.getDataTime());
+    async getData() {
+        let time = await this.getDataTime();
+        return (await this.getStages()).find(s => s.first_seen == time);
     }
 
     getImage(data) {
-        return fs.readFileSync(splatnetAssetPath + data.image);
+        return this.publicStorage.readBytes(`assets/splatnet${data.image}`);
     }
 
-    getText(data) {
-        let hours = (data.first_available - this.getDataTime()) / 60 / 60;
+    async getText(data) {
+        let hours = (data.first_available - await this.getDataTime()) / 60 / 60;
         let duration = (hours == 1) ? '1 hour' : `${hours} hours`;
         return `NEW STAGE: The first schedules for ${data.name} have been posted! Start playing the new stage when this tweet is ${duration} old. #splatoon2`;
     }

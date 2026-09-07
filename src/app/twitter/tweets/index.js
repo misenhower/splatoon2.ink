@@ -6,14 +6,20 @@ import NewWeaponTweet from './NewWeaponTweet.js';
 import NewStageTweet from './NewStageTweet.js';
 import SplatfestTweet from './SplatfestTweet.js';
 
-export default [
-    new ScheduleTweet,
-    new GearTweet,
-    new SalmonRunTweet,
-    // new SalmonRunGearTweet,
-    new NewWeaponTweet,
-    new NewStageTweet,
-    new SplatfestTweet('na'),
-    new SplatfestTweet('eu'),
-    new SplatfestTweet('jp'),
-];
+/**
+ * @param {{ publicStorage: object, privateStorage: object }} storage
+ * @param {object[]} clients
+ */
+export function createTweets(storage, clients) {
+    return [
+        new ScheduleTweet(storage, clients),
+        new GearTweet(storage, clients),
+        new SalmonRunTweet(storage, clients),
+        // new SalmonRunGearTweet(storage, clients),
+        new NewWeaponTweet(storage, clients),
+        new NewStageTweet(storage, clients),
+        new SplatfestTweet('na', storage, clients),
+        new SplatfestTweet('eu', storage, clients),
+        new SplatfestTweet('jp', storage, clients),
+    ];
+}
