@@ -1,4 +1,5 @@
 import { fetchWithTimeout } from '../../common/fetch.js';
+import { screenshotReadySelector } from '../../common/screenshot.js';
 
 // Screenshots of the site's screenshot page, rendered by Cloudflare Browser Rendering's REST
 // API. It is plain fetch, so the same code runs under Node and in a Worker. The page is the
@@ -67,8 +68,9 @@ export async function captureScreenshot({ hash, viewport: viewportOverrides, for
         body: JSON.stringify({
             url: url.toString(),
             viewport: thisViewport,
-            gotoOptions: { waitUntil: 'networkidle0', timeout: 30_000 },
-            actionTimeout: 30_000,
+            gotoOptions: { waitUntil: 'domcontentloaded', timeout: 10_000 },
+            waitForSelector: { selector: screenshotReadySelector, timeout: 10_000 },
+            actionTimeout: 10_000,
             setExtraHTTPHeaders: { 'Cache-Control': 'no-cache' },
             screenshotOptions: format === 'jpeg' ? { type: 'jpeg', quality: 90 } : { type: 'png' },
         }),
