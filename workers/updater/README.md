@@ -117,6 +117,39 @@ persists the pause and deletes the alarm. `/arm` resumes scheduling; a saved
 overdue run executes immediately. Do not pause
 in the middle of a run: a busy pause request returns 409 so the caller can retry.
 
+## Admin panel
+
+`/admin/` provides a mobile-friendly panel for data-only, social-only, and full
+manual runs. The authenticated browser starts a persisted request and polls its
+status; closing the tab does not cancel the job. One manual request can be
+pending at a time, and it shares the hourly scheduler's lock. Social runs keep
+normal checkpoints and the published-data check. An interrupted manual run is
+reported as failed rather than automatically replaying an uncertain social send.
+The hourly schedule is preserved. Paused scheduling also blocks manual runs.
+
+Preview the actual panel with simulated results using `npm run admin:preview`,
+then open `http://127.0.0.1:8788/admin/`. This standalone preview server listens
+only on loopback and has no production credentials or bindings. The production
+Worker has no local-authentication bypass.
+
+Before exposing the panel in production:
+
+1. Create a Cloudflare Access self-hosted application protecting the entire
+   chosen admin hostname (for example `admin.splatoon2.ink`). Allow only the
+   owner's identity, with email one-time codes or their preferred provider.
+2. Configure the updater with `ADMIN_HOSTNAME`, `ACCESS_TEAM_DOMAIN` (the bare
+   `<team>.cloudflareaccess.com` hostname), and `ACCESS_AUD` (the application's
+   audience tag). These settings are deliberately absent until Access is ready;
+   all admin routes fail closed without them.
+3. Attach the admin hostname to this Worker and deploy. Open `/admin/` and verify
+   login, status, and a deliberate test run. No Access application or production
+   admin domain is created by the local preview.
+
+The Worker verifies JWT signature, issuer, audience, expiration, and hostname.
+Mutating browser requests also require a matching Origin and JSON content type.
+The existing bearer-token API remains available for scripts, independently of
+Access. The panel does not expose force-repost, pause, or resume controls.
+
 ## Configuration and local commands
 
 Secrets: `NINTENDO_SESSION_ID_NA`, `NINTENDO_SESSION_ID_EU`,

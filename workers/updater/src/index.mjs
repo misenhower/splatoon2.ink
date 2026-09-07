@@ -1,3 +1,4 @@
+import { adminRequest } from './admin/routes.mjs';
 import { withSentry, instrumentDurableObjectWithSentry } from '@sentry/cloudflare';
 import { Scheduler as SchedulerClass } from './Scheduler.mjs';
 import { createLogger, describeError } from './log.mjs';
@@ -44,6 +45,14 @@ export default withSentry(sentryOptions, {
   // Manual runs use the same owner as alarms. Targeted runs refresh data only.
   async fetch(request, env, ctx) {
     let url = new URL(request.url);
+    if (url.pathname === '/admin' || url.pathname.startsWith('/admin/')) {
+      try {
+        return await adminRequest(request, env, () => scheduler(env));
+      } catch (error) {
+        createLogger('admin').error('Admin request failed', describeError(error));
+        return Response.json({ error: 'The request failed. Refresh status before retrying.' }, { status: 500, headers: { 'Cache-Control': 'no-store' } });
+      }
+    }
     let route = `${request.method} ${url.pathname}`;
     if (!['POST /run', 'POST /arm', 'POST /pause', 'GET /status', 'GET /list'].includes(route))
       return new Response('Not found', { status: 404 });

@@ -38,7 +38,8 @@
     "updater:deploy": "wrangler deploy --config workers/updater/wrangler.jsonc",
     "updater:tail": "wrangler tail --config workers/updater/wrangler.jsonc",
     "social": "node src/app/index.js social",
-    "social:test": "node src/app/index.js socialTest"
+    "social:test": "node src/app/index.js socialTest",
+    "admin:preview": "node workers/updater/preview/server.mjs"
   },
   "dependencies": {
     "@atproto/api": "^0.20.42",
@@ -52,6 +53,7 @@
     "delay": "^4.4.0",
     "he": "^1.1.1",
     "ics": "^3.12.0",
+    "jose": "^6.2.12",
     "json-stable-stringify": "^1.3.0",
     "jsonpath-plus": "^10.4.0",
     "lodash": "^4.18.1",
