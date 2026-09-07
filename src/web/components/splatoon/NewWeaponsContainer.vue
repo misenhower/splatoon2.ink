@@ -1,13 +1,13 @@
 <template>
-  <div class="columns is-multiline is-centered">
-    <div v-for="(weapon, index) in weapons" :key="weapon.id" class="column" :class="columnClass">
-      <NewWeaponBox
-        :weapon="weapon"
-        :title="title"
-        :class="(index % 2 == 0) ? 'tilt-right' : 'tilt-left'"
-      />
+    <div class="columns is-multiline is-centered">
+        <div class="column" :class="columnClass" v-for="(weapon, index) in weapons" :key="weapon.id">
+            <NewWeaponBox
+                :weapon="weapon"
+                :title="title"
+                :class="(index % 2 == 0) ? 'tilt-right' : 'tilt-left'"
+            />
+        </div>
     </div>
-  </div>
 </template>
 
 <script>

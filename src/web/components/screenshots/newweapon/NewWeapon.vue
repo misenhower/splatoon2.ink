@@ -1,9 +1,9 @@
 <template>
-  <Wrapper :title="title">
-    <div v-if="weapons" :class="{ 'new-weapons-large': weapons.length <= 3 }">
-      <NewWeaponsContainer title="Now Available" />
-    </div>
-  </Wrapper>
+    <Wrapper :title="title">
+        <div :class="{ 'new-weapons-large': weapons.length <= 3 }" v-if="weapons">
+            <NewWeaponsContainer title="Now Available" />
+        </div>
+    </Wrapper>
 </template>
 
 <script>

@@ -1,7 +1,7 @@
 <template>
-  <div class="festival-period" style="background-color: #333">
-    <span v-if="winner">{{ winnerText.before }}<span :style="{ color: winnerColor }">{{ teamNames[winner] }}</span>{{ winnerText.after }}</span>
-  </div>
+    <div class="festival-period" style="background-color: #333">
+        <span v-if="winner">{{ winnerText.before }}<span :style="{ color: winnerColor }">{{ teamNames[winner] }}</span>{{ winnerText.after }}</span>
+    </div>
 </template>
 
 <script>

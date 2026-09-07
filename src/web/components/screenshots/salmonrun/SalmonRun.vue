@@ -1,17 +1,17 @@
 <template>
-  <Wrapper title="Salmon Run">
-    <div class="salmon-run tilt-left">
-      <div class="hook-box">
-        <SalmonRunBox
-          :use-relative-time="true"
-          :show-current="showCurrent"
-          :show-upcoming="showUpcoming"
-          :show-reward-gear="showRewardGear"
-          :hide-upcoming-schedules-without-details="true"
-        />
-      </div>
-    </div>
-  </Wrapper>
+    <Wrapper title="Salmon Run">
+        <div class="salmon-run tilt-left">
+            <div class="hook-box">
+                <SalmonRunBox
+                    :use-relative-time="true"
+                    :show-current="showCurrent"
+                    :show-upcoming="showUpcoming"
+                    :show-reward-gear="showRewardGear"
+                    :hide-upcoming-schedules-without-details="true"
+                />
+            </div>
+        </div>
+    </Wrapper>
 </template>
 
 <script>

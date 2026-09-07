@@ -28,10 +28,16 @@ export default [
       'object-curly-spacing': ['warn', 'always'],
 
       // Vue
+      // Preserve this site's existing template layout instead of reformatting it on lint.
+      'vue/html-indent': ['warn', 4],
+      'vue/attributes-order': 'off',
+      'vue/max-attributes-per-line': 'off',
+      'vue/html-self-closing': 'off',
+      'vue/singleline-html-element-content-newline': 'off',
+      'vue/multiline-html-element-content-newline': 'off',
+      'vue/block-order': 'off',
       'vue/multi-word-component-names': 'off',
       'vue/require-default-prop': 'off',
-      'vue/max-attributes-per-line': ['warn', { singleline: { max: 4 } }],
-      'vue/html-self-closing': ['warn', { html: { void: 'always' } }],
       'vue/no-deprecated-filter': 'off',
       'vue/require-toggle-inside-transition': 'off',
       'vue/no-deprecated-destroyed-lifecycle': 'off',

@@ -1,36 +1,27 @@
 <template>
-  <div class="dropdown" :class="{ 'is-active': isOpen }">
-    <div class="dropdown-trigger">
-      <button v-if="tag == 'button'" v-click-outside="hide" class="button is-clear font-splatoon2" @click="isOpen = !isOpen">
-        <span v-if="selectedOption">{{ selectedOption.name }}</span>
-        <span class="icon is-small">
-          <span class="chevron bottom" />
-        </span>
-      </button>
-      <a v-if="tag == 'a'" v-click-outside="hide" @click="isOpen = !isOpen">
-        <span v-if="selectedOption">{{ selectedOption.name }}</span>
-        <span class="icon is-small">
-          <span class="chevron top" />
-        </span>
-      </a>
+    <div class="dropdown" :class="{ 'is-active': isOpen }">
+        <div class="dropdown-trigger">
+            <button class="button is-clear font-splatoon2" @click="isOpen = !isOpen" v-click-outside="hide" v-if="tag == 'button'">
+                <span v-if="selectedOption">{{ selectedOption.name }}</span>
+                <span class="icon is-small">
+                    <span class="chevron bottom"></span>
+                </span>
+            </button>
+            <a @click="isOpen = !isOpen" v-click-outside="hide" v-if="tag == 'a'">
+                <span v-if="selectedOption">{{ selectedOption.name }}</span>
+                <span class="icon is-small">
+                    <span class="chevron top"></span>
+                </span>
+            </a>
+        </div>
+        <div class="dropdown-menu" role="menu">
+            <div class="dropdown-content font-splatoon2 has-text-left">
+                <a href="#" class="dropdown-item" v-for="option in options" :key="option.key" :class="{ 'is-active': option.key == value }" @click.prevent="select(option)" @touchstart.stop @touchend.prevent="select(option)">
+                    {{ option.name }}
+                </a>
+            </div>
+        </div>
     </div>
-    <div class="dropdown-menu" role="menu">
-      <div class="dropdown-content font-splatoon2 has-text-left">
-        <a
-          v-for="option in options"
-          :key="option.key"
-          href="#"
-          class="dropdown-item"
-          :class="{ 'is-active': option.key == value }"
-          @click.prevent="select(option)"
-          @touchstart.stop
-          @touchend.prevent="select(option)"
-        >
-          {{ option.name }}
-        </a>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>

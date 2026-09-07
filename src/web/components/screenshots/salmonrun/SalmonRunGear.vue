@@ -1,9 +1,9 @@
 <template>
-  <Wrapper title="Salmon Run Gear">
-    <div v-if="rewardGear" class="tilt-left salmon-run-gear" style="display: flex; align-items: center; justify-content: center;">
-      <MerchandiseBox :merchandise="merchandise" class="salmon-run-gear" />
-    </div>
-  </Wrapper>
+    <Wrapper title="Salmon Run Gear">
+        <div class="tilt-left salmon-run-gear" style="display: flex; align-items: center; justify-content: center;" v-if="rewardGear">
+            <MerchandiseBox :merchandise="merchandise" class="salmon-run-gear" />
+        </div>
+    </Wrapper>
 </template>
 
 <script>

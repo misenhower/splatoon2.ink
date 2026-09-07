@@ -1,19 +1,19 @@
 <template>
-  <Wrapper v-if="festival" :title="title" class="splatfest-screenshot" hide-local-times>
-    <div class="level">
-      <div class="level-item">
-        <div class="splatfest tilt-left">
-          <div class="hook-box">
-            <SplatfestBox :festival="festival" screenshot-mode />
-          </div>
-        </div>
-      </div>
+    <Wrapper :title="title" class="splatfest-screenshot" v-if="festival" hide-local-times>
+        <div class="level">
+            <div class="level-item">
+                <div class="splatfest tilt-left">
+                    <div class="hook-box">
+                        <SplatfestBox :festival="festival" screenshot-mode />
+                    </div>
+                </div>
+            </div>
 
-      <div v-if="festival.results" class="level-item">
-        <SplatfestResultsBox :festival="festival" />
-      </div>
-    </div>
-  </Wrapper>
+            <div class="level-item" v-if="festival.results">
+                <SplatfestResultsBox :festival="festival" />
+            </div>
+        </div>
+    </Wrapper>
 </template>
 
 <script>

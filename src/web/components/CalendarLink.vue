@@ -1,55 +1,27 @@
 <template>
-  <div class="dropdown" :class="{ 'is-active': isOpen }">
-    <div class="dropdown-trigger">
-      <a
-        v-click-outside="hide"
-        :href="directLink"
-        class="button is-link is-rounded"
-        :class="{ 'tooltip is-tooltip-right is-tooltip-active': showTooltip }"
-        data-tooltip="Copied!"
-        @click.prevent="isOpen = !isOpen"
-      >
-        <span class="font-splatoon2">{{ title }}</span>
-        <span class="icon is-small">
-          <span class="chevron bottom" />
-        </span>
-      </a>
+    <div class="dropdown" :class="{ 'is-active': isOpen }">
+        <div class="dropdown-trigger">
+            <a :href="directLink" class="button is-link is-rounded" :class="{ 'tooltip is-tooltip-right is-tooltip-active': showTooltip }" data-tooltip="Copied!" @click.prevent="isOpen = !isOpen" v-click-outside="hide">
+                <span class="font-splatoon2">{{ title }}</span>
+                <span class="icon is-small">
+                    <span class="chevron bottom"></span>
+                </span>
+            </a>
+        </div>
+        <div class="dropdown-menu" role="menu">
+            <div class="dropdown-content font-splatoon2 has-text-left">
+                <a :href="googleLink" target="_blank" class="dropdown-item" @touchstart.stop @touchend.stop>
+                    Google Calendar
+                </a>
+                <a :href="webcalLink" target="_blank" class="dropdown-item" @touchstart.stop @touchend.stop>
+                    Apple/Android/Outlook Calendar
+                </a>
+                <a :href="directLink" target="_blank" class="dropdown-item" @click.prevent.stop="hide" v-clipboard:copy="directLink" v-clipboard:success="onCopy" @touchstart.stop @touchend.stop>
+                    Copy ICS Link
+                </a>
+            </div>
+        </div>
     </div>
-    <div class="dropdown-menu" role="menu">
-      <div class="dropdown-content font-splatoon2 has-text-left">
-        <a
-          :href="googleLink"
-          target="_blank"
-          class="dropdown-item"
-          @touchstart.stop
-          @touchend.stop
-        >
-          Google Calendar
-        </a>
-        <a
-          :href="webcalLink"
-          target="_blank"
-          class="dropdown-item"
-          @touchstart.stop
-          @touchend.stop
-        >
-          Apple/Android/Outlook Calendar
-        </a>
-        <a
-          v-clipboard:copy="directLink"
-          v-clipboard:success="onCopy"
-          :href="directLink"
-          target="_blank"
-          class="dropdown-item"
-          @click.prevent.stop="hide"
-          @touchstart.stop
-          @touchend.stop
-        >
-          Copy ICS Link
-        </a>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>

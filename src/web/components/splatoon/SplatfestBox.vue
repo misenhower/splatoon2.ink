@@ -1,96 +1,94 @@
 <template>
-  <div class="font-splatoon2" :class="{ 'has-results': showingResults }">
-    <div class="splatfest-header">
-      <h2 class="title is-3 is-size-2-fullhd font-splatoon1">
-        {{ title }}
-      </h2>
-    </div>
+    <div class="font-splatoon2" :class="{ 'has-results': showingResults }">
+        <div class="splatfest-header">
+            <h2 class="title is-3 is-size-2-fullhd font-splatoon1">
+                {{ title }}
+            </h2>
+        </div>
 
-    <div class="panel-container" :class="{ 'is-hidden-mobile' : showingResults }">
-      <div class="image panel-image">
-        <img :src="image" />
-      </div>
+        <div class="panel-container" :class="{ 'is-hidden-mobile' : showingResults }">
+            <div class="image panel-image">
+                <img :src="image" />
+            </div>
 
-      <div class="regions">
-        <span v-for="(data, region) in festival.regions" :key="region" class="region">
-          <span class="icon is-small">
-            <img :src="require(`@/web/assets/img/region-${region}.svg`)" />
-          </span>
-          <span>{{ region | upperCase }}</span>
+            <div class="regions">
+                <span class="region" v-for="(data, region) in festival.regions" :key="region">
+                    <span class="icon is-small">
+                        <img :src="require(`@/web/assets/img/region-${region}.svg`)" />
+                    </span>
+                    <span>{{ region | upperCase }}</span>
 
-        </span>
-      </div>
+                </span>
+            </div>
 
-      <div class="columns is-gapless labels is-hidden-mobile">
-        <div class="column" v-text="teamNames.long.alpha" />
-        <div class="column has-text-right" v-text="teamNames.long.bravo" />
-      </div>
+            <div class="columns is-gapless labels is-hidden-mobile">
+                <div class="column" v-text="teamNames.long.alpha"></div>
+                <div class="column has-text-right" v-text="teamNames.long.bravo"></div>
+            </div>
 
-      <div class="columns is-gapless labels is-mobile is-hidden-tablet">
-        <div class="column" v-text="teamNames.short.alpha" />
-        <div class="column has-text-right" v-text="teamNames.short.bravo" />
-      </div>
+            <div class="columns is-gapless labels is-mobile is-hidden-tablet">
+                <div class="column" v-text="teamNames.short.alpha"></div>
+                <div class="column has-text-right" v-text="teamNames.short.bravo"></div>
+            </div>
 
-      <SplatfestResultsBox v-if="showingResults" :festival="festival" />
-    </div>
+            <SplatfestResultsBox :festival="festival" v-if="showingResults" />
+        </div>
 
-    <div v-if="showingResults" class="mobile-results is-hidden-tablet">
-      <SplatfestResultsBox :festival="festival" />
-    </div>
+        <div class="mobile-results is-hidden-tablet" v-if="showingResults">
+            <SplatfestResultsBox :festival="festival" />
+        </div>
 
-    <div v-if="!globalSplatfestMode" class="has-text-centered is-size-5 title-color festival-period-container">
-      <div v-if="!showingResultsBar" class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }">
-        <template v-if="!screenshotMode">
-          <span class="nowrap">
-            {{ festival.times.start | date(dateOptions) }}
-            {{ festival.times.start | time }}
-          </span>
-          &ndash;
-          <span class="nowrap">
-            {{ festival.times.end | date }}
-            {{ festival.times.end | time }}
-          </span>
-        </template>
-        <template v-else>
-          <template v-if="festival.state == 'upcoming'">
-            <template v-if="festival.times.start - now > 24 * 60 * 60">
-              {{ festival.times.start - now | shortDuration | time.in }}
+        <div class="has-text-centered is-size-5 title-color festival-period-container" v-if="!globalSplatfestMode">
+            <div v-if="!showingResultsBar" class="festival-period" :style="{ 'background-color': festival.colors.middle.css_rgb }">
+                <template v-if="!screenshotMode">
+                    <span class="nowrap">
+                        {{ festival.times.start | date(dateOptions) }}
+                        {{ festival.times.start | time }}
+                    </span>
+                    &ndash;
+                    <span class="nowrap">
+                        {{ festival.times.end | date }}
+                        {{ festival.times.end | time }}
+                    </span>
+                </template>
+                <template v-else>
+                    <template v-if="festival.state == 'upcoming'">
+                        <template v-if="festival.times.start - now > 24 * 60 * 60">
+                            {{ festival.times.start - now | shortDuration | time.in }}
+                        </template>
+                        <template v-else>
+                            {{ festival.times.start - now | durationHours | time.in }}
+                        </template>
+                    </template>
+                    <template v-else-if="festival.state == 'past' && !results && festival.times.result > now">
+                        {{ festival.times.result - now | durationHours | resultsIn }}
+                    </template>
+                    <template v-else>
+                        {{ festival.times.end - now | durationHours | time.remaining }}
+                    </template>
+                </template>
+            </div>
+
+            <SplatfestWinnerBar :festival="festival" v-else />
+        </div>
+
+        <div class="splatfest-content has-text-centered" v-if="!screenshotMode && !globalSplatfestMode">
+            <template v-if="festival.state == 'upcoming'">
+                {{ festival.times.start - now | duration | time.in }}
             </template>
-            <template v-else>
-              {{ festival.times.start - now | durationHours | time.in }}
+
+            <template v-else-if="festival.state == 'active'">
+                {{ festival.times.end - now | duration | time.remaining }}
             </template>
-          </template>
-          <template v-else-if="festival.state == 'past' && !results && festival.times.result > now">
-            {{ festival.times.result - now | durationHours | resultsIn }}
-          </template>
-          <template v-else>
-            {{ festival.times.end - now | durationHours | time.remaining }}
-          </template>
-        </template>
-      </div>
 
-      <SplatfestWinnerBar v-else :festival="festival" />
+            <template v-else-if="festival.state == 'past' && !festival.results && festival.times.result > now">
+                {{ festival.times.result - now | duration | resultsIn }}
+            </template>
+        </div>
+
+        <!-- Spacer at the bottom -->
+        <div v-if="globalSplatfestMode">&nbsp;</div>
     </div>
-
-    <div v-if="!screenshotMode && !globalSplatfestMode" class="splatfest-content has-text-centered">
-      <template v-if="festival.state == 'upcoming'">
-        {{ festival.times.start - now | duration | time.in }}
-      </template>
-
-      <template v-else-if="festival.state == 'active'">
-        {{ festival.times.end - now | duration | time.remaining }}
-      </template>
-
-      <template v-else-if="festival.state == 'past' && !festival.results && festival.times.result > now">
-        {{ festival.times.result - now | duration | resultsIn }}
-      </template>
-    </div>
-
-    <!-- Spacer at the bottom -->
-    <div v-if="globalSplatfestMode">
-&nbsp;
-    </div>
-  </div>
 </template>
 
 <script>

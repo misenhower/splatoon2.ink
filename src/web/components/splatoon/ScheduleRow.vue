@@ -1,70 +1,62 @@
 <template>
-  <div>
-    <div class="level is-mobile is-marginless is-hidden-tablet">
-      <div class="level-left">
-        <template v-if="ruleName">
-          <div class="level-item title-color is-size-5">
-            {{ ruleName }}
-          </div>
-        </template>
-        <template v-else>
-          {{ timeFromNow }}
-        </template>
-      </div>
-      <div class="level-right">
-        <div class="level-item has-text-right">
-          <div>
-            <template v-if="ruleName && schedule.start_time > now">
-              {{ timeFromNow }}<span class="is-hidden-mobile">,&nbsp;</span>
-            </template>
-            <div class="is-size-7">
-              <template v-if="showStartDate">
-                {{ schedule.start_time | date }}
-              </template>
-              {{ schedule.start_time | time }} &ndash;
-              <template v-if="showEndDate">
-                {{ schedule.end_time | date }}
-              </template>
-              {{ schedule.end_time | time }}
+    <div>
+        <div class="level is-mobile is-marginless is-hidden-tablet">
+            <div class="level-left">
+                <template v-if="ruleName">
+                    <div class="level-item title-color is-size-5">{{ ruleName }}</div>
+                </template>
+                <template v-else>
+                    {{ timeFromNow }}
+                </template>
             </div>
-          </div>
+            <div class="level-right">
+                <div class="level-item has-text-right">
+                    <div>
+                        <template v-if="ruleName && schedule.start_time > now">
+                            {{ timeFromNow }}<span class="is-hidden-mobile">,&nbsp;</span>
+                        </template>
+                        <div class="is-size-7">
+                            <template v-if="showStartDate">
+                                {{ schedule.start_time | date }}
+                            </template>
+                            {{ schedule.start_time | time }} &ndash;
+                            <template v-if="showEndDate">
+                                {{ schedule.end_time | date }}
+                            </template>
+                            {{ schedule.end_time | time }}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <div v-if="schedule" class="columns is-slim">
-      <div class="column has-text-centered is-hidden-mobile" style="margin-top: auto; margin-bottom: auto;">
-        <div class="title is-size-5-fullhd is-size-5-touch" :class="ruleNameClass">
-          {{ ruleName }}
+        <div class="columns is-slim" v-if="schedule">
+            <div class="column has-text-centered is-hidden-mobile" style="margin-top: auto; margin-bottom: auto;">
+                <div class="title is-size-5-fullhd is-size-5-touch" :class="ruleNameClass">{{ ruleName }}</div>
+                <div class="subtitle is-size-6-fullhd is-size-6-touch" :class="scheduleClass">
+                    <template v-if="schedule.start_time > now">
+                        {{ timeFromNow }}
+                        <br />
+                    </template>
+                    <template v-if="showStartDate">
+                        {{ schedule.start_time | date }}
+                    </template>
+                    <span class="nowrap">{{ schedule.start_time | time }}</span>
+                    &ndash;
+                    <template v-if="showEndDate">
+                        {{ schedule.end_time | date }}
+                    </template>
+                    <span class="nowrap">{{ schedule.end_time | time }}</span>
+                </div>
+            </div>
+            <div class="column is-8">
+                <div class="columns is-mobile is-slim">
+                    <div class="column"><Stage :stage="schedule.stage_a" v-if="schedule.stage_a" /></div>
+                    <div class="column"><Stage :stage="schedule.stage_b" v-if="schedule.stage_b" /></div>
+                </div>
+            </div>
         </div>
-        <div class="subtitle is-size-6-fullhd is-size-6-touch" :class="scheduleClass">
-          <template v-if="schedule.start_time > now">
-            {{ timeFromNow }}
-            <br />
-          </template>
-          <template v-if="showStartDate">
-            {{ schedule.start_time | date }}
-          </template>
-          <span class="nowrap">{{ schedule.start_time | time }}</span>
-          &ndash;
-          <template v-if="showEndDate">
-            {{ schedule.end_time | date }}
-          </template>
-          <span class="nowrap">{{ schedule.end_time | time }}</span>
-        </div>
-      </div>
-      <div class="column is-8">
-        <div class="columns is-mobile is-slim">
-          <div class="column">
-            <Stage v-if="schedule.stage_a" :stage="schedule.stage_a" />
-          </div>
-          <div class="column">
-            <Stage v-if="schedule.stage_b" :stage="schedule.stage_b" />
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
