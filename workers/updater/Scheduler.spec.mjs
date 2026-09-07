@@ -180,6 +180,76 @@ describe('Scheduler', () => {
   });
 });
 
+describe('Background manual runs', () => {
+  it('persists a request, rejects overlap, and runs data without posting', async () => {
+    let release;
+    const gate = new Promise(resolve => { release = resolve; });
+    const renders = network({ beforeRequest: () => gate });
+    const scheduler = stub();
+    const { hourlyAt } = await scheduler.ensureArmed();
+    const result = await scheduler.startManual('data');
+    expect(result).toMatchObject({ ok: true, run: { mode: 'data', status: 'queued' } });
+    try {
+      expect((await scheduler.status()).pendingManual.id).toBe(result.run.id);
+      expect(await scheduler.startManual('social')).toMatchObject({ ok: false, busy: true });
+      expect(await scheduler.run()).toMatchObject({ ok: false, busy: true });
+      expect(await scheduler.pause()).toMatchObject({ ok: false, busy: true });
+    } finally { release(); }
+    const status = await runAlarmUntil(scheduler, s => !!s.lastManualRun);
+    expect(status.lastManualRun).toMatchObject({ id: result.run.id, ok: true, status: 'succeeded', social: { skipped: true } });
+    expect(status.pendingManual).toBeNull();
+    expect(status.hourlyAt).toBe(hourlyAt);
+    expect(renders).toHaveLength(0);
+  });
+  it('runs social from the published data without invoking SplatNet again', async () => {
+    network();
+    const scheduler = stub();
+    await scheduler.startManual('data');
+    await runAlarmUntil(scheduler, s => !!s.lastManualRun);
+    const requests = vi.fn();
+    const renders = network({ beforeRequest: requests });
+    const { run } = await scheduler.startManual('social');
+    const status = await runAlarmUntil(scheduler, s => s.lastManualRun?.id === run.id);
+    expect(status.lastManualRun).toMatchObject({ ok: true, updaters: { skipped: true }, social: { ok: true } });
+    expect(requests).not.toHaveBeenCalled();
+    expect(renders.length).toBeGreaterThan(0);
+  });
+  it('reports an interrupted run instead of automatically replaying an uncertain post', async () => {
+    const scheduler = stub();
+    const renders = network();
+    await scheduler.ensureArmed();
+    await runInDurableObject(scheduler, async (instance, state) => {
+      await state.storage.put('pendingManual', { id: 'interrupted', mode: 'social', status: 'running', startedAt: Date.now() - 1000 });
+    });
+    await scheduler.ensureArmed();
+    const status = await runAlarmUntil(scheduler, s => !!s.lastManualRun);
+    expect(status.lastManualRun).toMatchObject({ id: 'interrupted', ok: false, status: 'failed' });
+    expect(status.lastManualRun.error).toContain('interrupted');
+    expect(renders).toHaveLength(0);
+    expect(status.pendingManual).toBeNull();
+  });
+  it('still performs an hourly cycle that became due alongside a manual request', async () => {
+    network();
+    const scheduler = stub();
+    const { hourlyAt } = await scheduler.ensureArmed();
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(hourlyAt + 1);
+    await runInDurableObject(scheduler, async (instance, state) => {
+      await state.storage.put('pendingManual', { id: 'due', mode: 'data', status: 'queued', requestedAt: Date.now() });
+    });
+    const status = await runAlarmUntil(scheduler, s => !!s.lastRun);
+    expect(status.lastManualRun).toMatchObject({ id: 'due', ok: true, mode: 'data' });
+    expect(status.lastRun).toMatchObject({ ok: true, mode: 'both', social: { ok: true } });
+    expect(status.hourlyAt).toBe(hourlyAt + HOUR_MS);
+  });
+  it('rejects invalid modes and paused scheduling', async () => {
+    const scheduler = stub();
+    expect(await scheduler.startManual('anything')).toMatchObject({ ok: false });
+    await scheduler.pause();
+    expect(await scheduler.startManual('both')).toMatchObject({ ok: false, paused: true });
+  });
+});
+
 describe('Worker routing', () => {
   it('cron only calls the watchdog', async () => {
     const ensureArmed = vi.fn(async () => ({ armed: true }));
