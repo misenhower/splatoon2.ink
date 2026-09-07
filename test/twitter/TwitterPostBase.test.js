@@ -62,6 +62,20 @@ test('a failing client does not record a post time and does not block the other 
   assert.deepEqual(await json(s.privateBucket, 'twitter-lastTweetTimes.json'), { hourly: 3600 });
 });
 
+test('renders once per media type a client needs, with size from the screenshot', async () => {
+  class ScreenshotPost extends HourlyPost {
+    async getImage(data, format) { this.images++; return { image: new Uint8Array([format === 'jpeg' ? 2 : 1]), type: format === 'jpeg' ? 'image/jpeg' : 'image/png', width: 2432, height: 1368 }; }
+  }
+  const jpegClient = fakeClient('bluesky'); jpegClient.mediaType = 'image/jpeg';
+  const post = new ScreenshotPost(s, [jpegClient, twitter]);
+  await post.maybePostTweet();
+
+  assert.equal(post.images, 2); // one PNG (public copy + Twitter), one JPEG (Bluesky)
+  assert.deepEqual(jpegClient.sent[0].media, [{ file: new Uint8Array([2]), type: 'image/jpeg', width: 2432, height: 1368 }]);
+  assert.deepEqual(twitter.sent[0].media, [{ file: new Uint8Array([1]), type: 'image/png', width: 2432, height: 1368 }]);
+  assert.deepEqual(new Uint8Array(await (await s.publicBucket.get('twitter-images/hourly.png')).arrayBuffer()), new Uint8Array([1]));
+});
+
 test('with no data there is nothing to post', async () => {
   const post = new HourlyPost(s, [bluesky], { data: null });
   assert.equal(await post.maybePostTweet(), false);

@@ -1,6 +1,11 @@
-import http from 'node:http';
-import ecstatic from 'ecstatic';
-import puppeteer from 'puppeteer';
+// Screenshots of the site's screenshot page, rendered by Cloudflare Browser Rendering's REST
+// API. It is plain fetch, so the same code runs under Node and in a Worker. The page is the
+// deployed one (SITE_URL), which reads the published data.
+//
+// Configuration (environment variables / Worker secrets):
+//   SITE_URL                          e.g. https://splatoon2.ink
+//   CLOUDFLARE_ACCOUNT_ID
+//   CLOUDFLARE_BROWSER_RUN_API_TOKEN  an API token with Browser Rendering permission
 
 const viewport = {
     // Using a 16:9 ratio here by default to match Twitter's image card dimensions
@@ -10,88 +15,97 @@ const viewport = {
     deviceScaleFactor: 2,
 };
 
-function startHttpServer() {
-    return new Promise((resolve, reject) => {
-        const handler = ecstatic({ root: './dist' });
-        const server = http.createServer(handler);
-        server.on('listening', () => resolve(server));
-        server.listen();
-    });
+function config() {
+    let names = ['SITE_URL', 'CLOUDFLARE_ACCOUNT_ID', 'CLOUDFLARE_BROWSER_RUN_API_TOKEN'];
+    let missing = names.filter(name => !process.env[name]);
+    if (missing.length)
+        throw new Error(`Missing screenshot configuration: ${missing.join(', ')}`);
+
+    return {
+        siteUrl: process.env.SITE_URL,
+        accountId: process.env.CLOUDFLARE_ACCOUNT_ID,
+        apiToken: process.env.CLOUDFLARE_BROWSER_RUN_API_TOKEN,
+    };
 }
 
-function getBrowser() {
-    // Use Browserless when configured
-    if (process.env.USE_BROWSERLESS) {
-        return puppeteer.connect({
-            browserWSEndpoint: process.env.BROWSERLESS_ENDPOINT,
-        });
+async function errorMessage(response) {
+    let body = await response.text();
+
+    try {
+        let messages = JSON.parse(body).errors?.map(error => error.message).filter(Boolean);
+        if (messages?.length)
+            return messages.join('; ');
+    } catch {
+        // Not JSON; use the body as-is
     }
 
-    // Otherwise just launch normally
-    return puppeteer.launch({
-        args: [
-            '--no-sandbox', // Allow running as root inside the Docker container
-        ],
-        // headless: false, // For testing
-    });
+    return body || response.statusText || 'Unknown error';
 }
 
-async function captureScreenshot(options) {
-    // Create an HTTP server
-    const server = await startHttpServer();
-    const { port } = server.address();
+/**
+ * @param {{ hash: string, viewport?: object, format?: 'png' | 'jpeg' }} options
+ * @returns {Promise<{ image: Uint8Array, type: string, width: number, height: number }>}
+ */
+export async function captureScreenshot({ hash, viewport: viewportOverrides, format = 'png' }) {
+    let { siteUrl, accountId, apiToken } = config();
+    let thisViewport = Object.assign({}, viewport, viewportOverrides);
 
-    // Launch a new Chrome instance
-    const browser = await getBrowser();
+    let url = new URL('/screenshots.html', siteUrl);
+    url.hash = hash;
 
-    // Create a new page and set the viewport
-    const page = await browser.newPage();
-    let thisViewport = Object.assign({}, viewport, options.viewport);
-    page.setViewport(thisViewport);
+    let endpoint = new URL(`/client/v4/accounts/${accountId}/browser-rendering/screenshot`, 'https://api.cloudflare.com');
+    endpoint.searchParams.set('cacheTTL', '0');
 
-    // Navigate to the URL
-    let host = process.env.SCREENSHOT_HOST || 'localhost';
-    let url = new URL(`http://${host}:${port}/screenshots.html`);
-    url.hash = options.hash;
-    await page.goto(url, {
-        waitUntil: 'networkidle0', // Wait until the network is idle
+    let response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${apiToken}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            url: url.toString(),
+            viewport: thisViewport,
+            gotoOptions: { waitUntil: 'networkidle0' }, // Wait until the network is idle
+            screenshotOptions: format === 'jpeg' ? { type: 'jpeg', quality: 90 } : { type: 'png' },
+        }),
     });
 
-    // Take the screenshot
-    let result = await page.screenshot();
+    if (!response.ok)
+        throw new Error(`Browser Rendering screenshot failed (${response.status}): ${await errorMessage(response)}`);
 
-    // Close the browser and HTTP server
-    await browser.close();
-    server.close();
-
-    return result;
+    return {
+        image: new Uint8Array(await response.arrayBuffer()),
+        type: format === 'jpeg' ? 'image/jpeg' : 'image/png',
+        width: thisViewport.width * thisViewport.deviceScaleFactor,
+        height: thisViewport.height * thisViewport.deviceScaleFactor,
+    };
 }
 
-export function captureScheduleScreenshot(now, splatfestBattle = false) {
+export function captureScheduleScreenshot(now, splatfestBattle = false, format) {
     let hash = `/schedules/${now}`;
 
-    return captureScreenshot({ hash });
+    return captureScreenshot({ hash, format });
 }
 
-export function captureGearScreenshot(now) {
+export function captureGearScreenshot(now, format) {
     let hash = `/splatNetGear/${now}`;
 
-    return captureScreenshot({ hash });
+    return captureScreenshot({ hash, format });
 }
 
-export function captureSalmonRunScreenshot(now, mode) {
+export function captureSalmonRunScreenshot(now, mode, format) {
     let hash = `/salmonRun/${now}?mode=${mode}`;
 
-    return captureScreenshot({ hash });
+    return captureScreenshot({ hash, format });
 }
 
-export function captureSalmonRunGearScreenshot(now) {
+export function captureSalmonRunGearScreenshot(now, format) {
     let hash = `/salmonRunGear/${now}`;
 
-    return captureScreenshot({ hash });
+    return captureScreenshot({ hash, format });
 }
 
-export function captureNewWeaponScreenshot(now, weaponCount) {
+export function captureNewWeaponScreenshot(now, weaponCount, format) {
     let hash = `/newWeapon/${now}`;
 
     // There are a max of 4 weapons per row
@@ -103,12 +117,12 @@ export function captureNewWeaponScreenshot(now, weaponCount) {
     // Set a minimum overall image height
     height = Math.max(height, 700);
 
-    return captureScreenshot({ hash, viewport: { height }  });
+    return captureScreenshot({ hash, viewport: { height }, format });
 }
 
-export function captureSplatfestScreenshot(region, now, regions) {
+export function captureSplatfestScreenshot(region, now, regions, format) {
     regions = regions.join(',');
     let hash = `/splatfest/${region}/${now}?regions=${regions}`;
 
-    return captureScreenshot({ hash });
+    return captureScreenshot({ hash, format });
 }

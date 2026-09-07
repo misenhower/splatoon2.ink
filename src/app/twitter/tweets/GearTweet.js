@@ -27,9 +27,9 @@ export default class GearTweet extends TwitterPostBase {
         return merchandises[merchandises.length - 1];
     }
 
-    getImage(data) {
+    getImage(data, format) {
         let now = getTopOfCurrentHour();
-        return captureGearScreenshot(now);
+        return captureGearScreenshot(now, format);
     }
 
     getPublicImageFilename() {

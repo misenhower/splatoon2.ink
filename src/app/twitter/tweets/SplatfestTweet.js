@@ -108,8 +108,8 @@ export default class SplatfestTweet extends TwitterPostBase {
         return { festival: (await this.getFestivals())[0], type: 'start' };
     }
 
-    async getImage(data) {
-        return captureSplatfestScreenshot(this.region, await this.getDataTime(), await this.regions(data));
+    async getImage(data, format) {
+        return captureSplatfestScreenshot(this.region, await this.getDataTime(), await this.regions(data), format);
     }
 
     async getText(data) {

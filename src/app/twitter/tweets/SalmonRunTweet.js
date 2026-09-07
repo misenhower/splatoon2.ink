@@ -81,9 +81,9 @@ export default class SalmonRunTweet extends TwitterPostBase {
         return this.writeState(PREVIOUS_SCHEDULE_KEY, schedule);
     }
 
-    async getImage(data) {
+    async getImage(data, format) {
         let mode = (data.current) ? 'current' : 'upcoming';
-        return captureSalmonRunScreenshot(await this.getDataTime(), mode);
+        return captureSalmonRunScreenshot(await this.getDataTime(), mode, format);
     }
 
     async getText(data) {

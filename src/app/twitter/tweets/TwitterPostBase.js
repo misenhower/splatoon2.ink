@@ -1,4 +1,5 @@
 import { getTopOfCurrentHour } from '../../../common/time.js';
+import { pngSize } from '../../../common/png.js';
 
 export default class TwitterPostBase {
     /**
@@ -51,15 +52,13 @@ export default class TwitterPostBase {
             // Get the Tweet's text and image
             let data = await this.getData();
             let text = await this.getText(data);
-            let image = await this.getImage(data);
+            let image = await this.getMedia(data, 'image/png');
 
             // Maybe save the image
-            await this.maybeSavePublicImage(data, image);
+            await this.maybeSavePublicImage(data, image.file);
 
-            let status = {
-                status: text,
-                media: [{ file: image, type: 'image/png' }],
-            };
+            // Some clients want a different format (Bluesky limits image size, so it gets JPEG)
+            let media = { 'image/png': image };
 
             for (let client of this.clients) {
                 if (!await client.canSend()) {
@@ -72,6 +71,13 @@ export default class TwitterPostBase {
                 }
 
                 try {
+                    let mediaType = client.mediaType ?? 'image/png';
+                    media[mediaType] ??= await this.getMedia(data, mediaType);
+                    let status = {
+                        status: text,
+                        media: [media[mediaType]],
+                    };
+
                     await client.send(status);
                     await this.updateLastTweetTime(client);
                     this.info(`Posted to ${client.name}`);
@@ -104,9 +110,9 @@ export default class TwitterPostBase {
             }
 
             let key = this.getTestScreenshotKey();
-            let image = await this.getImage(data);
+            let { file } = await this.getMedia(data, 'image/png');
 
-            await this.publicStorage.writeBytes(key, image);
+            await this.publicStorage.writeBytes(key, file);
             this.info(`Saved screenshot as ${key}`);
         }
         catch (e) {
@@ -214,8 +220,22 @@ export default class TwitterPostBase {
         return this.getData();
     }
 
-    // The image data to be posted with the Tweet
-    async getImage(data) { }
+    // The image to post with the Tweet, as a screenshot result ({ image, type, width, height })
+    // or raw PNG bytes. `format` is 'png' or 'jpeg'.
+    async getImage(data, format) { }
+
+    // The image as a media attachment: { file, type, width?, height? }
+    async getMedia(data, mediaType) {
+        let format = mediaType === 'image/jpeg' ? 'jpeg' : 'png';
+        let result = await this.getImage(data, format);
+
+        if (result instanceof Uint8Array) {
+            let size = pngSize(result) ?? {};
+            return { file: result, type: 'image/png', ...size };
+        }
+
+        return { file: result.image, type: result.type, width: result.width, height: result.height };
+    }
 
     // The filename to store the image as (optional)
     getPublicImageFilename() { }

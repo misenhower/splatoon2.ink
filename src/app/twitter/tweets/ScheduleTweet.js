@@ -36,8 +36,8 @@ export default class ScheduleTweet extends TwitterPostBase {
         return { regular, gachi, league };
     }
 
-    async getImage(data) {
-        return captureScheduleScreenshot(data.regular.start_time, await this.globalSplatfestOpenInAllRegions());
+    async getImage(data, format) {
+        return captureScheduleScreenshot(data.regular.start_time, await this.globalSplatfestOpenInAllRegions(), format);
     }
 
     getPublicImageFilename() {

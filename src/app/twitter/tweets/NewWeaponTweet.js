@@ -30,8 +30,8 @@ export default class NewWeaponTweet extends TwitterPostBase {
             return availabilities;
     }
 
-    getImage(data) {
-        return captureNewWeaponScreenshot(data[0].release_time, data.length);
+    getImage(data, format) {
+        return captureNewWeaponScreenshot(data[0].release_time, data.length, format);
     }
 
     getText(data) {

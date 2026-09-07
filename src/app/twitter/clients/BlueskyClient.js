@@ -1,12 +1,18 @@
 import { BskyAgent, RichText } from '@atproto/api';
-import sharp from 'sharp';
 
 export default class BlueskyClient
 {
   key = 'bluesky';
   name = 'Bluesky';
 
+  // Bluesky limits image size, so posts are rendered as JPEG for it
+  mediaType = 'image/jpeg';
+
   #agent;
+
+  constructor({ agent = null } = {}) {
+    this.#agent = agent;
+  }
 
   async canSend() {
     return process.env.BLUESKY_SERVICE
@@ -27,23 +33,18 @@ export default class BlueskyClient
     }
   }
 
-  async send(status, generator) {
+  async send(status) {
     await this.login();
 
     // Upload images
     let images = await Promise.all(
       status.media.map(async m => {
-        // We have to convert the PNG to a JPG for Bluesky because of size limits
-        let jpeg = sharp(m.file).jpeg();
-        let metadata = await jpeg.metadata();
-        let buffer = await jpeg.toBuffer();
-
-        let response = await this.#agent.uploadBlob(buffer, { encoding: 'image/jpeg' });
+        let response = await this.#agent.uploadBlob(m.file, { encoding: m.type });
 
         return {
           image: response.data.blob,
           alt: m.altText || '',
-          aspectRatio: { width: metadata.width, height: metadata.height },
+          ...(m.width && m.height ? { aspectRatio: { width: m.width, height: m.height } } : {}),
         };
       }),
     );

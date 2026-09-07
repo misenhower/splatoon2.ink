@@ -21,8 +21,8 @@ export default class SalmonRunGearTweet extends TwitterPostBase {
         return this.getRewardGear();
     }
 
-    getImage(data) {
-        return captureSalmonRunGearScreenshot(data.available_time);
+    getImage(data, format) {
+        return captureSalmonRunGearScreenshot(data.available_time, format);
     }
 
     getText(data) {
