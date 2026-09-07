@@ -19,8 +19,6 @@ describe('runUpdaters', () => {
     let summary = await runUpdaters(env);
 
     expect(summary.ok).toBe(true);
-    expect(summary.updaters[1].summary).toMatchObject({ localizedFetches: expect.any(Array), imagesDownloaded: expect.any(Number), stagesSeeded: true });
-    expect(Object.keys(summary.updaters[1].summary.timings)).toEqual(['fetch', 'localize', 'process', 'publish', 'images']);
     expect(summary.updaters.map(u => u.name)).toEqual([
       'Original Gear', 'Schedules', 'Co-op Schedules', 'Timeline', 'Festivals NA', 'Festivals EU', 'Festivals JP', 'Merchandises',
     ]);

@@ -41,9 +41,7 @@ test('schedules: seeds the known stages from SplatNet and records new stages onc
     '/api/schedules': () => schedules,
     '/api/data/stages': () => ({ stages: [reef, fitness] }),
   });
-  const summary = await new SchedulesUpdater(b).update();
-  assert.equal(summary.stagesSeeded, true);
-  assert.deepEqual(summary.newStages, ['Skipper Pavilion']);
+  await new SchedulesUpdater(b).update();
 
   assert.deepEqual(await json(b.publicBucket, 'data/schedules.json'), schedules);
   assert.deepEqual(await json(b.privateBucket, 'stages.json'), [
@@ -112,8 +110,7 @@ test('festivals: merges one region into the shared file, fetches missing ranking
     '/api/festivals/pasts': () => ({ festivals: [festival(1)], results: [{ festival_id: 1 }, { festival_id: 2 }] }),
     '/api/festivals/2/rankings': () => ({ rankings: 'two' }),
   });
-  const summary = await new FestivalsUpdater('NA', b).update();
-  assert.equal(summary.rankingsFetched, 1);
+  await new FestivalsUpdater('NA', b).update();
 
   const data = await json(b.publicBucket, 'data/festivals.json');
   assert.deepEqual(Object.keys(data).sort(), ['eu', 'na']);
@@ -135,10 +132,9 @@ test('original gear: mirrors skill images from the bundled skills data', async (
   const images = Object.values(skills).map(s => s.image).filter(Boolean);
   await b.publicBucket.put(`assets/splatnet${images[0]}`, 'existing');
   const splatnet = fakeSplatNet();
-  const summary = await new OriginalGearImageUpdater(b).update();
+  await new OriginalGearImageUpdater(b).update();
 
   assert.equal(splatnet.images.length, images.length - 2); // one already present, one from the embedded backup
-  assert.equal(summary.imagesDownloaded, images.length - 1); // the backup counts as downloaded
   assert.equal(keys(b.publicBucket).length, images.length);
   assert.ok(keys(b.publicBucket).every(k => k.startsWith('assets/splatnet/images/skill/')));
 });

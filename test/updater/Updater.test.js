@@ -39,13 +39,7 @@ afterEach(() => mock.restoreAll());
 
 test('publishes data, locale document, and calendar with the right metadata', async () => {
   const splatnet = fakeSplatNet({ '/api/things': ({ language }) => thingsFor(language) });
-  const summary = await new ThingsUpdater(b).update();
-
-  assert.deepEqual(Object.keys(summary.timings), ['fetch', 'localize', 'process', 'publish', 'images']);
-  assert.deepEqual(summary.localizedFetches, ['es', 'es-MX', 'fr', 'fr-CA', 'de', 'nl', 'it', 'ru', 'ja']);
-  assert.deepEqual(summary.localesWritten, ['en', 'es', 'es-MX', 'fr', 'fr-CA', 'de', 'nl', 'it', 'ru', 'ja']);
-  assert.equal(summary.imagesDownloaded, 2);
-  assert.equal(typeof summary.totalMs, 'number');
+  await new ThingsUpdater(b).update();
 
   assert.deepEqual(await json(b.publicBucket, 'data/things.json'), thingsFor('en'));
   assert.deepEqual((await b.publicBucket.head('data/things.json')).httpMetadata, {
@@ -75,11 +69,8 @@ test('fetches each language with missing strings using that region\'s session, t
 
   const second = fakeSplatNet({ '/api/things': ({ language }) => thingsFor(language) });
   const puts = mock.method(b.publicBucket, 'put');
-  const summary = await new ThingsUpdater(b).update();
+  await new ThingsUpdater(b).update();
   assert.deepEqual(second.api.map(r => r.language), ['en']);
-  assert.deepEqual(summary.localizedFetches, []);
-  assert.deepEqual(summary.localesWritten, []);
-  assert.equal(summary.imagesDownloaded, 0);
   assert.deepEqual(puts.mock.calls.map(c => c.arguments[0]).filter(k => k.startsWith('data/locale/')), []);
 });
 

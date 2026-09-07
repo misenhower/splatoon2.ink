@@ -46,13 +46,9 @@ export default class FilesystemStorage {
         return buffer === null ? null : JSON.parse(buffer.toString('utf8'));
     }
 
-    /** @returns {Promise<boolean>} whether anything was written (unchanged content is skipped, as BucketStorage does) */
+    /** @returns {Promise<boolean>} always true; the filesystem write is cheap enough not to dedupe */
     async writeJson(key, data) {
-        let serialized = JSON.stringify(data);
-        let existing = await this.#read(key);
-        if (existing !== null && existing.toString('utf8') === serialized)
-            return false;
-        await this.#write(key, serialized);
+        await this.#write(key, JSON.stringify(data));
         return true;
     }
 

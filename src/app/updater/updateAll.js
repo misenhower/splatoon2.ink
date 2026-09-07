@@ -26,9 +26,7 @@ export function createUpdaters(storage) {
  *
  * @param {object} storage
  * @param {{ only?: string[] }} [options]  restrict the run to updaters with these names
- * @returns {Promise<Array<{ name: string, ok: boolean, ms: number, error?: string, summary?: object }>>}
- *   `summary` is what the updater reports about its run (phase timings, localized fetches,
- *   locale documents written, images downloaded, and updater-specific details).
+ * @returns {Promise<Array<{ name: string, ok: boolean, ms: number, error?: string }>>}
  */
 export default async function updateAll(storage, { only } = {}) {
     let results = [];
@@ -40,8 +38,8 @@ export default async function updateAll(storage, { only } = {}) {
 
         let started = Date.now();
         try {
-            let summary = await updater.update();
-            results.push({ name, ok: true, ms: Date.now() - started, summary });
+            await updater.update();
+            results.push({ name, ok: true, ms: Date.now() - started });
         } catch (e) {
             console.error(e);
             results.push({ name, ok: false, ms: Date.now() - started, error: e instanceof Error ? e.message : String(e) });
