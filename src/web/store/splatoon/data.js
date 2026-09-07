@@ -3,6 +3,7 @@ import { nextDataRefreshAt } from '../../../common/dataRefresh.js';
 let updateDataTimer;
 let updatingData = false;
 let refreshGeneration = 0;
+let removeVisibilityListener;
 
 export const namespaced = true;
 
@@ -65,21 +66,39 @@ export const actions = {
             return;
         updatingData = true;
         let generation = ++refreshGeneration;
+        let refreshing = false;
+        let lastRefresh = -Infinity;
 
         async function refresh() {
+            if (!updatingData || generation !== refreshGeneration || refreshing)
+                return;
+            refreshing = true;
+            lastRefresh = Date.now();
+            clearTimeout(updateDataTimer);
+            updateDataTimer = null;
             try {
                 await dispatch('updateAll');
             } catch (error) {
                 console.error('Could not refresh site data', error);
             } finally {
+                refreshing = false;
                 if (updatingData && generation === refreshGeneration)
                     updateDataTimer = setTimeout(refresh, nextDataRefreshAt() - Date.now());
             }
         }
+        function onVisibilityChange() {
+            // Match Splatoon3's activation cooldown, without delaying the hourly retries.
+            if (document.visibilityState === 'visible' && Date.now() - lastRefresh >= 60_000)
+                void refresh();
+        }
+        document.addEventListener('visibilitychange', onVisibilityChange);
+        removeVisibilityListener = () => document.removeEventListener('visibilitychange', onVisibilityChange);
         return refresh();
     },
     stopUpdatingData() {
         updatingData = false;
+        removeVisibilityListener?.();
+        removeVisibilityListener = null;
         clearTimeout(updateDataTimer);
         updateDataTimer = null;
     },

@@ -1,9 +1,12 @@
 import { afterEach, beforeEach, test, mock } from 'node:test';
 import assert from 'node:assert/strict';
+import { setImmediate } from 'node:timers/promises';
 import { actions } from '../../src/web/store/splatoon/data.js';
 
 let timers;
 let commits;
+let page;
+let originalDocument;
 const context = {
     rootGetters: { 'splatoon/languages/selectedLanguage': null },
     dispatch(name) { return actions[name](context); },
@@ -11,6 +14,10 @@ const context = {
 };
 
 beforeEach(() => {
+    originalDocument = Object.getOwnPropertyDescriptor(globalThis, 'document');
+    page = new EventTarget;
+    page.visibilityState = 'visible';
+    Object.defineProperty(globalThis, 'document', { configurable: true, value: page });
     timers = new Map;
     commits = [];
     let id = 0;
@@ -20,6 +27,10 @@ beforeEach(() => {
 afterEach(() => {
     actions.stopUpdatingData();
     mock.restoreAll();
+    if (originalDocument)
+        Object.defineProperty(globalThis, 'document', originalDocument);
+    else
+        delete globalThis.document;
 });
 
 test('a stalled body times out and leaves a future refresh scheduled', async () => {
@@ -60,5 +71,65 @@ test('stop and restart while an old refresh finishes creates only one timer', as
     await Promise.all([first, second]);
     assert.equal(timers.size, 1);
     await actions.startUpdatingData(context); // Already running: no extra fetch or timer
+    assert.equal(timers.size, 1);
+});
+
+function visibility(state) {
+    page.visibilityState = state;
+    page.dispatchEvent(new Event('visibilitychange'));
+}
+
+test('returning to an old tab refreshes immediately, with a cooldown and one timer', async () => {
+    let now = Date.parse('2026-09-07T10:10:00Z');
+    mock.method(Date, 'now', () => now);
+    const fetching = mock.method(globalThis, 'fetch', async () => Response.json({ current: true }));
+    await actions.startUpdatingData(context);
+    assert.equal(fetching.mock.callCount(), 5);
+    now += 60_000;
+    visibility('hidden');
+    await setImmediate();
+    assert.equal(fetching.mock.callCount(), 5);
+    visibility('visible');
+    await setImmediate();
+    assert.equal(fetching.mock.callCount(), 10);
+    assert.equal(timers.size, 1);
+    visibility('hidden');
+    visibility('visible');
+    await setImmediate();
+    assert.equal(fetching.mock.callCount(), 10);
+    actions.stopUpdatingData();
+    now += 60_000;
+    visibility('visible');
+    await setImmediate();
+    assert.equal(fetching.mock.callCount(), 10);
+    assert.equal(timers.size, 0);
+});
+
+test('activation does not overlap an in-flight refresh or leave a timer after stopping', async () => {
+    let now = Date.now();
+    mock.method(Date, 'now', () => now);
+    let release;
+    let pending = new Promise(resolve => { release = resolve; });
+    const fetching = mock.method(globalThis, 'fetch', async () => { await pending; return Response.json({ current: true }); });
+    let refreshing = actions.startUpdatingData(context);
+    now += 60_000;
+    visibility('visible');
+    assert.equal(fetching.mock.callCount(), 5);
+    actions.stopUpdatingData();
+    release();
+    await refreshing;
+    assert.equal(timers.size, 0);
+});
+
+test('activation cooldown does not suppress the scheduled top-of-hour refresh', async () => {
+    let now = Date.parse('2026-09-07T10:59:50Z');
+    mock.method(Date, 'now', () => now);
+    const fetching = mock.method(globalThis, 'fetch', async () => Response.json({ current: true }));
+    await actions.startUpdatingData(context);
+    const [id, scheduled] = [...timers.entries()][0];
+    timers.delete(id); // A real timeout is removed before its callback runs.
+    now += 40_000;
+    await scheduled.callback();
+    assert.equal(fetching.mock.callCount(), 10);
     assert.equal(timers.size, 1);
 });
