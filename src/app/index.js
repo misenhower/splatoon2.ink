@@ -1,9 +1,9 @@
 import '../common/bootstrap.js';
 import { runAction } from '../common/cli.js';
-import { updateAllLocally, postLocally, testScreenshotsLocally } from './local.js';
+import { updateAll, sendStatuses, testScreenshots } from './node.js';
 
 await runAction({
-    splatnet: updateAllLocally,
-    social: postLocally,
-    socialTest: testScreenshotsLocally,
+    splatnet: updateAll,
+    social: sendStatuses,
+    socialTest: testScreenshots,
 }, process.argv.slice(2));

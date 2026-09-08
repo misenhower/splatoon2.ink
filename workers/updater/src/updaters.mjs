@@ -1,5 +1,5 @@
 // Runs the shared updaters (src/app/updater) against this Worker's R2 bindings.
-// This is the Worker's counterpart of src/app/local.js.
+// This is the Worker's counterpart of src/app/node.js.
 
 import { BucketStorage } from '../../../src/common/storage/index.js';
 import { updateAll } from '../../../src/app/updater/index.js';
