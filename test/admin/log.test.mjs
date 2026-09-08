@@ -1,11 +1,11 @@
 import { test, mock } from 'node:test';
 import assert from 'node:assert/strict';
-import { createRunLog, logMessage } from '../../src/app/log.js';
+import { RunLog, logMessage } from '../../src/app/log.js';
 
 test('bounds retained logs, redacts secrets, and preserves normal console output', async () => {
   const consoleLog = mock.method(console, 'info', () => {});
   try {
-    const capture = createRunLog(['secret-value']);
+    const capture = new RunLog(['secret-value']);
     await capture.run(async () => {
       for (let i = 0; i < 205; i++) logMessage('info', `line ${i}`);
       logMessage('info', 'secret-value Bearer sensitive-token');
@@ -21,8 +21,8 @@ test('bounds retained logs, redacts secrets, and preserves normal console output
 test('concurrent run contexts do not capture each other or unrelated messages', async () => {
   mock.method(console, 'info', () => {});
   try {
-    const a = createRunLog(),
-      b = createRunLog();
+    const a = new RunLog(),
+      b = new RunLog();
     await Promise.all([
       a.run(async () => {
         await Promise.resolve();

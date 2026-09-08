@@ -1,4 +1,4 @@
-import { createRunLog, logMessage } from '../../../src/app/log.js';
+import { RunLog, logMessage } from '../../../src/app/log.js';
 // One owner for the hourly update → social pipeline and authenticated manual runs.
 // The alarm targets :00:10; the cron watchdog repairs a missing alarm. Alarms can be late.
 import { DurableObject } from 'cloudflare:workers';
@@ -127,7 +127,7 @@ export class Scheduler extends DurableObject {
     const secrets = Object.entries({ ...process.env, ...this.env })
       .filter(([key]) => /TOKEN|PASSWORD|SESSION|ACCOUNT_ID|SECRET/.test(key))
       .map(([, value]) => value);
-    const capture = createRunLog(secrets);
+    const capture = new RunLog(secrets);
     this.#activeRun = { mode, startedAt: Date.now(), logs: capture.snapshot };
     try {
       return await capture.run(async () => {
