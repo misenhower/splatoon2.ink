@@ -1,5 +1,4 @@
 import SocialPostBase from './SocialPostBase.js';
-import { captureSalmonRunGearScreenshot } from '../../screenshots/index.js';
 import moment from 'moment-timezone';
 
 export default class SalmonRunGearPost extends SocialPostBase {
@@ -22,7 +21,7 @@ export default class SalmonRunGearPost extends SocialPostBase {
     }
 
     getImage(data) {
-        return captureSalmonRunGearScreenshot(data.available_time);
+        return this.screenshots.captureSalmonRunGearScreenshot(data.available_time);
     }
 
     getText(data) {

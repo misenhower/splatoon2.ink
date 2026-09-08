@@ -9,17 +9,18 @@ import SplatfestPost from './SplatfestPost.js';
 /**
  * @param {{ publicStorage: object, privateStorage: object }} storage
  * @param {object[]} clients
+ * @param {import('../../screenshots/ScreenshotGenerator.js').default} screenshots
  */
-export function createPosts(storage, clients) {
+export function createPosts(storage, clients, screenshots) {
     return [
-        new SchedulePost(storage, clients),
-        new GearPost(storage, clients),
-        new SalmonRunPost(storage, clients),
-        // new SalmonRunGearPost(storage, clients),
-        new NewWeaponPost(storage, clients),
-        new NewStagePost(storage, clients),
-        new SplatfestPost('na', storage, clients),
-        new SplatfestPost('eu', storage, clients),
-        new SplatfestPost('jp', storage, clients),
+        new SchedulePost(storage, clients, screenshots),
+        new GearPost(storage, clients, screenshots),
+        new SalmonRunPost(storage, clients, screenshots),
+        // new SalmonRunGearPost(storage, clients, screenshots),
+        new NewWeaponPost(storage, clients, screenshots),
+        new NewStagePost(storage, clients, screenshots),
+        new SplatfestPost('na', storage, clients, screenshots),
+        new SplatfestPost('eu', storage, clients, screenshots),
+        new SplatfestPost('jp', storage, clients, screenshots),
     ];
 }

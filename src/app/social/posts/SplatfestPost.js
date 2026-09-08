@@ -1,10 +1,9 @@
 import SocialPostBase from './SocialPostBase.js';
-import { captureSplatfestScreenshot } from '../../screenshots/index.js';
 import { splatoonRegions } from '../../../common/regions.js';
 
 export default class SplatfestPost extends SocialPostBase {
-    constructor(region, storage, clients) {
-        super(storage, clients);
+    constructor(region, storage, clients, screenshots) {
+        super(storage, clients, screenshots);
 
         this.region = region;
         this.regionInfo = this.getRegionInfo();
@@ -109,7 +108,7 @@ export default class SplatfestPost extends SocialPostBase {
     }
 
     async getImage(data) {
-        return captureSplatfestScreenshot(this.region, await this.getDataTime(), await this.regions(data));
+        return this.screenshots.captureSplatfestScreenshot(this.region, await this.getDataTime(), await this.regions(data));
     }
 
     async getText(data) {

@@ -1,5 +1,4 @@
 import SocialPostBase from './SocialPostBase.js';
-import { captureNewWeaponScreenshot } from '../../screenshots/index.js';
 
 export default class NewWeaponPost extends SocialPostBase {
     getKey() { return 'weapon'; }
@@ -31,7 +30,7 @@ export default class NewWeaponPost extends SocialPostBase {
     }
 
     getImage(data) {
-        return captureNewWeaponScreenshot(data[0].release_time, data.length);
+        return this.screenshots.captureNewWeaponScreenshot(data[0].release_time, data.length);
     }
 
     getText(data) {

@@ -39,7 +39,8 @@
     "updater:tail": "wrangler tail --config workers/updater/wrangler.jsonc",
     "social": "node src/app/index.js social",
     "social:test": "node src/app/index.js socialTest",
-    "admin:preview": "node workers/updater/preview/server.mjs"
+    "admin:preview": "node workers/updater/preview/server.mjs",
+    "screenshot": "node src/app/screenshots/cli.js"
   },
   "dependencies": {
     "@atproto/api": "^0.20.42",
@@ -59,6 +60,8 @@
     "lodash": "^4.18.1",
     "mkdirp": "^3.0.1",
     "moment-timezone": "^0.6.3",
+    "puppeteer": "^25.10.0",
+    "serve-handler": "^6.1.7",
     "sharp": "^0.35.4",
     "v-click-outside": "^3.0.1",
     "vue": "^2.7.16",

@@ -1,3 +1,5 @@
+import BrowserRunClient from '../../../src/app/screenshots/BrowserRunClient.js';
+import ScreenshotGenerator from '../../../src/app/screenshots/ScreenshotGenerator.js';
 import stringify from 'json-stable-stringify';
 import { sendStatuses, createClients } from '../../../src/app/social/index.js';
 import { fetchWithTimeout } from '../../../src/common/fetch.js';
@@ -32,7 +34,11 @@ export async function runPosters(env) {
   for (let client of clients)
     if (await client.canSend())
       enabled.push(client.key);
-  let result = await sendStatuses(storage, clients);
+  let screenshots = new ScreenshotGenerator(new BrowserRunClient({
+    accountId: process.env.CLOUDFLARE_ACCOUNT_ID,
+    apiToken: process.env.CLOUDFLARE_BROWSER_RUN_API_TOKEN,
+  }), process.env.SITE_URL);
+  let result = await sendStatuses(storage, clients, screenshots);
   let summary = { ...result, ms: Date.now() - started, clients: enabled };
   createLogger('social')[summary.ok ? 'info' : 'error']('Social run finished', summary);
   return summary;

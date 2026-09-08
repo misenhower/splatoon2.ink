@@ -9,11 +9,13 @@ export default class SocialPostBase {
      *   publicStorage holds the site data this post reads and the public copy of its image;
      *   privateStorage holds the last-posted times and other state.
      * @param {object[]} clients  the social clients to post through (see ../clients/)
+     * @param {import('../../screenshots/ScreenshotGenerator.js').default} screenshots
      */
-    constructor(storage = {}, clients = []) {
+    constructor(storage = {}, clients = [], screenshots) {
         this.publicStorage = storage.publicStorage;
         this.privateStorage = storage.privateStorage;
         this.clients = clients;
+        this.screenshots = screenshots;
     }
 
     async maybePost() {

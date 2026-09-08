@@ -1,5 +1,4 @@
 import SocialPostBase from './SocialPostBase.js';
-import { captureScheduleScreenshot } from '../../screenshots/index.js';
 import finalFest from '../../../common/data/finalFest.json' with { type: 'json' };
 import shiftyStations from '../../../common/data/shiftyStations.json' with { type: 'json' };
 
@@ -37,7 +36,7 @@ export default class SchedulePost extends SocialPostBase {
     }
 
     getImage(data) {
-        return captureScheduleScreenshot(data.regular.start_time);
+        return this.screenshots.captureScheduleScreenshot(data.regular.start_time);
     }
 
     getPublicImageFilename() {

@@ -25,9 +25,10 @@ function pinTime(post, time) {
 }
 
 test('createPosts builds every post against the same storage and clients', () => {
-  const posts = createPosts(s, [client]);
+  const screenshots = {};
+  const posts = createPosts(s, [client], screenshots);
   assert.deepEqual(posts.map(t => t.getKey()), ['schedule', 'gear', 'salmonrun', 'weapon', 'newstage', 'splatfest-na', 'splatfest-eu', 'splatfest-jp']);
-  assert.ok(posts.every(t => t.publicStorage === s.publicStorage && t.clients[0] === client));
+  assert.ok(posts.every(t => t.publicStorage === s.publicStorage && t.clients[0] === client && t.screenshots === screenshots));
 });
 
 test('schedule: posts the rotation for the current hour, with new-stage wording when the stage is new', async () => {

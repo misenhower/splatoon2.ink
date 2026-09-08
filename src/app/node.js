@@ -4,6 +4,7 @@
 import FilesystemStorage from '../common/storage/FilesystemStorage.js';
 import * as updater from './updater/index.js';
 import * as social from './social/index.js';
+import { withScreenshots } from './screenshots/node.js';
 
 export function filesystemStorage() {
     return {
@@ -20,12 +21,13 @@ export async function updateAll() {
 }
 
 export async function sendStatuses() {
-    let result = await social.sendStatuses(filesystemStorage());
+    let clients = social.createClients();
+    let result = await withScreenshots(screenshots => social.sendStatuses(filesystemStorage(), clients, screenshots));
     if (!result.ok)
         throw new Error('One or more social posts failed.');
     return result;
 }
 
 export function testScreenshots() {
-    return social.testScreenshots(filesystemStorage());
+    return withScreenshots(screenshots => social.testScreenshots(filesystemStorage(), [], screenshots));
 }

@@ -1,5 +1,4 @@
 import SocialPostBase from './SocialPostBase.js';
-import { captureSalmonRunScreenshot } from '../../screenshots/index.js';
 
 const PREVIOUS_SCHEDULE_KEY = 'salmonrun-previousSchedule.json';
 
@@ -83,7 +82,7 @@ export default class SalmonRunPost extends SocialPostBase {
 
     async getImage(data) {
         let mode = (data.current) ? 'current' : 'upcoming';
-        return captureSalmonRunScreenshot(await this.getDataTime(), mode);
+        return this.screenshots.captureSalmonRunScreenshot(await this.getDataTime(), mode);
     }
 
     async getText(data) {

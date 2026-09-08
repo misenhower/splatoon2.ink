@@ -1,5 +1,4 @@
 import SocialPostBase from './SocialPostBase.js';
-import { captureGearScreenshot } from '../../screenshots/index.js';
 import { getTopOfCurrentHour } from '../../../common/time.js';
 
 export default class GearPost extends SocialPostBase {
@@ -29,7 +28,7 @@ export default class GearPost extends SocialPostBase {
 
     getImage(data) {
         let now = getTopOfCurrentHour();
-        return captureGearScreenshot(now);
+        return this.screenshots.captureGearScreenshot(now);
     }
 
     getPublicImageFilename() {
