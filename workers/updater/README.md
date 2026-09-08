@@ -85,6 +85,49 @@ repeat rendering, never the social send; exhausted failures still reach the hour
 pipeline's bounded retry mechanism. Errors are reported rather than logged
 as successful social runs.
 
+## Local screenshots and Browser Run testing
+
+Node commands select `SCREENSHOT_PROVIDER=puppeteer` or `cloudflare`, matching
+splat3's setting name. There is no implicit provider fallback. The Worker
+constructs its `BrowserRunClient` directly and does not import Puppeteer.
+`ScreenshotGenerator` owns the shared routes, viewport, and page-ready selector;
+either renderer returns PNG bytes. No new package import conditions are used.
+
+With Puppeteer, leave `SITE_URL` empty to temporarily serve the built `dist/`
+on loopback. Run `npm run build` first and provide the usual data/assets in
+`dist/`. Puppeteer installs its own Chrome; Browserless is not required.
+Set `SITE_URL=http://127.0.0.1:8080` to use `npm run serve` instead. The Vue dev
+server already serves data/assets from `dist/`; keep those files aligned with
+the data the social test reads. Local rendering waits for the page-ready signal
+and uses 10-second navigation, readiness, and browser-protocol timeouts.
+
+```sh
+# Generate the social test images against the local build.
+SCREENSHOT_PROVIDER=puppeteer SITE_URL= npm run social:test
+
+# Capture one route; replace the timestamp with a rotation in your data.
+SCREENSHOT_PROVIDER=puppeteer SITE_URL= npm run screenshot -- \
+  --hash '/schedules/1788652800' --output dist/test-screenshots/schedule.png
+
+# Capture a running dev server directly.
+npm run screenshot -- --provider puppeteer \
+  --url 'http://127.0.0.1:8080/screenshots.html#/schedules/1788652800'
+
+# Exercise the actual Browser Run client from Node against a reachable site.
+npm run screenshot -- --provider cloudflare \
+  --url 'https://dev.splatoon2.ink/screenshots.html#/schedules/1788652800' \
+  --output dist/test-screenshots/cloudflare.png
+```
+
+`npm run screenshot` is capture-only: it does not read social data, compare
+published datasets, post messages, update checkpoints, or convert to JPEG.
+It loads `.env`, accepts either `--url` or `--hash`, and saves a PNG. Cloudflare
+still requires `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_BROWSER_RUN_API_TOKEN`,
+and cannot reach localhost directly. `--url` needs no `SITE_URL`; `--hash` uses
+`SITE_URL` (or Puppeteer's temporary server). All screenshot pages must provide
+the readiness marker. The Worker's social pipeline retains its published-data
+checks; this diagnostic command deliberately does not run that pipeline.
+
 ## Shadow testing and cutover
 
 The checked-in `ASSETS` binding points at `splatoon2-ink-dev-assets`. This keeps
