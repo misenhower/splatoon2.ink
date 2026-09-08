@@ -40,7 +40,8 @@
     "social": "node src/app/index.js social",
     "social:test": "node src/app/index.js socialTest",
     "admin:preview": "node workers/updater/preview/server.mjs",
-    "screenshot": "node src/app/screenshots/cli.js"
+    "screenshot": "node src/app/screenshots/cli.js",
+    "screenshot:cloudflare": "wrangler dev --config workers/screenshots/wrangler.jsonc"
   },
   "dependencies": {
     "@atproto/api": "^0.20.42",

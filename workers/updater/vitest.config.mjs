@@ -5,6 +5,8 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   plugins: [
     cloudflareTest({
+      // Browser captures are mocked; automated tests never use the remote service.
+      remoteBindings: false,
       wrangler: {
         configPath: fileURLToPath(new URL('./wrangler.jsonc', import.meta.url)),
       },

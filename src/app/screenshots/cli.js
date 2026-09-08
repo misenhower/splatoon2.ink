@@ -11,7 +11,6 @@ if (existsSync('.env'))
 try {
     let { values } = parseArgs({
         options: {
-            provider: { type: 'string' },
             url: { type: 'string' },
             hash: { type: 'string' },
             output: { type: 'string', default: 'dist/test-screenshots/capture.png' },
@@ -21,10 +20,10 @@ try {
 
     if (values.help) {
         console.log(
-            'Usage: npm run screenshot -- [--provider puppeteer|cloudflare] (--url <page URL> | --hash <screenshot route>) [--output <file.png>]',
+            'Usage: npm run screenshot -- (--url <page URL> | --hash <screenshot route>) [--output <file.png>]',
         );
         console.log(
-            'Uses SCREENSHOT_PROVIDER and SITE_URL from the environment or .env. Without SITE_URL, Puppeteer serves dist/ temporarily.',
+            'Uses local Puppeteer and SITE_URL from the environment or .env. Without SITE_URL, Puppeteer serves dist/ temporarily.',
         );
     } else {
         if (!!values.url === !!values.hash)

@@ -1,16 +1,12 @@
 import { test, beforeEach, afterEach, mock } from 'node:test';
 import assert from 'node:assert/strict';
-import BrowserRunClient from '../../src/app/screenshots/BrowserRunClient.js';
+import BrowserRunRenderer from '../../src/app/screenshots/BrowserRunRenderer.js';
 import ScreenshotGenerator from '../../src/app/screenshots/ScreenshotGenerator.js';
 
+let browser;
+
 function screenshots() {
-  return new ScreenshotGenerator(
-    new BrowserRunClient({
-      accountId: process.env.CLOUDFLARE_ACCOUNT_ID,
-      apiToken: process.env.CLOUDFLARE_BROWSER_RUN_API_TOKEN,
-    }),
-    process.env.SITE_URL,
-  );
+  return new ScreenshotGenerator(new BrowserRunRenderer(browser), process.env.SITE_URL);
 }
 
 const PNG = new Uint8Array([0x89, 0x50, 0x4e, 0x47]);
@@ -20,19 +16,19 @@ function fakeBrowserRendering(
 ) {
   const requests = [];
 
-  mock.method(globalThis, 'fetch', async (input, init) => {
-    requests.push({ url: new URL(input), headers: new Headers(init.headers), body: JSON.parse(init.body) });
+  browser = {
+    async quickAction(action, body) {
+      requests.push({ action, body });
 
-    return respond();
-  });
+      return respond();
+    },
+  };
 
   return requests;
 }
 
 beforeEach(() => {
   process.env.SITE_URL = 'https://example.test';
-  process.env.CLOUDFLARE_ACCOUNT_ID = 'acct';
-  process.env.CLOUDFLARE_BROWSER_RUN_API_TOKEN = 'token';
 });
 afterEach(() => mock.restoreAll());
 
@@ -42,13 +38,10 @@ test('asks Browser Rendering for the deployed screenshot page at the default vie
 
   assert.equal(requests.length, 1);
 
-  const [{ url, headers, body }] = requests;
+  const [{ action, body }] = requests;
 
-  assert.equal(
-    url.href,
-    'https://api.cloudflare.com/client/v4/accounts/acct/browser-rendering/screenshot?cacheTTL=0',
-  );
-  assert.equal(headers.get('authorization'), 'Bearer token');
+  assert.equal(action, 'screenshot');
+  assert.equal(body.cacheTTL, 0);
   assert.equal(body.url, 'https://example.test/screenshots.html#/schedules/3600');
   assert.deepEqual(body.viewport, { width: 1216, height: 684, deviceScaleFactor: 2 });
   assert.deepEqual(body.gotoOptions, { waitUntil: 'domcontentloaded', timeout: 10_000 });
@@ -85,15 +78,6 @@ test('reports API errors with Cloudflare\'s message', async () => {
   await assert.rejects(
     screenshots().capture({ hash: '/x' }),
     /Browser Rendering screenshot failed \(401\): Invalid token/,
-  );
-});
-
-test('fails clearly when configuration is missing', async () => {
-  delete process.env.CLOUDFLARE_BROWSER_RUN_API_TOKEN;
-
-  await assert.rejects(
-    screenshots().capture({ hash: '/x' }),
-    /Missing screenshot configuration: CLOUDFLARE_BROWSER_RUN_API_TOKEN/,
   );
 });
 
@@ -152,7 +136,7 @@ test('does not retry authentication, rate limits or non-timeout validation error
   assert.deepEqual(delays, []);
 });
 
-test('retries network and client deadline failures, including while reading the image', async () => {
+test('retries network and timeout failures, including while reading the image', async () => {
   immediateBackoff();
 
   let attempt = 0;

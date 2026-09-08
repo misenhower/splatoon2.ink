@@ -25,6 +25,14 @@ function network({ down = false, renderFails = false, beforeRequest } = {}) {
   let splatnet = fakeSplatNet();
   let renders = [];
 
+  vi.spyOn(env.BROWSER, 'quickAction').mockImplementation(async (action, options) => {
+    renders.push(options);
+
+    return new Response(renderFails ? 'render failed' : new Uint8Array([1, 2]), {
+      status: renderFails ? 503 : 200,
+    });
+  });
+
   vi.stubGlobal('fetch', async (input, init) => {
     const url = new URL(input);
 
@@ -32,14 +40,6 @@ function network({ down = false, renderFails = false, beforeRequest } = {}) {
       let object = await env.ASSETS.get(url.pathname.slice(1));
 
       return object ? new Response(object.body) : new Response('missing', { status: 404 });
-    }
-
-    if (url.hostname === 'api.cloudflare.com') {
-      renders.push(JSON.parse(init.body));
-
-      return new Response(renderFails ? 'render failed' : new Uint8Array([1, 2]), {
-        status: renderFails ? 503 : 200,
-      });
     }
 
     await beforeRequest?.();
@@ -53,14 +53,13 @@ function network({ down = false, renderFails = false, beforeRequest } = {}) {
 beforeEach(() => {
   setSessionEnvironment();
   process.env.SITE_URL = 'https://site.test';
-  process.env.CLOUDFLARE_ACCOUNT_ID = 'test';
-  process.env.CLOUDFLARE_BROWSER_RUN_API_TOKEN = 'test';
 
   for (let name of ['BLUESKY_SERVICE', 'BLUESKY_IDENTIFIER', 'BLUESKY_PASSWORD'])
     delete process.env[name];
 });
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
   vi.useRealTimers();
 });
 

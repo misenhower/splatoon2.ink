@@ -73,7 +73,7 @@ Visually check generated images before cutover.
 
 Nintendo, Bluesky, and rendering-site checks have 30-second network deadlines,
 including body consumption. Browser Rendering uses 10-second navigation, page-ready, and capture limits,
-with a 40-second overall request deadline per attempt. It waits for
+through the Browser binding. It waits for
 `data-screenshot-ready="true"` after data, Vue rendering, fonts, images and layout
 settle, instead of waiting for network idle. Deploy the updated screenshot page
 before the Worker that requires this marker.
@@ -87,11 +87,10 @@ as successful social runs.
 
 ## Local screenshots and Browser Run testing
 
-Node commands select `SCREENSHOT_PROVIDER=puppeteer` or `cloudflare`, matching
-splat3's setting name. There is no implicit provider fallback. The Worker
-constructs its `BrowserRunClient` directly and does not import Puppeteer.
-`ScreenshotGenerator` owns the shared routes, viewport, and page-ready selector;
-either renderer returns PNG bytes. No new package import conditions are used.
+Node commands use Puppeteer; the Worker uses `BrowserRunRenderer` with its
+`BROWSER` binding. `ScreenshotGenerator` owns the shared routes, viewport, and
+page-ready selector; either renderer returns PNG bytes. No API token or account
+ID is needed for screenshots, and no package import conditions select renderers.
 
 With Puppeteer, leave `SITE_URL` empty to temporarily serve the built `dist/`
 on loopback. Run `npm run build` first and provide the usual data/assets in
@@ -103,30 +102,38 @@ and uses 10-second navigation, readiness, and browser-protocol timeouts.
 
 ```sh
 # Generate the social test images against the local build.
-SCREENSHOT_PROVIDER=puppeteer SITE_URL= npm run social:test
+SITE_URL= npm run social:test
 
 # Capture one route; replace the timestamp with a rotation in your data.
-SCREENSHOT_PROVIDER=puppeteer SITE_URL= npm run screenshot -- \
+SITE_URL= npm run screenshot -- \
   --hash '/schedules/1788652800' --output dist/test-screenshots/schedule.png
 
 # Capture a running dev server directly.
-npm run screenshot -- --provider puppeteer \
+npm run screenshot -- \
   --url 'http://127.0.0.1:8080/screenshots.html#/schedules/1788652800'
 
-# Exercise the actual Browser Run client from Node against a reachable site.
-npm run screenshot -- --provider cloudflare \
-  --url 'https://dev.splatoon2.ink/screenshots.html#/schedules/1788652800' \
-  --output dist/test-screenshots/cloudflare.png
+# Start the capture-only Worker locally, with a remote Browser binding.
+npm run screenshot:cloudflare
+
+# In another terminal, save a capture from a publicly reachable screenshot page.
+curl --fail-with-body --get 'http://127.0.0.1:8789/' \
+  --data-urlencode 'url=https://dev.splatoon2.ink/screenshots.html#/schedules/1788652800' \
+  --output /tmp/cloudflare.png
 ```
 
-`npm run screenshot` is capture-only: it does not read social data, compare
-published datasets, post messages, update checkpoints, or convert to JPEG.
-It loads `.env`, accepts either `--url` or `--hash`, and saves a PNG. Cloudflare
-still requires `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_BROWSER_RUN_API_TOKEN`,
-and cannot reach localhost directly. `--url` needs no `SITE_URL`; `--hash` uses
-`SITE_URL` (or Puppeteer's temporary server). All screenshot pages must provide
-the readiness marker. The Worker's social pipeline retains its published-data
-checks; this diagnostic command deliberately does not run that pipeline.
+`npm run screenshot` loads `.env`, accepts either `--url` or `--hash`, and saves
+a PNG using local Chrome. `--hash` uses `SITE_URL` or the temporary dist server.
+
+`npm run screenshot:cloudflare` runs the small `workers/screenshots` entry point
+through Wrangler. Sign in with `npx wrangler login` if needed. Only the browser
+runs remotely; the capture endpoint listens on loopback port 8789. This entry
+point is for local development, not deployment. Cloudflare cannot reach localhost:
+use a deployed preview or tunnel for an unpublished frontend. Remote captures
+use the account's Browser Run allowance.
+
+Both paths are capture-only: no updates, social sends, checkpoints, dataset
+comparisons, or JPEG conversion. All screenshot pages must provide the readiness
+marker. The updater's social pipeline retains its published-data checks.
 
 ## Shadow testing and cutover
 
@@ -211,14 +218,12 @@ Access. The panel does not expose force-repost, pause, or resume controls.
 
 Secrets: `NINTENDO_SESSION_ID_NA`, `NINTENDO_SESSION_ID_EU`,
 `NINTENDO_SESSION_ID_JP`, optional `SPLATNET_USER_AGENT`, `RUN_TOKEN`,
-`CLOUDFLARE_BROWSER_RUN_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, optional `SENTRY_DSN`, and at cutover
+optional `SENTRY_DSN`, and at cutover
 `BLUESKY_SERVICE`, `BLUESKY_IDENTIFIER`, `BLUESKY_PASSWORD`.
 
 Use `wrangler secret put NAME --config workers/updater/wrangler.jsonc` for a
-secret. `SITE_URL` is a non-secret var in the config. The account ID is stored
-as a secret to keep this account identifier out of the public repository; it
-is not an authentication credential. Before deploying this change, configure
-`CLOUDFLARE_ACCOUNT_ID` with the secret command above.
+secret. `SITE_URL` is a non-secret var in the config. Screenshots use the
+`BROWSER` binding; no Browser Run API credentials are required.
 For local development, use gitignored `workers/updater/.dev.vars`. The existing
 shared code reads these values through Workers' populated `process.env`.
 Sentry wrappers route shared updater errors to Sentry when `SENTRY_DSN` is set.

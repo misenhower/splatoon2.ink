@@ -1,4 +1,4 @@
-import BrowserRunClient from '../../../src/app/screenshots/BrowserRunClient.js';
+import BrowserRunRenderer from '../../../src/app/screenshots/BrowserRunRenderer.js';
 import ScreenshotGenerator from '../../../src/app/screenshots/ScreenshotGenerator.js';
 import stringify from 'json-stable-stringify';
 import { sendStatuses, createClients } from '../../../src/app/social/index.js';
@@ -50,10 +50,7 @@ export async function runPosters(env) {
       enabled.push(client.key);
 
   let screenshots = new ScreenshotGenerator(
-    new BrowserRunClient({
-      accountId: process.env.CLOUDFLARE_ACCOUNT_ID,
-      apiToken: process.env.CLOUDFLARE_BROWSER_RUN_API_TOKEN,
-    }),
+    new BrowserRunRenderer(env.BROWSER),
     process.env.SITE_URL,
   );
   let result = await sendStatuses(storage, clients, screenshots);

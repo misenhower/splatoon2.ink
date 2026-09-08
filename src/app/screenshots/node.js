@@ -1,32 +1,15 @@
 import { createServer } from 'node:http';
 import { access } from 'node:fs/promises';
 import handler from 'serve-handler';
-import BrowserRunClient from './BrowserRunClient.js';
 import PuppeteerRenderer from './PuppeteerRenderer.js';
 import ScreenshotGenerator from './ScreenshotGenerator.js';
 
-// Provider selection and the temporary file server belong to the Node command.
-// The Worker constructs its BrowserRunClient directly.
+// The Node commands use local Chrome; Browser Run is tested through Wrangler.
 export async function withScreenshots(
     callback,
-    { provider = process.env.SCREENSHOT_PROVIDER, siteUrl = process.env.SITE_URL, url } = {},
+    { siteUrl = process.env.SITE_URL, url } = {},
 ) {
-    let renderer;
-
-    if (provider === 'cloudflare') {
-        renderer = new BrowserRunClient({
-            accountId: process.env.CLOUDFLARE_ACCOUNT_ID,
-            apiToken: process.env.CLOUDFLARE_BROWSER_RUN_API_TOKEN,
-        });
-
-        if (!siteUrl && !url)
-            throw new Error('SITE_URL or --url is required for Cloudflare screenshots.');
-    } else if (provider === 'puppeteer') {
-        renderer = new PuppeteerRenderer();
-    } else {
-        throw new Error('SCREENSHOT_PROVIDER must be "puppeteer" or "cloudflare" (or pass --provider).');
-    }
-
+    let renderer = new PuppeteerRenderer();
     let server;
 
     try {

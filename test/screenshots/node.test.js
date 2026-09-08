@@ -60,46 +60,6 @@ test('local browser uses page readiness and closes on success or failure', async
     assert.equal(closed, 2);
 });
 
-test('Node can select Cloudflare for a direct URL without SITE_URL or social data', async () => {
-    let requests = [];
-
-    mock.method(globalThis, 'fetch', async (url, init) => {
-        requests.push(JSON.parse(init.body));
-
-        return new Response(PNG);
-    });
-
-    let previous = { ...process.env };
-
-    try {
-        process.env.CLOUDFLARE_ACCOUNT_ID = 'account';
-        process.env.CLOUDFLARE_BROWSER_RUN_API_TOKEN = 'token';
-
-        let url = 'https://dev.example.test/screenshots.html#/schedules/3600';
-        let result = await withScreenshots(screenshots => screenshots.capture({ url }), {
-            provider: 'cloudflare',
-            siteUrl: '',
-            url,
-        });
-
-        assert.deepEqual(result.image, PNG);
-        assert.equal(requests[0].url, url);
-    } finally {
-        process.env = previous;
-    }
-});
-
-test('provider selection is explicit and Cloudflare requires a reachable target', async () => {
-    await assert.rejects(
-        withScreenshots(() => {}, { provider: 'unknown' }),
-        /SCREENSHOT_PROVIDER/,
-    );
-    await assert.rejects(
-        withScreenshots(() => {}, { provider: 'cloudflare', siteUrl: '' }),
-        /SITE_URL or --url/,
-    );
-});
-
 test('temporary dist server is loopback-only and closes when capture fails', async () => {
     let { mkdtemp, mkdir, writeFile, rm } = await import('node:fs/promises');
     let { tmpdir } = await import('node:os');
@@ -129,7 +89,7 @@ test('temporary dist server is loopback-only and closes when capture fails', asy
 
                     return screenshots.capture({ hash: '/schedules/3600' });
                 },
-                { provider: 'puppeteer', siteUrl: '' },
+                { siteUrl: '' },
             ),
             /Capture failed/,
         );

@@ -1,5 +1,4 @@
 import { logMessage } from '../log.js';
-import { fetchWithTimeout } from '../../common/fetch.js';
 
 async function errorMessage(response) {
     let body = await response.text();
@@ -18,53 +17,28 @@ async function errorMessage(response) {
     return body || response.statusText || 'Unknown error';
 }
 
-// Browser Run's REST client works in both Node and Workers.
-export default class BrowserRunClient {
-    constructor({ accountId, apiToken }) {
-        this.accountId = accountId;
-        this.apiToken = apiToken;
+// Browser Run captures remotely through the Worker's Browser binding.
+export default class BrowserRunRenderer {
+    constructor(browser) {
+        this.browser = browser;
     }
 
     async capture({ url, viewport, readySelector }) {
-        let missing = [];
-
-        if (!this.accountId)
-            missing.push('CLOUDFLARE_ACCOUNT_ID');
-
-        if (!this.apiToken)
-            missing.push('CLOUDFLARE_BROWSER_RUN_API_TOKEN');
-
-        if (missing.length)
-            throw new Error(`Missing screenshot configuration: ${missing.join(', ')}`);
-
-        let endpoint = new URL(
-            `/client/v4/accounts/${this.accountId}/browser-rendering/screenshot`,
-            'https://api.cloudflare.com',
-        );
-        endpoint.searchParams.set('cacheTTL', '0');
-
-        let request = {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${this.apiToken}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                url: url.toString(),
-                viewport,
-                gotoOptions: { waitUntil: 'domcontentloaded', timeout: 10_000 },
-                waitForSelector: { selector: readySelector, timeout: 10_000 },
-                actionTimeout: 10_000,
-                setExtraHTTPHeaders: { 'Cache-Control': 'no-cache' },
-                screenshotOptions: { type: 'png' },
-            }),
+        let options = {
+            url: url.toString(),
+            viewport,
+            cacheTTL: 0,
+            gotoOptions: { waitUntil: 'domcontentloaded', timeout: 10_000 },
+            waitForSelector: { selector: readySelector, timeout: 10_000 },
+            actionTimeout: 10_000,
+            setExtraHTTPHeaders: { 'Cache-Control': 'no-cache' },
+            screenshotOptions: { type: 'png' },
         };
         let image;
 
         for (let attempt = 0; attempt <= 3; attempt++) {
             try {
-                // Three 10s browser phases plus transport overhead; covers response body too.
-                let response = await fetchWithTimeout(endpoint, request, 40_000);
+                let response = await this.browser.quickAction('screenshot', options);
 
                 if (!response.ok) {
                     let message = await errorMessage(response);

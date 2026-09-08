@@ -5,7 +5,7 @@ import { fakeSplatNet, ROUTES } from './fakeSplatNet.mjs';
 import { getTopOfCurrentHour } from '../../src/common/time.js';
 
 // The posters (src/app/social) running inside workerd: data from R2, screenshots from a
-// stubbed Browser Rendering endpoint, no social credentials (shadow mode).
+// stubbed Browser binding, no social credentials (shadow mode).
 const PNG = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 
 describe('runPosters', () => {
@@ -13,8 +13,6 @@ describe('runPosters', () => {
 
   beforeEach(async () => {
     process.env.SITE_URL = 'https://example.test';
-    process.env.CLOUDFLARE_ACCOUNT_ID = 'acct';
-    process.env.CLOUDFLARE_BROWSER_RUN_API_TOKEN = 'token';
 
     for (let name of ['BLUESKY_SERVICE', 'BLUESKY_IDENTIFIER', 'BLUESKY_PASSWORD'])
       delete process.env[name];
@@ -48,6 +46,12 @@ describe('runPosters', () => {
 
     let splatnet = fakeSplatNet();
 
+    vi.spyOn(env.BROWSER, 'quickAction').mockImplementation(async (action, options) => {
+      renders.push(options);
+
+      return new Response(PNG, { headers: { 'content-type': 'image/png' } });
+    });
+
     vi.stubGlobal('fetch', async (input, init) => {
       let url = new URL(input);
 
@@ -57,16 +61,13 @@ describe('runPosters', () => {
         return object ? new Response(object.body) : new Response('missing', { status: 404 });
       }
 
-      if (url.hostname === 'api.cloudflare.com') {
-        renders.push(JSON.parse(init.body));
-
-        return new Response(PNG, { headers: { 'content-type': 'image/png' } });
-      }
-
       return splatnet(input, init);
     });
   });
-  afterEach(() => vi.unstubAllGlobals());
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
 
   it('renders the public images for the hour without posting anywhere', async () => {
     let summary = await runPosters(env);
