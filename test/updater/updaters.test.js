@@ -15,32 +15,58 @@ import { fakeSplatNet, buckets, json, keys, setSessionEnvironment } from './supp
 setSessionEnvironment();
 
 let b;
-beforeEach(() => { b = buckets(); });
+
+beforeEach(() => {
+  b = buckets();
+});
 afterEach(() => mock.restoreAll());
 
 const stage = (id, name) => ({ id, name, image: `/images/stage/${id}.png` });
 const rotation = (start, a, c, rule = 'turf_war') => ({
-  id: start, start_time: start, end_time: start + 7200,
-  stage_a: a, stage_b: c,
+  id: start,
+  start_time: start,
+  end_time: start + 7200,
+  stage_a: a,
+  stage_b: c,
   game_mode: { key: 'regular', name: 'Regular Battle' },
   rule: { key: rule, name: 'Turf War', multiline_name: 'Turf\nWar' },
 });
 
 test('createUpdaters builds every updater against the given buckets', () => {
   const updaters = createUpdaters(b);
-  assert.deepEqual(updaters.map(u => u.options.name), [
-    'Original Gear', 'Schedules', 'Co-op Schedules', 'Timeline', 'Festivals NA', 'Festivals EU', 'Festivals JP', 'Merchandises',
-  ]);
-  assert.ok(updaters.every(u => u.publicStorage === b.publicStorage && u.privateStorage === b.privateStorage));
+
+  assert.deepEqual(
+    updaters.map(u => u.options.name),
+    [
+      'Original Gear',
+      'Schedules',
+      'Co-op Schedules',
+      'Timeline',
+      'Festivals NA',
+      'Festivals EU',
+      'Festivals JP',
+      'Merchandises',
+    ],
+  );
+  assert.ok(
+    updaters.every(u => u.publicStorage === b.publicStorage && u.privateStorage === b.privateStorage),
+  );
 });
 
 test('schedules: seeds the known stages from SplatNet and records new stages once', async () => {
-  const reef = stage('0', 'The Reef'), fitness = stage('1', 'Musselforge Fitness'), skipper = stage('22', 'Skipper Pavilion');
-  const schedules = { regular: [rotation(7200, skipper, reef), rotation(3600, reef, fitness)], gachi: [rotation(3600, reef, fitness)], league: [rotation(3600, fitness, reef)] };
+  const reef = stage('0', 'The Reef'),
+    fitness = stage('1', 'Musselforge Fitness'),
+    skipper = stage('22', 'Skipper Pavilion');
+  const schedules = {
+    regular: [rotation(7200, skipper, reef), rotation(3600, reef, fitness)],
+    gachi: [rotation(3600, reef, fitness)],
+    league: [rotation(3600, fitness, reef)],
+  };
   const splatnet = fakeSplatNet({
     '/api/schedules': () => schedules,
     '/api/data/stages': () => ({ stages: [reef, fitness] }),
   });
+
   await new SchedulesUpdater(b).update();
 
   assert.deepEqual(await json(b.publicBucket, 'data/schedules.json'), schedules);
@@ -53,20 +79,46 @@ test('schedules: seeds the known stages from SplatNet and records new stages onc
 
   const second = fakeSplatNet({ '/api/schedules': () => schedules });
   const puts = mock.method(b.privateBucket, 'put');
+
   await new SchedulesUpdater(b).update();
+
   assert.equal(second.api.filter(r => r.path === '/api/data/stages').length, 0);
   assert.equal(puts.mock.calls.length, 0);
 });
 
 test('coop: publishes the calendar with stage and weapon details', async () => {
   const coop = {
-    schedules: [{ start_time: 3600, end_time: 7200 }, { start_time: 90000, end_time: 93600 }],
-    details: [{ start_time: 3600, end_time: 7200, stage: { name: 'Spawning Grounds', image: '/images/coop_stage/a.png' }, weapons: [{ id: '0', weapon: { id: '0', name: 'Splattershot', image: '/images/weapon/0.png', sub: { id: '1', name: 'Bomb' }, special: { id: '2', name: 'Special' } } }, null] }],
+    schedules: [
+      { start_time: 3600, end_time: 7200 },
+      { start_time: 90000, end_time: 93600 },
+    ],
+    details: [
+      {
+        start_time: 3600,
+        end_time: 7200,
+        stage: { name: 'Spawning Grounds', image: '/images/coop_stage/a.png' },
+        weapons: [
+          {
+            id: '0',
+            weapon: {
+              id: '0',
+              name: 'Splattershot',
+              image: '/images/weapon/0.png',
+              sub: { id: '1', name: 'Bomb' },
+              special: { id: '2', name: 'Special' },
+            },
+          },
+          null,
+        ],
+      },
+    ],
   };
+
   fakeSplatNet({ '/api/coop_schedules': () => coop });
   await new CoopSchedulesUpdater(b).update();
 
   const ics = await (await b.publicBucket.get('data/coop-schedules.ics')).text();
+
   assert.match(ics, /SUMMARY:Salmon Run on Spawning Grounds/);
   assert.match(ics, /Splattershot/);
   assert.match(ics, /Random/);
@@ -75,25 +127,58 @@ test('coop: publishes the calendar with stage and weapon details', async () => {
 });
 
 test('timeline: keeps only coop and weapon availability, dropping hidden items', async () => {
-  fakeSplatNet({ '/api/timeline': () => ({ coop: { importance: -1 }, weapon_availability: { importance: 1, availabilities: [] }, stats: { ignored: true } }) });
+  fakeSplatNet({
+    '/api/timeline': () => ({
+      coop: { importance: -1 },
+      weapon_availability: { importance: 1, availabilities: [] },
+      stats: { ignored: true },
+    }),
+  });
   await new TimelineUpdater(b).update();
-  assert.deepEqual(await json(b.publicBucket, 'data/timeline.json'), { coop: null, weapon_availability: { importance: 1, availabilities: [] } });
+
+  assert.deepEqual(await json(b.publicBucket, 'data/timeline.json'), {
+    coop: null,
+    weapon_availability: { importance: 1, availabilities: [] },
+  });
 });
 
 test('merchandises: attaches original gear from the bundled data without its brand', async () => {
   const original = gearData.head[0];
-  const brand = { id: '0', name: 'Brand', image: '/images/brand/0.png', frequent_skill: { id: '0', name: 'Skill', image: '/images/skill/0.png' } };
+  const brand = {
+    id: '0',
+    name: 'Brand',
+    image: '/images/brand/0.png',
+    frequent_skill: { id: '0', name: 'Skill', image: '/images/skill/0.png' },
+  };
   const skill = { id: '0', name: 'Skill', image: '/images/skill/0.png' };
-  fakeSplatNet({ '/api/onlineshop/merchandises': () => ({
-    merchandises: [
-      { end_time: 7200, gear: { kind: 'head', id: '1', name: original.name.toUpperCase(), image: '/images/gear/1.png', brand }, skill },
-      { end_time: 7200, gear: { kind: 'head', id: '2', name: 'No Such Gear', image: '/images/gear/2.png', brand }, skill },
-    ],
-    extra: 'dropped',
-  }) });
+
+  fakeSplatNet({
+    '/api/onlineshop/merchandises': () => ({
+      merchandises: [
+        {
+          end_time: 7200,
+          gear: {
+            kind: 'head',
+            id: '1',
+            name: original.name.toUpperCase(),
+            image: '/images/gear/1.png',
+            brand,
+          },
+          skill,
+        },
+        {
+          end_time: 7200,
+          gear: { kind: 'head', id: '2', name: 'No Such Gear', image: '/images/gear/2.png', brand },
+          skill,
+        },
+      ],
+      extra: 'dropped',
+    }),
+  });
   await new MerchandisesUpdater(b).update();
 
   const data = await json(b.publicBucket, 'data/merchandises.json');
+
   assert.deepEqual(Object.keys(data), ['merchandises']);
   assert.equal(data.merchandises[0].original_gear.name, original.name);
   assert.equal('brand' in data.merchandises[0].original_gear, false);
@@ -104,34 +189,66 @@ test('merchandises: attaches original gear from the bundled data without its bra
 test('festivals: merges one region into the shared file, fetches missing rankings, uses regional languages', async () => {
   await b.publicBucket.put('data/festivals.json', JSON.stringify({ eu: { festivals: [], results: [] } }));
   await b.publicBucket.put('data/festivals/na-1-rankings.json', JSON.stringify({ existing: true }));
-  const festival = id => ({ festival_id: id, names: { alpha_short: 'A', bravo_short: 'B' }, times: { start: 3600, end: 7200 }, images: { alpha: '/images/festival/a.png', bravo: '/images/festival/b.png', panel: '/images/festival/p.png' }, special_stage: { id: '100', name: 'Shifty Station', image: '/images/stage/100.png' } });
+
+  const festival = id => ({
+    festival_id: id,
+    names: { alpha_short: 'A', bravo_short: 'B' },
+    times: { start: 3600, end: 7200 },
+    images: {
+      alpha: '/images/festival/a.png',
+      bravo: '/images/festival/b.png',
+      panel: '/images/festival/p.png',
+    },
+    special_stage: { id: '100', name: 'Shifty Station', image: '/images/stage/100.png' },
+  });
   const splatnet = fakeSplatNet({
     '/api/festivals/active': () => ({ festivals: [festival(2)] }),
-    '/api/festivals/pasts': () => ({ festivals: [festival(1)], results: [{ festival_id: 1 }, { festival_id: 2 }] }),
+    '/api/festivals/pasts': () => ({
+      festivals: [festival(1)],
+      results: [{ festival_id: 1 }, { festival_id: 2 }],
+    }),
     '/api/festivals/2/rankings': () => ({ rankings: 'two' }),
   });
+
   await new FestivalsUpdater('NA', b).update();
 
   const data = await json(b.publicBucket, 'data/festivals.json');
+
   assert.deepEqual(Object.keys(data).sort(), ['eu', 'na']);
-  assert.deepEqual(data.na.festivals.map(f => f.festival_id), [2, 1]);
+  assert.deepEqual(
+    data.na.festivals.map(f => f.festival_id),
+    [2, 1],
+  );
   assert.deepEqual(await json(b.publicBucket, 'data/festivals/na-1-rankings.json'), { existing: true });
   assert.deepEqual(await json(b.publicBucket, 'data/festivals/na-2-rankings.json'), { rankings: 'two' });
-  assert.deepEqual(splatnet.api.filter(r => r.path.endsWith('/rankings')).map(r => r.path), ['/api/festivals/2/rankings']);
+  assert.deepEqual(
+    splatnet.api.filter(r => r.path.endsWith('/rankings')).map(r => r.path),
+    ['/api/festivals/2/rankings'],
+  );
 
   // Only this region's languages are localized (NA: en, es-MX, fr-CA), all with the NA session
   const localized = splatnet.api.filter(r => r.path === '/api/festivals/active');
-  assert.deepEqual(localized.map(r => `${r.region}/${r.language}`), ['NA/en', 'NA/es-MX', 'NA/fr-CA']);
+
+  assert.deepEqual(
+    localized.map(r => `${r.region}/${r.language}`),
+    ['NA/en', 'NA/es-MX', 'NA/fr-CA'],
+  );
 
   const ics = await (await b.publicBucket.get('data/festivals-na.ics')).text();
+
   assert.match(ics, /X-WR-CALNAME:Splatfests \(NA\)/);
   assert.match(ics, /SUMMARY:NA Splatfest: A vs. B/);
 });
 
 test('original gear: mirrors skill images from the bundled skills data', async () => {
-  const images = Object.values(skills).map(s => s.image).filter(Boolean);
+  const images = Object.values(skills)
+    .map(s => s.image)
+    .filter(Boolean);
+
   await b.publicBucket.put(`assets/splatnet${images[0]}`, 'existing');
+
   const splatnet = fakeSplatNet();
+
   await new OriginalGearImageUpdater(b).update();
 
   assert.equal(splatnet.images.length, images.length - 2); // one already present, one from the embedded backup

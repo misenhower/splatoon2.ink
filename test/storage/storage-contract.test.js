@@ -9,7 +9,7 @@ import FilesystemStorage from '../../src/common/storage/FilesystemStorage.js';
 // One contract for the storage interface the updaters use, run against every implementation.
 const implementations = {
   BucketStorage: {
-    create: async () => new BucketStorage(new MemoryBucket),
+    create: async () => new BucketStorage(new MemoryBucket()),
     destroy: async () => {},
   },
   FilesystemStorage: {
@@ -21,7 +21,10 @@ const implementations = {
 for (const [name, { create, destroy }] of Object.entries(implementations)) {
   describe(name, () => {
     let storage;
-    beforeEach(async () => { storage = await create(); });
+
+    beforeEach(async () => {
+      storage = await create();
+    });
     afterEach(() => destroy(storage));
 
     test('missing keys do not exist and read as null', async () => {
@@ -32,19 +35,23 @@ for (const [name, { create, destroy }] of Object.entries(implementations)) {
 
     test('json round-trips and becomes visible to exists', async () => {
       await storage.writeJson('data/nested/a.json', { hello: 'world' });
+
       assert.equal(await storage.exists('data/nested/a.json'), true);
       assert.deepEqual(await storage.readJson('data/nested/a.json'), { hello: 'world' });
 
       await storage.writeJson('data/nested/a.json', { hello: 'again' });
+
       assert.deepEqual(await storage.readJson('data/nested/a.json'), { hello: 'again' });
     });
 
     test('bytes and text round-trip', async () => {
       await storage.writeBytes('assets/x.png', new Uint8Array([1, 2, 3]));
+
       assert.deepEqual(await storage.readBytes('assets/x.png'), new Uint8Array([1, 2, 3]));
       assert.equal(await storage.exists('assets/x.png'), true);
 
       await storage.writeText('data/cal.ics', 'BEGIN:VCALENDAR');
+
       assert.equal(await storage.exists('data/cal.ics'), true);
       assert.equal(new TextDecoder().decode(await storage.readBytes('data/cal.ics')), 'BEGIN:VCALENDAR');
     });

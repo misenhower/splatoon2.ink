@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { nextRunAt, HOUR_MS, GRACE_MS } from './src/schedule.mjs';
 
 const HOUR = Date.UTC(2026, 8, 4, 14, 0, 0); // 14:00:00 UTC
-const t = (seconds) => HOUR + seconds * 1000;
+const t = seconds => HOUR + seconds * 1000;
 
 describe('nextRunAt', () => {
   it('targets :00:10 of the current hour when that is still ahead', () => {

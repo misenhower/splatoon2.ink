@@ -9,6 +9,7 @@ const env = {
   ACCESS_TEAM_DOMAIN: 'example.cloudflareaccess.com',
   ACCESS_AUD: 'admin-audience',
 };
+
 async function token({
   audience = env.ACCESS_AUD,
   issuer = 'https://' + env.ACCESS_TEAM_DOMAIN,
@@ -22,6 +23,7 @@ async function token({
     .setExpirationTime(expires)
     .sign(privateKey);
 }
+
 function request(jwt, host = env.ADMIN_HOSTNAME) {
   return new Request(`https://${host}/admin/`, {
     headers: jwt ? { 'Cf-Access-Jwt-Assertion': jwt } : {},
@@ -32,17 +34,18 @@ test('validates Access signature, issuer, audience, expiration and configured ho
   assert.deepEqual(await verifyAccess(request(await token()), env, publicKey), {
     email: 'admin@example.test',
   });
+
   for (const options of [
     { audience: 'different-app' },
     { issuer: 'https://other.cloudflareaccess.com' },
     { expires: '0s' },
   ])
     assert.equal(await verifyAccess(request(await token(options)), env, publicKey), null);
-  assert.equal(
-    await verifyAccess(request(await token(), 'other.workers.dev'), env, publicKey),
-    null,
-  );
+
+  assert.equal(await verifyAccess(request(await token(), 'other.workers.dev'), env, publicKey), null);
+
   const wrong = await generateKeyPair('RS256');
+
   assert.equal(await verifyAccess(request(await token()), env, wrong.publicKey), null);
 });
 

@@ -8,9 +8,14 @@ import { captureException } from '@sentry/core';
 // core: Sentry keys its global carrier by version, so a version split silently drops events.
 test('captureException from @sentry/core reaches the client @sentry/node initialized', async () => {
   const seen = [];
+
   SentryNode.init({
     dsn: 'https://public@example.ingest.sentry.io/1',
-    beforeSend: event => { seen.push(event.exception.values[0].value); return null; },
+    beforeSend: event => {
+      seen.push(event.exception.values[0].value);
+
+      return null;
+    },
   });
 
   captureException(new Error('routed through core'));
