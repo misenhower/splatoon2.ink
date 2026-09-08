@@ -15,8 +15,8 @@ function directoryOf(key) {
 
 export default class BucketStorage {
     #bucket;
-    #listings = new Map;   // directory prefix -> Set of keys under it
-    #documents = new Map;  // key -> { data, serialized } for JSON documents (data may be null)
+    #listings = new Map(); // directory prefix -> Set of keys under it
+    #documents = new Map(); // key -> { data, serialized } for JSON documents (data may be null)
 
     constructor(bucket) {
         this.#bucket = bucket;
@@ -24,16 +24,21 @@ export default class BucketStorage {
 
     async #listing(directory) {
         if (!this.#listings.has(directory)) {
-            let keys = new Set;
+            let keys = new Set();
             let cursor;
+
             do {
                 let page = await this.#bucket.list({ prefix: directory, cursor, limit: 1000 });
+
                 for (let object of page.objects)
                     keys.add(object.key);
+
                 cursor = page.truncated ? page.cursor : undefined;
             } while (cursor);
+
             this.#listings.set(directory, keys);
         }
+
         return this.#listings.get(directory);
     }
 
@@ -50,26 +55,36 @@ export default class BucketStorage {
         if (!this.#documents.has(key)) {
             let object = await this.#bucket.get(key);
             let serialized = object ? await object.text() : null;
-            this.#documents.set(key, { data: serialized === null ? null : JSON.parse(serialized), serialized });
+
+            this.#documents.set(key, {
+                data: serialized === null ? null : JSON.parse(serialized),
+                serialized,
+            });
         }
+
         return this.#documents.get(key).data;
     }
 
     /** @returns {Promise<boolean>} whether anything was written */
     async writeJson(key, data, { cacheControl } = {}) {
         let serialized = JSON.stringify(data);
+
         if (this.#documents.get(key)?.serialized === serialized)
             return false;
 
-        await this.#bucket.put(key, serialized, { httpMetadata: { contentType: 'application/json', cacheControl } });
+        await this.#bucket.put(key, serialized, {
+            httpMetadata: { contentType: 'application/json', cacheControl },
+        });
         this.#documents.set(key, { data, serialized });
         this.#noteWritten(key);
+
         return true;
     }
 
     /** @returns {Promise<Uint8Array | null>} */
     async readBytes(key) {
         let object = await this.#bucket.get(key);
+
         return object ? new Uint8Array(await object.arrayBuffer()) : null;
     }
 

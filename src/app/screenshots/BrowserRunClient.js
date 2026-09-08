@@ -5,7 +5,10 @@ async function errorMessage(response) {
     let body = await response.text();
 
     try {
-        let messages = JSON.parse(body).errors?.map(error => error.message).filter(Boolean);
+        let messages = JSON.parse(body)
+            .errors?.map(error => error.message)
+            .filter(Boolean);
+
         if (messages?.length)
             return messages.join('; ');
     } catch {
@@ -24,20 +27,26 @@ export default class BrowserRunClient {
 
     async capture({ url, viewport, readySelector }) {
         let missing = [];
+
         if (!this.accountId)
             missing.push('CLOUDFLARE_ACCOUNT_ID');
+
         if (!this.apiToken)
             missing.push('CLOUDFLARE_BROWSER_RUN_API_TOKEN');
+
         if (missing.length)
             throw new Error(`Missing screenshot configuration: ${missing.join(', ')}`);
 
-        let endpoint = new URL(`/client/v4/accounts/${this.accountId}/browser-rendering/screenshot`, 'https://api.cloudflare.com');
+        let endpoint = new URL(
+            `/client/v4/accounts/${this.accountId}/browser-rendering/screenshot`,
+            'https://api.cloudflare.com',
+        );
         endpoint.searchParams.set('cacheTTL', '0');
 
         let request = {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${this.apiToken}`,
+                Authorization: `Bearer ${this.apiToken}`,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
@@ -51,29 +60,45 @@ export default class BrowserRunClient {
             }),
         };
         let image;
+
         for (let attempt = 0; attempt <= 3; attempt++) {
             try {
                 // Three 10s browser phases plus transport overhead; covers response body too.
                 let response = await fetchWithTimeout(endpoint, request, 40_000);
+
                 if (!response.ok) {
                     let message = await errorMessage(response);
-                    let error = new Error(`Browser Rendering screenshot failed (${response.status}): ${message}`);
+                    let error = new Error(
+                        `Browser Rendering screenshot failed (${response.status}): ${message}`,
+                    );
+
                     // Browser Run reports navigation/selector/action timeouts as 422 errors.
-                    error.retryable = response.status === 408 || response.status >= 500
-                        || (response.status === 422 && /timeout|timed out/i.test(message));
+                    error.retryable =
+                        response.status === 408 ||
+                        response.status >= 500 ||
+                        (response.status === 422 && /timeout|timed out/i.test(message));
                     throw error;
                 }
+
                 image = new Uint8Array(await response.arrayBuffer());
                 break;
             } catch (error) {
                 let retryable = error.retryable ?? ['TimeoutError', 'TypeError'].includes(error.name);
+
                 if (!retryable || attempt === 3)
                     throw error;
+
                 let delayMs = 500 * 2 ** attempt;
-                logMessage('warn', 'Retrying Browser Run screenshot', { attempt: attempt + 1, delayMs, error: error.message });
+
+                logMessage('warn', 'Retrying Browser Run screenshot', {
+                    attempt: attempt + 1,
+                    delayMs,
+                    error: error.message,
+                });
                 await new Promise(resolve => setTimeout(resolve, delayMs));
             }
         }
+
         return image;
     }
 }

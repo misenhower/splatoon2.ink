@@ -3,7 +3,9 @@
 export function nextDataRefreshAt(now = Date.now(), jitter = Math.floor(Math.random() * 35)) {
     let candidate = new Date(now);
     candidate.setSeconds(25 + jitter, 0);
+
     while (candidate.getTime() <= now || (candidate.getMinutes() > 5 && candidate.getMinutes() % 5 !== 0))
         candidate.setMinutes(candidate.getMinutes() + 1);
+
     return candidate.getTime();
 }

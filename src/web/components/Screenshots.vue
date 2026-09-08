@@ -27,7 +27,9 @@ export default {
         ...mapActions('splatoon/data', ['updateAll']),
         async loadData() {
             let version = ++this.readinessVersion;
+
             this.setNow({ now: this.$route.params.now || 0 });
+
             try {
                 await markScreenshotReady({
                     loadData: () => this.updateAll(),

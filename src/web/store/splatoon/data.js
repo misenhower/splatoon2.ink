@@ -42,17 +42,23 @@ for (let source of dataSources) {
     source.mutationName = 'UPDATE_' + source.name.toUpperCase();
 }
 
-export const state = { };
+export const state = {};
 
 export const actions = {
     updateLanguage({ dispatch, rootGetters }) {
         let language = rootGetters['splatoon/languages/selectedLanguage'];
+
         if (language) {
-            return fetchJson(`/data/locale/${language.language}.json`)
-                .then(data => dispatch('i18n/addLocale', {
-                    locale: language.language,
-                    translations: { splatnet: data },
-                }, { root: true }));
+            return fetchJson(`/data/locale/${language.language}.json`).then(data =>
+                dispatch(
+                    'i18n/addLocale',
+                    {
+                        locale: language.language,
+                        translations: { splatnet: data },
+                    },
+                    { root: true },
+                ),
+            );
         }
     },
     updateAll({ dispatch }) {
@@ -64,7 +70,9 @@ export const actions = {
     startUpdatingData({ dispatch }) {
         if (updatingData)
             return;
+
         updatingData = true;
+
         let generation = ++refreshGeneration;
         let refreshing = false;
         let lastRefresh = -Infinity;
@@ -72,27 +80,33 @@ export const actions = {
         async function refresh() {
             if (!updatingData || generation !== refreshGeneration || refreshing)
                 return;
+
             refreshing = true;
             lastRefresh = Date.now();
             clearTimeout(updateDataTimer);
             updateDataTimer = null;
+
             try {
                 await dispatch('updateAll');
             } catch (error) {
                 console.error('Could not refresh site data', error);
             } finally {
                 refreshing = false;
+
                 if (updatingData && generation === refreshGeneration)
                     updateDataTimer = setTimeout(refresh, nextDataRefreshAt() - Date.now());
             }
         }
+
         function onVisibilityChange() {
             // Match Splatoon3's activation cooldown, without delaying the hourly retries.
             if (document.visibilityState === 'visible' && Date.now() - lastRefresh >= 60_000)
                 void refresh();
         }
+
         document.addEventListener('visibilitychange', onVisibilityChange);
         removeVisibilityListener = () => document.removeEventListener('visibilitychange', onVisibilityChange);
+
         return refresh();
     },
     stopUpdatingData() {
@@ -104,7 +118,7 @@ export const actions = {
     },
 };
 
-export const mutations = { };
+export const mutations = {};
 
 for (let source of dataSources) {
     // State
@@ -112,8 +126,7 @@ for (let source of dataSources) {
 
     // Actions
     actions[source.actionName] = async ({ commit }) => {
-        return fetchJson(source.url)
-            .then(data => commit(source.mutationName, { data }));
+        return fetchJson(source.url).then(data => commit(source.mutationName, { data }));
     };
 
     // Mutations
@@ -125,12 +138,15 @@ for (let source of dataSources) {
 async function fetchJson(url) {
     // Use AbortController rather than newer AbortSignal helpers in the older frontend.
     // Keep the deadline active through body parsing so a stalled response cannot stop polling.
-    let controller = new AbortController;
+    let controller = new AbortController();
     let timeout = setTimeout(() => controller.abort(), 30_000);
+
     try {
         let response = await fetch(url, { signal: controller.signal });
+
         if (!response.ok)
             throw new Error(`Data request failed: ${response.status}`);
+
         return await response.json();
     } finally {
         clearTimeout(timeout);

@@ -19,5 +19,6 @@ const CONTENT_TYPES = {
 
 export function contentTypeFor(key) {
     let extension = key.split('.').pop().toLowerCase();
+
     return CONTENT_TYPES[extension];
 }

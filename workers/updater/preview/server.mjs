@@ -42,16 +42,21 @@ const state = {
     social: { ok: true },
   },
 };
+
 createServer(async (request, response) => {
   response.setHeader('Cache-Control', 'no-store');
+
   const url = new URL(request.url, `http://127.0.0.1:${port}`);
+
   function json(body, status = 200) {
     response.writeHead(status, { 'Content-Type': 'application/json' });
     response.end(JSON.stringify(body));
   }
+
   try {
     if (request.method === 'GET' && ['/', '/admin', '/admin/'].includes(url.pathname)) {
       response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+
       return response.end(
         (await readFile(new URL('../src/admin/page.html', import.meta.url), 'utf8')).replaceAll(
           '__NONCE__',
@@ -59,25 +64,41 @@ createServer(async (request, response) => {
         ),
       );
     }
-    if (request.method === 'GET' && url.pathname === '/admin/api/status') return json(state);
+
+    if (request.method === 'GET' && url.pathname === '/admin/api/status')
+      return json(state);
+
     if (request.method === 'POST' && url.pathname === '/admin/api/run') {
       if (request.headers.origin !== `http://${request.headers.host}`)
         return json({ error: 'Invalid origin.' }, 403);
-      if (state.busy) return json({ error: 'A run is already active.' }, 409);
+
+      if (state.busy)
+        return json({ error: 'A run is already active.' }, 409);
+
       let body = '';
+
       for await (const chunk of request) {
         body += chunk;
-        if (body.length > 1024) return json({ error: 'Request too large.' }, 413);
+
+        if (body.length > 1024)
+          return json({ error: 'Request too large.' }, 413);
       }
+
       const { mode } = JSON.parse(body);
-      if (!['data', 'social', 'both'].includes(mode)) return json({ error: 'Unknown mode.' }, 400);
+
+      if (!['data', 'social', 'both'].includes(mode))
+        return json({ error: 'Unknown mode.' }, 400);
+
       const run = { id: randomUUID(), mode, status: 'queued', requestedAt: Date.now() };
+
       state.busy = true;
       state.pendingManual = run;
+
       const logs = {
         lines: [{ at: Date.now(), level: 'info', text: `Starting ${mode} run` }],
         omitted: 0,
       };
+
       state.activeRun = { mode, startedAt: Date.now(), logs };
       setTimeout(
         () =>
@@ -97,9 +118,7 @@ createServer(async (request, response) => {
             at: Date.now(),
             level: 'info',
             text:
-              mode === 'social'
-                ? '[Social] Preparing a due Bluesky post…'
-                : '[Updater] [Schedules] Done.',
+              mode === 'social' ? '[Social] Preparing a due Bluesky post…' : '[Updater] [Schedules] Done.',
           }),
         3200,
       );
@@ -128,11 +147,12 @@ createServer(async (request, response) => {
             mode === 'social'
               ? { ok: true, skipped: true }
               : {
+                ok: true,
+                updaters: ['Schedules', 'Timeline', 'CoopSchedules', 'Merchandises'].map(name => ({
+                  name,
                   ok: true,
-                  updaters: ['Schedules', 'Timeline', 'CoopSchedules', 'Merchandises'].map(
-                    (name) => ({ name, ok: true }),
-                  ),
-                },
+                })),
+              },
           social:
             mode === 'data'
               ? { ok: true, skipped: true }
@@ -142,8 +162,10 @@ createServer(async (request, response) => {
         state.pendingManual = null;
         state.activeRun = null;
       }, 6000);
+
       return json({ ok: true, run }, 202);
     }
+
     json({ error: 'Not found.' }, 404);
   } catch {
     json({ error: 'Invalid preview request.' }, 400);

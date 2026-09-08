@@ -15,16 +15,22 @@ export function filesystemStorage() {
 
 export async function updateAll() {
     let updaters = await updater.updateAll(filesystemStorage());
+
     if (updaters.some(updater => !updater.ok))
         throw new Error('One or more updaters failed; social posting skipped.');
+
     return 'Done';
 }
 
 export async function sendStatuses() {
     let clients = social.createClients();
-    let result = await withScreenshots(screenshots => social.sendStatuses(filesystemStorage(), clients, screenshots));
+    let result = await withScreenshots(screenshots =>
+        social.sendStatuses(filesystemStorage(), clients, screenshots),
+    );
+
     if (!result.ok)
         throw new Error('One or more social posts failed.');
+
     return result;
 }
 

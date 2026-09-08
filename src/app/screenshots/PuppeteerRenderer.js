@@ -10,7 +10,6 @@ export default class PuppeteerRenderer {
 
         try {
             let page = await browser.newPage();
-
             page.setDefaultTimeout(10_000);
             await page.setViewport(viewport);
             await page.setCacheEnabled(false);
@@ -26,6 +25,7 @@ export default class PuppeteerRenderer {
             await page.waitForSelector(readySelector);
 
             let image = await page.screenshot({ type: 'png' });
+
             return new Uint8Array(image);
         } finally {
             await browser.close();

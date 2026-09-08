@@ -22,6 +22,8 @@ export async function runUpdaters(env, { only } = {}) {
   let started = Date.now();
   let updaters = await updateAll(bucketStorage(env), { only });
   let summary = { ok: updaters.every(u => u.ok), ms: Date.now() - started, updaters };
+
   log[summary.ok ? 'info' : 'error']('Updaters finished', summary);
+
   return summary;
 }

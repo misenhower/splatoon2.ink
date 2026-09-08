@@ -517,11 +517,11 @@
       function formatDate(value) {
         return value
           ? new Date(value).toLocaleString([], {
-              month: 'short',
-              day: 'numeric',
-              hour: 'numeric',
-              minute: '2-digit',
-            })
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+          })
           : '—';
       }
 
@@ -533,50 +533,61 @@
       function renderLogLines(logs) {
         const box = document.createElement('div');
         box.className = 'log-view';
+
         if (!logs?.lines?.length) {
           box.textContent = 'No log lines recorded for this run.';
+
           return box;
         }
+
         if (logs.omitted) {
           const note = document.createElement('div');
           note.className = 'log-note';
           note.textContent = `${logs.omitted} earlier lines omitted. Showing the most recent log lines.`;
           box.append(note);
         }
+
         for (const line of logs.lines) {
           const row = document.createElement('div');
           row.className = 'log-line ' + line.level;
+
           const time = document.createElement('span');
           time.className = 'log-time';
           time.textContent = new Date(line.at).toLocaleTimeString() + '  ';
           row.append(time, document.createTextNode(line.text));
           box.append(row);
         }
+
         return box;
       }
 
       function renderRunRecord(label, run) {
         const row = document.createElement('div');
         row.className = 'record';
+
         const top = document.createElement('div');
         top.className = 'record-top';
+
         const title = document.createElement('span');
         title.className = 'record-name';
         title.textContent = label;
+
         const badge = document.createElement('span');
         badge.className = 'badge' + (!run ? ' neutral' : run.ok ? '' : ' failed');
         badge.textContent = !run ? 'No runs yet' : run.ok ? 'Completed' : 'Needs attention';
         top.append(title, badge);
         row.append(top);
+
         const detail = document.createElement('div');
         detail.className = 'detail';
         detail.textContent = run
           ? `${runNames[run.mode] || 'Full cycle'} · ${formatDate(run.startedAt)} · ${Math.max(
-              1,
-              Math.round((run.runMs || 0) / 1000),
-            )}s`
+            1,
+            Math.round((run.runMs || 0) / 1000),
+          )}s`
           : 'Results will appear here after a run.';
         row.append(detail);
+
         if (run) {
           const messages = [
             run.error,
@@ -587,32 +598,38 @@
               .filter((item) => item && !item.ok)
               .map((item) => item.error || 'A social post failed'),
           ].filter(Boolean);
+
           if (messages.length) {
             const error = document.createElement('div');
             error.className = 'error';
             error.textContent = messages.join(' · ');
             row.append(error);
           }
+
           const logDetails = document.createElement('details');
           const logSummary = document.createElement('summary');
           logSummary.textContent = 'View log lines';
           logDetails.append(logSummary, renderLogLines(run.logs));
           row.append(logDetails);
+
           const details = document.createElement('details');
           const summary = document.createElement('summary');
           const pre = document.createElement('pre');
           summary.textContent = 'View run details';
+
           const summaryResult = { ...run };
           delete summaryResult.logs;
           pre.textContent = JSON.stringify(summaryResult, null, 2);
           details.append(summary, pre);
           row.append(details);
         }
+
         return row;
       }
 
       function render() {
         element('preview').style.display = state.preview ? 'block' : 'none';
+
         if (state.busy) {
           element('state').textContent = 'Run in progress';
           element('dot').className = 'dot busy';
@@ -626,13 +643,16 @@
           element('dot').className = 'dot';
           element('state-detail').textContent = 'The hourly schedule is running automatically.';
         }
+
         if (state.pendingManual) {
           const name = runNames[state.pendingManual.mode];
           const progress = state.pendingManual.status === 'queued' ? 'waiting to start' : 'running';
           element('state-detail').textContent = `${name} · ${progress}`;
         }
+
         element('next').textContent = state.paused ? 'Paused' : formatDate(state.retryAt || state.hourlyAt);
         element('live-run').hidden = !state.activeRun;
+
         if (state.activeRun) {
           const old = element('live-log').firstElementChild;
           const follow = !old || old.scrollHeight - old.scrollTop - old.clientHeight < 30;
@@ -641,8 +661,10 @@
           element('live-log').replaceChildren(box);
           box.scrollTop = follow ? box.scrollHeight : position;
         }
+
         // Keep expanded details open during polling when the records have not changed.
         const signature = JSON.stringify([state.lastManualRun, state.lastRun]);
+
         if (element('history').dataset.signature !== signature) {
           element('history').replaceChildren(
             renderRunRecord('Last manual run', state.lastManualRun),
@@ -650,12 +672,14 @@
           );
           element('history').dataset.signature = signature;
         }
+
         if (lastRunId && state.lastManualRun?.id === lastRunId) {
           element('notice').textContent = state.lastManualRun.ok
             ? 'Your run finished successfully.'
             : 'Your run needs attention. See the result below before retrying.';
           lastRunId = null;
         }
+
         element('identity').textContent = state.preview
           ? 'Preview session · Simulated results'
           : `Signed in as ${state.user.email}`;
@@ -673,21 +697,31 @@
           redirect: 'error',
           signal: AbortSignal.timeout(15000),
         });
+
         if (response.status === 401 || response.status === 403) {
           element('sign-in').style.display = 'inline-block';
           throw new Error('Your session may have expired. Sign in again to continue.');
         }
+
         if (!response.headers.get('content-type')?.includes('application/json'))
           throw new Error('Could not read status. Reload to sign in again.');
+
         const result = await response.json();
-        if (!response.ok) throw new Error(result.error || 'The request failed.');
+
+        if (!response.ok)
+          throw new Error(result.error || 'The request failed.');
+
         return result;
       }
 
       async function refreshStatus() {
         clearTimeout(timer);
-        if (polling) return;
+
+        if (polling)
+          return;
+
         polling = true;
+
         try {
           state = await requestAdmin('status');
           render();
@@ -700,14 +734,18 @@
           element('notice').textContent = error.message;
         } finally {
           polling = false;
-          if (!document.hidden) timer = setTimeout(refreshStatus, state?.busy ? 2000 : 15000);
+
+          if (!document.hidden)
+            timer = setTimeout(refreshStatus, state?.busy ? 2000 : 15000);
         }
       }
+
       for (const button of buttons)
         button.addEventListener('click', async () => {
           sending = true;
           updateControls();
           element('notice').textContent = 'Starting your run…';
+
           try {
             const result = await requestAdmin('run', {
               method: 'POST',
@@ -715,11 +753,13 @@
               body: JSON.stringify({ mode: button.dataset.mode }),
             });
             lastRunId = result.run.id;
+
             if (state) {
               state.busy = true;
               state.pendingManual = result.run;
               render();
             }
+
             element('notice').textContent = 'Run accepted. You can close this page and check back later.';
           } catch (error) {
             element(
@@ -731,10 +771,13 @@
             updateControls();
           }
         });
+
       element('refresh').addEventListener('click', refreshStatus);
       document.addEventListener('visibilitychange', () => {
-        if (document.hidden) clearTimeout(timer);
-        else refreshStatus();
+        if (document.hidden)
+          clearTimeout(timer);
+        else
+          refreshStatus();
       });
       refreshStatus();
     </script>

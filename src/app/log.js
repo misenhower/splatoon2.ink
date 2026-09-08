@@ -23,11 +23,13 @@ export class RunLog {
 
     append(level, message, fields) {
         let line = { at: Date.now(), level, text: this.formatStoredMessage(message, fields) };
+
         this.snapshot.lines.push(line);
         this.storedBytes += this.storedLineBytes(line);
 
         while (this.snapshot.lines.length > MAX_STORED_LINES || this.storedBytes > MAX_STORED_BYTES) {
             let removed = this.snapshot.lines.shift();
+
             this.storedBytes -= this.storedLineBytes(removed);
             this.snapshot.omitted++;
         }
@@ -39,17 +41,21 @@ export class RunLog {
         // Keep readable progress messages; the full structured result has its own JSON view.
         if (fields?.updater)
             text = `[${fields.updater}] ${text}`;
+
         if (fields?.error)
             text += `: ${fields.error}`;
+
         if (fields?.attempt)
             text += ` (retry ${fields.attempt})`;
 
         for (let secret of this.secrets)
             text = text.replaceAll(secret, '[redacted]');
+
         text = text.replace(/Bearer\s+[^\s,;]+/gi, 'Bearer [redacted]');
 
         if (text.length > MAX_STORED_LINE_LENGTH)
             text = text.slice(0, MAX_STORED_LINE_LENGTH) + '…';
+
         return text;
     }
 
@@ -68,6 +74,7 @@ export function logMessage(level, message, fields) {
     }
 
     let runLog = currentRunLog.getStore();
+
     if (runLog)
         runLog.append(level, message, fields);
 }

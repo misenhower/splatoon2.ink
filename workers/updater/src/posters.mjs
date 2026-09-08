@@ -12,14 +12,25 @@ import { createLogger } from './log.mjs';
 export async function verifyPublishedData(publicStorage) {
   if (!process.env.SITE_URL)
     throw new Error('SITE_URL must point to a site serving this Worker\'s published data.');
-  for (let filename of ['schedules.json', 'coop-schedules.json', 'timeline.json', 'festivals.json', 'merchandises.json', 'locale/en.json']) {
+
+  for (let filename of [
+    'schedules.json',
+    'coop-schedules.json',
+    'timeline.json',
+    'festivals.json',
+    'merchandises.json',
+    'locale/en.json',
+  ]) {
     let key = `data/${filename}`;
     let expected = await publicStorage.readJson(key);
+
     if (!expected)
       throw new Error(`Missing published data: ${key}`);
+
     let response = await fetchWithTimeout(new URL(`/${key}`, process.env.SITE_URL), {
       headers: { 'Cache-Control': 'no-cache' },
     });
+
     if (!response.ok || stringify(await response.json()) !== stringify(expected))
       throw new Error(`Rendering site data does not match this Worker: ${key}`);
   }
@@ -28,18 +39,27 @@ export async function verifyPublishedData(publicStorage) {
 export async function runPosters(env) {
   let started = Date.now();
   let storage = bucketStorage(env);
+
   await verifyPublishedData(storage.publicStorage);
+
   let clients = createClients();
   let enabled = [];
+
   for (let client of clients)
     if (await client.canSend())
       enabled.push(client.key);
-  let screenshots = new ScreenshotGenerator(new BrowserRunClient({
-    accountId: process.env.CLOUDFLARE_ACCOUNT_ID,
-    apiToken: process.env.CLOUDFLARE_BROWSER_RUN_API_TOKEN,
-  }), process.env.SITE_URL);
+
+  let screenshots = new ScreenshotGenerator(
+    new BrowserRunClient({
+      accountId: process.env.CLOUDFLARE_ACCOUNT_ID,
+      apiToken: process.env.CLOUDFLARE_BROWSER_RUN_API_TOKEN,
+    }),
+    process.env.SITE_URL,
+  );
   let result = await sendStatuses(storage, clients, screenshots);
   let summary = { ...result, ms: Date.now() - started, clients: enabled };
+
   createLogger('social')[summary.ok ? 'info' : 'error']('Social run finished', summary);
+
   return summary;
 }

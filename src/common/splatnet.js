@@ -14,16 +14,19 @@ export default class SplatNet {
 
     getSessionId() {
         switch (this.region) {
-            case 'NA': return process.env.NINTENDO_SESSION_ID_NA;
-            case 'EU': return process.env.NINTENDO_SESSION_ID_EU;
-            case 'JP': return process.env.NINTENDO_SESSION_ID_JP;
+            case 'NA':
+                return process.env.NINTENDO_SESSION_ID_NA;
+            case 'EU':
+                return process.env.NINTENDO_SESSION_ID_EU;
+            case 'JP':
+                return process.env.NINTENDO_SESSION_ID_JP;
         }
     }
 
     getHeaders() {
         return {
             ...(userAgent() ? { 'User-Agent': userAgent() } : {}),
-            'Cookie': `iksm_session=${this.getSessionId()}`,
+            Cookie: `iksm_session=${this.getSessionId()}`,
             'Accept-Language': this.language,
         };
     }
@@ -32,18 +35,22 @@ export default class SplatNet {
     async request(path, { headers = this.getHeaders() } = {}) {
         let url = new URL(path, splatnetBaseUrl);
         let response = await fetchWithTimeout(url, { headers });
+
         if (!response.ok)
             throw new Error(`SplatNet request failed with status ${response.status}: ${url.pathname}`);
+
         return response;
     }
 
     async getResponse(path) {
         let response = await this.request(`/api/${path}`);
+
         return response.json();
     }
 
     async getText(path) {
         let response = await this.request(path);
+
         return response.text();
     }
 
@@ -107,7 +114,8 @@ export default class SplatNet {
     }
 
     getResults(id = null, region = 'NA') {
-        let url = (id) ? `results/${id}` : 'results';
+        let url = id ? `results/${id}` : 'results';
+
         return this.getResponse(url);
     }
 
@@ -116,6 +124,7 @@ export default class SplatNet {
         let response = await this.request(imagePath, {
             headers: userAgent() ? { 'User-Agent': userAgent() } : {},
         });
+
         return new Uint8Array(await response.arrayBuffer());
     }
 }

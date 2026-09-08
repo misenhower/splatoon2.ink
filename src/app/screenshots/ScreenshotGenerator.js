@@ -19,15 +19,18 @@ export default class ScreenshotGenerator {
         if (!url) {
             if (!this.siteUrl)
                 throw new Error('SITE_URL is required to capture a screenshot route.');
+
             url = new URL('/screenshots.html', this.siteUrl);
             url.hash = hash;
         }
+
         let captureViewport = { ...defaultViewport, ...viewport };
         let image = await this.renderer.capture({
             url: new URL(url).toString(),
             viewport: captureViewport,
             readySelector: screenshotReadySelector,
         });
+
         return {
             image,
             type: 'image/png',
@@ -67,6 +70,7 @@ export default class ScreenshotGenerator {
         const rows = Math.ceil(weaponCount / 4);
         // Determine the image height based on the number of rows
         let height = rows * 320;
+
         // Add some extra height for the bottom banner
         height += 60;
         // Set a minimum overall image height
@@ -77,6 +81,7 @@ export default class ScreenshotGenerator {
 
     captureSplatfestScreenshot(region, now, regions) {
         regions = regions.join(',');
+
         let hash = `/splatfest/${region}/${now}?regions=${regions}`;
 
         return this.capture({ hash });

@@ -14,10 +14,12 @@ export default class LocalizationProcessor {
         this.storage = storage;
 
         let entities = this.ruleset.entities;
-        this.entityExpressions = (Array.isArray(entities)) ? entities : [entities];
+
+        this.entityExpressions = Array.isArray(entities) ? entities : [entities];
 
         let values = this.ruleset.values;
-        this.valueExpressions = (Array.isArray(values)) ? values : [values];
+
+        this.valueExpressions = Array.isArray(values) ? values : [values];
     }
 
     getKey() {
@@ -25,7 +27,7 @@ export default class LocalizationProcessor {
     }
 
     async readData() {
-        return await this.storage.readJson(this.getKey()) ?? {};
+        return (await this.storage.readJson(this.getKey())) ?? {};
     }
 
     writeData(data) {
@@ -57,6 +59,7 @@ export default class LocalizationProcessor {
 
         for (let entity of this.entities(data)) {
             let ids = this.getIdValues(entity);
+
             for (let valueKey of this.valueExpressions)
                 _.setWith(localizations, this.getExpression(ids, valueKey), _.get(entity, valueKey), Object);
         }
@@ -69,6 +72,7 @@ export default class LocalizationProcessor {
 
         for (let entity of this.entities(data)) {
             let ids = this.getIdValues(entity);
+
             for (let valueKey of this.valueExpressions)
                 if (_.get(localizations, this.getExpression(ids, valueKey)) === undefined)
                     return false;

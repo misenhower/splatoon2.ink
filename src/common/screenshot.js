@@ -11,14 +11,18 @@ export async function markScreenshotReady({
     requestAnimationFrame = globalThis.requestAnimationFrame,
 }) {
     document.documentElement.removeAttribute(screenshotReadyAttribute);
+
     let results = await loadData();
+
     if (results.some(result => result.status === 'rejected'))
         throw new Error('Screenshot data failed to load');
+
     await nextTick();
     await document.fonts?.ready;
     await Promise.allSettled([...document.images].map(image => image.decode()));
     await new Promise(resolve => requestAnimationFrame(resolve));
     await new Promise(resolve => requestAnimationFrame(resolve));
+
     if (isCurrent())
         document.documentElement.setAttribute(screenshotReadyAttribute, 'true');
 }

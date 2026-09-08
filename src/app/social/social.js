@@ -2,7 +2,7 @@ import { createPosts } from './posts/index.js';
 import BlueskyClient from './clients/BlueskyClient.js';
 
 export function createClients() {
-    return [new BlueskyClient];
+    return [new BlueskyClient()];
 }
 
 /**
@@ -13,10 +13,13 @@ export function createClients() {
  */
 export async function sendStatuses(storage, clients = createClients(), screenshots) {
     let posts = [];
+
     for (let post of createPosts(storage, clients, screenshots)) {
         let result = await post.maybePost();
+
         posts.push({ key: post.getKey(), ...(result || { ok: true, skipped: true }) });
     }
+
     return { ok: posts.every(post => post.ok), posts };
 }
 

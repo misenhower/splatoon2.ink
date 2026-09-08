@@ -11,5 +11,6 @@ const images = {
 /** @returns {Promise<Uint8Array | null>} the image bytes, or null if SplatNet still serves this path */
 export async function cdnBackup(imagePath) {
     let data = images[imagePath];
+
     return data ? new Uint8Array(data) : null;
 }

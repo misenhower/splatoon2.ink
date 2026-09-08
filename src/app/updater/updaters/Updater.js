@@ -63,6 +63,7 @@ export default class Updater {
 
     getData({ region, language }) {
         let splatnet = new SplatNet(region, language);
+
         return this.options.request(splatnet);
     }
 
@@ -73,8 +74,7 @@ export default class Updater {
     async handleRequest(request) {
         try {
             return await request;
-        }
-        catch (e) {
+        } catch (e) {
             // Send the error to Sentry
             Sentry.captureException(e);
 
@@ -92,7 +92,8 @@ export default class Updater {
 
             for (let key of this.options.rootKeys) {
                 let value = data[key];
-                result[key] = (this.shouldIncludeRootValue(value)) ? value : null;
+
+                result[key] = this.shouldIncludeRootValue(value) ? value : null;
             }
 
             return result;
@@ -108,7 +109,9 @@ export default class Updater {
     }
 
     getProcessors(languageInfo) {
-        return this.options.localization.map(ruleset => new LocalizationProcessor(ruleset, languageInfo, this.publicStorage));
+        return this.options.localization.map(
+            ruleset => new LocalizationProcessor(ruleset, languageInfo, this.publicStorage),
+        );
     }
 
     async updateLocalizations(data, initialLanguageInfo) {
@@ -119,9 +122,10 @@ export default class Updater {
 
             // Do we need to retrieve data for any other languages?
             let missingLanguages = [];
+
             for (let languageInfo of this.getLanguages()) {
                 for (let processor of this.getProcessors(languageInfo)) {
-                    if (!await processor.hasLocalizations(data)) {
+                    if (!(await processor.hasLocalizations(data))) {
                         missingLanguages.push(languageInfo);
                         break;
                     }
@@ -130,9 +134,13 @@ export default class Updater {
 
             // Retrieve data for missing languages
             for (let missingLanguageInfo of missingLanguages) {
-                this.info(`Retrieving localized data for region: ${missingLanguageInfo.region}, language: ${missingLanguageInfo.language}`);
+                this.info(
+                    `Retrieving localized data for region: ${missingLanguageInfo.region}, language: ${missingLanguageInfo.language}`,
+                );
+
                 let localData = await this.handleRequest(this.getData(missingLanguageInfo));
                 localData = this.filterRootKeys(localData);
+
                 for (let processor of this.getProcessors(missingLanguageInfo))
                     await processor.updateLocalizations(localData);
             }
@@ -156,6 +164,7 @@ export default class Updater {
         if (this.options.imagePaths) {
             for (let expression of this.options.imagePaths) {
                 let splatnetImages = jsonpath.query(data, expression);
+
                 for (let splatnetImage of splatnetImages)
                     await this.maybeDownloadImage(splatnetImage);
             }
@@ -174,6 +183,7 @@ export default class Updater {
 
         // Certain images are not available on the CDN anymore
         let backup = await cdnBackup(imagePath);
+
         if (backup) {
             this.info(`Using CDN backup: ${imagePath}`);
             await this.publicStorage.writeBytes(key, backup);
@@ -183,8 +193,10 @@ export default class Updater {
 
         // Download the image
         this.info(`Downloading image: ${imagePath}`);
-        let splatnet = new SplatNet;
+
+        let splatnet = new SplatNet();
         let image = await this.handleRequest(splatnet.getImage(imagePath));
+
         await this.publicStorage.writeBytes(key, image);
     }
 
@@ -194,11 +206,13 @@ export default class Updater {
 
     async updateCalendarEvents(data) {
         let key = this.getCalendarKey();
+
         if (!key)
             return;
 
         let events = this.getCalendarEntries(data);
         let ical = this.getiCalData(events);
+
         await this.publicStorage.writeText(key, ical, { cacheControl: DATA_CACHE_CONTROL });
     }
 

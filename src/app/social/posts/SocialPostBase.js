@@ -22,22 +22,26 @@ export default class SocialPostBase {
         try {
             // Read once: Salmon Run's getData also remembers the current shift.
             let data = await this.getData();
+
             if (!data)
                 return false;
 
             let due = [];
+
             for (let client of this.clients)
-                if (await client.canSend() && await this.shouldPostForCurrentTime(client))
+                if ((await client.canSend()) && (await this.shouldPostForCurrentTime(client)))
                     due.push(client);
 
             // Without credentials, retain the public-image-only shadow mode.
             let enabled = await this.canPost();
+
             if (!due.length && (enabled || !this.getPublicImageFilename()))
                 return false;
 
             return await this.post(data, due);
         } catch (error) {
             this.error(`Could not prepare post: ${error.message}`);
+
             return { ok: false, error: error.message, clients: [] };
         }
     }
@@ -46,6 +50,7 @@ export default class SocialPostBase {
         for (let client of this.clients)
             if (await client.canSend())
                 return true;
+
         return false;
     }
 
@@ -54,12 +59,15 @@ export default class SocialPostBase {
         let text = await this.getText(data);
         let time = await this.getDataTime();
         let image = await this.getMedia(data);
+
         await this.maybeSavePublicImage(data, image.file);
+
         let media = { 'image/png': image };
 
         for (let client of clients) {
             try {
                 let mediaType = client.mediaType ?? 'image/png';
+
                 media[mediaType] ??= await this.convertMedia(image, mediaType);
                 await client.send({ status: text, media: [media[mediaType]] });
                 await this.updateLastPostTime(client, time);
@@ -70,11 +78,13 @@ export default class SocialPostBase {
                 this.error(`Could not post to ${client.name}: ${error.message}`);
             }
         }
+
         return { ok: results.every(result => result.ok), clients: results };
     }
 
     async maybeSavePublicImage(data, image) {
         let filename = this.getPublicImageFilename();
+
         if (filename) {
             // Keep the established public URLs; removing X does not require breaking image links.
             await this.publicStorage.writeBytes(`twitter-images/${filename}`, image);
@@ -85,8 +95,10 @@ export default class SocialPostBase {
     async saveTestScreenshot() {
         try {
             let data = await this.getTestData();
+
             if (!data) {
                 this.info('No data available');
+
                 return;
             }
 
@@ -95,8 +107,7 @@ export default class SocialPostBase {
 
             await this.publicStorage.writeBytes(key, file);
             this.info(`Saved screenshot as ${key}`);
-        }
-        catch (e) {
+        } catch (e) {
             this.error('Couldn\'t save screenshot');
             throw e;
         }
@@ -129,18 +140,18 @@ export default class SocialPostBase {
     }
 
     async getLastPostTimes(client) {
-        return await this.readState(this.getLastPostTimesKey(client)) ?? {};
+        return (await this.readState(this.getLastPostTimesKey(client))) ?? {};
     }
 
     async getLastPostTime(client) {
         let key = this.getKey();
+
         return (await this.getLastPostTimes(client))[key] || 0;
     }
 
     async updateLastPostTime(client, time) {
         let key = this.getKey();
         let lastPostTimes = await this.getLastPostTimes(client);
-
         lastPostTimes[key] = time;
 
         await this.writeState(this.getLastPostTimesKey(client), lastPostTimes);
@@ -150,6 +161,7 @@ export default class SocialPostBase {
         // Check whether the current data time has already been posted
         let time = await this.getDataTime();
         let lastPostTime = await this.getLastPostTime(client);
+
         return lastPostTime < time;
     }
 
@@ -159,6 +171,7 @@ export default class SocialPostBase {
 
     formatLogMessage(message) {
         let name = this.getName();
+
         return `[Social] [${name}] ${message}`;
     }
 
@@ -179,10 +192,10 @@ export default class SocialPostBase {
      */
 
     // The unique key for this Post (used for storing the last time this Post was posted)
-    getKey() { }
+    getKey() {}
 
     // The friendly name for this Post (used for console log messages)
-    getName() { }
+    getName() {}
 
     // The time which the current Post is based off of (usually the top of the current hour)
     async getDataTime() {
@@ -190,7 +203,7 @@ export default class SocialPostBase {
     }
 
     // The current data item the Post is based on (used by getImage and getText)
-    async getData() { }
+    async getData() {}
 
     // Data for test screenshots
     async getTestData() {
@@ -199,7 +212,7 @@ export default class SocialPostBase {
 
     // The image to post with the Post, as a screenshot result ({ image, type, width, height })
     // or raw PNG bytes.
-    async getImage(data) { }
+    async getImage(data) {}
 
     // The image as a media attachment: { file, type, width?, height? }
     async getMedia(data) {
@@ -207,6 +220,7 @@ export default class SocialPostBase {
 
         if (result instanceof Uint8Array) {
             let size = pngSize(result) ?? {};
+
             return { file: result, type: 'image/png', ...size };
         }
 
@@ -216,18 +230,20 @@ export default class SocialPostBase {
     async convertMedia(image, mediaType) {
         if (mediaType !== 'image/jpeg')
             throw new Error(`Unsupported social image type: ${mediaType}`);
+
         return { ...image, file: await convertToJpeg(image.file), type: mediaType };
     }
 
     // The filename to store the image as (optional)
-    getPublicImageFilename() { }
+    getPublicImageFilename() {}
 
     // The text body of the Post
-    async getText(data) { }
+    async getText(data) {}
 
     // The key for test screenshots in public storage
     getTestScreenshotKey() {
         let key = this.getKey();
+
         return `test-screenshots/${key}.png`;
     }
 

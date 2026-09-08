@@ -20,6 +20,7 @@ export default class FilesystemStorage {
         } catch (error) {
             if (error.code === 'ENOENT')
                 return false;
+
             throw error;
         }
     }
@@ -30,12 +31,14 @@ export default class FilesystemStorage {
         } catch (error) {
             if (error.code === 'ENOENT' || error.code === 'EISDIR')
                 return null;
+
             throw error;
         }
     }
 
     async #write(key, body) {
         let filename = this.pathFor(key);
+
         await fs.mkdir(path.dirname(filename), { recursive: true });
         await fs.writeFile(filename, body);
     }
@@ -43,18 +46,21 @@ export default class FilesystemStorage {
     /** The parsed document, or null if it does not exist. */
     async readJson(key) {
         let buffer = await this.#read(key);
+
         return buffer === null ? null : JSON.parse(buffer.toString('utf8'));
     }
 
     /** @returns {Promise<boolean>} always true; the filesystem write is cheap enough not to dedupe */
     async writeJson(key, data) {
         await this.#write(key, JSON.stringify(data));
+
         return true;
     }
 
     /** @returns {Promise<Uint8Array | null>} */
     async readBytes(key) {
         let buffer = await this.#read(key);
+
         return buffer === null ? null : new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
     }
 

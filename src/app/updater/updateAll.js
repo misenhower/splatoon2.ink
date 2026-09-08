@@ -33,23 +33,33 @@ export default async function updateAll(storage, { only } = {}) {
     let results = [];
 
     let updaters = createUpdaters(storage);
+
     if (only) {
         let unknown = only.filter(name => !updaters.some(updater => updater.options.name === name));
+
         if (!only.length || unknown.length)
             throw new Error(`Unknown or empty updater selection: ${unknown.join(', ')}`);
     }
+
     for (let updater of updaters) {
         let name = updater.options.name;
+
         if (only && !only.includes(name))
             continue;
 
         let started = Date.now();
+
         try {
             await updater.update();
             results.push({ name, ok: true, ms: Date.now() - started });
         } catch (e) {
             logMessage('error', e);
-            results.push({ name, ok: false, ms: Date.now() - started, error: e instanceof Error ? e.message : String(e) });
+            results.push({
+                name,
+                ok: false,
+                ms: Date.now() - started,
+                error: e instanceof Error ? e.message : String(e),
+            });
         }
     }
 

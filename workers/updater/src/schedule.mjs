@@ -7,5 +7,6 @@ export const GRACE_MS = 10 * 1000;
 /** The :00:10 strictly after `now`. */
 export function nextRunAt(now = Date.now()) {
   let candidate = now - (now % HOUR_MS) + GRACE_MS;
+
   return candidate > now ? candidate : candidate + HOUR_MS;
 }
