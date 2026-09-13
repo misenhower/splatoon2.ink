@@ -143,6 +143,48 @@
         font-size: 11px;
         margin-bottom: 7px;
       }
+      .scheduling {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 44px;
+        margin: 10px 0 0 auto;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        font-size: 13px;
+      }
+      .switch-track {
+        display: flex;
+        align-items: center;
+        width: 40px;
+        height: 24px;
+        padding: 3px;
+        border: 1px solid #686978;
+        border-radius: 20px;
+        background: #3a3b48;
+      }
+      .switch-track::before {
+        content: '';
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #f3f2fa;
+      }
+      .scheduling[aria-checked='true'] .switch-track {
+        justify-content: flex-end;
+        background: var(--purple);
+        border-color: var(--purple);
+      }
+      .scheduling[aria-checked='true'] .switch-track::before {
+        background: #191226;
+      }
+      #scheduling-value {
+        min-width: 22px;
+        text-align: left;
+        color: var(--muted);
+      }
       .section-label {
         display: flex;
         justify-content: space-between;
@@ -216,14 +258,6 @@
       .run:hover:not(:disabled) {
         background: #373046;
         border-color: #8c75b7;
-      }
-      .action:first-child .run {
-        background: #b6a4fa;
-        color: #191226;
-        border-color: #b6a4fa;
-      }
-      .action:first-child .run:hover:not(:disabled) {
-        background: #cbbbff;
       }
       .note {
         font-size: 12px;
@@ -366,6 +400,13 @@
         .status {
           padding: 18px 17px;
           align-items: flex-start;
+          flex-direction: column;
+        }
+        .next {
+          text-align: left;
+        }
+        .scheduling {
+          margin-left: 0;
         }
         .next strong {
           font-size: 12px;
@@ -447,12 +488,16 @@
         </div>
         <div class="next">
           <small>Next scheduled run</small><strong id="next">—</strong>
-          <button class="refresh" id="scheduling" role="switch" aria-checked="false" disabled>Automatic scheduling</button>
+          <button class="scheduling" id="scheduling" role="switch"
+            aria-label="Automatic scheduling" aria-checked="false" disabled>
+            <span>Automatic scheduling</span>
+            <span class="switch-track" aria-hidden="true"></span>
+            <span id="scheduling-value" aria-hidden="true">Off</span>
+          </button>
         </div>
       </section>
       <div class="section-label">
         <h2>Start a run</h2>
-        <span class="hint">One run at a time</span>
       </div>
       <section class="actions" aria-label="Manual actions">
         <article class="action">
@@ -648,7 +693,7 @@
           element('dot').className = 'dot neutral';
           element('state-detail').textContent = 'Manual runs are available.';
         } else {
-          element('state').textContent = 'Ready when you are';
+          element('state').textContent = 'Idle';
           element('dot').className = 'dot';
           element('state-detail').textContent = 'The hourly schedule is running automatically.';
         }
@@ -662,7 +707,7 @@
         element('next').textContent = state.paused ? 'Paused'
           : state.automaticSchedulingEnabled ? formatDate(state.retryAt || state.hourlyAt) : 'Off';
         element('scheduling').setAttribute('aria-checked', String(state.automaticSchedulingEnabled));
-        element('scheduling').textContent = `Automatic scheduling: ${state.automaticSchedulingEnabled ? 'On' : 'Off'}`;
+        element('scheduling-value').textContent = state.automaticSchedulingEnabled ? 'On' : 'Off';
         element('live-run').hidden = !state.activeRun;
 
         if (state.activeRun) {
