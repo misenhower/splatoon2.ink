@@ -147,6 +147,19 @@ The npm updater development, deployment, dry-run and tail commands select dev.
 Use `npm run updater:deploy:production` only at production cutover. Neither
 environment starts automatic scheduling on a fresh scheduler.
 
+The dev Worker uses Cloudflare Workers Builds to deploy pushes to `develop`.
+Its build settings are configured in the Cloudflare dashboard:
+
+- Repository root: `/`
+- Build command: `npm run lint -- --max-warnings 0 && npm test`
+- Deploy command: `npx wrangler deploy --config workers/updater/wrangler.jsonc --env dev`
+- Build variable: `NODE_VERSION=22`
+- Preview builds for other branches: disabled
+
+The frontend deploys separately through Cloudflare Pages. Production updater
+deployment remains manual until cutover. Deploying dev preserves its stored
+scheduling toggle; it does not enable automatic updates.
+
 1. Run the tests, build, and deployment dry run below. Compare old/new public
    data using `scripts/compare-data.mjs` on downloaded bucket directories.
 2. Serve the built frontend with `/data/` and `/assets/` backed by the dev
