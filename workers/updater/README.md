@@ -144,21 +144,27 @@ The `dev` environment deploys `splatoon2-ink-dev-updater`, using
 its own scheduler and secrets. Leave Bluesky credentials unset in dev.
 
 The npm updater development, deployment, dry-run and tail commands select dev.
-Use `npm run updater:deploy:production` only at production cutover. Neither
-environment starts automatic scheduling on a fresh scheduler.
+Use `npm run updater:deploy:production` for a manual production deployment.
+Neither environment starts automatic scheduling on a fresh scheduler.
 
-The dev Worker uses Cloudflare Workers Builds to deploy pushes to `develop`.
-Its build settings are configured in the Cloudflare dashboard:
+Cloudflare Workers Builds deploys pushes to `develop` to the dev Worker and
+pushes to `main` to the production Worker. Both use these dashboard settings:
 
 - Repository root: `/`
 - Build command: `npm run lint -- --max-warnings 0 && npm test`
 - Deploy command: `npx wrangler deploy --config workers/updater/wrangler.jsonc --env dev`
+  for dev, or the same command with `--env production` for production
 - Build variable: `NODE_VERSION=22`
 - Preview builds for other branches: disabled
 
-The frontend deploys separately through Cloudflare Pages. Production updater
-deployment remains manual until cutover. Deploying dev preserves its stored
-scheduling toggle; it does not enable automatic updates.
+The frontend deploys separately through Cloudflare Pages. Deployments preserve
+the stored scheduling toggle; they do not enable automatic updates.
+
+Production cut over on September 13, 2026. The old backend is stopped, public
+data and private checkpoints are in the production R2 buckets, and hourly
+scheduling is enabled. The production admin panel is at
+`https://admin.splatoon2.ink/`, protected by its own Access application using
+the same owner-only policy as dev.
 
 1. Run the tests, build, and deployment dry run below. Compare old/new public
    data using `scripts/compare-data.mjs` on downloaded bucket directories.
@@ -187,7 +193,8 @@ in the middle of a run: a busy pause request returns 409 so the caller can retry
 
 ## Admin panel
 
-`https://admin.dev.splatoon2.ink/` provides a mobile-friendly panel for data-only, social-only, and full
+The admin panels at `https://admin.splatoon2.ink/` and
+`https://admin.dev.splatoon2.ink/` provide data-only, social-only, and full
 manual runs. The authenticated browser starts a persisted request and polls its
 status; closing the tab does not cancel the job. One manual request can be
 pending at a time, and it shares the hourly scheduler's lock. Social runs keep
