@@ -10,6 +10,7 @@ import { createLogger, describeError } from './log.mjs';
 
 const RETRY_DELAY_MS = 60 * 1000;
 const MAX_RETRIES = 3;
+const MAX_STORED_RUNS = 50;
 export const MANUAL_MODES = ['data', 'social', 'both'];
 
 export class Scheduler extends DurableObject {
@@ -37,6 +38,41 @@ export class Scheduler extends DurableObject {
 
   async #pendingManual() {
     return (await this.ctx.storage.get('pendingManual')) ?? null;
+  }
+
+  async #runHistory(storage = this.ctx.storage) {
+    const records = await storage.list({ prefix: 'run:', reverse: true });
+
+    if (records.size)
+      return [...records.values()];
+
+    // Keep the two results retained by older deployments when history starts.
+    const state = await storage.get('state');
+    const manual = await storage.get('lastManualRun');
+
+    return [
+      state?.lastRun && { ...state.lastRun, trigger: 'scheduled' },
+      manual && { ...manual, trigger: 'manual' },
+    ].filter(Boolean).sort((a, b) => b.startedAt - a.startedAt);
+  }
+
+  async #recordRun(storage, result, trigger) {
+    const records = await storage.list({ prefix: 'run:', reverse: true });
+    const previous = records.size ? [] : await this.#runHistory(storage);
+    const run = { ...result, trigger, id: result.id ?? crypto.randomUUID() };
+    let sequence = Number(records.keys().next().value?.split(':')[1] ?? 0);
+
+    // Separate records keep each run's logs out of one growing storage value.
+    for (const entry of [...previous.reverse(), run]) {
+      const key = `run:${String(++sequence).padStart(15, '0')}`;
+      await storage.put(key, entry);
+      records.set(key, entry);
+    }
+
+    const expired = [...records.keys()].sort().reverse().slice(MAX_STORED_RUNS);
+
+    if (expired.length)
+      await storage.delete(expired);
   }
 
   async ensureArmed() {
@@ -144,6 +180,7 @@ export class Scheduler extends DurableObject {
       ...(await this.#state()),
       alarmAt: await this.ctx.storage.getAlarm(),
       lastManualRun: (await this.ctx.storage.get('lastManualRun')) ?? null,
+      runHistory: await this.#runHistory(),
       pendingManual,
       activeRun: this.#activeRun,
       busy: this.#running || !!pendingManual,
@@ -197,7 +234,10 @@ export class Scheduler extends DurableObject {
 
       let result = await this.#execute(only);
 
-      await this.ctx.storage.put('lastManualRun', result);
+      await this.ctx.storage.transaction(async txn => {
+        await this.#recordRun(txn, result, 'manual');
+        await txn.put('lastManualRun', result);
+      });
 
       return result;
     } finally {
@@ -300,12 +340,15 @@ export class Scheduler extends DurableObject {
         }
 
         await this.ctx.storage.transaction(async txn => {
-          await txn.put('lastManualRun', {
+          const completed = {
             ...manual,
             ...result,
             status: result.ok ? 'succeeded' : 'failed',
             finishedAt: Date.now(),
-          });
+          };
+
+          await this.#recordRun(txn, completed, 'manual');
+          await txn.put('lastManualRun', completed);
           await txn.delete('pendingManual');
         });
       }
@@ -320,16 +363,20 @@ export class Scheduler extends DurableObject {
 
       let scheduledFor = state.retryAt ?? state.hourlyAt;
 
+      let scheduledRun;
+
       if (Date.now() >= scheduledFor) {
         let result = await this.#execute();
 
-        state.lastRun = {
+        scheduledRun = {
           ...result,
           scheduledFor,
           driftMs: result.startedAt - scheduledFor,
           retries: state.retries,
           retryCount: alarmInfo?.retryCount ?? 0,
         };
+
+        state.lastRun = scheduledRun;
 
         if (result.ok || state.retries >= MAX_RETRIES) {
           state.hourlyAt = nextRunAt();
@@ -343,8 +390,13 @@ export class Scheduler extends DurableObject {
 
       // Storage failures escape so the platform retries. Schedule and state are saved
       // together without external I/O in between.
-      await this.ctx.storage.put('state', state);
-      await this.ctx.storage.setAlarm(state.retryAt ?? state.hourlyAt);
+      await this.ctx.storage.transaction(async txn => {
+        if (scheduledRun)
+          await this.#recordRun(txn, scheduledRun, 'scheduled');
+
+        await txn.put('state', state);
+        await txn.setAlarm(state.retryAt ?? state.hourlyAt);
+      });
     } finally {
       this.#running = false;
     }

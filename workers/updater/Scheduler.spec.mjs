@@ -159,6 +159,8 @@ describe('Scheduler', () => {
     vi.setSystemTime(status.retryAt);
     status = await runAlarmUntil(scheduler, s => s.retryAt === null);
 
+    expect(status.runHistory).toHaveLength(4);
+    expect(status.runHistory.every(run => run.trigger === 'scheduled' && !run.ok)).toBe(true);
     expect(status.retries).toBe(0);
     expect(status.alarmAt).toBe(hourlyAt + HOUR_MS);
   });
@@ -342,8 +344,93 @@ describe('Background manual runs', () => {
 
     expect(status.lastManualRun).toMatchObject({ id: 'due', ok: true, mode: 'data' });
     expect(status.lastRun).toMatchObject({ ok: true, mode: 'both', social: { ok: true } });
+    expect(status.runHistory.map(run => run.trigger)).toEqual(['scheduled', 'manual']);
     expect(status.hourlyAt).toBe(hourlyAt + HOUR_MS);
   });
+
+  it('preserves older results when starting a combined run history', async () => {
+    const scheduler = stub();
+    const now = Date.now();
+
+    await runInDurableObject(scheduler, async (_instance, ctx) => {
+      await ctx.storage.put('state', {
+        automaticSchedulingEnabled: false,
+        lastRun: {
+          startedAt: now - 2000,
+          ok: false,
+          mode: 'both',
+        },
+      });
+      await ctx.storage.put('lastManualRun', {
+        startedAt: now - 1000,
+        ok: true,
+        mode: 'data',
+      });
+      await ctx.storage.put('pendingManual', {
+        id: 'interrupted',
+        status: 'running',
+        mode: 'social',
+        startedAt: now,
+      });
+    });
+
+    await scheduler.ensureArmed();
+
+    expect((await scheduler.status()).runHistory.map(run => run.trigger))
+      .toEqual(['manual', 'scheduled']);
+
+    const status = await runAlarmUntil(scheduler, s => s.lastManualRun?.id === 'interrupted');
+
+    expect(status.runHistory.map(run => [run.trigger, run.ok])).toEqual([
+      ['manual', false],
+      ['manual', true],
+      ['scheduled', false],
+    ]);
+    expect((await scheduler.status()).runHistory).toEqual(status.runHistory);
+  });
+
+  it('retains only the newest 50 runs, including their logs', async () => {
+    const scheduler = stub();
+    const now = Date.now();
+    const logs = { lines: [{ text: 'x'.repeat(30000) }], omitted: 0 };
+
+    await runInDurableObject(scheduler, async (_instance, ctx) => {
+      await ctx.storage.put('state', { automaticSchedulingEnabled: false });
+
+      for (let i = 0; i < 50; i++) {
+        const startedAt = now - 1000 + i;
+
+        await ctx.storage.put(`run:${String(startedAt).padStart(15, '0')}:${i}`, {
+          id: String(i),
+          startedAt,
+          trigger: 'scheduled',
+          ok: true,
+          logs,
+        });
+      }
+
+      await ctx.storage.put('pendingManual', {
+        id: 'latest',
+        status: 'running',
+        mode: 'data',
+        startedAt: now,
+      });
+    });
+
+    await scheduler.ensureArmed();
+
+    const status = await runAlarmUntil(scheduler, s => s.lastManualRun?.id === 'latest');
+
+    expect(status.runHistory).toHaveLength(50);
+    expect(status.runHistory[0].id).toBe('latest');
+    expect(status.runHistory.at(-1).id).toBe('1');
+    expect(status.runHistory[1].logs).toEqual(logs);
+
+    await runInDurableObject(scheduler, async (_instance, ctx) => {
+      expect((await ctx.storage.list({ prefix: 'run:' })).size).toBe(50);
+    });
+  });
+
   it('rejects invalid modes and paused scheduling', async () => {
     const scheduler = stub();
 

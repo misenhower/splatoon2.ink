@@ -44,6 +44,11 @@ const state = {
   },
 };
 
+state.runHistory = [
+  { ...state.lastRun, trigger: 'scheduled' },
+  { ...state.lastManualRun, trigger: 'manual' },
+];
+
 createServer(async (request, response) => {
   response.setHeader('Cache-Control', 'no-store');
 
@@ -171,6 +176,8 @@ createServer(async (request, response) => {
               ? { ok: true, skipped: true }
               : { ok: true, posts: [{ name: 'Schedule', ok: true, simulated: true }] },
         };
+        state.runHistory.unshift({ ...state.lastManualRun, trigger: 'manual' });
+        state.runHistory = state.runHistory.slice(0, 50);
         state.busy = false;
         state.pendingManual = null;
         state.activeRun = null;

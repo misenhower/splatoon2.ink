@@ -196,6 +196,8 @@ reported as failed rather than automatically replaying an uncertain social send.
 The hourly schedule is preserved. Paused scheduling also blocks manual runs.
 
 The panel polls live application log lines every two seconds during a run and
+retains the latest 50 manual and scheduled runs in one history, including failed
+attempts. Older deployments contribute their two existing results. Each run
 stores up to the latest 200 lines (500 characters each, 32 KB total) with its
 final summary.
 Known secret values are redacted from captured lines. This includes updater,

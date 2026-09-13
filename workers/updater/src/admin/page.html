@@ -720,12 +720,15 @@
         }
 
         // Keep expanded details open during polling when the records have not changed.
-        const signature = JSON.stringify([state.lastManualRun, state.lastRun]);
+        const signature = JSON.stringify(state.runHistory);
 
         if (element('history').dataset.signature !== signature) {
           element('history').replaceChildren(
-            renderRunRecord('Last manual run', state.lastManualRun),
-            renderRunRecord('Last scheduled run', state.lastRun),
+            ...(state.runHistory?.length
+              ? state.runHistory.map(run => renderRunRecord(
+                run.trigger === 'scheduled' ? 'Scheduled run' : 'Manual run', run,
+              ))
+              : [renderRunRecord('Run history', null)]),
           );
           element('history').dataset.signature = signature;
         }
