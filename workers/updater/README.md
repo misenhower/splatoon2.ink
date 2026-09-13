@@ -137,11 +137,15 @@ marker. The updater's social pipeline retains its published-data checks.
 
 ## Shadow testing and cutover
 
-The checked-in `ASSETS` binding points at `splatoon2-ink-dev-assets`. This keeps
-the existing public site on `splatoon2-ink-assets` until an intentional rollout.
-The `PRIVATE` binding points at `splatoon2-ink-private`: verify that this is
-isolated from the old writer during shadow testing, or provision a separate
-shadow private bucket and change that binding before running both backends.
+The `dev` environment deploys `splatoon2-ink-dev-updater`, using
+`splatoon2-ink-dev-assets`, `splatoon2-ink-dev-private`, and
+`https://dev.splatoon2.ink`. The `production` environment deploys
+`splatoon2-ink-updater`, using the production buckets and site. Each Worker owns
+its own scheduler and secrets. Leave Bluesky credentials unset in dev.
+
+The npm updater development, deployment, dry-run and tail commands select dev.
+Use `npm run updater:deploy:production` only at production cutover. Neither
+environment starts automatic scheduling on a fresh scheduler.
 
 1. Run the tests, build, and deployment dry run below. Compare old/new public
    data using `scripts/compare-data.mjs` on downloaded bucket directories.
@@ -212,7 +216,16 @@ For another deployment:
 The Worker verifies JWT signature, issuer, audience, expiration, and hostname.
 Mutating browser requests also require a matching Origin and JSON content type.
 The existing bearer-token API remains available for scripts, independently of
-Access. The panel does not expose force-repost, pause, or resume controls.
+Access. The panel exposes an **Automatic scheduling** toggle. Its value is saved in the
+scheduler Durable Object and survives deployments. Turning it off clears the
+hourly/retry schedule, but manual runs still work. The watchdog respects the
+setting, so leave its cron configured. Turning it on schedules the next hour
+at :00:10; missed hours are not replayed. Wait for an active or queued run to
+finish before toggling.
+
+The separate API-only `/pause` remains a maintenance stop: it also blocks manual
+runs. `/arm` clears that maintenance pause without changing the automatic setting.
+The panel does not expose force-repost or maintenance pause/resume controls.
 
 ## Configuration and local commands
 
@@ -221,10 +234,10 @@ Secrets: `NINTENDO_SESSION_ID_NA`, `NINTENDO_SESSION_ID_EU`,
 optional `SENTRY_DSN`, and at cutover
 `BLUESKY_SERVICE`, `BLUESKY_IDENTIFIER`, `BLUESKY_PASSWORD`.
 
-Use `wrangler secret put NAME --config workers/updater/wrangler.jsonc` for a
+Use `wrangler secret put NAME --config workers/updater/wrangler.jsonc --env dev` for a
 secret. `SITE_URL` is a non-secret var in the config. Screenshots use the
 `BROWSER` binding; no Browser Run API credentials are required.
-For local development, use gitignored `workers/updater/.dev.vars`. The existing
+For local development, use gitignored `workers/updater/.dev.vars.dev`. The existing
 shared code reads these values through Workers' populated `process.env`.
 Sentry wrappers route shared updater errors to Sentry when `SENTRY_DSN` is set.
 

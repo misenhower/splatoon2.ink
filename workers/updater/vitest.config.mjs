@@ -7,7 +7,9 @@ export default defineConfig({
     cloudflareTest({
       // Browser captures are mocked; automated tests never use the remote service.
       remoteBindings: false,
+      miniflare: { bindings: { AUTOMATIC_SCHEDULING_ENABLED: 'true' } },
       wrangler: {
+        environment: 'dev',
         configPath: fileURLToPath(new URL('./wrangler.jsonc', import.meta.url)),
       },
     }),
