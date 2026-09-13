@@ -9,19 +9,19 @@
             <div class="weapon-special-sub">
                 <div class="image-wrapper" :title="specialName">
                     <div class="image is-24x24">
-                        <img :src="weapon.special.image_a | localSplatNetImageUrl" />
+                        <img loading="lazy" :src="weapon.special.image_a | localSplatNetImageUrl" />
                     </div>
                 </div>
 
                 <div class="image-wrapper" :title="subName">
                     <div class="image is-24x24">
-                        <img :src="weapon.sub.image_a | localSplatNetImageUrl" />
+                        <img loading="lazy" :src="weapon.sub.image_a | localSplatNetImageUrl" />
                     </div>
                 </div>
             </div>
 
             <div class="image is-square">
-                <img :src="weapon.image | localSplatNetImageUrl" />
+                <img loading="lazy" :src="weapon.image | localSplatNetImageUrl" />
             </div>
 
             <div class="weapon-name has-text-centered is-size-5">

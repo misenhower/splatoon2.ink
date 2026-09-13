@@ -2,13 +2,13 @@
     <div class="merchandise-box font-splatoon2" :class="merchandise.kind">
         <div class="brand">
             <div class="image is-32x32">
-                <img :src="merchandise.gear.brand.image | localSplatNetImageUrl" :title="brandName" />
+                <img loading="lazy" :src="merchandise.gear.brand.image | localSplatNetImageUrl" :title="brandName" />
             </div>
         </div>
 
         <div class="skills">
             <div class="main skill-img-bg" v-if="merchandise.skill">
-                <img :src="merchandise.skill.image | localSplatNetImageUrl" :title="skillName" />
+                <img loading="lazy" :src="merchandise.skill.image | localSplatNetImageUrl" :title="skillName" />
             </div>
             <div class="sub" v-for="i in merchandise.gear.rarity + 1" :key="i">
                 <img src="~@/web/assets/img/blank-skill-slot.png" />
@@ -21,7 +21,7 @@
 
         <div class="gear-image">
             <div class="image is-square">
-                <img :src="merchandise.gear.image | localSplatNetImageUrl" />
+                <img loading="lazy" :src="merchandise.gear.image | localSplatNetImageUrl" />
             </div>
         </div>
 
@@ -36,7 +36,7 @@
                         <div class="level-left">
                             <div class="level-item">
                                 <div class="skill-img-bg strikethrough">
-                                    <img :src="merchandise.original_gear.skill.image | localSplatNetImageUrl" :title="originalSkillName" />
+                                    <img loading="lazy" :src="merchandise.original_gear.skill.image | localSplatNetImageUrl" :title="originalSkillName" />
                                 </div>
                                 <div class="sub" v-for="i in merchandise.original_gear.rarity + 1" :key="i">
                                     <img src="~@/web/assets/img/blank-skill-slot.png" />
@@ -58,7 +58,7 @@
                     <div class="is-size-7">{{ $t('gear.frequent_ability') }}</div>
                     <div>
                         <div class="skill-img-bg">
-                            <img :src="merchandise.gear.brand.frequent_skill.image | localSplatNetImageUrl" :title="frequentSkillName" />
+                            <img loading="lazy" :src="merchandise.gear.brand.frequent_skill.image | localSplatNetImageUrl" :title="frequentSkillName" />
                         </div>
                         {{ brandName }}
                     </div>

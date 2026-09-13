@@ -8,13 +8,13 @@
 
         <div class="panel-container" :class="{ 'is-hidden-mobile' : showingResults }">
             <div class="image panel-image">
-                <img :src="image" />
+                <img loading="lazy" :src="image" />
             </div>
 
             <div class="regions">
                 <span class="region" v-for="(data, region) in festival.regions" :key="region">
                     <span class="icon is-small">
-                        <img :src="require(`@/web/assets/img/region-${region}.svg`)" />
+                        <img loading="lazy" :src="require(`@/web/assets/img/region-${region}.svg`)" />
                     </span>
                     <span>{{ region | upperCase }}</span>
 

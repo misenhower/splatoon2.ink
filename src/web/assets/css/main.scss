@@ -507,11 +507,15 @@ body.has-modal #main {
 }
 
 .stage-image {
-    background-size: contain;
-    background-repeat: no-repeat;
     border-radius: 10px;
 
     position: relative;
+
+    > figure > img {
+        object-fit: contain;
+        object-position: top;
+        border-radius: 10px;
+    }
 
     .stage-title {
         position: absolute;

@@ -1,6 +1,8 @@
 <template>
-    <div class="stage-image" :class="{ hand: clickable }" :style="style" @click="click" v-if="stageDetails">
-        <figure class="image is-16by9"></figure>
+    <div class="stage-image" :class="{ hand: clickable }" @click="click" v-if="stageDetails">
+        <figure class="image is-16by9">
+            <img :src="image" :alt="name" loading="lazy" />
+        </figure>
         <span class="stage-title" v-if="showTitle">{{ name }}</span>
 
         <Modal v-if="isOpen" @close="isOpen = false" class="is-xwide">
@@ -59,11 +61,6 @@ export default {
             if (this.stageDetails)
                 return this.stageDetails.largeImage || Vue.filter('localSplatNetImageUrl')(this.stageDetails.image);
             return null;
-        },
-        style() {
-            return {
-                'background-image': `url(${this.image})`,
-            };
         },
     },
     methods: {

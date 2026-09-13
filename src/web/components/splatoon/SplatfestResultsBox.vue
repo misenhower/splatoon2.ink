@@ -9,7 +9,7 @@
 
             <div class="column">
                 <div class="image is-48x48" :title="$t(`splatnet.festivals.${festival.festival_id}.names.alpha_short`, festival.names.alpha_short)">
-                    <img :src="festival.images.alpha | localSplatNetImageUrl" />
+                    <img loading="lazy" :src="festival.images.alpha | localSplatNetImageUrl" />
                 </div>
             </div>
 
@@ -19,7 +19,7 @@
 
             <div class="column">
                 <div class="image is-48x48" :title="$t(`splatnet.festivals.${festival.festival_id}.names.bravo_short`, festival.names.bravo_short)">
-                    <img :src="festival.images.bravo | localSplatNetImageUrl" />
+                    <img loading="lazy" :src="festival.images.bravo | localSplatNetImageUrl" />
                 </div>
             </div>
         </div>

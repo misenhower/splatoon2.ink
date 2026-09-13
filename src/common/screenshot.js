@@ -19,6 +19,11 @@ export async function markScreenshotReady({
 
     await nextTick();
     await document.fonts?.ready;
+
+    // Screenshots capture the whole layout, including images outside the viewport.
+    for (let image of document.images)
+        image.loading = 'eager';
+
     await Promise.allSettled([...document.images].map(image => image.decode()));
     await new Promise(resolve => requestAnimationFrame(resolve));
     await new Promise(resolve => requestAnimationFrame(resolve));

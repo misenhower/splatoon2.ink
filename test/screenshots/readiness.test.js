@@ -25,7 +25,9 @@ test('waits for data, Vue, fonts, images and two layout frames before signaling 
         fonts: { ready: fonts.promise },
         images: [
             {
-                decode: () => {
+                loading: 'lazy',
+                decode() {
+                    assert.equal(this.loading, 'eager');
                     steps.push('image');
 
                     return image.promise;

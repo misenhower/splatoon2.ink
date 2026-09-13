@@ -17,6 +17,7 @@
                         <div class="image is-square weapon">
                             <template v-if="weapon.weapon">
                                 <img
+                                    loading="lazy"
                                     :src="weapon.weapon.image | localSplatNetImageUrl"
                                     :title="$t(`splatnet.weapons.${weapon.weapon.id}.name`, weapon.weapon.name)"
                                 />
@@ -24,6 +25,7 @@
 
                             <template v-else-if="weapon.coop_special_weapon">
                                 <img
+                                    loading="lazy"
                                     :src="weapon.coop_special_weapon.image | localSplatNetImageUrl"
                                     :title="$t(`splatnet.coop_special_weapons.${weapon.coop_special_weapon.image}.name`, weapon.coop_special_weapon.name)"
                                 />
