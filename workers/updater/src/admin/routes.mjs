@@ -29,7 +29,7 @@ export async function adminRequest(request, env, getScheduler) {
   if (request.method === 'GET' && url.pathname === '/admin/api/status')
     return json({ ...(await getScheduler().status()), user, preview: false });
 
-  if (request.method === 'POST' && url.pathname === '/admin/api/run') {
+  if (request.method === 'POST' && ['/admin/api/run', '/admin/api/scheduling'].includes(url.pathname)) {
     // Access cookies authenticate the user; require a same-origin JSON request as well.
     if (
       request.headers.get('Origin') !== url.origin ||
@@ -37,13 +37,24 @@ export async function adminRequest(request, env, getScheduler) {
     )
       return json({ error: 'A same-origin JSON request is required.' }, 403);
 
-    let mode;
+    let body;
 
     try {
-      ({ mode } = await request.json());
+      body = await request.json();
     } catch {
       return json({ error: 'Invalid request.' }, 400);
     }
+
+    if (url.pathname === '/admin/api/scheduling') {
+      if (typeof body?.enabled !== 'boolean')
+        return json({ error: 'Enabled must be a boolean.' }, 400);
+
+      let result = await getScheduler().setAutomaticScheduling(body.enabled);
+
+      return json(result, result.ok ? 200 : result.busy || result.paused ? 409 : 400);
+    }
+
+    let mode = body?.mode;
 
     if (!MANUAL_MODES.includes(mode))
       return json({ error: 'Unknown run mode.' }, 400);

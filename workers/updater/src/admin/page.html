@@ -445,7 +445,10 @@
           </div>
           <div class="sub" id="state-detail">Checking the updater</div>
         </div>
-        <div class="next"><small>Next scheduled run</small><strong id="next">—</strong></div>
+        <div class="next">
+          <small>Next scheduled run</small><strong id="next">—</strong>
+          <button class="refresh" id="scheduling" role="switch" aria-checked="false" disabled>Automatic scheduling</button>
+        </div>
       </section>
       <div class="section-label">
         <h2>Start a run</h2>
@@ -526,6 +529,8 @@
       }
 
       function updateControls() {
+        element('scheduling').disabled = sending || !state || state.busy || state.paused;
+
         for (const button of buttons)
           button.disabled = sending || !state || state.busy || state.paused;
       }
@@ -638,6 +643,10 @@
           element('state').textContent = 'Scheduler paused';
           element('dot').className = 'dot warning';
           element('state-detail').textContent = 'Manual runs are disabled while paused.';
+        } else if (!state.automaticSchedulingEnabled) {
+          element('state').textContent = 'Automatic scheduling off';
+          element('dot').className = 'dot neutral';
+          element('state-detail').textContent = 'Manual runs are available.';
         } else {
           element('state').textContent = 'Ready when you are';
           element('dot').className = 'dot';
@@ -650,7 +659,10 @@
           element('state-detail').textContent = `${name} · ${progress}`;
         }
 
-        element('next').textContent = state.paused ? 'Paused' : formatDate(state.retryAt || state.hourlyAt);
+        element('next').textContent = state.paused ? 'Paused'
+          : state.automaticSchedulingEnabled ? formatDate(state.retryAt || state.hourlyAt) : 'Off';
+        element('scheduling').setAttribute('aria-checked', String(state.automaticSchedulingEnabled));
+        element('scheduling').textContent = `Automatic scheduling: ${state.automaticSchedulingEnabled ? 'On' : 'Off'}`;
         element('live-run').hidden = !state.activeRun;
 
         if (state.activeRun) {
@@ -771,6 +783,29 @@
             updateControls();
           }
         });
+
+      element('scheduling').addEventListener('click', async () => {
+        const enabled = !state.automaticSchedulingEnabled;
+        sending = true;
+        updateControls();
+
+        try {
+          await requestAdmin('scheduling', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ enabled }),
+          });
+          element('notice').textContent = enabled
+            ? 'Automatic scheduling enabled. The next run starts after the next hour.'
+            : 'Automatic scheduling disabled. You can still run updates manually.';
+        } catch (error) {
+          element('notice').textContent = error.message;
+        } finally {
+          sending = false;
+          await refreshStatus();
+          updateControls();
+        }
+      });
 
       element('refresh').addEventListener('click', refreshStatus);
       document.addEventListener('visibilitychange', () => {

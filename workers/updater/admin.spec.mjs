@@ -63,3 +63,27 @@ it.each(['/', '/admin/'])(
     expect(await response.text()).not.toContain('__NONCE__');
   },
 );
+
+it('protects scheduling changes with Access, same-origin checks and boolean validation', async () => {
+  const request = (enabled, origin = url) => new Request(url + '/admin/api/scheduling', {
+    method: 'POST',
+    headers: { Origin: origin, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ enabled }),
+  });
+  const setAutomaticScheduling = vi.fn(async enabled => ({ ok: true, automaticSchedulingEnabled: enabled }));
+  const scheduler = () => ({ setAutomaticScheduling });
+
+  verifyAccess.mockResolvedValue(null);
+  expect((await adminRequest(request(false), {}, scheduler)).status).toBe(401);
+
+  verifyAccess.mockResolvedValue({ email: 'admin@example.test' });
+  expect((await adminRequest(request(false, 'https://other.test'), {}, scheduler)).status).toBe(403);
+  expect((await adminRequest(request('false'), {}, scheduler)).status).toBe(400);
+  expect(setAutomaticScheduling).not.toHaveBeenCalled();
+
+  expect((await adminRequest(request(false), {}, scheduler)).status).toBe(200);
+  expect(setAutomaticScheduling).toHaveBeenCalledWith(false);
+
+  setAutomaticScheduling.mockResolvedValue({ ok: false, busy: true });
+  expect((await adminRequest(request(true), {}, scheduler)).status).toBe(409);
+});

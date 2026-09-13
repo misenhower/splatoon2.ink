@@ -9,6 +9,7 @@ const state = {
   preview: true,
   user: { email: 'Local preview' },
   paused: false,
+  automaticSchedulingEnabled: true,
   busy: false,
   hourlyAt: hour + 3600000 + 10000,
   retryAt: null,
@@ -68,7 +69,7 @@ createServer(async (request, response) => {
     if (request.method === 'GET' && url.pathname === '/admin/api/status')
       return json(state);
 
-    if (request.method === 'POST' && url.pathname === '/admin/api/run') {
+    if (request.method === 'POST' && ['/admin/api/run', '/admin/api/scheduling'].includes(url.pathname)) {
       if (request.headers.origin !== `http://${request.headers.host}`)
         return json({ error: 'Invalid origin.' }, 403);
 
@@ -84,7 +85,19 @@ createServer(async (request, response) => {
           return json({ error: 'Request too large.' }, 413);
       }
 
-      const { mode } = JSON.parse(body);
+      const input = JSON.parse(body);
+
+      if (url.pathname === '/admin/api/scheduling') {
+        if (typeof input?.enabled !== 'boolean')
+          return json({ error: 'Enabled must be a boolean.' }, 400);
+
+        state.automaticSchedulingEnabled = input.enabled;
+        state.hourlyAt = input.enabled ? Math.floor(Date.now() / 3600000) * 3600000 + 3610000 : null;
+
+        return json({ ok: true });
+      }
+
+      const { mode } = input;
 
       if (!['data', 'social', 'both'].includes(mode))
         return json({ error: 'Unknown mode.' }, 400);

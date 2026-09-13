@@ -26,6 +26,8 @@ export class Scheduler extends DurableObject {
     // becomes one immediate full run, then the generic queue is retired.
     return {
       paused: saved.paused ?? false,
+      automaticSchedulingEnabled: saved.automaticSchedulingEnabled
+        ?? (this.env.AUTOMATIC_SCHEDULING_ENABLED !== 'false'),
       hourlyAt: saved.hourlyAt ?? null,
       retryAt: saved.retryAt ?? (saved.pending?.length ? Date.now() : null),
       retries: saved.retries ?? 0,
@@ -48,14 +50,68 @@ export class Scheduler extends DurableObject {
 
     let armed = (await this.ctx.storage.getAlarm()) === null;
 
-    state.hourlyAt ??= nextRunAt();
+    let manual = await this.#pendingManual();
+
+    if (!state.automaticSchedulingEnabled && !manual) {
+      await this.ctx.storage.deleteAlarm();
+
+      return { armed: false, automaticSchedulingEnabled: false };
+    }
+
+    if (state.automaticSchedulingEnabled)
+      state.hourlyAt ??= nextRunAt();
     await this.ctx.storage.put('state', state);
 
-    let alarmAt = (await this.#pendingManual()) ? Date.now() : (state.retryAt ?? state.hourlyAt);
+    let alarmAt = manual ? Date.now() : (state.retryAt ?? state.hourlyAt);
 
     await this.ctx.storage.setAlarm(alarmAt);
 
     return { armed, hourlyAt: state.hourlyAt, alarmAt };
+  }
+
+  async setAutomaticScheduling(enabled) {
+    if (typeof enabled !== 'boolean')
+      return { ok: false, error: 'Enabled must be a boolean.' };
+
+    if (this.#running)
+      return { ok: false, busy: true, error: 'Wait for the current run to finish.' };
+
+    this.#running = true;
+
+    try {
+      if (await this.#pendingManual())
+        return { ok: false, busy: true, error: 'Wait for the queued run to finish.' };
+
+      let state = await this.#state();
+
+      if (state.paused)
+        return { ok: false, paused: true, error: 'The Worker is paused for maintenance.' };
+
+      if (state.automaticSchedulingEnabled !== enabled) {
+        state.hourlyAt = enabled ? nextRunAt() : null;
+        state.retryAt = null;
+        state.retries = 0;
+      }
+
+      state.automaticSchedulingEnabled = enabled;
+
+      if (enabled)
+        state.hourlyAt ??= nextRunAt();
+
+      await this.ctx.storage.transaction(async txn => {
+        await txn.put('state', state);
+
+        if (enabled) {
+          await txn.setAlarm(state.retryAt ?? state.hourlyAt);
+        } else {
+          await txn.deleteAlarm();
+        }
+      });
+
+      return { ok: true, automaticSchedulingEnabled: enabled };
+    } finally {
+      this.#running = false;
+    }
   }
 
   async pause() {
@@ -252,6 +308,12 @@ export class Scheduler extends DurableObject {
           });
           await txn.delete('pendingManual');
         });
+      }
+
+      if (!state.automaticSchedulingEnabled) {
+        await this.ctx.storage.deleteAlarm();
+
+        return;
       }
 
       state.hourlyAt ??= nextRunAt();

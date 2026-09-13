@@ -392,3 +392,42 @@ describe('Worker routing', () => {
     expect((await worker.fetch(request(headers), fakeEnv, createExecutionContext())).status).toBe(200);
   });
 });
+
+it('keeps manual runs available with scheduling off and does not replay missed hours', async () => {
+  network();
+
+  let scheduler = stub();
+  await scheduler.ensureArmed();
+  await scheduler.setAutomaticScheduling(false);
+
+  expect(await scheduler.ensureArmed()).toEqual({ armed: false, automaticSchedulingEnabled: false });
+  expect(await scheduler.status()).toMatchObject({
+    automaticSchedulingEnabled: false,
+    alarmAt: null,
+    hourlyAt: null,
+    retryAt: null,
+  });
+
+  let manual = await scheduler.startManual('data');
+  expect(manual.ok).toBe(true);
+  expect(await scheduler.setAutomaticScheduling(true)).toMatchObject({ busy: true });
+
+  let status = await runAlarmUntil(scheduler, s => s.lastManualRun !== null);
+  expect(status.lastManualRun.ok).toBe(true);
+  expect(status.lastRun).toBeNull();
+  expect(status.alarmAt).toBeNull();
+  expect(status.automaticSchedulingEnabled).toBe(false);
+
+  // A stale platform alarm must not run automatic work after disabling it.
+  await runInDurableObject(scheduler, instance => instance.alarm());
+  expect((await scheduler.status()).lastRun).toBeNull();
+
+  expect((await scheduler.run({ only: ['Schedules'] })).ok).toBe(true);
+  expect((await scheduler.status()).alarmAt).toBeNull();
+
+  await scheduler.setAutomaticScheduling(true);
+  status = await scheduler.status();
+  expect(status.hourlyAt).toBe(nextRunAt());
+  expect(status.alarmAt).toBe(status.hourlyAt);
+  expect(status.lastRun).toBeNull();
+});
