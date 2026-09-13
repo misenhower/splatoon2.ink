@@ -1,4 +1,4 @@
-import { test, beforeEach } from 'node:test';
+import { test, beforeEach, afterEach, mock } from 'node:test';
 import assert from 'node:assert/strict';
 import SchedulePost from '../../src/app/social/posts/SchedulePost.js';
 import SalmonRunPost from '../../src/app/social/posts/SalmonRunPost.js';
@@ -20,6 +20,7 @@ const rotation = (start, a, b, rule) => ({
 let s, client;
 
 beforeEach(async () => {
+  mock.timers.enable({ apis: ['Date'], now: NOW * 1000 });
   s = storage();
   client = fakeClient('bluesky');
   await seed(s.publicBucket, 'data/festivals.json', {
@@ -29,8 +30,13 @@ beforeEach(async () => {
   });
 });
 
+afterEach(() => mock.timers.reset());
+
 function pinTime(post, time) {
-  post.getDataTime = async () => time;
+  if (post instanceof SchedulePost)
+    mock.timers.setTime(time * 1000);
+  else
+    post.getDataTime = async () => time;
   post.getImage = async () => new Uint8Array([1]);
 
   return post;
@@ -73,7 +79,7 @@ test('schedule: posts the rotation for the current hour, with new-stage wording 
 
   const later = pinTime(new SchedulePost(nextRun(s), [client]), NOW + 3600);
 
-  assert.equal(await later.maybePost(), false); // no rotation starts at that hour
+  assert.equal(await later.maybePost(), false); // the active rotation was already posted
 });
 
 test('schedule: the plain rotation text names the ranked and league rules', async () => {
@@ -178,4 +184,39 @@ test('splatfest: a global fest posts once, from the first region', async () => {
   }
 
   assert.deepEqual(sentBy, [['na', 'The global Splatfest is now open! #splatfest #splatoon2']]);
+});
+
+
+test('schedule: catches up in the second hour and checkpoints the rotation start', async () => {
+  const reef = stage('0', 'The Reef');
+  const fitness = stage('1', 'Musselforge Fitness');
+  const rotations = [NOW, NOW + 7200].map(time => rotation(time, reef, fitness, 'Turf War'));
+
+  await seed(s.publicBucket, 'data/schedules.json', {
+    regular: rotations,
+    gachi: rotations,
+    league: rotations,
+  });
+
+  const failedClient = fakeClient('bluesky', { fail: true });
+  const failed = pinTime(new SchedulePost(s, [failedClient]), NOW);
+  assert.equal((await failed.maybePost()).ok, false);
+  assert.equal(await json(s.privateBucket, 'bluesky-lastPostTimes.json'), null);
+
+  const catchUp = pinTime(new SchedulePost(nextRun(s), [client]), NOW + 3600);
+  assert.equal((await catchUp.maybePost()).ok, true);
+  assert.equal((await json(s.privateBucket, 'bluesky-lastPostTimes.json')).schedule, NOW);
+  assert.ok(await s.publicBucket.get('twitter-images/schedule.png'));
+
+  const repeated = pinTime(new SchedulePost(nextRun(s), [client]), NOW + 3600);
+  assert.equal(await repeated.maybePost(), false);
+  assert.equal(client.sent.length, 1);
+
+  const next = pinTime(new SchedulePost(nextRun(s), [client]), NOW + 7200);
+  assert.equal((await next.maybePost()).ok, true);
+  assert.equal((await json(s.privateBucket, 'bluesky-lastPostTimes.json')).schedule, NOW + 7200);
+  assert.equal(client.sent.length, 2);
+
+  const expired = pinTime(new SchedulePost(nextRun(s), [client]), NOW + 14400);
+  assert.equal(await expired.maybePost(), false);
 });

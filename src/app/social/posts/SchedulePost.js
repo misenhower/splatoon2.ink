@@ -16,15 +16,23 @@ export default class SchedulePost extends SocialPostBase {
 
     async getData() {
         let schedules = await this.getSchedules();
-        let time = await this.getDataTime();
-        let regular = schedules.regular.find(s => s.start_time == time);
-        let gachi = schedules.gachi.find(s => s.start_time == time);
-        let league = schedules.league.find(s => s.start_time == time);
+        let time = await super.getDataTime();
+        let isActive = schedule => schedule.start_time <= time && time < schedule.end_time;
+        let regular = schedules.regular.find(isActive);
+        let gachi = schedules.gachi.find(isActive);
+        let league = schedules.league.find(isActive);
 
-        if (!regular)
+        if (!regular || !gachi || !league)
             return null;
 
         return { regular, gachi, league };
+    }
+
+    async getDataTime() {
+        // Identify the rotation, so a second-hour retry cannot duplicate a successful post.
+        let data = await this.getData();
+
+        return data?.regular.start_time;
     }
 
     async getTestData() {
