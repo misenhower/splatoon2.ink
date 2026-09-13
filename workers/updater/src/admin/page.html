@@ -41,7 +41,8 @@
         color: var(--purple);
       }
       button:focus-visible,
-      a:focus-visible {
+      a:focus-visible,
+      summary:focus-visible {
         outline: 3px solid var(--purple);
         outline-offset: 4px;
       }
@@ -65,6 +66,19 @@
         font-weight: 750;
         font-size: 18px;
         letter-spacing: -0.5px;
+      }
+      .site-name {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .staging {
+        color: #e6d595;
+        background: #333024;
+        border-radius: 4px;
+        padding: 4px 7px;
+        font-size: 11px;
+        font-weight: 600;
       }
       .brand span {
         color: var(--purple);
@@ -284,21 +298,55 @@
         overflow: hidden;
       }
       .record {
-        padding: 20px 23px;
+        margin: 0;
         background: #191a23;
       }
       .record + .record {
         border-top: 1px solid var(--line);
       }
       .record-top {
-        display: flex;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: 10px minmax(100px, 1fr) 90px auto 85px;
         align-items: center;
-        gap: 16px;
+        gap: 12px;
+        min-height: 48px;
+        padding: 10px 16px;
+        list-style: none;
+      }
+      .record-top::-webkit-details-marker {
+        display: none;
+      }
+      .record-top::before {
+        content: '›';
+        font-size: 18px;
+      }
+      .record[open] > .record-top::before {
+        transform: rotate(90deg);
+      }
+      .record-top:hover {
+        background: #22232e;
       }
       .record-name {
+        color: #f3f2fa;
         font-weight: 550;
-        font-size: 14px;
+        font-size: 13px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .record-time,
+      .record-trigger {
+        white-space: nowrap;
+        font-size: 11px;
+      }
+      .record-top .badge {
+        text-align: center;
+      }
+      .record-body {
+        padding: 0 16px 16px 38px;
+      }
+      .history-empty {
+        padding: 16px;
       }
       .badge {
         font-size: 11px;
@@ -415,8 +463,23 @@
           max-width: 180px;
           line-height: 1.5;
         }
-        .record {
-          padding: 18px 17px;
+        .record-top {
+          grid-template-columns: 8px minmax(0, 1fr) auto 65px;
+          gap: 7px;
+          padding: 10px;
+        }
+        .record-trigger {
+          display: none;
+        }
+        .record-top .badge {
+          font-size: 10px;
+          padding: 4px;
+        }
+        .record-time {
+          font-size: 10px;
+        }
+        .record-body {
+          padding: 0 12px 12px;
         }
         .footer {
           flex-direction: column;
@@ -473,7 +536,10 @@
   <body>
     <main class="shell">
       <header class="top">
-        <div class="brand">splatoon<span>2</span>.ink</div>
+        <div class="site-name">
+          <div class="brand">splatoon<span>2</span>.ink</div>
+          <span class="staging" __STAGING_HIDDEN__>Staging</span>
+        </div>
         <span class="tag">Administration</span>
       </header>
       <div class="preview" id="preview">
@@ -612,67 +678,76 @@
       }
 
       function renderRunRecord(label, run) {
-        const row = document.createElement('div');
+        if (!run) {
+          const empty = document.createElement('p');
+          empty.className = 'history-empty';
+          empty.textContent = 'No runs yet.';
+
+          return empty;
+        }
+
+        const row = document.createElement('details');
         row.className = 'record';
 
-        const top = document.createElement('div');
+        const top = document.createElement('summary');
         top.className = 'record-top';
 
         const title = document.createElement('span');
         title.className = 'record-name';
-        title.textContent = label;
+        title.textContent = runNames[run.mode] || 'Full cycle';
+
+        const trigger = document.createElement('span');
+        trigger.className = 'record-trigger';
+        trigger.textContent = label;
+
+        const time = document.createElement('time');
+        time.className = 'record-time';
+        time.dateTime = new Date(run.startedAt).toISOString();
+        time.textContent = formatDate(run.startedAt);
 
         const badge = document.createElement('span');
-        badge.className = 'badge' + (!run ? ' neutral' : run.ok ? '' : ' failed');
-        badge.textContent = !run ? 'No runs yet' : run.ok ? 'Completed' : 'Needs attention';
-        top.append(title, badge);
-        row.append(top);
+        badge.className = 'badge' + (run.ok ? '' : ' failed');
+        badge.textContent = run.ok ? 'Completed' : 'Failed';
+        top.append(title, trigger, time, badge);
+
+        const body = document.createElement('div');
+        body.className = 'record-body';
 
         const detail = document.createElement('div');
         detail.className = 'detail';
-        detail.textContent = run
-          ? `${runNames[run.mode] || 'Full cycle'} · ${formatDate(run.startedAt)} · ${Math.max(
-            1,
-            Math.round((run.runMs || 0) / 1000),
-          )}s`
-          : 'Results will appear here after a run.';
-        row.append(detail);
+        detail.textContent = `${label} · ${Math.max(1, Math.round((run.runMs || 0) / 1000))}s`;
+        body.append(detail);
+        row.append(top, body);
 
-        if (run) {
-          const messages = [
-            run.error,
-            ...(run.updaters?.updaters || [])
-              .filter((item) => !item.ok)
-              .map((item) => item.error || `${item.name} failed`),
-            ...(run.social?.posts || [])
-              .filter((item) => item && !item.ok)
-              .map((item) => item.error || 'A social post failed'),
-          ].filter(Boolean);
+        const messages = [
+          run.error,
+          ...(run.updaters?.updaters || [])
+            .filter((item) => !item.ok)
+            .map((item) => item.error || `${item.name} failed`),
+          ...(run.social?.posts || [])
+            .filter((item) => item && !item.ok)
+            .map((item) => item.error || 'A social post failed'),
+        ].filter(Boolean);
 
-          if (messages.length) {
-            const error = document.createElement('div');
-            error.className = 'error';
-            error.textContent = messages.join(' · ');
-            row.append(error);
-          }
-
-          const logDetails = document.createElement('details');
-          const logSummary = document.createElement('summary');
-          logSummary.textContent = 'View log lines';
-          logDetails.append(logSummary, renderLogLines(run.logs));
-          row.append(logDetails);
-
-          const details = document.createElement('details');
-          const summary = document.createElement('summary');
-          const pre = document.createElement('pre');
-          summary.textContent = 'View run details';
-
-          const summaryResult = { ...run };
-          delete summaryResult.logs;
-          pre.textContent = JSON.stringify(summaryResult, null, 2);
-          details.append(summary, pre);
-          row.append(details);
+        if (messages.length) {
+          const error = document.createElement('div');
+          error.className = 'error';
+          error.textContent = messages.join(' · ');
+          body.append(error);
         }
+
+        body.append(renderLogLines(run.logs));
+
+        const details = document.createElement('details');
+        const summary = document.createElement('summary');
+        const pre = document.createElement('pre');
+        summary.textContent = 'View run details';
+
+        const summaryResult = { ...run };
+        delete summaryResult.logs;
+        pre.textContent = JSON.stringify(summaryResult, null, 2);
+        details.append(summary, pre);
+        body.append(details);
 
         return row;
       }

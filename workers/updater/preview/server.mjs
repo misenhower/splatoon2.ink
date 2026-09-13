@@ -67,7 +67,7 @@ createServer(async (request, response) => {
         (await readFile(new URL('../src/admin/page.html', import.meta.url), 'utf8')).replaceAll(
           '__NONCE__',
           'preview',
-        ),
+        ).replaceAll('__STAGING_HIDDEN__', ''),
       );
     }
 

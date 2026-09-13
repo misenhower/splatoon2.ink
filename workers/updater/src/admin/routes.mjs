@@ -16,7 +16,11 @@ export async function adminRequest(request, env, getScheduler) {
   if (request.method === 'GET' && ['/', '/admin', '/admin/'].includes(url.pathname)) {
     let nonce = crypto.randomUUID();
 
-    return new Response(page.replaceAll('__NONCE__', nonce), {
+    const staging = new URL(env.SITE_URL || request.url).hostname.startsWith('dev.');
+    const html = page.replaceAll('__NONCE__', nonce)
+      .replaceAll('__STAGING_HIDDEN__', staging ? '' : 'hidden');
+
+    return new Response(html, {
       headers: {
         ...headers,
         'Content-Type': 'text/html; charset=utf-8',
