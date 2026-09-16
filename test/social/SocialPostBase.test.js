@@ -55,8 +55,12 @@ test('posts to every client, saves the public image, and records the time per cl
   assert.deepEqual(bluesky.sent, [{ status: 'Post 1', media: [{ file: IMAGE, type: 'image/png' }] }]);
   assert.deepEqual(other.sent, bluesky.sent);
   assert.equal(post.images, 1);
+
+  const publicImage = await s.publicBucket.get('twitter-images/hourly.png');
+
+  assert.equal(publicImage.httpMetadata.cacheControl, 'no-cache');
   assert.deepEqual(
-    new Uint8Array(await (await s.publicBucket.get('twitter-images/hourly.png')).arrayBuffer()),
+    new Uint8Array(await publicImage.arrayBuffer()),
     IMAGE,
   );
   assert.deepEqual(await json(s.privateBucket, 'bluesky-lastPostTimes.json'), { hourly: 3600 });

@@ -87,7 +87,10 @@ export default class SocialPostBase {
 
         if (filename) {
             // Keep the established public URLs; removing X does not require breaking image links.
-            await this.publicStorage.writeBytes(`twitter-images/${filename}`, image);
+            // These URLs are overwritten, so caches must revalidate before reusing them.
+            await this.publicStorage.writeBytes(`twitter-images/${filename}`, image, {
+                cacheControl: 'no-cache',
+            });
             this.info(`Saved public image as ${filename}`);
         }
     }

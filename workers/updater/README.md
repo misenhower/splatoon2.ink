@@ -41,6 +41,30 @@ ambiguous outcome; storage cannot make those two external operations atomic.
 
 ## Social posts and screenshots
 
+### Public routing and caching
+
+Cloudflare Pages serves the frontend. Cloud Connector serves individual
+`/data/`, `/assets/splatnet/`, and `/twitter-images/` files directly from R2
+at their original site URLs; do not redirect file requests to the asset host.
+Production `/data`, slash-terminated `/data/` directories, and slash-terminated
+`/assets/splatnet/` directories redirect to the browser at `assets.splatoon2.ink`.
+The asset-browser Worker handles directory listings only.
+
+Cloudflare's `Long-lived immutable media` cache rule uses a one-year edge TTL
+for production `/assets/` files (excluding directories and HTML), and image
+files under `assets.splatoon2.ink/assets/splatnet/`. The zone's Browser Cache TTL
+is **Respect Existing Headers**; the old `/assets/*` Page Rule that forced a
+one-month browser TTL is disabled. These settings are managed in Cloudflare,
+not Wrangler. Do not add a browser TTL override to obtain longer edge caching.
+
+Rotating public images under `/twitter-images/` reuse their filenames. The
+updater writes them with `Cache-Control: no-cache` so caches revalidate before
+reuse. Keep them outside the long-lived asset rule. On September 15, 2026,
+production routing and cache settings were verified, the existing schedule and
+gear PNGs received this metadata, and their old edge-cache entries were purged.
+
+### Posting pipeline
+
 `src/app/social` posts to Bluesky. Twitter/X support and its dependency have
 been removed. Local commands are `npm run social` and `npm run social:test`.
 
