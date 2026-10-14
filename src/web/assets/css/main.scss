@@ -18,6 +18,13 @@ body.has-modal #main {
     filter: blur(4px);
 }
 
+@include touch {
+    #main .container.is-fluid {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
 // Disabling this for now to fix issues on the Calendars dialog
 // .dropdown {
 //     z-index: 100;
